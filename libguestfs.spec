@@ -4,7 +4,7 @@
 Summary:     Access and modify virtual machine disk images
 Name:        libguestfs
 Version:     1.0.21
-Release:     2%{?dist}
+Release:     3%{?dist}
 License:     LGPLv2+
 Group:       Development/Libraries
 URL:         http://et.redhat.com/~rjones/libguestfs/
@@ -21,7 +21,7 @@ BuildRequires: /usr/bin/pod2text
 BuildRequires: febootstrap >= 1.5
 BuildRequires: augeas-devel >= 0.5.0
 BuildRequires: readline-devel
-BuildRequires: qemu >= 0.10-7
+#BuildRequires: qemu >= 0.10-7
 BuildRequires: createrepo
 
 # This is only needed for RHEL 5 because readline-devel doesn't
@@ -250,6 +250,7 @@ createrepo repo
 %define extra %nil
 %endif
 
+vmchannel_test=no \
 ./configure \
   --prefix=%{_prefix} --libdir=%{_libdir} \
   --mandir=%{_mandir} \
@@ -428,7 +429,7 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
-* Fri May  8 2009 Richard Jones <rjones@redhat.com> - 1.0.21-2
+* Fri May  8 2009 Richard Jones <rjones@redhat.com> - 1.0.21-3
 - New upstream version 1.0.21.
 
 * Thu May  7 2009 Richard Jones <rjones@redhat.com> - 1.0.20-2
