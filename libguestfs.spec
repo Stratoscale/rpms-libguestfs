@@ -268,10 +268,6 @@ export PATH=/usr/sbin:$PATH
 make INSTALLDIRS=vendor %{?_smp_mflags}
 
 
-%check
-make check
-
-
 %install
 rm -rf $RPM_BUILD_ROOT
 
