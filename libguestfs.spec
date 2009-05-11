@@ -4,7 +4,7 @@
 Summary:     Access and modify virtual machine disk images
 Name:        libguestfs
 Version:     1.0.23
-Release:     1%{?dist}
+Release:     2%{?dist}
 License:     LGPLv2+
 Group:       Development/Libraries
 URL:         http://et.redhat.com/~rjones/libguestfs/
@@ -245,11 +245,12 @@ mkdir -p daemon/m4
 mkdir repo
 find /var/cache/yum/build -type f -name '*.rpm' -print0 | xargs -0 cp -t repo
 createrepo repo
-%define extra --with-mirror=file://$(pwd)/repo --with-repo=fedora-12
+%define extra --with-mirror=file://$(pwd)/repo --with-repo=epel-5 --with-updates=none
 %else
 %define extra %nil
 %endif
 
+vmchannel_test=no \
 ./configure \
   --prefix=%{_prefix} --libdir=%{_libdir} \
   --mandir=%{_mandir} \
@@ -265,10 +266,6 @@ export PATH=/usr/sbin:$PATH
 # 'INSTALLDIRS' ensures that perl libs are installed in the vendor dir
 # not the site dir.
 make INSTALLDIRS=vendor %{?_smp_mflags}
-
-
-%check
-#make check
 
 
 %install
@@ -428,8 +425,10 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
-* Mon May 11 2009 Richard Jones <rjones@redhat.com> - 1.0.23-1
+* Mon May 11 2009 Richard Jones <rjones@redhat.com> - 1.0.23-2
 - New upstream version 1.0.23.
+- Disable vmchannel test.
+- Disable updates repo.
 
 * Fri May  8 2009 Richard Jones <rjones@redhat.com> - 1.0.21-2
 - New upstream version 1.0.21.
