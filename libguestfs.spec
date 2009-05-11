@@ -4,7 +4,7 @@
 Summary:     Access and modify virtual machine disk images
 Name:        libguestfs
 Version:     1.0.23
-Release:     6%{?dist}
+Release:     7%{?dist}
 License:     LGPLv2+
 Group:       Development/Libraries
 URL:         http://et.redhat.com/~rjones/libguestfs/
@@ -21,7 +21,7 @@ BuildRequires: /usr/bin/pod2text
 BuildRequires: febootstrap >= 2.0
 BuildRequires: augeas-devel >= 0.5.0
 BuildRequires: readline-devel
-#BuildRequires: qemu >= 0.10-7
+BuildRequires: qemu
 BuildRequires: createrepo
 
 # This is only needed for RHEL 5 because readline-devel doesn't
@@ -426,12 +426,13 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
-* Mon May 11 2009 Richard Jones <rjones@redhat.com> - 1.0.23-6
+* Mon May 11 2009 Richard Jones <rjones@redhat.com> - 1.0.23-7
 - New upstream version 1.0.23.
 - Disable vmchannel test.
 - Disable updates repo.
 - Fix specfile for EPEL build.
 - Correct yum location.
+- Need _a_ version of qemu installed when installing.
 
 * Fri May  8 2009 Richard Jones <rjones@redhat.com> - 1.0.21-2
 - New upstream version 1.0.21.
