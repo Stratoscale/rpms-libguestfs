@@ -4,7 +4,7 @@
 Summary:     Access and modify virtual machine disk images
 Name:        libguestfs
 Version:     1.0.23
-Release:     7%{?dist}
+Release:     8%{?dist}
 License:     LGPLv2+
 Group:       Development/Libraries
 URL:         http://et.redhat.com/~rjones/libguestfs/
@@ -395,8 +395,10 @@ rm -rf $RPM_BUILD_ROOT
 %doc README
 %{python_sitearch}/*
 %{python_sitelib}/*.py
-#%{python_sitelib}/*.pyc
-#%{python_sitelib}/*.pyo
+%ifarch x86_64
+%{python_sitelib}/*.pyc
+%{python_sitelib}/*.pyo
+%endif
 
 
 %files -n ruby-%{name}
@@ -426,13 +428,14 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
-* Mon May 11 2009 Richard Jones <rjones@redhat.com> - 1.0.23-7
+* Mon May 11 2009 Richard Jones <rjones@redhat.com> - 1.0.23-8
 - New upstream version 1.0.23.
 - Disable vmchannel test.
 - Disable updates repo.
 - Fix specfile for EPEL build.
 - Correct yum location.
 - Need _a_ version of qemu installed when installing.
+- *.pyc and *.pyo files are present on x86_64.
 
 * Fri May  8 2009 Richard Jones <rjones@redhat.com> - 1.0.21-2
 - New upstream version 1.0.21.
