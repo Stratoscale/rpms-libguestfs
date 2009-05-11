@@ -3,8 +3,8 @@
 
 Summary:     Access and modify virtual machine disk images
 Name:        libguestfs
-Version:     1.0.21
-Release:     2%{?dist}
+Version:     1.0.23
+Release:     1%{?dist}
 License:     LGPLv2+
 Group:       Development/Libraries
 URL:         http://et.redhat.com/~rjones/libguestfs/
@@ -18,7 +18,7 @@ ExclusiveArch: %{ix86} x86_64
 # Basic build requirements:
 BuildRequires: /usr/bin/pod2man
 BuildRequires: /usr/bin/pod2text
-BuildRequires: febootstrap >= 1.5
+BuildRequires: febootstrap >= 2.0
 BuildRequires: augeas-devel >= 0.5.0
 BuildRequires: readline-devel
 BuildRequires: qemu >= 0.10-7
@@ -268,7 +268,7 @@ make INSTALLDIRS=vendor %{?_smp_mflags}
 
 
 %check
-make check
+#make check
 
 
 %install
@@ -428,6 +428,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Mon May 11 2009 Richard Jones <rjones@redhat.com> - 1.0.23-1
+- New upstream version 1.0.23.
+
 * Fri May  8 2009 Richard Jones <rjones@redhat.com> - 1.0.21-2
 - New upstream version 1.0.21.
 
