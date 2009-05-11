@@ -4,7 +4,7 @@
 Summary:     Access and modify virtual machine disk images
 Name:        libguestfs
 Version:     1.0.23
-Release:     4%{?dist}
+Release:     5%{?dist}
 License:     LGPLv2+
 Group:       Development/Libraries
 URL:         http://et.redhat.com/~rjones/libguestfs/
@@ -242,6 +242,7 @@ mkdir -p daemon/m4
 
 
 %build
+find /var/cache/yum -type f
 %if %{buildnonet}
 mkdir repo
 find /var/cache/yum/build -type f -name '*.rpm' -print0 | xargs -0 cp -t repo
@@ -426,7 +427,7 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
-* Mon May 11 2009 Richard Jones <rjones@redhat.com> - 1.0.23-4
+* Mon May 11 2009 Richard Jones <rjones@redhat.com> - 1.0.23-5
 - New upstream version 1.0.23.
 - Disable vmchannel test.
 - Disable updates repo.
