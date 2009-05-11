@@ -4,7 +4,7 @@
 Summary:     Access and modify virtual machine disk images
 Name:        libguestfs
 Version:     1.0.23
-Release:     2%{?dist}
+Release:     3%{?dist}
 License:     LGPLv2+
 Group:       Development/Libraries
 URL:         http://et.redhat.com/~rjones/libguestfs/
@@ -21,7 +21,7 @@ BuildRequires: /usr/bin/pod2text
 BuildRequires: febootstrap >= 2.0
 BuildRequires: augeas-devel >= 0.5.0
 BuildRequires: readline-devel
-BuildRequires: qemu >= 0.10-7
+#BuildRequires: qemu >= 0.10-7
 BuildRequires: createrepo
 
 # This is only needed for RHEL 5 because readline-devel doesn't
@@ -30,20 +30,21 @@ BuildRequires: ncurses-devel
 
 # Build requirements for the appliance:
 # (see 'make-initramfs.sh.in' in the source)
-BuildRequires: kernel, bash, coreutils, lvm2, ntfs-3g, util-linux-ng
+BuildRequires: kernel, bash, coreutils, lvm2
 BuildRequires: MAKEDEV, net-tools, augeas-libs, file
 BuildRequires: module-init-tools, procps, strace, iputils
 BuildRequires: grub, dosfstools, ntfsprogs
+# ntfs-3g util-linux-ng
 
 # These are only required if you want to build the bindings for
 # different languages:
 BuildRequires: ocaml
 BuildRequires: ocaml-findlib-devel
-BuildRequires: perl-devel
-BuildRequires: perl-Test-Simple
+#BuildRequires: perl-devel
+#BuildRequires: perl-Test-Simple
 BuildRequires: perl-Test-Pod
 BuildRequires: perl-Test-Pod-Coverage
-BuildRequires: perl-ExtUtils-MakeMaker
+#BuildRequires: perl-ExtUtils-MakeMaker
 BuildRequires: python-devel
 BuildRequires: ruby-devel
 BuildRequires: rubygem-rake
@@ -52,7 +53,7 @@ BuildRequires: jpackage-utils
 BuildRequires: java-devel
 
 # For virt-inspector:
-BuildRequires: perl-Sys-Virt
+#BuildRequires: perl-Sys-Virt
 
 # Runtime requires:
 Requires:    qemu >= 0.10-7
@@ -119,20 +120,20 @@ modifying virtual machine disk images from the command line and shell
 scripts.
 
 
-%package -n virt-inspector
-Summary:     Display OS version, kernel, drivers, etc in a virtual machine
-Group:       Development/Tools
-License:     GPLv2+
-Requires:    %{name} = %{version}-%{release}
-Requires:    guestfish
-Requires:    perl-Sys-Virt
-
-
-%description -n virt-inspector
-Virt-inspector examines a virtual machine and tries to determine the
-version of the OS, the kernel version, what drivers are installed,
-whether the virtual machine is fully virtualized (FV) or
-para-virtualized (PV), what applications are installed and more.
+#%package -n virt-inspector
+#Summary:     Display OS version, kernel, drivers, etc in a virtual machine
+#Group:       Development/Tools
+#License:     GPLv2+
+#Requires:    %{name} = %{version}-%{release}
+#Requires:    guestfish
+#Requires:    perl-Sys-Virt
+#
+#
+#%description -n virt-inspector
+#Virt-inspector examines a virtual machine and tries to determine the
+#version of the OS, the kernel version, what drivers are installed,
+#whether the virtual machine is fully virtualized (FV) or
+#para-virtualized (PV), what applications are installed and more.
 
 
 %package -n ocaml-%{name}
@@ -355,10 +356,10 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man1/guestfish.1*
 
 
-%files -n virt-inspector
-%defattr(-,root,root,-)
-%{_bindir}/virt-inspector
-%{_mandir}/man1/virt-inspector.1*
+#%files -n virt-inspector
+#%defattr(-,root,root,-)
+#%{_bindir}/virt-inspector
+#%{_mandir}/man1/virt-inspector.1*
 
 
 %files -n ocaml-%{name}
@@ -394,8 +395,8 @@ rm -rf $RPM_BUILD_ROOT
 %doc README
 %{python_sitearch}/*
 %{python_sitelib}/*.py
-%{python_sitelib}/*.pyc
-%{python_sitelib}/*.pyo
+#%{python_sitelib}/*.pyc
+#%{python_sitelib}/*.pyo
 
 
 %files -n ruby-%{name}
@@ -425,10 +426,11 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
-* Mon May 11 2009 Richard Jones <rjones@redhat.com> - 1.0.23-2
+* Mon May 11 2009 Richard Jones <rjones@redhat.com> - 1.0.23-3
 - New upstream version 1.0.23.
 - Disable vmchannel test.
 - Disable updates repo.
+- Fix specfile for EPEL build.
 
 * Fri May  8 2009 Richard Jones <rjones@redhat.com> - 1.0.21-2
 - New upstream version 1.0.21.
