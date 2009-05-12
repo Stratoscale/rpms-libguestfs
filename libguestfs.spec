@@ -3,8 +3,8 @@
 
 Summary:     Access and modify virtual machine disk images
 Name:        libguestfs
-Version:     1.0.23
-Release:     2%{?dist}
+Version:     1.0.24
+Release:     1%{?dist}
 License:     LGPLv2+
 Group:       Development/Libraries
 URL:         http://et.redhat.com/~rjones/libguestfs/
@@ -23,6 +23,7 @@ BuildRequires: augeas-devel >= 0.5.0
 BuildRequires: readline-devel
 BuildRequires: qemu >= 0.10-7
 BuildRequires: createrepo
+BuildRequires: glibc-static
 
 # This is only needed for RHEL 5 because readline-devel doesn't
 # properly depend on it, but doesn't do any harm on other platforms:
@@ -268,7 +269,7 @@ make INSTALLDIRS=vendor %{?_smp_mflags}
 
 
 %check
-#make check
+make check
 
 
 %install
@@ -428,6 +429,11 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Tue May 12 2009 Richard Jones <rjones@redhat.com> - 1.0.24-1
+- New upstream version 1.0.24.
+- BRs glibc-static for the new command tests.
+- Enable tests.
+
 * Mon May 11 2009 Richard Jones <rjones@redhat.com> - 1.0.23-2
 - New upstream version 1.0.23.
 - Don't try to use updates during build.
