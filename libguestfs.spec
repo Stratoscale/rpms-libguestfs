@@ -3,7 +3,7 @@
 
 Summary:     Access and modify virtual machine disk images
 Name:        libguestfs
-Version:     1.0.24
+Version:     1.0.25
 Release:     1%{?dist}
 License:     LGPLv2+
 Group:       Development/Libraries
@@ -269,6 +269,8 @@ make INSTALLDIRS=vendor %{?_smp_mflags}
 
 
 %check
+# This is very useful when tracking down problems in the tests:
+export LIBGUESTFS_DEBUG=1
 make check
 
 
@@ -429,6 +431,10 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Tue May 12 2009 Richard Jones <rjones@redhat.com> - 1.0.25-1
+- New upstream version 1.0.25.
+- Enable debugging when running the tests.
+
 * Tue May 12 2009 Richard Jones <rjones@redhat.com> - 1.0.24-1
 - New upstream version 1.0.24.
 - BRs glibc-static for the new command tests.
