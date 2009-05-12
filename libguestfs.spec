@@ -3,7 +3,7 @@
 
 Summary:     Access and modify virtual machine disk images
 Name:        libguestfs
-Version:     1.0.21
+Version:     1.0.25
 Release:     3%{?dist}
 License:     LGPLv2+
 Group:       Development/Libraries
@@ -18,11 +18,12 @@ ExclusiveArch: %{ix86} x86_64
 # Basic build requirements:
 BuildRequires: /usr/bin/pod2man
 BuildRequires: /usr/bin/pod2text
-BuildRequires: febootstrap >= 1.5
+BuildRequires: febootstrap >= 2.0
 BuildRequires: augeas-devel >= 0.5.0
 BuildRequires: readline-devel
 BuildRequires: qemu >= 0.10-7
 BuildRequires: createrepo
+BuildRequires: glibc-static
 
 # This is only needed for RHEL 5 because readline-devel doesn't
 # properly depend on it, but doesn't do any harm on other platforms:
@@ -245,7 +246,7 @@ mkdir -p daemon/m4
 mkdir repo
 find /var/cache/yum/build -type f -name '*.rpm' -print0 | xargs -0 cp -t repo
 createrepo repo
-%define extra --with-mirror=file://$(pwd)/repo --with-repo=fedora-12
+%define extra --with-mirror=file://$(pwd)/repo --with-repo=fedora-12 --with-updates=none
 %else
 %define extra %nil
 %endif
@@ -268,7 +269,9 @@ make INSTALLDIRS=vendor %{?_smp_mflags}
 
 
 %check
-#make check
+# This is very useful when tracking down problems in the tests:
+export LIBGUESTFS_DEBUG=1
+make check
 
 
 %install
@@ -428,6 +431,19 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Tue May 12 2009 Richard Jones <rjones@redhat.com> - 1.0.25-3
+- New upstream version 1.0.25.
+- Enable debugging when running the tests.
+
+* Tue May 12 2009 Richard Jones <rjones@redhat.com> - 1.0.24-1
+- New upstream version 1.0.24.
+- BRs glibc-static for the new command tests.
+- Enable tests.
+
+* Mon May 11 2009 Richard Jones <rjones@redhat.com> - 1.0.23-2
+- New upstream version 1.0.23.
+- Don't try to use updates during build.
+
 * Fri May  8 2009 Richard Jones <rjones@redhat.com> - 1.0.21-3
 - New upstream version 1.0.21.
 
