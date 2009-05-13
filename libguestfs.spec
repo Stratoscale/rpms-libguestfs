@@ -4,7 +4,7 @@
 Summary:     Access and modify virtual machine disk images
 Name:        libguestfs
 Version:     1.0.23
-Release:     8%{?dist}
+Release:     9%{?dist}
 License:     LGPLv2+
 Group:       Development/Libraries
 URL:         http://et.redhat.com/~rjones/libguestfs/
@@ -56,7 +56,7 @@ BuildRequires: java-devel
 #BuildRequires: perl-Sys-Virt
 
 # Runtime requires:
-Requires:    qemu >= 0.10-7
+#Requires:    qemu >= 0.10-7
 
 
 %description
@@ -428,6 +428,10 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Wed May 13 2009 Richard Jones <rjones@redhat.com> - 1.0.23-9
+- Remove the runtime requires on non-existant package.  It'll just fail
+  instead.
+
 * Mon May 11 2009 Richard Jones <rjones@redhat.com> - 1.0.23-8
 - New upstream version 1.0.23.
 - Disable vmchannel test.
