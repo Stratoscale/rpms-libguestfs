@@ -4,7 +4,7 @@
 Summary:     Access and modify virtual machine disk images
 Name:        libguestfs
 Version:     1.0.26
-Release:     5%{?dist}
+Release:     6%{?dist}
 License:     LGPLv2+
 Group:       Development/Libraries
 URL:         http://et.redhat.com/~rjones/libguestfs/
@@ -272,13 +272,11 @@ make INSTALLDIRS=vendor %{?_smp_mflags}
 # do a very long and thorough test ('make check') or just
 # a quick test to see if things generally work.
 
-# Currently tests are disabled on some architectures because of:
-#   BZ 494075 (ppc, ppc64).
-#   BZ 500564 (x86-64)
+# Currently tests are disabled on all architectures because of:
+#   BZ 494075 (ppc, ppc64)
+#   BZ 500564 (i386, x86-64)
 
-%ifarch %{ix86}
-make check
-%endif
+#make check
 
 # Quick test:
 #./fish/guestfish -v <<EOT
@@ -453,7 +451,7 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
-* Mon May 18 2009 Richard Jones <rjones@redhat.com> - 1.0.26-5
+* Mon May 18 2009 Richard Jones <rjones@redhat.com> - 1.0.26-6
 - Experimentally try to reenable ppc and ppc64 builds.
 - Note BZ numbers which are causing tests to fail.
 
