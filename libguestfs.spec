@@ -4,7 +4,7 @@
 Summary:     Access and modify virtual machine disk images
 Name:        libguestfs
 Version:     1.0.26
-Release:     2%{?dist}
+Release:     3%{?dist}
 License:     LGPLv2+
 Group:       Development/Libraries
 URL:         http://et.redhat.com/~rjones/libguestfs/
@@ -30,8 +30,10 @@ BuildRequires: ncurses-devel
 BuildRequires: kernel, bash, coreutils, lvm2, ntfs-3g, util-linux-ng
 BuildRequires: MAKEDEV, net-tools, augeas-libs, file
 BuildRequires: module-init-tools, procps, strace, iputils
-BuildRequires: grub, dosfstools, ntfsprogs
-BuildRequires: zerofree
+BuildRequires: dosfstools, zerofree
+%ifarch %{ix86} x86_64
+BuildRequires: grub, ntfsprogs
+%endif
 
 # These are only required if you want to build the bindings for
 # different languages:
@@ -426,7 +428,7 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
-* Mon May 18 2009 Richard Jones <rjones@redhat.com> - 1.0.26-2
+* Mon May 18 2009 Richard Jones <rjones@redhat.com> - 1.0.26-3
 - Experimentally try to reenable ppc and ppc64 builds.
 
 * Mon May 18 2009 Richard Jones <rjones@redhat.com> - 1.0.26-1
