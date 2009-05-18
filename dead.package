@@ -1,0 +1,7 @@
+This package cannot be built for F-10 because it depends
+on a version of qemu with vmchannel support.  Backporting
+vmchannel support turned out to be rather more complex than
+we anticipated.
+
+Please use libguestfs + qemu packages from F-11 or later
+instead.
