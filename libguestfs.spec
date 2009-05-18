@@ -4,16 +4,12 @@
 Summary:     Access and modify virtual machine disk images
 Name:        libguestfs
 Version:     1.0.26
-Release:     1%{?dist}
+Release:     2%{?dist}
 License:     LGPLv2+
 Group:       Development/Libraries
 URL:         http://et.redhat.com/~rjones/libguestfs/
 Source0:     http://et.redhat.com/~rjones/libguestfs/files/%{name}-%{version}.tar.gz
 BuildRoot:   %{_tmppath}/%{name}-%{version}-%{release}-root
-
-# Currently fails on non-x86 because of this error:
-# "qemu: linux kernel too old to load a ram disk"
-ExclusiveArch: %{ix86} x86_64
 
 # Basic build requirements:
 BuildRequires: /usr/bin/pod2man
@@ -270,7 +266,7 @@ make INSTALLDIRS=vendor %{?_smp_mflags}
 
 
 %check
-#make check
+make check
 
 
 %install
@@ -430,6 +426,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Mon May 18 2009 Richard Jones <rjones@redhat.com> - 1.0.26-2
+- Experimentally try to reenable ppc and ppc64 builds.
+
 * Mon May 18 2009 Richard Jones <rjones@redhat.com> - 1.0.26-1
 - New upstream version 1.0.26.
 
