@@ -3,8 +3,8 @@
 
 Summary:     Access and modify virtual machine disk images
 Name:        libguestfs
-Version:     1.0.26
-Release:     6%{?dist}
+Version:     1.0.27
+Release:     1%{?dist}
 License:     LGPLv2+
 Group:       Development/Libraries
 URL:         http://et.redhat.com/~rjones/libguestfs/
@@ -294,6 +294,7 @@ make INSTALLDIRS=vendor %{?_smp_mflags}
 #sync
 #EOT
 
+
 %install
 rm -rf $RPM_BUILD_ROOT
 
@@ -451,6 +452,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Tue May 19 2009 Richard Jones <rjones@redhat.com> - 1.0.27-1
+- New upstream version 1.0.27.
+
 * Mon May 18 2009 Richard Jones <rjones@redhat.com> - 1.0.26-6
 - Experimentally try to reenable ppc and ppc64 builds.
 - Note BZ numbers which are causing tests to fail.
