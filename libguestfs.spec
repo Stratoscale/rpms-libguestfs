@@ -4,7 +4,7 @@
 Summary:     Access and modify virtual machine disk images
 Name:        libguestfs
 Version:     1.0.27
-Release:     1%{?dist}
+Release:     1%{?dist}.1
 License:     LGPLv2+
 Group:       Development/Libraries
 URL:         http://et.redhat.com/~rjones/libguestfs/
@@ -30,9 +30,7 @@ BuildRequires: ncurses-devel
 BuildRequires: kernel, bash, coreutils, lvm2, ntfs-3g, util-linux-ng
 BuildRequires: MAKEDEV, net-tools, augeas-libs, file
 BuildRequires: module-init-tools, procps, strace, iputils
-BuildRequires: dosfstools
-# Still in F11 updates-testing:
-#BuildRequires: zerofree
+BuildRequires: dosfstools, zerofree
 %ifarch %{ix86} x86_64
 BuildRequires: grub, ntfsprogs
 %endif
@@ -454,6 +452,10 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Wed May 20 2009 Richard Jones <rjones@redhat.com> - 1.0.27-1.fc11.1
+- Requested that zerofree and febootstrap be moved so we will be able
+  to build this.
+
 * Wed May 20 2009 Richard Jones <rjones@redhat.com> - 1.0.27-1
 - Backport version 1.0.27 from devel branch.
 
