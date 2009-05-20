@@ -3,17 +3,13 @@
 
 Summary:     Access and modify virtual machine disk images
 Name:        libguestfs
-Version:     1.0.25
-Release:     3%{?dist}
+Version:     1.0.27
+Release:     1%{?dist}
 License:     LGPLv2+
 Group:       Development/Libraries
 URL:         http://et.redhat.com/~rjones/libguestfs/
 Source0:     http://et.redhat.com/~rjones/libguestfs/files/%{name}-%{version}.tar.gz
 BuildRoot:   %{_tmppath}/%{name}-%{version}-%{release}-root
-
-# Currently fails on non-x86 because of this error:
-# "qemu: linux kernel too old to load a ram disk"
-ExclusiveArch: %{ix86} x86_64
 
 # Basic build requirements:
 BuildRequires: /usr/bin/pod2man
@@ -34,7 +30,12 @@ BuildRequires: ncurses-devel
 BuildRequires: kernel, bash, coreutils, lvm2, ntfs-3g, util-linux-ng
 BuildRequires: MAKEDEV, net-tools, augeas-libs, file
 BuildRequires: module-init-tools, procps, strace, iputils
-BuildRequires: grub, dosfstools, ntfsprogs
+BuildRequires: dosfstools
+# Still in F11 updates-testing:
+#BuildRequires: zerofree
+%ifarch %{ix86} x86_64
+BuildRequires: grub, ntfsprogs
+%endif
 
 # These are only required if you want to build the bindings for
 # different languages:
@@ -269,9 +270,31 @@ make INSTALLDIRS=vendor %{?_smp_mflags}
 
 
 %check
-# This is very useful when tracking down problems in the tests:
-export LIBGUESTFS_DEBUG=1
-make check
+# Uncomment one of these, depending on whether you want to
+# do a very long and thorough test ('make check') or just
+# a quick test to see if things generally work.
+
+# Currently tests are disabled on all architectures because of:
+#   BZ 494075 (ppc, ppc64)
+#   BZ 500564 (i386, x86-64)
+
+#make check
+
+# Quick test:
+#./fish/guestfish -v <<EOT
+#alloc test.img 100M
+#run
+#sfdisk /dev/sda 0 0 0 ,
+#pvcreate /dev/sda1
+#vgcreate VG /dev/sda1
+#lvcreate LV1 VG 10M
+#lvcreate LV2 VG 10M
+#mkfs ext2 /dev/VG/LV1
+#mount /dev/VG/LV1 /
+#ll /
+#lvs
+#sync
+#EOT
 
 
 %install
@@ -431,6 +454,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Wed May 20 2009 Richard Jones <rjones@redhat.com> - 1.0.27-1
+- Backport version 1.0.27 from devel branch.
+
 * Tue May 12 2009 Richard Jones <rjones@redhat.com> - 1.0.25-3
 - New upstream version 1.0.25.
 - Enable debugging when running the tests.
