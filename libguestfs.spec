@@ -279,6 +279,7 @@ export LIBGUESTFS_DEBUG=1
 # Currently tests are disabled on all architectures because of:
 #   BZ 494075 (ppc, ppc64)
 #   BZ 502058 (i386, x86-64) - only on F-11 we think, seems to work on F-12
+#   BZ 502074 (i386) - sha1sum segfault on F-11 only
 
 # Workaround for BZ 502058.  This is only needed for F-11, but
 # won't harm other builds.
