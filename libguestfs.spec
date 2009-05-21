@@ -3,8 +3,8 @@
 
 Summary:     Access and modify virtual machine disk images
 Name:        libguestfs
-Version:     1.0.27
-Release:     3%{?dist}
+Version:     1.0.28
+Release:     1%{?dist}
 License:     LGPLv2+
 Group:       Development/Libraries
 URL:         http://et.redhat.com/~rjones/libguestfs/
@@ -452,6 +452,11 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Thu May 21 2009 Richard Jones <rjones@redhat.com> - 1.0.28-1
+- New upstream version 1.0.28.  Nothing has visibly changed, but
+  the source has been gettextized and we want to check that doesn't
+  break anything.
+
 * Thu May 21 2009 Richard Jones <rjones@redhat.com> - 1.0.27-3
 - Change requirement from qemu -> qemu-kvm (RHBZ#501761).
 
