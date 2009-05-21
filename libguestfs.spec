@@ -4,7 +4,7 @@
 Summary:     Access and modify virtual machine disk images
 Name:        libguestfs
 Version:     1.0.28
-Release:     1%{?dist}
+Release:     2%{?dist}
 License:     LGPLv2+
 Group:       Development/Libraries
 URL:         http://et.redhat.com/~rjones/libguestfs/
@@ -276,7 +276,8 @@ make INSTALLDIRS=vendor %{?_smp_mflags}
 #   BZ 494075 (ppc, ppc64)
 #   BZ 500564 (i386, x86-64)
 
-#make check
+export LIBGUESTFS_DEBUG=1
+make check
 
 # Quick test:
 #./fish/guestfish -v <<EOT
@@ -452,6 +453,10 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Thu May 21 2009 Richard Jones <rjones@redhat.com> - 1.0.28-2
+- Experiment with enabling tests to see if latest KVM fixes earlier
+  problems.
+
 * Thu May 21 2009 Richard Jones <rjones@redhat.com> - 1.0.28-1
 - New upstream version 1.0.28.  Nothing has visibly changed, but
   the source has been gettextized and we want to check that doesn't
