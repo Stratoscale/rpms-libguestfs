@@ -4,7 +4,7 @@
 Summary:     Access and modify virtual machine disk images
 Name:        libguestfs
 Version:     1.0.30
-Release:     1%{?dist}
+Release:     1%{?dist}.2
 License:     LGPLv2+
 Group:       Development/Libraries
 URL:         http://et.redhat.com/~rjones/libguestfs/
@@ -279,12 +279,13 @@ export LIBGUESTFS_DEBUG=1
 # Currently tests are disabled on all architectures because of:
 #   BZ 494075 (ppc, ppc64)
 #   BZ 502058 (i386, x86-64) - only on F-11 we think, seems to work on F-12
+#   BZ 502074 (i386) - sha1sum segfault on F-11 only
 
 # Workaround for BZ 502058.  This is only needed for F-11, but
 # won't harm other builds.
 export LIBGUESTFS_APPEND=noapic
 
-%ifarch %{ix86} x86_64
+%ifarch x86_64
 make check
 %endif
 
@@ -462,8 +463,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
-* Thu May 21 2009 Richard Jones <rjones@redhat.com> - 1.0.30-1
+* Thu May 21 2009 Richard Jones <rjones@redhat.com> - 1.0.30-1.fc11.2
 - Backport version 1.0.30 from devel branch.
+- Disable tests on i586 because of RHBZ#502074.
 
 * Thu May 21 2009 Richard Jones <rjones@redhat.com> - 1.0.27-1.fc11.2
 - Change requirement from qemu -> qemu-kvm (RHBZ#501761).
