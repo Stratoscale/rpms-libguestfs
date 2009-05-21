@@ -3,8 +3,8 @@
 
 Summary:     Access and modify virtual machine disk images
 Name:        libguestfs
-Version:     1.0.28
-Release:     2%{?dist}
+Version:     1.0.29
+Release:     1%{?dist}
 License:     LGPLv2+
 Group:       Development/Libraries
 URL:         http://et.redhat.com/~rjones/libguestfs/
@@ -268,16 +268,21 @@ make INSTALLDIRS=vendor %{?_smp_mflags}
 
 
 %check
+# Enable debugging - very useful if a test does fail, although
+# it produces masses of output in the build.log.
+export LIBGUESTFS_DEBUG=1
+
 # Uncomment one of these, depending on whether you want to
 # do a very long and thorough test ('make check') or just
 # a quick test to see if things generally work.
 
 # Currently tests are disabled on all architectures because of:
 #   BZ 494075 (ppc, ppc64)
-#   BZ 500564 (i386, x86-64)
+#   BZ 500564 (i386, x86-64) - only on F-11 we think, seems to work on F-12
 
-export LIBGUESTFS_DEBUG=1
+%ifarch %{ix86} x86_64
 make check
+%endif
 
 # Quick test:
 #./fish/guestfish -v <<EOT
@@ -453,9 +458,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
-* Thu May 21 2009 Richard Jones <rjones@redhat.com> - 1.0.28-2
-- Experiment with enabling tests to see if latest KVM fixes earlier
-  problems.
+* Thu May 21 2009 Richard Jones <rjones@redhat.com> - 1.0.29-1
+- New upstream version 1.0.29 (fixes RHBZ#502007 RHBZ#502018).
+- This should allow us to enable tests for i386 and x86-64.
 
 * Thu May 21 2009 Richard Jones <rjones@redhat.com> - 1.0.28-1
 - New upstream version 1.0.28.  Nothing has visibly changed, but
