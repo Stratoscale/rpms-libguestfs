@@ -4,12 +4,15 @@
 Summary:     Access and modify virtual machine disk images
 Name:        libguestfs
 Version:     1.0.29
-Release:     1%{?dist}
+Release:     2%{?dist}
 License:     LGPLv2+
 Group:       Development/Libraries
 URL:         http://et.redhat.com/~rjones/libguestfs/
 Source0:     http://et.redhat.com/~rjones/libguestfs/files/%{name}-%{version}.tar.gz
 BuildRoot:   %{_tmppath}/%{name}-%{version}-%{release}-root
+
+# Can be removed in 1.0.30:
+Source1:     test-bootbootboot.sh
 
 # Basic build requirements:
 BuildRequires: /usr/bin/pod2man
@@ -237,6 +240,9 @@ Requires:    jpackage-utils
 %prep
 %setup -q
 
+# Can be removed in 1.0.30:
+cp -n %{SOURCE1} .
+
 mkdir -p daemon/m4
 
 
@@ -458,9 +464,10 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
-* Thu May 21 2009 Richard Jones <rjones@redhat.com> - 1.0.29-1
+* Thu May 21 2009 Richard Jones <rjones@redhat.com> - 1.0.29-2
 - New upstream version 1.0.29 (fixes RHBZ#502007 RHBZ#502018).
 - This should allow us to enable tests for i386 and x86-64.
+- Added test-bootbootboot.sh script which was missed from 1.0.29 tarball.
 
 * Thu May 21 2009 Richard Jones <rjones@redhat.com> - 1.0.28-1
 - New upstream version 1.0.28.  Nothing has visibly changed, but
