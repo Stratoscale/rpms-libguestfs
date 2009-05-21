@@ -3,8 +3,8 @@
 
 Summary:     Access and modify virtual machine disk images
 Name:        libguestfs
-Version:     1.0.27
-Release:     1%{?dist}.2
+Version:     1.0.30
+Release:     1%{?dist}
 License:     LGPLv2+
 Group:       Development/Libraries
 URL:         http://et.redhat.com/~rjones/libguestfs/
@@ -268,15 +268,25 @@ make INSTALLDIRS=vendor %{?_smp_mflags}
 
 
 %check
+# Enable debugging - very useful if a test does fail, although
+# it produces masses of output in the build.log.
+export LIBGUESTFS_DEBUG=1
+
 # Uncomment one of these, depending on whether you want to
 # do a very long and thorough test ('make check') or just
 # a quick test to see if things generally work.
 
 # Currently tests are disabled on all architectures because of:
 #   BZ 494075 (ppc, ppc64)
-#   BZ 500564 (i386, x86-64)
+#   BZ 502058 (i386, x86-64) - only on F-11 we think, seems to work on F-12
 
-#make check
+# Workaround for BZ 502058.  This is only needed for F-11, but
+# won't harm other builds.
+export LIBGUESTFS_APPEND=noapic
+
+%ifarch %{ix86} x86_64
+make check
+%endif
 
 # Quick test:
 #./fish/guestfish -v <<EOT
@@ -452,6 +462,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Thu May 21 2009 Richard Jones <rjones@redhat.com> - 1.0.30-1
+- Backport version 1.0.30 from devel branch.
+
 * Thu May 21 2009 Richard Jones <rjones@redhat.com> - 1.0.27-1.fc11.2
 - Change requirement from qemu -> qemu-kvm (RHBZ#501761).
 
