@@ -4,7 +4,7 @@
 Summary:     Access and modify virtual machine disk images
 Name:        libguestfs
 Version:     1.0.27
-Release:     2%{?dist}
+Release:     3%{?dist}
 License:     LGPLv2+
 Group:       Development/Libraries
 URL:         http://et.redhat.com/~rjones/libguestfs/
@@ -17,7 +17,7 @@ BuildRequires: /usr/bin/pod2text
 BuildRequires: febootstrap >= 2.0
 BuildRequires: augeas-devel >= 0.5.0
 BuildRequires: readline-devel
-BuildRequires: qemu >= 0.10-7
+BuildRequires: qemu-kvm >= 0.10-7
 BuildRequires: createrepo
 BuildRequires: glibc-static
 
@@ -55,7 +55,7 @@ BuildRequires: java-devel
 BuildRequires: perl-Sys-Virt
 
 # Runtime requires:
-Requires:    qemu >= 0.10-7
+Requires:    qemu-kvm >= 0.10-7
 
 
 %description
@@ -452,6 +452,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Thu May 21 2009 Richard Jones <rjones@redhat.com> - 1.0.27-3
+- Change requirement from qemu -> qemu-kvm (RHBZ#501761).
+
 * Tue May 19 2009 Richard Jones <rjones@redhat.com> - 1.0.27-2
 - New upstream version 1.0.27.
 
