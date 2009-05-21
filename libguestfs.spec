@@ -4,7 +4,7 @@
 Summary:     Access and modify virtual machine disk images
 Name:        libguestfs
 Version:     1.0.29
-Release:     2%{?dist}
+Release:     3%{?dist}
 License:     LGPLv2+
 Group:       Development/Libraries
 URL:         http://et.redhat.com/~rjones/libguestfs/
@@ -284,7 +284,10 @@ export LIBGUESTFS_DEBUG=1
 
 # Currently tests are disabled on all architectures because of:
 #   BZ 494075 (ppc, ppc64)
-#   BZ 500564 (i386, x86-64) - only on F-11 we think, seems to work on F-12
+#   BZ 502058 (i386, x86-64) - only on F-11 we think, seems to work on F-12
+
+# Workaround for BZ 502058:
+export LIBGUESTFS_APPEND=noapic
 
 %ifarch %{ix86} x86_64
 make check
@@ -464,10 +467,11 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
-* Thu May 21 2009 Richard Jones <rjones@redhat.com> - 1.0.29-2
+* Thu May 21 2009 Richard Jones <rjones@redhat.com> - 1.0.29-3
 - New upstream version 1.0.29 (fixes RHBZ#502007 RHBZ#502018).
 - This should allow us to enable tests for i386 and x86-64.
 - Added test-bootbootboot.sh script which was missed from 1.0.29 tarball.
+- Pass kernel noapic flag to workaround RHBZ#502058.
 
 * Thu May 21 2009 Richard Jones <rjones@redhat.com> - 1.0.28-1
 - New upstream version 1.0.28.  Nothing has visibly changed, but
