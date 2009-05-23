@@ -3,7 +3,7 @@
 
 Summary:     Access and modify virtual machine disk images
 Name:        libguestfs
-Version:     1.0.30
+Version:     1.0.31
 Release:     1%{?dist}
 License:     LGPLv2+
 Group:       Development/Libraries
@@ -463,6 +463,10 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sat May 23 2009 Richard W.M. Jones <rjones@redhat.com> - 1.0.31-1
+- Rebuild for OCaml 3.11.1.
+- New upstream version 1.0.31.
+
 * Thu May 21 2009 Richard Jones <rjones@redhat.com> - 1.0.30-1
 - New upstream version 1.0.30.  Now includes test-bootbootboot.sh script.
 
