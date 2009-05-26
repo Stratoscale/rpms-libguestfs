@@ -3,8 +3,8 @@
 
 Summary:     Access and modify virtual machine disk images
 Name:        libguestfs
-Version:     1.0.30
-Release:     1%{?dist}.2
+Version:     1.0.32
+Release:     1%{?dist}
 License:     LGPLv2+
 Group:       Development/Libraries
 URL:         http://et.redhat.com/~rjones/libguestfs/
@@ -463,6 +463,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Tue May 26 2009 Richard Jones <rjones@redhat.com> - 1.0.32-1
+- New upstream version 1.0.32.
+
 * Thu May 21 2009 Richard Jones <rjones@redhat.com> - 1.0.30-1.fc11.2
 - Backport version 1.0.30 from devel branch.
 - Disable tests on i586 because of RHBZ#502074.
