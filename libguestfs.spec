@@ -4,7 +4,7 @@
 Summary:     Access and modify virtual machine disk images
 Name:        libguestfs
 Version:     1.0.32
-Release:     1%{?dist}
+Release:     2%{?dist}
 License:     LGPLv2+
 Group:       Development/Libraries
 URL:         http://et.redhat.com/~rjones/libguestfs/
@@ -357,6 +357,9 @@ rm $RPM_BUILD_ROOT%{_libdir}/libguestfs_jni.la
 # Generator shouldn't be executable when we distribute it.
 chmod -x src/generator.ml
 
+# Find locale files.
+%find_lang %{name}
+
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -367,7 +370,7 @@ rm -rf $RPM_BUILD_ROOT
 %postun -p /sbin/ldconfig
 
 
-%files
+%files -f %{name}.lang
 %defattr(-,root,root,-)
 %doc COPYING
 %{_libdir}/guestfs/
@@ -463,8 +466,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
-* Tue May 26 2009 Richard W.M. Jones <rjones@redhat.com> - 1.0.32-1
+* Tue May 26 2009 Richard W.M. Jones <rjones@redhat.com> - 1.0.32-2
 - New upstream version 1.0.32.
+- Use %%find_lang macro.
 
 * Sat May 23 2009 Richard W.M. Jones <rjones@redhat.com> - 1.0.31-1
 - Rebuild for OCaml 3.11.1.
