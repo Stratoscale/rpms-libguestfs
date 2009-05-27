@@ -3,17 +3,13 @@
 
 Summary:     Access and modify virtual machine disk images
 Name:        libguestfs
-Version:     1.0.23
-Release:     9%{?dist}
+Version:     1.0.34
+Release:     1%{?dist}
 License:     LGPLv2+
 Group:       Development/Libraries
 URL:         http://et.redhat.com/~rjones/libguestfs/
 Source0:     http://et.redhat.com/~rjones/libguestfs/files/%{name}-%{version}.tar.gz
 BuildRoot:   %{_tmppath}/%{name}-%{version}-%{release}-root
-
-# Currently fails on non-x86 because of this error:
-# "qemu: linux kernel too old to load a ram disk"
-ExclusiveArch: %{ix86} x86_64
 
 # Basic build requirements:
 BuildRequires: /usr/bin/pod2man
@@ -21,7 +17,12 @@ BuildRequires: /usr/bin/pod2text
 BuildRequires: febootstrap >= 2.0
 BuildRequires: augeas-devel >= 0.5.0
 BuildRequires: readline-devel
-BuildRequires: qemu
+%ifarch %{ix86} x86_64
+BuildRequires: qemu-system-x86 >= 0.10.5
+%endif
+%ifarch ppc ppc64
+BuildRequires: qemu-system-ppc >= 0.10.5
+%endif
 BuildRequires: createrepo
 
 # This is only needed for RHEL 5 because readline-devel doesn't
@@ -33,8 +34,11 @@ BuildRequires: ncurses-devel
 BuildRequires: kernel, bash, coreutils, lvm2
 BuildRequires: MAKEDEV, net-tools, augeas-libs, file
 BuildRequires: module-init-tools, procps, strace, iputils
-BuildRequires: grub, dosfstools, ntfsprogs
-# ntfs-3g util-linux-ng
+BuildRequires: dosfstools
+# Not supported in EPEL yet: ntfs-3g util-linux-ng zerofree
+%ifarch %{ix86} x86_64
+BuildRequires: grub, ntfsprogs
+%endif
 
 # These are only required if you want to build the bindings for
 # different languages:
@@ -56,7 +60,12 @@ BuildRequires: java-devel
 #BuildRequires: perl-Sys-Virt
 
 # Runtime requires:
-#Requires:    qemu >= 0.10-7
+%ifarch %{ix86} x86_64
+Requires:      qemu-system-x86 >= 0.10.5
+%endif
+%ifarch ppc ppc64
+Requires:      qemu-system-ppc >= 0.10.5
+%endif
 
 
 %description
@@ -255,7 +264,6 @@ vmchannel_test=no \
 ./configure \
   --prefix=%{_prefix} --libdir=%{_libdir} \
   --mandir=%{_mandir} \
-  --with-java-home=%{java_home} \
   --with-qemu="qemu-kvm qemu-system-%{_build_arch} qemu" \
   --enable-debug-command \
   %{extra}
@@ -267,6 +275,16 @@ export PATH=/usr/sbin:$PATH
 # 'INSTALLDIRS' ensures that perl libs are installed in the vendor dir
 # not the site dir.
 make INSTALLDIRS=vendor %{?_smp_mflags}
+
+
+%check
+# Enable debugging - very useful if a test does fail, although
+# it produces masses of output in the build.log.
+export LIBGUESTFS_DEBUG=1
+
+# Tests in subdirs fail because they all assume that the device
+# is called /dev/sda, not /dev/hda as on EPEL-5.
+make SUBDIRS= check
 
 
 %install
@@ -320,6 +338,9 @@ rm $RPM_BUILD_ROOT%{_libdir}/libguestfs_jni.la
 # Generator shouldn't be executable when we distribute it.
 chmod -x src/generator.ml
 
+# Find locale files.
+%find_lang %{name}
+
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -330,7 +351,7 @@ rm -rf $RPM_BUILD_ROOT
 %postun -p /sbin/ldconfig
 
 
-%files
+%files -f %{name}.lang
 %defattr(-,root,root,-)
 %doc COPYING
 %{_libdir}/guestfs/
@@ -395,10 +416,8 @@ rm -rf $RPM_BUILD_ROOT
 %doc README
 %{python_sitearch}/*
 %{python_sitelib}/*.py
-%ifarch x86_64
 %{python_sitelib}/*.pyc
 %{python_sitelib}/*.pyo
-%endif
 
 
 %files -n ruby-%{name}
@@ -428,6 +447,10 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Wed May 27 2009 Richard Jones <rjones@redhat.com> - 1.0.34-1
+- Backport 1.0.34 from devel to EPEL.
+- There should now be a working qemu in EPEL (0.10.5).
+
 * Wed May 13 2009 Richard Jones <rjones@redhat.com> - 1.0.23-9
 - Remove the runtime requires on non-existant package.  It'll just fail
   instead.
