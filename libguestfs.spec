@@ -4,7 +4,7 @@
 Summary:     Access and modify virtual machine disk images
 Name:        libguestfs
 Version:     1.0.34
-Release:     1%{?dist}.2
+Release:     1%{?dist}.3
 License:     LGPLv2+
 Group:       Development/Libraries
 URL:         http://et.redhat.com/~rjones/libguestfs/
@@ -19,7 +19,7 @@ ExclusiveArch: %{ix86} x86_64
 BuildRequires: /usr/bin/pod2man
 BuildRequires: /usr/bin/pod2text
 BuildRequires: febootstrap >= 2.0
-BuildRequires: augeas-devel >= 0.5.0
+#BuildRequires: augeas-devel >= 0.5.0
 BuildRequires: readline-devel
 %ifarch %{ix86} x86_64
 BuildRequires: qemu-system-x86 >= 0.10.5
@@ -36,10 +36,11 @@ BuildRequires: ncurses-devel
 # Build requirements for the appliance:
 # (see 'make-initramfs.sh.in' in the source)
 BuildRequires: kernel, bash, coreutils, lvm2
-BuildRequires: MAKEDEV, net-tools, augeas-libs, file
+BuildRequires: MAKEDEV, net-tools, file
 BuildRequires: module-init-tools, procps, strace, iputils
 BuildRequires: dosfstools
 # Not supported in EPEL yet: ntfs-3g util-linux-ng zerofree
+# Not working: augeas-libs
 %ifarch %{ix86} x86_64
 BuildRequires: grub, ntfsprogs
 %endif
@@ -452,7 +453,7 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
-* Wed May 27 2009 Richard Jones <rjones@redhat.com> - 1.0.34-1.el5.2
+* Wed May 27 2009 Richard Jones <rjones@redhat.com> - 1.0.34-1.el5.3
 - Fails to build on PPC.
 - Fix missing Augeas dependency.
 
