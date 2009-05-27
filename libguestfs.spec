@@ -4,12 +4,16 @@
 Summary:     Access and modify virtual machine disk images
 Name:        libguestfs
 Version:     1.0.34
-Release:     1%{?dist}
+Release:     1%{?dist}.1
 License:     LGPLv2+
 Group:       Development/Libraries
 URL:         http://et.redhat.com/~rjones/libguestfs/
 Source0:     http://et.redhat.com/~rjones/libguestfs/files/%{name}-%{version}.tar.gz
 BuildRoot:   %{_tmppath}/%{name}-%{version}-%{release}-root
+
+# Currently fails on PPC because:
+# "No Package Found for kernel"
+ExclusiveArch: %{ix86} x86_64
 
 # Basic build requirements:
 BuildRequires: /usr/bin/pod2man
@@ -447,6 +451,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Wed May 27 2009 Richard Jones <rjones@redhat.com> - 1.0.34-1.el5.1
+- Fails to build on PPC.
+
 * Wed May 27 2009 Richard Jones <rjones@redhat.com> - 1.0.34-1
 - Backport 1.0.34 from devel to EPEL.
 - There should now be a working qemu in EPEL (0.10.5).
