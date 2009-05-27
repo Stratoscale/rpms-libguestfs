@@ -3,7 +3,7 @@
 
 Summary:     Access and modify virtual machine disk images
 Name:        libguestfs
-Version:     1.0.33
+Version:     1.0.34
 Release:     1%{?dist}
 License:     LGPLv2+
 Group:       Development/Libraries
@@ -465,6 +465,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Wed May 27 2009 Richard W.M. Jones <rjones@redhat.com> - 1.0.34-1
+- New upstream version 1.0.34.
+
 * Wed May 27 2009 Richard W.M. Jones <rjones@redhat.com> - 1.0.33-1
 - New upstream version 1.0.33.
 - --with-java-home option is no longer required.
