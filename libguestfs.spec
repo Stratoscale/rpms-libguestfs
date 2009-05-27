@@ -3,8 +3,8 @@
 
 Summary:     Access and modify virtual machine disk images
 Name:        libguestfs
-Version:     1.0.32
-Release:     2%{?dist}
+Version:     1.0.33
+Release:     1%{?dist}
 License:     LGPLv2+
 Group:       Development/Libraries
 URL:         http://et.redhat.com/~rjones/libguestfs/
@@ -253,7 +253,6 @@ createrepo repo
 ./configure \
   --prefix=%{_prefix} --libdir=%{_libdir} \
   --mandir=%{_mandir} \
-  --with-java-home=%{java_home} \
   --with-qemu="qemu-kvm qemu-system-%{_build_arch} qemu" \
   --enable-debug-command \
   %{extra}
@@ -466,6 +465,16 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Wed May 27 2009 Richard W.M. Jones <rjones@redhat.com> - 1.0.33-1
+- New upstream version 1.0.33.
+- --with-java-home option is no longer required.
+- Upstream contains potential fixes for:
+    501878 built-in commands like 'alloc' and 'help' don't autocomplete
+    501883 javadoc messed up in libguestfs java documentation
+    501885 Doesn't detect missing Java, --with-java-home=no should not be needed
+    502533 Polish translation of libguestfs
+    n/a    Allow more ext filesystem kmods (Charles Duffy)
+
 * Tue May 26 2009 Richard W.M. Jones <rjones@redhat.com> - 1.0.32-2
 - New upstream version 1.0.32.
 - Use %%find_lang macro.
