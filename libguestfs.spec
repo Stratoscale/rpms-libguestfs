@@ -4,7 +4,7 @@
 Summary:     Access and modify virtual machine disk images
 Name:        libguestfs
 Version:     1.0.34
-Release:     1%{?dist}.1
+Release:     1%{?dist}.2
 License:     LGPLv2+
 Group:       Development/Libraries
 URL:         http://et.redhat.com/~rjones/libguestfs/
@@ -259,6 +259,7 @@ mkdir -p daemon/m4
 mkdir repo
 find /var/cache/yum/ -type f -name '*.rpm' -print0 | xargs -0 cp -t repo
 createrepo repo
+ls -l repo
 %define extra --with-mirror=file://$(pwd)/repo --with-repo=epel-5 --with-updates=none
 %else
 %define extra %nil
@@ -451,8 +452,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
-* Wed May 27 2009 Richard Jones <rjones@redhat.com> - 1.0.34-1.el5.1
+* Wed May 27 2009 Richard Jones <rjones@redhat.com> - 1.0.34-1.el5.2
 - Fails to build on PPC.
+- Fix missing Augeas dependency.
 
 * Wed May 27 2009 Richard Jones <rjones@redhat.com> - 1.0.34-1
 - Backport 1.0.34 from devel to EPEL.
