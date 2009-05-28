@@ -263,7 +263,7 @@ createrepo repo
 ls -l repo
 %define extra --with-mirror=file://$(pwd)/repo --with-repo=epel-5 --with-updates=none
 %else
-%define extra %nil
+%define extra --with-mirror=http://mirror.centos.org/centos-5/5.3/os/i386/ --with-repo=centos-5 --with-updates=none
 %endif
 
 vmchannel_test=no \
