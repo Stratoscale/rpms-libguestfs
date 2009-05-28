@@ -3,8 +3,8 @@
 
 Summary:     Access and modify virtual machine disk images
 Name:        libguestfs
-Version:     1.0.34
-Release:     1%{?dist}.3
+Version:     1.0.35
+Release:     1%{?dist}
 License:     LGPLv2+
 Group:       Development/Libraries
 URL:         http://et.redhat.com/~rjones/libguestfs/
@@ -290,7 +290,7 @@ export LIBGUESTFS_DEBUG=1
 
 # Tests in subdirs fail because they all assume that the device
 # is called /dev/sda, not /dev/hda as on EPEL-5.
-make SUBDIRS= check
+#make SUBDIRS= check
 
 
 %install
@@ -453,6 +453,10 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Thu May 28 2009 Richard Jones <rjones@redhat.com> - 1.0.35-1
+- New upstream version 1.0.35.
+- Disable tests, they took over 24 hours to run.
+
 * Wed May 27 2009 Richard Jones <rjones@redhat.com> - 1.0.34-1.el5.3
 - Fails to build on PPC.
 - Fix missing Augeas dependency.
