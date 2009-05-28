@@ -4,7 +4,7 @@
 Summary:     Access and modify virtual machine disk images
 Name:        libguestfs
 Version:     1.0.36
-Release:     1%{?dist}
+Release:     2%{?dist}
 License:     LGPLv2+
 Group:       Development/Libraries
 URL:         http://et.redhat.com/~rjones/libguestfs/
@@ -239,6 +239,9 @@ Requires:    jpackage-utils
 
 mkdir -p daemon/m4
 
+# Rerun the generator to make sure all files are up to date.
+src/generator.ml
+
 
 %build
 %if %{buildnonet}
@@ -465,8 +468,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
-* Thu May 28 2009 Richard W.M. Jones <rjones@redhat.com> - 1.0.36-1
+* Thu May 28 2009 Richard W.M. Jones <rjones@redhat.com> - 1.0.36-2
 - New upstream version 1.0.36.
+- Rerun the generator in prep section.
 
 * Thu May 28 2009 Richard W.M. Jones <rjones@redhat.com> - 1.0.35-1
 - New upstream version 1.0.35.
