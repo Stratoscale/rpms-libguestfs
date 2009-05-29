@@ -3,8 +3,8 @@
 
 Summary:     Access and modify virtual machine disk images
 Name:        libguestfs
-Version:     1.0.36
-Release:     1%{?dist}.2
+Version:     1.0.37
+Release:     1%{?dist}
 License:     LGPLv2+
 Group:       Development/Libraries
 URL:         http://et.redhat.com/~rjones/libguestfs/
@@ -17,6 +17,7 @@ BuildRequires: /usr/bin/pod2text
 BuildRequires: febootstrap >= 2.0
 BuildRequires: augeas-devel >= 0.5.0
 BuildRequires: readline-devel
+BuildRequires: squashfs-tools
 BuildRequires: qemu-kvm >= 0.10-7
 BuildRequires: createrepo
 BuildRequires: glibc-static
@@ -468,6 +469,13 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Fri May 29 2009 Richard W.M. Jones <rjones@redhat.com> - 1.0.37-1
+- New upstream version 1.0.37.
+- Fixes:
+  . "mkdir-p" should not throw errors on preexisting directories (RHBZ#503133)
+  . cramfs and squashfs modules should be available in libguestfs appliances
+      (RHBZ#503135)
+
 * Thu May 28 2009 Richard W.M. Jones <rjones@redhat.com> - 1.0.36-1.fc11.2
 - New upstream version 1.0.36.
 - Rerun the generator in prep section.
