@@ -3,7 +3,7 @@
 
 Summary:     Access and modify virtual machine disk images
 Name:        libguestfs
-Version:     1.0.35
+Version:     1.0.37
 Release:     1%{?dist}
 License:     LGPLv2+
 Group:       Development/Libraries
@@ -21,6 +21,7 @@ BuildRequires: /usr/bin/pod2text
 BuildRequires: febootstrap >= 2.0
 #BuildRequires: augeas-devel >= 0.5.0
 BuildRequires: readline-devel
+BuildRequires: squashfs-tools
 %ifarch %{ix86} x86_64
 BuildRequires: qemu-system-x86 >= 0.10.5
 %endif
@@ -453,6 +454,13 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Fri May 29 2009 Richard W.M. Jones <rjones@redhat.com> - 1.0.37-1
+- New upstream version 1.0.37.
+- Fixes:
+  . "mkdir-p" should not throw errors on preexisting directories (RHBZ#503133)
+  . cramfs and squashfs modules should be available in libguestfs appliances
+      (RHBZ#503135)
+
 * Thu May 28 2009 Richard Jones <rjones@redhat.com> - 1.0.35-1
 - New upstream version 1.0.35.
 - Disable tests, they took over 24 hours to run.
