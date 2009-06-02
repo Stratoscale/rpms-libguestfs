@@ -283,13 +283,15 @@ export LIBGUESTFS_DEBUG=1
 #   BZ 494075 (ppc, ppc64)
 #   BZ 502058 (i386, x86-64) - only on F-11 we think, seems to work on F-12
 #   BZ 502074 (i386) - sha1sum segfault on F-11 only
-#   BZ 503236 (?) - cryptomgr_test at doublefault_fn (F-12 only)
+#   BZ 503236 (i386) - cryptomgr_test at doublefault_fn (F-12 only)
 
 # Workaround for BZ 502058.  This is only needed for F-11, but
 # won't harm other builds.
 export LIBGUESTFS_APPEND=noapic
 
-#make check
+%ifarch x86_64
+make check
+%endif
 
 # Quick test:
 #./fish/guestfish -v <<EOT
@@ -469,7 +471,7 @@ rm -rf $RPM_BUILD_ROOT
 
 %changelog
 * Tue Jun  2 2009 Richard W.M. Jones <rjones@redhat.com> - 1.0.38-2
-- Disable all tests because of RHBZ#503236.
+- Disable tests on ix86 because of RHBZ#503236.
 
 * Tue Jun  2 2009 Richard W.M. Jones <rjones@redhat.com> - 1.0.38-1
 - New upstream version 1.0.38.
