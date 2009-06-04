@@ -3,8 +3,8 @@
 
 Summary:     Access and modify virtual machine disk images
 Name:        libguestfs
-Version:     1.0.38
-Release:     2%{?dist}
+Version:     1.0.39
+Release:     1%{?dist}
 License:     LGPLv2+
 Group:       Development/Libraries
 URL:         http://et.redhat.com/~rjones/libguestfs/
@@ -470,6 +470,12 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Thu Jun  4 2009 Richard W.M. Jones <rjones@redhat.com> - 1.0.39-1
+- New upstream version 1.0.39.
+- Fixes:
+  . libguestfs /dev is too sparse for kernel installation/upgrade (RHBZ#503169)
+  . OCaml bindings build failure (RHBZ#502309)
+
 * Tue Jun  2 2009 Richard W.M. Jones <rjones@redhat.com> - 1.0.38-2
 - Disable tests on ix86 because of RHBZ#503236.
 
