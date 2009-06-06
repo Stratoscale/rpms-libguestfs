@@ -3,7 +3,7 @@
 
 Summary:     Access and modify virtual machine disk images
 Name:        libguestfs
-Version:     1.0.41
+Version:     1.0.42
 Release:     1%{?dist}
 License:     LGPLv2+
 Group:       Development/Libraries
@@ -454,6 +454,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sat Jun  6 2009 Richard W.M. Jones <rjones@redhat.com> - 1.0.42-1
+- New upstream version 1.0.42.
+
 * Thu Jun  4 2009 Richard W.M. Jones <rjones@redhat.com> - 1.0.41-1
 - New upstream version 1.0.41.
 - Fixes a number of regressions in RHBZ#503169.
