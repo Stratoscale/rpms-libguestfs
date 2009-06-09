@@ -3,12 +3,12 @@
 
 Summary:     Access and modify virtual machine disk images
 Name:        libguestfs
-Version:     1.0.42
+Version:     1.0.43
 Release:     1%{?dist}
 License:     LGPLv2+
 Group:       Development/Libraries
-URL:         http://et.redhat.com/~rjones/libguestfs/
-Source0:     http://et.redhat.com/~rjones/libguestfs/files/%{name}-%{version}.tar.gz
+URL:         http://libguestfs.org/
+Source0:     http://libguestfs.org/download/%{name}-%{version}.tar.gz
 BuildRoot:   %{_tmppath}/%{name}-%{version}-%{release}-root
 
 # Currently fails on PPC because:
@@ -457,6 +457,11 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Tue Jun  9 2009 Richard W.M. Jones <rjones@redhat.com> - 1.0.43-1
+- New upstream version 1.0.43.
+- New upstream URL.
+- Requires chntpw program.
+
 * Sat Jun  6 2009 Richard W.M. Jones <rjones@redhat.com> - 1.0.42-1
 - New upstream version 1.0.42.
 
