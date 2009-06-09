@@ -56,7 +56,10 @@ BuildRequires: java-devel
 BuildRequires: perl-Sys-Virt
 
 # Runtime requires:
-Requires:    qemu-kvm >= 0.10-7
+Requires:      qemu-kvm >= 0.10-7
+
+# For virt-inspector --windows-registry option.
+Requires:      chntpw >= 0.99.6-8
 
 
 %description
