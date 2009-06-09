@@ -73,6 +73,9 @@ Requires:      qemu-system-x86 >= 0.10.5
 Requires:      qemu-system-ppc >= 0.10.5
 %endif
 
+# For virt-inspector --windows-registry option.
+Requires:      chntpw >= 0.99.6-8
+
 
 %description
 Libguestfs is a library for accessing and modifying guest disk images.
