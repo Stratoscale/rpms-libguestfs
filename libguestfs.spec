@@ -3,7 +3,7 @@
 
 Summary:     Access and modify virtual machine disk images
 Name:        libguestfs
-Version:     1.0.43
+Version:     1.0.44
 Release:     1%{?dist}
 License:     LGPLv2+
 Group:       Development/Libraries
@@ -292,9 +292,7 @@ make INSTALLDIRS=vendor %{?_smp_mflags}
 # it produces masses of output in the build.log.
 export LIBGUESTFS_DEBUG=1
 
-# Tests in subdirs fail because they all assume that the device
-# is called /dev/sda, not /dev/hda as on EPEL-5.
-#make SUBDIRS= check
+make check
 
 
 %install
@@ -457,6 +455,11 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Wed Jun 10 2009 Richard W.M. Jones <rjones@redhat.com> - 1.0.44-1
+- New upstream version 1.0.44.
+- This release is supposed to fix the testsuite under RHEL 5, so
+  try enabling tests.
+
 * Tue Jun  9 2009 Richard W.M. Jones <rjones@redhat.com> - 1.0.43-1
 - New upstream version 1.0.43.
 - New upstream URL.
