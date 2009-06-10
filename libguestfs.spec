@@ -1,3 +1,8 @@
+# XXX FAILS TO BUILD:
+# WAITING FOR THE FOLLOWING PACKAGES TO GO INTO F11 UPDATES:
+#   zerofree
+#   febootstrap 2.0
+
 # Enable to build w/o network.
 %global buildnonet 1
 
@@ -285,7 +290,8 @@ export LIBGUESTFS_DEBUG=1
 # a quick test to see if things generally work.
 
 # Currently tests are disabled on all architectures because of:
-#   BZ 494075/504273 (ppc, ppc64)
+#   BZ 494075/504273 (ppc, ppc64) - possibly now fixed
+#   BZ 505109 (ppc, ppc64) - openbios boot failure
 #   BZ 502058 (i386, x86-64) - only on F-11 we think, seems to work on F-12
 #   BZ 502074 (i386) - sha1sum segfault on F-11 only
 #   BZ 503236 (i386) - cryptomgr_test at doublefault_fn (F-12 only)
