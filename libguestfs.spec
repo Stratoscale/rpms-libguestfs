@@ -3,7 +3,7 @@
 
 Summary:     Access and modify virtual machine disk images
 Name:        libguestfs
-Version:     1.0.43
+Version:     1.0.44
 Release:     1%{?dist}
 License:     LGPLv2+
 Group:       Development/Libraries
@@ -285,7 +285,7 @@ export LIBGUESTFS_DEBUG=1
 # a quick test to see if things generally work.
 
 # Currently tests are disabled on all architectures because of:
-#   BZ 494075 (ppc, ppc64)
+#   BZ 494075/504273 (ppc, ppc64)
 #   BZ 502058 (i386, x86-64) - only on F-11 we think, seems to work on F-12
 #   BZ 502074 (i386) - sha1sum segfault on F-11 only
 #   BZ 503236 (i386) - cryptomgr_test at doublefault_fn (F-12 only)
@@ -475,6 +475,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Wed Jun 10 2009 Richard W.M. Jones <rjones@redhat.com> - 1.0.44-1
+- New upstream version 1.0.44.
+
 * Tue Jun  9 2009 Richard W.M. Jones <rjones@redhat.com> - 1.0.43-1
 - New upstream version 1.0.43.
 - New upstream URL.
