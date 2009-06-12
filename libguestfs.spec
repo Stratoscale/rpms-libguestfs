@@ -3,8 +3,8 @@
 
 Summary:     Access and modify virtual machine disk images
 Name:        libguestfs
-Version:     1.0.44
-Release:     2%{?dist}
+Version:     1.0.45
+Release:     1%{?dist}
 License:     LGPLv2+
 Group:       Development/Libraries
 URL:         http://libguestfs.org/
@@ -250,7 +250,7 @@ src/generator.ml
 %build
 %if %{buildnonet}
 mkdir repo
-find /var/cache/yum/build -type f -name '*.rpm' -print0 | xargs -0 cp -t repo
+find /var/cache/yum -type f -name '*.rpm' -print0 | xargs -0 cp -t repo
 createrepo repo
 %define extra --with-mirror=file://$(pwd)/repo --with-repo=fedora-12 --with-updates=none
 %else
@@ -474,6 +474,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Fri Jun 12 2009 Richard W.M. Jones <rjones@redhat.com> - 1.0.45-1
+- New upstream release 1.0.45.
+
 * Wed Jun 10 2009 Richard W.M. Jones <rjones@redhat.com> - 1.0.44-2
 - Disable ppc/ppc64 tests again because of RHBZ#505109.
 
