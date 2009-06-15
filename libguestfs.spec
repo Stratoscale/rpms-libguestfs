@@ -3,8 +3,8 @@
 
 Summary:     Access and modify virtual machine disk images
 Name:        libguestfs
-Version:     1.0.45
-Release:     2%{?dist}
+Version:     1.0.46
+Release:     1%{?dist}
 License:     LGPLv2+
 Group:       Development/Libraries
 URL:         http://libguestfs.org/
@@ -26,14 +26,22 @@ BuildRequires: glibc-static
 # properly depend on it, but doesn't do any harm on other platforms:
 BuildRequires: ncurses-devel
 
-# Build requirements for the appliance:
-# (see 'make-initramfs.sh.in' in the source)
+# Build requirements for the appliance (see 'make.sh.in' in the source):
 BuildRequires: kernel, bash, coreutils, lvm2, ntfs-3g, util-linux-ng
 BuildRequires: MAKEDEV, net-tools, augeas-libs, file
 BuildRequires: module-init-tools, procps, strace, iputils
 BuildRequires: dosfstools, zerofree
 %ifarch %{ix86} x86_64
 BuildRequires: grub, ntfsprogs
+%endif
+
+# Must match the above set of BuildRequires exactly!
+Requires:      kernel, bash, coreutils, lvm2, ntfs-3g, util-linux-ng
+Requires:      MAKEDEV, net-tools, augeas-libs, file
+Requires:      module-init-tools, procps, strace, iputils
+Requires:      dosfstools, zerofree
+%ifarch %{ix86} x86_64
+Requires:      grub, ntfsprogs
 %endif
 
 # These are only required if you want to build the bindings for
@@ -262,6 +270,7 @@ createrepo repo
   --mandir=%{_mandir} \
   --with-qemu="qemu-kvm qemu-system-%{_build_arch} qemu" \
   --enable-debug-command \
+  --enable-supermin \
   %{extra}
 
 # This ensures that /usr/sbin/chroot is on the path.  Not needed
@@ -319,6 +328,11 @@ rm -rf $RPM_BUILD_ROOT
 
 make DESTDIR=$RPM_BUILD_ROOT install
 
+# Delete the ordinary appliance, leaving just the supermin appliance.
+rm $RPM_BUILD_ROOT%{_libdir}/vmlinuz.*
+rm $RPM_BUILD_ROOT%{_libdir}/initramfs.*.img
+
+# Delete static libraries, libtool files.
 rm $RPM_BUILD_ROOT%{_libdir}/libguestfs.a
 rm $RPM_BUILD_ROOT%{_libdir}/libguestfs.la
 
@@ -381,6 +395,7 @@ rm -rf $RPM_BUILD_ROOT
 %files -f %{name}.lang
 %defattr(-,root,root,-)
 %doc COPYING
+%{_bindir}/guestfs-supermin-helper
 %{_libdir}/guestfs/
 %{_libdir}/libguestfs.so.*
 
@@ -474,6 +489,10 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Mon Jun 15 2009 Richard W.M. Jones <rjones@redhat.com> - 1.0.46-1
+- New upstream release 1.0.46.
+- Enable experimental supermin appliance build.
+
 * Fri Jun 12 2009 Richard W.M. Jones <rjones@redhat.com> - 1.0.45-2
 - New upstream release 1.0.45.
 
