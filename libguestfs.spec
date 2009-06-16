@@ -4,7 +4,7 @@
 Summary:     Access and modify virtual machine disk images
 Name:        libguestfs
 Version:     1.0.48
-Release:     1%{?dist}
+Release:     2%{?dist}
 License:     LGPLv2+
 Group:       Development/Libraries
 URL:         http://libguestfs.org/
@@ -330,7 +330,11 @@ make DESTDIR=$RPM_BUILD_ROOT install
 
 # Delete the ordinary appliance, leaving just the supermin appliance.
 rm $RPM_BUILD_ROOT%{_libdir}/guestfs/vmlinuz.*
+mkdir keep
+mv $RPM_BUILD_ROOT%{_libdir}/guestfs/initramfs.*.supermin.img keep
 rm $RPM_BUILD_ROOT%{_libdir}/guestfs/initramfs.*.img
+mv keep/* $RPM_BUILD_ROOT%{_libdir}/guestfs/
+rmdir keep
 
 # Delete static libraries, libtool files.
 rm $RPM_BUILD_ROOT%{_libdir}/libguestfs.a
@@ -489,6 +493,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Tue Jun 16 2009 Richard W.M. Jones <rjones@redhat.com> - 1.0.48-2
+- Accidentally omitted the supermin image from previous version.
+
 * Tue Jun 16 2009 Richard W.M. Jones <rjones@redhat.com> - 1.0.48-1
 - New upstream release 1.0.48.
 - Should fix all the brokenness from 1.0.47.
