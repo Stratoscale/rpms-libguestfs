@@ -3,8 +3,8 @@
 
 Summary:     Access and modify virtual machine disk images
 Name:        libguestfs
-Version:     1.0.47
-Release:     2%{?dist}
+Version:     1.0.48
+Release:     1%{?dist}
 License:     LGPLv2+
 Group:       Development/Libraries
 URL:         http://libguestfs.org/
@@ -14,7 +14,7 @@ BuildRoot:   %{_tmppath}/%{name}-%{version}-%{release}-root
 # Basic build requirements:
 BuildRequires: /usr/bin/pod2man
 BuildRequires: /usr/bin/pod2text
-BuildRequires: febootstrap >= 2.0
+BuildRequires: febootstrap >= 2.3
 BuildRequires: augeas-devel >= 0.5.0
 BuildRequires: readline-devel
 BuildRequires: squashfs-tools
@@ -489,6 +489,11 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Tue Jun 16 2009 Richard W.M. Jones <rjones@redhat.com> - 1.0.48-1
+- New upstream release 1.0.48.
+- Should fix all the brokenness from 1.0.47.
+- Requires febootstrap >= 2.3.
+
 * Mon Jun 15 2009 Richard W.M. Jones <rjones@redhat.com> - 1.0.47-2
 - New upstream release 1.0.47.
 - Enable experimental supermin appliance build.
