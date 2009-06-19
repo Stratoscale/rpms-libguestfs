@@ -4,7 +4,7 @@
 Summary:     Access and modify virtual machine disk images
 Name:        libguestfs
 Version:     1.0.49
-Release:     1%{?dist}
+Release:     2%{?dist}
 License:     LGPLv2+
 Group:       Development/Libraries
 URL:         http://libguestfs.org/
@@ -300,7 +300,9 @@ export LIBGUESTFS_DEBUG=1
 
 # Workaround for BZ 502058.  This is only needed for F-11, but
 # won't harm other builds.
-export LIBGUESTFS_APPEND=noapic
+# mce=off is a workaround for BZ 507007 (only for a particular
+# 2.6.31 kernel release in Rawhide).
+export LIBGUESTFS_APPEND="noapic mce=off"
 
 %ifarch x86_64
 make check
@@ -493,8 +495,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
-* Fri Jun 19 2009 Richard W.M. Jones <rjones@redhat.com> - 1.0.49-1
+* Fri Jun 19 2009 Richard W.M. Jones <rjones@redhat.com> - 1.0.49-2
 - New upstream release 1.0.49.
+- Add workaround for RHBZ#507007.
 
 * Tue Jun 16 2009 Richard W.M. Jones <rjones@redhat.com> - 1.0.48-2
 - Accidentally omitted the supermin image from previous version.
