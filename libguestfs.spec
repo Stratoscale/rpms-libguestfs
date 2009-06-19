@@ -3,8 +3,8 @@
 
 Summary:     Access and modify virtual machine disk images
 Name:        libguestfs
-Version:     1.0.48
-Release:     2%{?dist}
+Version:     1.0.49
+Release:     1%{?dist}
 License:     LGPLv2+
 Group:       Development/Libraries
 URL:         http://libguestfs.org/
@@ -399,7 +399,7 @@ rm -rf $RPM_BUILD_ROOT
 %files -f %{name}.lang
 %defattr(-,root,root,-)
 %doc COPYING
-%{_bindir}/guestfs-supermin-helper
+%{_bindir}/libguestfs-supermin-helper
 %{_libdir}/guestfs/
 %{_libdir}/libguestfs.so.*
 
@@ -493,6 +493,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Fri Jun 19 2009 Richard W.M. Jones <rjones@redhat.com> - 1.0.49-1
+- New upstream release 1.0.49.
+
 * Tue Jun 16 2009 Richard W.M. Jones <rjones@redhat.com> - 1.0.48-2
 - Accidentally omitted the supermin image from previous version.
 
