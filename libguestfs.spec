@@ -4,7 +4,7 @@
 Summary:     Access and modify virtual machine disk images
 Name:        libguestfs
 Version:     1.0.49
-Release:     4%{?dist}
+Release:     5%{?dist}
 License:     LGPLv2+
 Group:       Development/Libraries
 URL:         http://libguestfs.org/
@@ -13,6 +13,8 @@ BuildRoot:   %{_tmppath}/%{name}-%{version}-%{release}-root
 
 # Upstream: 3c5b447efd42b03c24104bdc1f3260e879bb1d25
 Patch0:      guestfs-daemon-find.patch
+# Upstream: 6654f617a6f720baa8f1ced89179e11679353d1e
+Patch1:      guestfs-daemon-waitpid.patch
 
 # Basic build requirements:
 BuildRequires: /usr/bin/pod2man
@@ -253,6 +255,7 @@ Requires:    jpackage-utils
 %setup -q
 
 %patch0 -p1
+%patch1 -p1
 
 mkdir -p daemon/m4
 
@@ -498,9 +501,11 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
-* Sat Jun 20 2009 Richard W.M. Jones <rjones@redhat.com> - 1.0.49-4
+* Sat Jun 20 2009 Richard W.M. Jones <rjones@redhat.com> - 1.0.49-5
 - Remove workaround for RHBZ#507007, since bug is now fixed.
 - Pull in upstream patch to fix pclose checking
+  (testing as possible fix for RHBZ#507066).
+- Pull in upstream patch to check waitpid return values
   (testing as possible fix for RHBZ#507066).
 
 * Fri Jun 19 2009 Richard W.M. Jones <rjones@redhat.com> - 1.0.49-2
