@@ -7,7 +7,7 @@
 
 Summary:     Access and modify virtual machine disk images
 Name:        libguestfs
-Version:     1.0.50
+Version:     1.0.51
 Release:     1%{?dist}
 License:     LGPLv2+
 Group:       Development/Libraries
@@ -34,7 +34,7 @@ BuildRequires: ncurses-devel
 BuildRequires: kernel, bash, coreutils, lvm2, ntfs-3g, util-linux-ng
 BuildRequires: MAKEDEV, net-tools, augeas-libs, file
 BuildRequires: module-init-tools, procps, strace, iputils
-BuildRequires: dosfstools, zerofree
+BuildRequires: dosfstools, zerofree, lsof
 %ifarch %{ix86} x86_64
 BuildRequires: grub, ntfsprogs
 %endif
@@ -43,7 +43,7 @@ BuildRequires: grub, ntfsprogs
 Requires:      kernel, bash, coreutils, lvm2, ntfs-3g, util-linux-ng
 Requires:      MAKEDEV, net-tools, augeas-libs, file
 Requires:      module-init-tools, procps, strace, iputils
-Requires:      dosfstools, zerofree
+Requires:      dosfstools, zerofree, lsof
 %ifarch %{ix86} x86_64
 Requires:      grub, ntfsprogs
 %endif
@@ -499,8 +499,8 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
-* Mon Jun 22 2009 Richard W.M. Jones <rjones@redhat.com> - 1.0.50-1
-- New upstream release 1.0.50.
+* Mon Jun 22 2009 Richard W.M. Jones <rjones@redhat.com> - 1.0.51-1
+- New upstream release 1.0.51.
 - Enable supermin appliance, backporting changes from devel branch.
 
 * Fri Jun 12 2009 Richard W.M. Jones <rjones@redhat.com> - 1.0.45-1
