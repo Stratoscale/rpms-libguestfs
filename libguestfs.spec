@@ -1,13 +1,14 @@
 # XXX FAILS TO BUILD:
 # WAITING FOR THE FOLLOWING PACKAGES TO GO INTO EL5 UPDATES:
 #   febootstrap 2.3
+#      -- cannot be build because of "old" new fakeroot package.
 
 # Enable to build w/o network.
 %global buildnonet 1
 
 Summary:     Access and modify virtual machine disk images
 Name:        libguestfs
-Version:     1.0.50
+Version:     1.0.51
 Release:     1%{?dist}
 License:     LGPLv2+
 Group:       Development/Libraries
@@ -42,7 +43,7 @@ BuildRequires: ncurses-devel
 BuildRequires: kernel, bash, coreutils, lvm2
 BuildRequires: MAKEDEV, net-tools, file
 BuildRequires: module-init-tools, procps, strace, iputils
-BuildRequires: dosfstools
+BuildRequires: dosfstools, lsof
 # Not supported in EPEL yet: ntfs-3g util-linux-ng zerofree
 # Not working: augeas-libs
 %ifarch %{ix86} x86_64
@@ -53,7 +54,7 @@ BuildRequires: grub, ntfsprogs
 Requires:      kernel, bash, coreutils, lvm2
 Requires:      MAKEDEV, net-tools, file
 Requires:      module-init-tools, procps, strace, iputils
-Requires:      dosfstools
+Requires:      dosfstools, lsof
 # Not supported in EPEL yet: ntfs-3g util-linux-ng zerofree
 # Not working: augeas-libs
 %ifarch %{ix86} x86_64
@@ -485,8 +486,8 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
-* Mon Jun 22 2009 Richard W.M. Jones <rjones@redhat.com> - 1.0.50-1
-- New upstream release 1.0.50.
+* Mon Jun 22 2009 Richard W.M. Jones <rjones@redhat.com> - 1.0.51-1
+- New upstream release 1.0.51.
 - Enable supermin appliance, backporting changes from devel branch.
 
 * Thu Jun 11 2009 Richard W.M. Jones <rjones@redhat.com> - 1.0.44-1.el5.1
