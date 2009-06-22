@@ -1,14 +1,13 @@
 # XXX FAILS TO BUILD:
 # WAITING FOR THE FOLLOWING PACKAGES TO GO INTO F11 UPDATES:
-#   zerofree
-#   febootstrap 2.0
+#   febootstrap 2.3
 
 # Enable to build w/o network.
 %global buildnonet 1
 
 Summary:     Access and modify virtual machine disk images
 Name:        libguestfs
-Version:     1.0.45
+Version:     1.0.50
 Release:     1%{?dist}
 License:     LGPLv2+
 Group:       Development/Libraries
@@ -19,7 +18,7 @@ BuildRoot:   %{_tmppath}/%{name}-%{version}-%{release}-root
 # Basic build requirements:
 BuildRequires: /usr/bin/pod2man
 BuildRequires: /usr/bin/pod2text
-BuildRequires: febootstrap >= 2.0
+BuildRequires: febootstrap >= 2.3
 BuildRequires: augeas-devel >= 0.5.0
 BuildRequires: readline-devel
 BuildRequires: squashfs-tools
@@ -31,14 +30,22 @@ BuildRequires: glibc-static
 # properly depend on it, but doesn't do any harm on other platforms:
 BuildRequires: ncurses-devel
 
-# Build requirements for the appliance:
-# (see 'make-initramfs.sh.in' in the source)
+# Build requirements for the appliance (see 'make.sh.in' in the source):
 BuildRequires: kernel, bash, coreutils, lvm2, ntfs-3g, util-linux-ng
 BuildRequires: MAKEDEV, net-tools, augeas-libs, file
 BuildRequires: module-init-tools, procps, strace, iputils
 BuildRequires: dosfstools, zerofree
 %ifarch %{ix86} x86_64
 BuildRequires: grub, ntfsprogs
+%endif
+
+# Must match the above set of BuildRequires exactly!
+Requires:      kernel, bash, coreutils, lvm2, ntfs-3g, util-linux-ng
+Requires:      MAKEDEV, net-tools, augeas-libs, file
+Requires:      module-init-tools, procps, strace, iputils
+Requires:      dosfstools, zerofree
+%ifarch %{ix86} x86_64
+Requires:      grub, ntfsprogs
 %endif
 
 # These are only required if you want to build the bindings for
@@ -269,6 +276,7 @@ createrepo repo
   --mandir=%{_mandir} \
   --with-qemu="qemu-kvm qemu-system-%{_build_arch} qemu" \
   --enable-debug-command \
+  --enable-supermin \
   %{extra}
 
 # This ensures that /usr/sbin/chroot is on the path.  Not needed
@@ -298,7 +306,7 @@ export LIBGUESTFS_DEBUG=1
 
 # Workaround for BZ 502058.  This is only needed for F-11, but
 # won't harm other builds.
-export LIBGUESTFS_APPEND=noapic
+export LIBGUESTFS_APPEND="noapic"
 
 %ifarch x86_64
 make check
@@ -326,6 +334,15 @@ rm -rf $RPM_BUILD_ROOT
 
 make DESTDIR=$RPM_BUILD_ROOT install
 
+# Delete the ordinary appliance, leaving just the supermin appliance.
+rm $RPM_BUILD_ROOT%{_libdir}/guestfs/vmlinuz.*
+mkdir keep
+mv $RPM_BUILD_ROOT%{_libdir}/guestfs/initramfs.*.supermin.img keep
+rm $RPM_BUILD_ROOT%{_libdir}/guestfs/initramfs.*.img
+mv keep/* $RPM_BUILD_ROOT%{_libdir}/guestfs/
+rmdir keep
+
+# Delete static libraries, libtool files.
 rm $RPM_BUILD_ROOT%{_libdir}/libguestfs.a
 rm $RPM_BUILD_ROOT%{_libdir}/libguestfs.la
 
@@ -388,6 +405,7 @@ rm -rf $RPM_BUILD_ROOT
 %files -f %{name}.lang
 %defattr(-,root,root,-)
 %doc COPYING
+%{_bindir}/libguestfs-supermin-helper
 %{_libdir}/guestfs/
 %{_libdir}/libguestfs.so.*
 
@@ -481,6 +499,10 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Mon Jun 22 2009 Richard W.M. Jones <rjones@redhat.com> - 1.0.50-1
+- New upstream release 1.0.50.
+- Enable supermin appliance, backporting changes from devel branch.
+
 * Fri Jun 12 2009 Richard W.M. Jones <rjones@redhat.com> - 1.0.45-1
 - New upstream release 1.0.45.
 
