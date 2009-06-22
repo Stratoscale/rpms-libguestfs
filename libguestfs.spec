@@ -1,10 +1,14 @@
+# XXX FAILS TO BUILD:
+# WAITING FOR THE FOLLOWING PACKAGES TO GO INTO EL5 UPDATES:
+#   febootstrap 2.3
+
 # Enable to build w/o network.
 %global buildnonet 1
 
 Summary:     Access and modify virtual machine disk images
 Name:        libguestfs
-Version:     1.0.44
-Release:     1%{?dist}.1
+Version:     1.0.50
+Release:     1%{?dist}
 License:     LGPLv2+
 Group:       Development/Libraries
 URL:         http://libguestfs.org/
@@ -18,7 +22,7 @@ ExclusiveArch: %{ix86} x86_64
 # Basic build requirements:
 BuildRequires: /usr/bin/pod2man
 BuildRequires: /usr/bin/pod2text
-BuildRequires: febootstrap >= 2.0
+BuildRequires: febootstrap >= 2.3
 #BuildRequires: augeas-devel >= 0.5.0
 BuildRequires: readline-devel
 BuildRequires: squashfs-tools
@@ -34,8 +38,7 @@ BuildRequires: createrepo
 # properly depend on it, but doesn't do any harm on other platforms:
 BuildRequires: ncurses-devel
 
-# Build requirements for the appliance:
-# (see 'make-initramfs.sh.in' in the source)
+# Build requirements for the appliance (see 'make.sh.in' in the source):
 BuildRequires: kernel, bash, coreutils, lvm2
 BuildRequires: MAKEDEV, net-tools, file
 BuildRequires: module-init-tools, procps, strace, iputils
@@ -44,6 +47,17 @@ BuildRequires: dosfstools
 # Not working: augeas-libs
 %ifarch %{ix86} x86_64
 BuildRequires: grub, ntfsprogs
+%endif
+
+# Must match the above set of BuildRequires exactly!
+Requires:      kernel, bash, coreutils, lvm2
+Requires:      MAKEDEV, net-tools, file
+Requires:      module-init-tools, procps, strace, iputils
+Requires:      dosfstools
+# Not supported in EPEL yet: ntfs-3g util-linux-ng zerofree
+# Not working: augeas-libs
+%ifarch %{ix86} x86_64
+Requires:      grub, ntfsprogs
 %endif
 
 # These are only required if you want to build the bindings for
@@ -276,6 +290,7 @@ vmchannel_test=no \
   --mandir=%{_mandir} \
   --with-qemu="qemu-kvm qemu-system-%{_build_arch} qemu" \
   --enable-debug-command \
+  --enable-supermin \
   %{extra}
 
 # This ensures that /usr/sbin/chroot is on the path.  Not needed
@@ -305,6 +320,15 @@ rm -rf $RPM_BUILD_ROOT
 
 make DESTDIR=$RPM_BUILD_ROOT install
 
+# Delete the ordinary appliance, leaving just the supermin appliance.
+rm $RPM_BUILD_ROOT%{_libdir}/guestfs/vmlinuz.*
+mkdir keep
+mv $RPM_BUILD_ROOT%{_libdir}/guestfs/initramfs.*.supermin.img keep
+rm $RPM_BUILD_ROOT%{_libdir}/guestfs/initramfs.*.img
+mv keep/* $RPM_BUILD_ROOT%{_libdir}/guestfs/
+rmdir keep
+
+# Delete static libraries, libtool files.
 rm $RPM_BUILD_ROOT%{_libdir}/libguestfs.a
 rm $RPM_BUILD_ROOT%{_libdir}/libguestfs.la
 
@@ -367,6 +391,7 @@ rm -rf $RPM_BUILD_ROOT
 %files -f %{name}.lang
 %defattr(-,root,root,-)
 %doc COPYING
+%{_bindir}/libguestfs-supermin-helper
 %{_libdir}/guestfs/
 %{_libdir}/libguestfs.so.*
 
@@ -460,6 +485,10 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Mon Jun 22 2009 Richard W.M. Jones <rjones@redhat.com> - 1.0.50-1
+- New upstream release 1.0.50.
+- Enable supermin appliance, backporting changes from devel branch.
+
 * Thu Jun 11 2009 Richard W.M. Jones <rjones@redhat.com> - 1.0.44-1.el5.1
 - Tests fail on i386 (impossible to debug because there are no
   log files available in plague), so disable tests on i386.
