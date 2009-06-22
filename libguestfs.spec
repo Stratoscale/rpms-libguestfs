@@ -11,11 +11,6 @@ URL:         http://libguestfs.org/
 Source0:     http://libguestfs.org/download/%{name}-%{version}.tar.gz
 BuildRoot:   %{_tmppath}/%{name}-%{version}-%{release}-root
 
-# Upstream: 3c5b447efd42b03c24104bdc1f3260e879bb1d25
-Patch0:      guestfs-daemon-find.patch
-# Upstream: 6654f617a6f720baa8f1ced89179e11679353d1e
-Patch1:      guestfs-daemon-waitpid.patch
-
 # Basic build requirements:
 BuildRequires: /usr/bin/pod2man
 BuildRequires: /usr/bin/pod2text
@@ -253,9 +248,6 @@ Requires:    jpackage-utils
 
 %prep
 %setup -q
-
-%patch0 -p1
-%patch1 -p1
 
 mkdir -p daemon/m4
 
@@ -503,6 +495,7 @@ rm -rf $RPM_BUILD_ROOT
 %changelog
 * Mon Jun 22 2009 Richard W.M. Jones <rjones@redhat.com> - 1.0.50-1
 - New upstream release 1.0.50.
+- Removed patches which are now upstream.
 
 * Sat Jun 20 2009 Richard W.M. Jones <rjones@redhat.com> - 1.0.49-5
 - Remove workaround for RHBZ#507007, since bug is now fixed.
