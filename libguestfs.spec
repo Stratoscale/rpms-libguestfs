@@ -34,7 +34,7 @@ BuildRequires: ncurses-devel
 BuildRequires: kernel, bash, coreutils, lvm2, ntfs-3g, util-linux-ng
 BuildRequires: MAKEDEV, net-tools, augeas-libs, file
 BuildRequires: module-init-tools, procps, strace, iputils
-BuildRequires: dosfstools, zerofree, lsof
+BuildRequires: dosfstools, zerofree, lsof, scrub
 %ifarch %{ix86} x86_64
 BuildRequires: grub, ntfsprogs
 %endif
@@ -43,7 +43,7 @@ BuildRequires: grub, ntfsprogs
 Requires:      kernel, bash, coreutils, lvm2, ntfs-3g, util-linux-ng
 Requires:      MAKEDEV, net-tools, augeas-libs, file
 Requires:      module-init-tools, procps, strace, iputils
-Requires:      dosfstools, zerofree, lsof
+Requires:      dosfstools, zerofree, lsof, scrub
 %ifarch %{ix86} x86_64
 Requires:      grub, ntfsprogs
 %endif
