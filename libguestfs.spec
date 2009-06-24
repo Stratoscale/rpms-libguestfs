@@ -1,13 +1,9 @@
-# XXX FAILS TO BUILD:
-# WAITING FOR THE FOLLOWING PACKAGES TO GO INTO F11 UPDATES:
-#   febootstrap 2.3
-
 # Enable to build w/o network.
 %global buildnonet 1
 
 Summary:     Access and modify virtual machine disk images
 Name:        libguestfs
-Version:     1.0.51
+Version:     1.0.52
 Release:     1%{?dist}
 License:     LGPLv2+
 Group:       Development/Libraries
@@ -499,6 +495,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Wed Jun 24 2009 Richard W.M. Jones <rjones@redhat.com> - 1.0.52-1
+- New upstream release 1.0.52.
+
 * Mon Jun 22 2009 Richard W.M. Jones <rjones@redhat.com> - 1.0.51-1
 - New upstream release 1.0.51.
 - Enable supermin appliance, backporting changes from devel branch.
