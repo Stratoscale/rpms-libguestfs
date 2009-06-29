@@ -9,7 +9,7 @@
 Summary:     Access and modify virtual machine disk images
 Name:        libguestfs
 Version:     1.0.54
-Release:     1%{?dist}
+Release:     2%{?dist}
 License:     LGPLv2+
 Group:       Development/Libraries
 URL:         http://libguestfs.org/
@@ -70,6 +70,7 @@ BuildRequires: ocaml-findlib-devel
 BuildRequires: perl-Test-Pod
 BuildRequires: perl-Test-Pod-Coverage
 #BuildRequires: perl-ExtUtils-MakeMaker
+BuildRequires: perl-XML-Writer
 BuildRequires: python-devel
 BuildRequires: ruby-devel
 BuildRequires: rubygem-rake
@@ -486,8 +487,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
-* Mon Jun 29 2009 Richard W.M. Jones <rjones@redhat.com> - 1.0.54-1
+* Mon Jun 29 2009 Richard W.M. Jones <rjones@redhat.com> - 1.0.54-2
 - New upstream release 1.0.54.
+- +BR perl-XML-Writer.
 
 * Mon Jun 22 2009 Richard W.M. Jones <rjones@redhat.com> - 1.0.51-1
 - New upstream release 1.0.51.
