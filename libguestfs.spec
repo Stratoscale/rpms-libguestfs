@@ -8,8 +8,8 @@
 
 Summary:     Access and modify virtual machine disk images
 Name:        libguestfs
-Version:     1.0.54
-Release:     2%{?dist}
+Version:     1.0.55
+Release:     1%{?dist}
 License:     LGPLv2+
 Group:       Development/Libraries
 URL:         http://libguestfs.org/
@@ -404,6 +404,7 @@ rm -rf $RPM_BUILD_ROOT
 %doc src/generator.ml
 %{_libdir}/libguestfs.so
 %{_mandir}/man3/guestfs.3*
+%{_mandir}/man3/libguestfs.3*
 %{_includedir}/guestfs.h
 %{_includedir}/guestfs-actions.h
 %{_includedir}/guestfs-structs.h
@@ -487,6 +488,10 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Thu Jul  2 2009 Richard W.M. Jones <rjones@redhat.com> - 1.0.55-1
+- New upstream release 1.0.55.
+- New manual page libguestfs(3).
+
 * Mon Jun 29 2009 Richard W.M. Jones <rjones@redhat.com> - 1.0.54-2
 - New upstream release 1.0.54.
 - +BR perl-XML-Writer.
