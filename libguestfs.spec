@@ -4,7 +4,7 @@
 Summary:     Access and modify virtual machine disk images
 Name:        libguestfs
 Version:     1.0.57
-Release:     1%{?dist}
+Release:     2%{?dist}
 License:     LGPLv2+
 Group:       Development/Libraries
 URL:         http://libguestfs.org/
@@ -321,6 +321,10 @@ make INSTALLDIRS=vendor %{?_smp_mflags}
 # it produces masses of output in the build.log.
 export LIBGUESTFS_DEBUG=1
 
+# Workaround for BZ 502058.  This is needed sometimes (but not
+# always) for EL-5.  We don't know why it only affects some boots.
+export LIBGUESTFS_APPEND="noapic"
+
 # Tests fail on i386.  We don't know why because plague doesn't let us
 # see the logs (the tests hang rather than failing completely).
 
@@ -507,8 +511,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
-* Fri Jul 10 2009 Richard W.M. Jones <rjones@redhat.com> - 1.0.57-1
+* Fri Jul 10 2009 Richard W.M. Jones <rjones@redhat.com> - 1.0.57-2
 - New upstream release 1.0.57.
+- Workaround for RHBZ#502058.
 
 * Tue Jul  7 2009 Richard W.M. Jones <rjones@redhat.com> - 1.0.56-1
 - New upstream release 1.0.56.
