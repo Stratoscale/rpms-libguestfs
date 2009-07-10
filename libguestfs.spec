@@ -1,14 +1,9 @@
-# XXX FAILS TO BUILD:
-# WAITING FOR THE FOLLOWING PACKAGES TO GO INTO EL5 UPDATES:
-#   febootstrap 2.3
-#      -- cannot be build because of "old" new fakeroot package.
-
 # Enable to build w/o network.
 %global buildnonet 1
 
 Summary:     Access and modify virtual machine disk images
 Name:        libguestfs
-Version:     1.0.56
+Version:     1.0.57
 Release:     1%{?dist}
 License:     LGPLv2+
 Group:       Development/Libraries
@@ -168,6 +163,23 @@ scripts.
 #version of the OS, the kernel version, what drivers are installed,
 #whether the virtual machine is fully virtualized (FV) or
 #para-virtualized (PV), what applications are installed and more.
+
+#%package -n virt-df
+#Summary:     Display free space on virtual filesystems
+#Group:       Development/Tools
+#License:     GPLv2+
+#Requires:    %{name} = %{version}-%{release}
+#Requires:    perl-Sys-Virt
+#
+#
+#%description -n virt-df
+#"virt-df" is a command line tool to display free space on virtual
+#machine filesystems.  Unlike other tools, it doesn’t just display the
+#amount of space allocated to a virtual machine, but can look inside
+#the virtual machine to see how much space is really being used.
+#
+#It is like the df(1) command, but for virtual machines, except that it
+#also works for Windows virtual machines.
 
 
 %package -n ocaml-%{name}
@@ -424,6 +436,12 @@ rm -rf $RPM_BUILD_ROOT
 #%{_mandir}/man1/virt-inspector.1*
 
 
+#%files -n virt-df
+#%defattr(-,root,root,-)
+#%{_bindir}/virt-df
+#%{_mandir}/man1/virt-df.1*
+
+
 %files -n ocaml-%{name}
 %defattr(-,root,root,-)
 %doc README
@@ -450,6 +468,7 @@ rm -rf $RPM_BUILD_ROOT
 %doc perl/examples
 %{perl_vendorarch}/*
 %{_mandir}/man3/Sys::Guestfs.3pm*
+%{_mandir}/man3/Sys::Guestfs::Lib.3pm*
 
 
 %files -n python-%{name}
@@ -488,6 +507,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Fri Jul 10 2009 Richard W.M. Jones <rjones@redhat.com> - 1.0.57-1
+- New upstream release 1.0.57.
+
 * Tue Jul  7 2009 Richard W.M. Jones <rjones@redhat.com> - 1.0.56-1
 - New upstream release 1.0.56.
 
