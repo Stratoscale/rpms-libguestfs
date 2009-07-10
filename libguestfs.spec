@@ -3,8 +3,8 @@
 
 Summary:     Access and modify virtual machine disk images
 Name:        libguestfs
-Version:     1.0.56
-Release:     2%{?dist}
+Version:     1.0.57
+Release:     1%{?dist}
 License:     LGPLv2+
 Group:       Development/Libraries
 URL:         http://libguestfs.org/
@@ -146,6 +146,26 @@ Virt-inspector examines a virtual machine and tries to determine the
 version of the OS, the kernel version, what drivers are installed,
 whether the virtual machine is fully virtualized (FV) or
 para-virtualized (PV), what applications are installed and more.
+
+
+%package -n virt-df2
+Summary:     Display free space on virtual filesystems
+Group:       Development/Tools
+License:     GPLv2+
+Requires:    %{name} = %{version}-%{release}
+Requires:    perl-Sys-Virt
+Obsoletes:   virt-df
+Provides:    virt-df
+
+
+%description -n virt-df2
+"virt-df" is a command line tool to display free space on virtual
+machine filesystems.  Unlike other tools, it doesn’t just display the
+amount of space allocated to a virtual machine, but can look inside
+the virtual machine to see how much space is really being used.
+
+It is like the df(1) command, but for virtual machines, except that it
+also works for Windows virtual machines.
 
 
 %package -n ocaml-%{name}
@@ -296,14 +316,15 @@ export LIBGUESTFS_DEBUG=1
 #   BZ 502074 (i386) - sha1sum segfault on F-11 only
 #   BZ 503236 (i386) - cryptomgr_test at doublefault_fn (F-12 only)
 #   BZ 507066 (all) - sequence of chroot calls makes fs unmountable (F-12 only)
+#                     (fixed?)
 
 # Workaround for BZ 502058.  This is only needed for F-11, but
 # won't harm other builds.
 export LIBGUESTFS_APPEND="noapic"
 
-#%ifarch x86_64
-#make check
-#%endif
+%ifarch x86_64
+make check
+%endif
 
 # Quick test:
 #./fish/guestfish -v <<EOT
@@ -382,6 +403,10 @@ rm $RPM_BUILD_ROOT%{_libdir}/libguestfs_jni.la
 # Generator shouldn't be executable when we distribute it.
 chmod -x src/generator.ml
 
+# Remove virt-v2v for now, WIP.
+rm $RPM_BUILD_ROOT%{_bindir}/virt-v2v
+rm $RPM_BUILD_ROOT%{_mandir}/man1/virt-v2v.1*
+
 # Find locale files.
 %find_lang %{name}
 
@@ -429,6 +454,12 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man1/virt-inspector.1*
 
 
+%files -n virt-df2
+%defattr(-,root,root,-)
+%{_bindir}/virt-df
+%{_mandir}/man1/virt-df.1*
+
+
 %files -n ocaml-%{name}
 %defattr(-,root,root,-)
 %doc README
@@ -455,6 +486,7 @@ rm -rf $RPM_BUILD_ROOT
 %doc perl/examples
 %{perl_vendorarch}/*
 %{_mandir}/man3/Sys::Guestfs.3pm*
+%{_mandir}/man3/Sys::Guestfs::Lib.3pm*
 
 
 %files -n python-%{name}
@@ -493,6 +525,11 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Fri Jul 10 2009 Richard W.M. Jones <rjones@redhat.com> - 1.0.57-1
+- New upstream release 1.0.57.
+- New tool virt-df (obsoletes existing package with this name).
+- RHBZ#507066 may be fixed, so reenable tests.
+
 * Tue Jul  7 2009 Richard W.M. Jones <rjones@redhat.com> - 1.0.56-2
 - New upstream release 1.0.56.
 - Don't rerun generator.
