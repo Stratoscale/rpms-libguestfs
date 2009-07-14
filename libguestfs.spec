@@ -3,7 +3,8 @@
 
 Summary:     Access and modify virtual machine disk images
 Name:        libguestfs
-Version:     1.0.59
+Epoch:       1
+Version:     1.0.60
 Release:     1%{?dist}
 License:     LGPLv2+
 Group:       Development/Libraries
@@ -149,17 +150,15 @@ whether the virtual machine is fully virtualized (FV) or
 para-virtualized (PV), what applications are installed and more.
 
 
-%package -n virt-df2
+%package -n virt-df
 Summary:     Display free space on virtual filesystems
 Group:       Development/Tools
 License:     GPLv2+
 Requires:    %{name} = %{version}-%{release}
 Requires:    perl-Sys-Virt
-Obsoletes:   virt-df
-Provides:    virt-df
 
 
-%description -n virt-df2
+%description -n virt-df
 "virt-df" is a command line tool to display free space on virtual
 machine filesystems.  Unlike other tools, it doesn’t just display the
 amount of space allocated to a virtual machine, but can look inside
@@ -455,7 +454,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man1/virt-inspector.1*
 
 
-%files -n virt-df2
+%files -n virt-df
 %defattr(-,root,root,-)
 %{_bindir}/virt-df
 %{_mandir}/man1/virt-df.1*
@@ -526,8 +525,8 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
-* Tue Jul 14 2009 Richard W.M. Jones <rjones@redhat.com> - 1.0.59-1
-- New upstream release 1.0.59.
+* Tue Jul 14 2009 Richard W.M. Jones <rjones@redhat.com> - 1.0.60-1
+- New upstream release 1.0.60.
 
 * Fri Jul 10 2009 Richard W.M. Jones <rjones@redhat.com> - 1.0.58-2
 - New upstream release 1.0.58.
