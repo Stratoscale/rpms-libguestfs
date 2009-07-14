@@ -3,15 +3,13 @@
 
 Summary:     Access and modify virtual machine disk images
 Name:        libguestfs
-Version:     1.0.58
-Release:     2%{?dist}
+Version:     1.0.59
+Release:     1%{?dist}
 License:     LGPLv2+
 Group:       Development/Libraries
 URL:         http://libguestfs.org/
 Source0:     http://libguestfs.org/download/%{name}-%{version}.tar.gz
 BuildRoot:   %{_tmppath}/%{name}-%{version}-%{release}-root
-
-Source1:     Version.java
 
 # Basic build requirements:
 BuildRequires: /usr/bin/pod2man
@@ -275,9 +273,6 @@ Requires:    jpackage-utils
 %prep
 %setup -q
 
-# Accidentally missed from 1.0.58, remove in 1.0.59+
-cp -i %{SOURCE1} java/com/redhat/et/libguestfs/
-
 mkdir -p daemon/m4
 
 
@@ -533,6 +528,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Tue Jul 14 2009 Richard W.M. Jones <rjones@redhat.com> - 1.0.59-1
+- New upstream release 1.0.59.
+
 * Fri Jul 10 2009 Richard W.M. Jones <rjones@redhat.com> - 1.0.58-2
 - New upstream release 1.0.58.
 
