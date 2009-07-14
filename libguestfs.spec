@@ -143,6 +143,7 @@ Group:       Development/Tools
 License:     GPLv2+
 Requires:    %{name} = %{version}-%{release}
 Requires:    /usr/bin/pod2text
+Requires:    virt-inspector
 
 
 %description -n guestfish
