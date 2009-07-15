@@ -3,8 +3,8 @@
 
 Summary:     Access and modify virtual machine disk images
 Name:        libguestfs
-Version:     1.0.60
-Release:     2%{?dist}
+Version:     1.0.61
+Release:     1%{?dist}
 License:     LGPLv2+
 Group:       Development/Libraries
 URL:         http://libguestfs.org/
@@ -66,6 +66,7 @@ BuildRequires: perl-Test-Pod
 BuildRequires: perl-Test-Pod-Coverage
 #BuildRequires: perl-ExtUtils-MakeMaker
 BuildRequires: perl-XML-Writer
+BuildRequires: perl-libintl
 BuildRequires: python-devel
 BuildRequires: ruby-devel
 BuildRequires: rubygem-rake
@@ -165,6 +166,7 @@ scripts.
 #whether the virtual machine is fully virtualized (FV) or
 #para-virtualized (PV), what applications are installed and more.
 
+
 #%package -n virt-df
 #Summary:     Display free space on virtual filesystems
 #Group:       Development/Tools
@@ -181,6 +183,19 @@ scripts.
 #
 #It is like the df(1) command, but for virtual machines, except that it
 #also works for Windows virtual machines.
+
+
+#%package -n virt-cat
+#Summary:     Display a file in a virtual machine
+#Group:       Development/Tools
+#License:     GPLv2+
+#Requires:    %{name} = %{epoch}:%{version}-%{release}
+#Requires:    perl-Sys-Virt
+#
+#
+#%description -n virt-cat
+#"virt-cat" is a command line tool to display the contents
+#of a file in a virtual machine.
 
 
 %package -n ocaml-%{name}
@@ -447,6 +462,12 @@ rm -rf $RPM_BUILD_ROOT
 #%{_mandir}/man1/virt-df.1*
 
 
+#%files -n virt-cat
+#%defattr(-,root,root,-)
+#%{_bindir}/virt-cat
+#%{_mandir}/man1/virt-cat.1*
+
+
 %files -n ocaml-%{name}
 %defattr(-,root,root,-)
 %doc README
@@ -512,6 +533,11 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Wed Jul 15 2009 Richard W.M. Jones <rjones@redhat.com> - 1.0.61-1
+- New upstream release 1.0.61.
+- New tool / subpackage 'virt-cat'.
+- New BR perl-libintl.
+
 * Wed Jul 15 2009 Richard W.M. Jones <rjones@redhat.com> - 1.0.60-2
 - Fix runtime Requires so they use epoch correctly.
 
