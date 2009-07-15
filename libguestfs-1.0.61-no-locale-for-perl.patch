@@ -1,13 +1,13 @@
-diff --git a/configure.ac b/configure.ac
-index 6b14c4a..59eeb9d 100644
---- a/configure.ac
-+++ b/configure.ac
-@@ -306,7 +306,7 @@ AC_CHECK_PROG([PERL],[perl],[perl],[no])
- dnl Check for Perl modules that must be present to compile and
- dnl test the Perl bindings.
+diff -ur libguestfs-1.0.61.orig/configure libguestfs-1.0.61/configure
+--- libguestfs-1.0.61.orig/configure	2009-07-15 17:08:14.000000000 +0100
++++ libguestfs-1.0.61/configure	2009-07-15 21:00:34.207966400 +0100
+@@ -16735,7 +16735,7 @@
+ 
+ 
  missing_perl_modules=no
 -for pm in Test::More Test::Pod Test::Pod::Coverage ExtUtils::MakeMaker Locale::TextDomain; do
 +for pm in Test::More Test::Pod Test::Pod::Coverage ExtUtils::MakeMaker; do
-     AC_MSG_CHECKING([for $pm])
+     { $as_echo "$as_me:$LINENO: checking for $pm" >&5
+ $as_echo_n "checking for $pm... " >&6; }
      if ! perl -M$pm -e1 >/dev/null 2>&1; then
-         AC_MSG_RESULT([no])
+Only in libguestfs-1.0.61: configure~
