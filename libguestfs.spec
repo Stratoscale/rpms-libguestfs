@@ -4,7 +4,7 @@
 Summary:     Access and modify virtual machine disk images
 Name:        libguestfs
 Version:     1.0.61
-Release:     1%{?dist}
+Release:     2%{?dist}
 License:     LGPLv2+
 Group:       Development/Libraries
 URL:         http://libguestfs.org/
@@ -66,7 +66,7 @@ BuildRequires: perl-Test-Pod
 BuildRequires: perl-Test-Pod-Coverage
 #BuildRequires: perl-ExtUtils-MakeMaker
 BuildRequires: perl-XML-Writer
-BuildRequires: perl-libintl
+#BuildRequires: perl-libintl
 BuildRequires: python-devel
 BuildRequires: ruby-devel
 BuildRequires: rubygem-rake
@@ -533,10 +533,10 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
-* Wed Jul 15 2009 Richard W.M. Jones <rjones@redhat.com> - 1.0.61-1
+* Wed Jul 15 2009 Richard W.M. Jones <rjones@redhat.com> - 1.0.61-2
 - New upstream release 1.0.61.
 - New tool / subpackage 'virt-cat'.
-- New BR perl-libintl.
+- New BR perl-libintl (not enabled, because not in EPEL).
 
 * Wed Jul 15 2009 Richard W.M. Jones <rjones@redhat.com> - 1.0.60-2
 - Fix runtime Requires so they use epoch correctly.
