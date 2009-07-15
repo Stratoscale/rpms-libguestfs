@@ -4,12 +4,14 @@
 Summary:     Access and modify virtual machine disk images
 Name:        libguestfs
 Version:     1.0.61
-Release:     2%{?dist}
+Release:     3%{?dist}
 License:     LGPLv2+
 Group:       Development/Libraries
 URL:         http://libguestfs.org/
 Source0:     http://libguestfs.org/download/%{name}-%{version}.tar.gz
 BuildRoot:   %{_tmppath}/%{name}-%{version}-%{release}-root
+
+Patch0:      libguestfs-1.0.61-no-locale-for-perl.patch
 
 # Currently fails on PPC because:
 # "No Package Found for kernel"
@@ -300,6 +302,8 @@ Requires:    jpackage-utils
 %prep
 %setup -q
 
+%patch0 -p1
+
 mkdir -p daemon/m4
 
 
@@ -533,10 +537,11 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
-* Wed Jul 15 2009 Richard W.M. Jones <rjones@redhat.com> - 1.0.61-2
+* Wed Jul 15 2009 Richard W.M. Jones <rjones@redhat.com> - 1.0.61-3
 - New upstream release 1.0.61.
 - New tool / subpackage 'virt-cat'.
 - New BR perl-libintl (not enabled, because not in EPEL).
+- Pull in upstream fix for building Perl bindings.
 
 * Wed Jul 15 2009 Richard W.M. Jones <rjones@redhat.com> - 1.0.60-2
 - Fix runtime Requires so they use epoch correctly.
