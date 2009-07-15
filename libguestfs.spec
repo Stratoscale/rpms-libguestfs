@@ -5,7 +5,7 @@ Summary:     Access and modify virtual machine disk images
 Name:        libguestfs
 Epoch:       1
 Version:     1.0.60
-Release:     1%{?dist}
+Release:     2%{?dist}
 License:     LGPLv2+
 Group:       Development/Libraries
 URL:         http://libguestfs.org/
@@ -112,7 +112,7 @@ For Java bindings, see 'libguestfs-java-devel'.
 %package devel
 Summary:     Development tools and libraries for %{name}
 Group:       Development/Libraries
-Requires:    %{name} = %{version}-%{release}
+Requires:    %{name} = %{epoch}:%{version}-%{release}
 Requires:    pkgconfig
 
 
@@ -125,7 +125,7 @@ for %{name}.
 Summary:     Shell for accessing and modifying virtual machine disk images
 Group:       Development/Tools
 License:     GPLv2+
-Requires:    %{name} = %{version}-%{release}
+Requires:    %{name} = %{epoch}:%{version}-%{release}
 Requires:    /usr/bin/pod2text
 Requires:    virt-inspector
 
@@ -140,7 +140,7 @@ scripts.
 Summary:     Display OS version, kernel, drivers, etc in a virtual machine
 Group:       Development/Tools
 License:     GPLv2+
-Requires:    %{name} = %{version}-%{release}
+Requires:    %{name} = %{epoch}:%{version}-%{release}
 Requires:    guestfish
 Requires:    perl-Sys-Virt
 
@@ -156,7 +156,7 @@ para-virtualized (PV), what applications are installed and more.
 Summary:     Display free space on virtual filesystems
 Group:       Development/Tools
 License:     GPLv2+
-Requires:    %{name} = %{version}-%{release}
+Requires:    %{name} = %{epoch}:%{version}-%{release}
 Requires:    perl-Sys-Virt
 
 
@@ -173,7 +173,7 @@ also works for Windows virtual machines.
 %package -n ocaml-%{name}
 Summary:     OCaml bindings for %{name}
 Group:       Development/Libraries
-Requires:    %{name} = %{version}-%{release}
+Requires:    %{name} = %{epoch}:%{version}-%{release}
 
 
 %description -n ocaml-%{name}
@@ -186,7 +186,7 @@ programs which use %{name} you will also need ocaml-%{name}-devel.
 %package -n ocaml-%{name}-devel
 Summary:     OCaml bindings for %{name}
 Group:       Development/Libraries
-Requires:    ocaml-%{name} = %{version}-%{release}
+Requires:    ocaml-%{name} = %{epoch}:%{version}-%{release}
 
 
 %description -n ocaml-%{name}-devel
@@ -197,7 +197,7 @@ required to use the OCaml bindings for %{name}.
 %package -n perl-%{name}
 Summary:     Perl bindings for %{name}
 Group:       Development/Libraries
-Requires:    %{name} = %{version}-%{release}
+Requires:    %{name} = %{epoch}:%{version}-%{release}
 Requires:    perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $version))
 
 
@@ -208,7 +208,7 @@ perl-%{name} contains Perl bindings for %{name}.
 %package -n python-%{name}
 Summary:     Python bindings for %{name}
 Group:       Development/Libraries
-Requires:    %{name} = %{version}-%{release}
+Requires:    %{name} = %{epoch}:%{version}-%{release}
 
 %{!?python_sitelib: %global python_sitelib %(%{__python} -c "from distutils.sysconfig import get_python_lib; print get_python_lib()")}
 %{!?python_sitearch: %global python_sitearch %(%{__python} -c "from distutils.sysconfig import get_python_lib; print get_python_lib(1)")}
@@ -220,7 +220,7 @@ python-%{name} contains Python bindings for %{name}.
 %package -n ruby-%{name}
 Summary:     Ruby bindings for %{name}
 Group:       Development/Libraries
-Requires:    %{name} = %{version}-%{release}
+Requires:    %{name} = %{epoch}:%{version}-%{release}
 Requires:    ruby(abi) = 1.8
 Provides:    ruby(guestfs) = %{version}
 
@@ -234,7 +234,7 @@ ruby-%{name} contains Ruby bindings for %{name}.
 %package java
 Summary:     Java bindings for %{name}
 Group:       Development/Libraries
-Requires:    %{name} = %{version}-%{release}
+Requires:    %{name} = %{epoch}:%{version}-%{release}
 Requires:    java >= 1.5.0
 Requires:    jpackage-utils
 
@@ -248,8 +248,8 @@ you will also need %{name}-java-devel.
 %package java-devel
 Summary:     Java development package for %{name}
 Group:       Development/Libraries
-Requires:    %{name} = %{version}-%{release}
-Requires:    %{name}-java = %{version}-%{release}
+Requires:    %{name} = %{epoch}:%{version}-%{release}
+Requires:    %{name}-java = %{epoch}:%{version}-%{release}
 
 %description java-devel
 %{name}-java-devel contains the tools for developing Java software
@@ -261,8 +261,8 @@ See also %{name}-javadoc.
 %package javadoc
 Summary:     Java documentation for %{name}
 Group:       Development/Libraries
-Requires:    %{name} = %{version}-%{release}
-Requires:    %{name}-java = %{version}-%{release}
+Requires:    %{name} = %{epoch}:%{version}-%{release}
+Requires:    %{name}-java = %{epoch}:%{version}-%{release}
 Requires:    jpackage-utils
 
 %description javadoc
@@ -527,6 +527,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Wed Jul 15 2009 Richard W.M. Jones <rjones@redhat.com> - 1.0.60-2
+- Fix runtime Requires so they use epoch correctly.
+
 * Tue Jul 14 2009 Richard W.M. Jones <rjones@redhat.com> - 1.0.60-1
 - New upstream release 1.0.60.
 
