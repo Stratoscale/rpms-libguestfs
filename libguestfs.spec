@@ -4,7 +4,7 @@
 Summary:     Access and modify virtual machine disk images
 Name:        libguestfs
 Epoch:       1
-Version:     1.0.61
+Version:     1.0.64
 Release:     1%{?dist}
 License:     LGPLv2+
 Group:       Development/Libraries
@@ -70,9 +70,10 @@ BuildRequires: perl-Sys-Virt
 Requires:      qemu-kvm >= 0.10-7
 
 # For virt-inspector --windows-registry option.
-# NB: Enable this when available in Fedora-11:
-# https://admin.fedoraproject.org/updates/chntpw-0.99.6-8.fc11
-#Requires:      chntpw >= 0.99.6-8
+Requires:      chntpw >= 0.99.6-8
+
+# For libguestfs-test-tool.
+Requires:      genisoimage
 
 
 %description
@@ -321,42 +322,20 @@ make INSTALLDIRS=vendor %{?_smp_mflags}
 # it produces masses of output in the build.log.
 export LIBGUESTFS_DEBUG=1
 
-# Uncomment one of these, depending on whether you want to
-# do a very long and thorough test ('make check') or just
-# a quick test to see if things generally work.
+# Tracking test issues:
+# BZ       archs        branch reason
+# 494075   ppc, ppc64          openbios bug causes "invalid/unsupported opcode"
+# 504273   ppc, ppc64          "no opcode defined"
+# 505109   ppc, ppc64          "Boot failure! No secondary bootloader specified"
+# 502058   i386, x86-64 F-11   need to boot with noapic (WORKAROUND ENABLED)
+# 502074   i386         F-11   commands segfault randomly
+# 503236   i386         F-12?  cryptomgr_test at doublefault_fn
+# 507066   all          F-12   sequence of chroot calls (FIXED)
+# 513249   all          F-12   guestfwd broken in qemu
 
-# Currently tests are disabled on all architectures because of:
-#   BZ 494075/504273 (ppc, ppc64) - possibly now fixed
-#   BZ 505109 (ppc, ppc64) - openbios boot failure
-#   BZ 502058 (i386, x86-64) - only on F-11 we think, seems to work on F-12
-#   BZ 502074 (i386) - sha1sum segfault on F-11 only
-#   BZ 503236 (i386) - cryptomgr_test at doublefault_fn (F-12 only)
-#   BZ 507066 (all) - sequence of chroot calls makes fs unmountable (F-12 only)
-#                     (fixed?)
-
-# Workaround for BZ 502058.  This is only needed for F-11, but
-# won't harm other builds.
-export LIBGUESTFS_APPEND="noapic"
-
-%ifarch x86_64
+%ifarch x86-64
 make check
 %endif
-
-# Quick test:
-#./fish/guestfish -v <<EOT
-#alloc test.img 100M
-#run
-#sfdisk /dev/sda 0 0 0 ,
-#pvcreate /dev/sda1
-#vgcreate VG /dev/sda1
-#lvcreate LV1 VG 10M
-#lvcreate LV2 VG 10M
-#mkfs ext2 /dev/VG/LV1
-#mount /dev/VG/LV1 /
-#ll /
-#lvs
-#sync
-#EOT
 
 
 %install
@@ -440,8 +419,11 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(-,root,root,-)
 %doc COPYING
 %{_bindir}/libguestfs-supermin-helper
+%{_bindir}/libguestfs-test-tool
 %{_libdir}/guestfs/
 %{_libdir}/libguestfs.so.*
+%{_libexecdir}/libguestfs-test-tool-helper
+%{_mandir}/man1/libguestfs-test-tool.1*
 
 
 %files devel
@@ -547,6 +529,10 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Thu Jul 23 2009 Richard W.M. Jones <rjones@redhat.com> - 1.0.64-1
+- New upstream release 1.0.64.
+- New tool 'libguestfs-test-tool'.
+
 * Wed Jul 15 2009 Richard W.M. Jones <rjones@redhat.com> - 1.0.61-1
 - New upstream release 1.0.61.
 - New tool / subpackage 'virt-cat'.
