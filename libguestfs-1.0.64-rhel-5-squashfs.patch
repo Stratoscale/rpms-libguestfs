@@ -1,0 +1,25 @@
+From 9af502eff08017941a58ad676d0cbb867f83a341 Mon Sep 17 00:00:00 2001
+From: Richard Jones <rjones@trick.home.annexia.org>
+Date: Thu, 23 Jul 2009 12:45:12 +0100
+Subject: [PATCH] RHEL 5 thinks squashfs is HFS+ filesystem, unless we specify the type explicitly.
+
+---
+ regressions/test-read_file.sh |    2 +-
+ 1 files changed, 1 insertions(+), 1 deletions(-)
+
+diff --git a/regressions/test-read_file.sh b/regressions/test-read_file.sh
+index 33759b8..5840da3 100755
+--- a/regressions/test-read_file.sh
++++ b/regressions/test-read_file.sh
+@@ -25,7 +25,7 @@ rm -f test.out
+ ../fish/guestfish <<'EOF' > test.out
+ add-ro ../images/test.sqsh
+ run
+-mount /dev/sda /
++mount-vfs ro squashfs /dev/sda /
+ read-file /helloworld.tar
+ EOF
+ 
+-- 
+1.6.2.5
+

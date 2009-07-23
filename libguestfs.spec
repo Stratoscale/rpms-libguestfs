@@ -5,12 +5,14 @@ Summary:     Access and modify virtual machine disk images
 Name:        libguestfs
 Epoch:       1
 Version:     1.0.64
-Release:     1%{?dist}
+Release:     2%{?dist}
 License:     LGPLv2+
 Group:       Development/Libraries
 URL:         http://libguestfs.org/
 Source0:     http://libguestfs.org/download/%{name}-%{version}.tar.gz
 BuildRoot:   %{_tmppath}/%{name}-%{version}-%{release}-root
+
+Patch0:      libguestfs-1.0.64-rhel-5-squashfs.patch
 
 # Currently fails on PPC because:
 # "No Package Found for kernel"
@@ -306,6 +308,8 @@ Requires:    jpackage-utils
 
 mkdir -p daemon/m4
 
+%patch0 -p1
+
 
 %build
 %if %{buildnonet}
@@ -533,9 +537,10 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
-* Thu Jul 23 2009 Richard W.M. Jones <rjones@redhat.com> - 1.0.64-1
+* Thu Jul 23 2009 Richard W.M. Jones <rjones@redhat.com> - 1.0.64-2
 - New upstream release 1.0.64.
 - New tool 'libguestfs-test-tool'.
+- Workaround for RHEL 5 bug with squashfs filesystems.
 
 * Wed Jul 15 2009 Richard W.M. Jones <rjones@redhat.com> - 1.0.61-6
 - New upstream release 1.0.61.
