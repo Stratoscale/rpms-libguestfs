@@ -329,7 +329,7 @@ export LIBGUESTFS_DEBUG=1
 # 505109   ppc, ppc64          "Boot failure! No secondary bootloader specified"
 # 502058   i386, x86-64 F-11   need to boot with noapic (WORKAROUND ENABLED)
 # 502074   i386         F-11   commands segfault randomly
-# 503236   i386         F-12?  cryptomgr_test at doublefault_fn
+# 503236   i386         F-12   cryptomgr_test at doublefault_fn
 # 507066   all          F-12   sequence of chroot calls (FIXED)
 # 513249   all          F-12   guestfwd broken in qemu
 
