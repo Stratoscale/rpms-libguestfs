@@ -3,15 +3,14 @@
 
 Summary:     Access and modify virtual machine disk images
 Name:        libguestfs
-Version:     1.0.61
-Release:     6%{?dist}
+Epoch:       1
+Version:     1.0.64
+Release:     1%{?dist}
 License:     LGPLv2+
 Group:       Development/Libraries
 URL:         http://libguestfs.org/
 Source0:     http://libguestfs.org/download/%{name}-%{version}.tar.gz
 BuildRoot:   %{_tmppath}/%{name}-%{version}-%{release}-root
-
-Patch0:      libguestfs-1.0.61-no-locale-for-perl.patch
 
 # Currently fails on PPC because:
 # "No Package Found for kernel"
@@ -89,6 +88,9 @@ Requires:      qemu-system-ppc >= 0.10.5
 
 # For virt-inspector --windows-registry option.
 Requires:      chntpw >= 0.99.6-8
+
+# For libguestfs-test-tool.
+Requires:      genisoimage
 
 
 %description
@@ -304,8 +306,6 @@ Requires:    jpackage-utils
 
 mkdir -p daemon/m4
 
-%patch0 -p1
-
 
 %build
 %if %{buildnonet}
@@ -341,14 +341,7 @@ make INSTALLDIRS=vendor %{?_smp_mflags}
 # it produces masses of output in the build.log.
 export LIBGUESTFS_DEBUG=1
 
-# Workaround for BZ 502058.  This is needed sometimes (but not
-# always) for EL-5.  We don't know why it only affects some boots.
-export LIBGUESTFS_APPEND="noapic"
-
-# Tests fail on i386.  We don't know why because plague doesn't let us
-# see the logs (the tests hang rather than failing completely).
-
-%ifarch x86_64
+%ifarch %{ix86}
 make check
 %endif
 
@@ -430,8 +423,11 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(-,root,root,-)
 %doc COPYING
 %{_bindir}/libguestfs-supermin-helper
+%{_bindir}/libguestfs-test-tool
 %{_libdir}/guestfs/
 %{_libdir}/libguestfs.so.*
+%{_libexecdir}/libguestfs-test-tool-helper
+%{_mandir}/man1/libguestfs-test-tool.1*
 
 
 %files devel
@@ -537,6 +533,10 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Thu Jul 23 2009 Richard W.M. Jones <rjones@redhat.com> - 1.0.64-1
+- New upstream release 1.0.64.
+- New tool 'libguestfs-test-tool'.
+
 * Wed Jul 15 2009 Richard W.M. Jones <rjones@redhat.com> - 1.0.61-6
 - New upstream release 1.0.61.
 - New tool / subpackage 'virt-cat'.
