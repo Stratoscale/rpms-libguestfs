@@ -5,7 +5,7 @@ Summary:     Access and modify virtual machine disk images
 Name:        libguestfs
 Epoch:       1
 Version:     1.0.64
-Release:     1%{?dist}
+Release:     2%{?dist}
 License:     LGPLv2+
 Group:       Development/Libraries
 URL:         http://libguestfs.org/
@@ -333,7 +333,7 @@ export LIBGUESTFS_DEBUG=1
 # 507066   all          F-12   sequence of chroot calls (FIXED)
 # 513249   all          F-12   guestfwd broken in qemu
 
-%ifarch x86-64
+%ifarch x86_64
 make check
 %endif
 
@@ -529,7 +529,7 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
-* Thu Jul 23 2009 Richard W.M. Jones <rjones@redhat.com> - 1.0.64-1
+* Thu Jul 23 2009 Richard W.M. Jones <rjones@redhat.com> - 1.0.64-2
 - New upstream release 1.0.64.
 - New tool 'libguestfs-test-tool'.
 
