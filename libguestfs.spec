@@ -4,7 +4,7 @@
 Summary:     Access and modify virtual machine disk images
 Name:        libguestfs
 Epoch:       1
-Version:     1.0.61
+Version:     1.0.63
 Release:     1%{?dist}
 License:     LGPLv2+
 Group:       Development/Libraries
@@ -71,6 +71,9 @@ Requires:      qemu-kvm >= 0.10-7
 
 # For virt-inspector --windows-registry option.
 Requires:      chntpw >= 0.99.6-8
+
+# For libguestfs-test-tool.
+Requires:      genisoimage
 
 
 %description
@@ -438,8 +441,11 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(-,root,root,-)
 %doc COPYING
 %{_bindir}/libguestfs-supermin-helper
+%{_bindir}/libguestfs-test-tool
 %{_libdir}/guestfs/
 %{_libdir}/libguestfs.so.*
+%{_libexecdir}/libguestfs-test-tool-helper
+%{_mandir}/man1/libguestfs-test-tool.1*
 
 
 %files devel
@@ -545,6 +551,10 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Thu Jul 23 2009 Richard W.M. Jones <rjones@redhat.com> - 1.0.63-1
+- New upstream release 1.0.63.
+- New tool 'libguestfs-test-tool'.
+
 * Wed Jul 15 2009 Richard W.M. Jones <rjones@redhat.com> - 1.0.61-1
 - New upstream release 1.0.61.
 - New tool / subpackage 'virt-cat'.
