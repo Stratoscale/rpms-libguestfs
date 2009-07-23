@@ -326,38 +326,20 @@ export LIBGUESTFS_DEBUG=1
 # do a very long and thorough test ('make check') or just
 # a quick test to see if things generally work.
 
-# Currently tests are disabled on all architectures because of:
-#   BZ 494075/504273 (ppc, ppc64) - possibly now fixed
-#   BZ 505109 (ppc, ppc64) - openbios boot failure
-#   BZ 502058 (i386, x86-64) - only on F-11 we think, seems to work on F-12
-#   BZ 502074 (i386) - sha1sum segfault on F-11 only
-#   BZ 503236 (i386) - cryptomgr_test at doublefault_fn (F-12 only)
-#   BZ 507066 (all) - sequence of chroot calls makes fs unmountable (F-12 only)
-#                     (fixed?)
+# Tracking test issues:
+# BZ       archs        branch reason
+# 494075   ppc, ppc64          openbios bug causes "invalid/unsupported opcode"
+# 504273   ppc, ppc64          "no opcode defined"
+# 505109   ppc, ppc64          "Boot failure! No secondary bootloader specified"
+# 502058   i386, x86-64 F-11   need to boot with noapic (WORKAROUND ENABLED)
+# 502074   i386         F-11   commands segfault randomly
+# 503236   i386         F-12?  cryptomgr_test at doublefault_fn
+# 507066   all          F-12   sequence of chroot calls (FIXED)
+# 513249   all          F-12   guestfwd broken in qemu
 
-# Workaround for BZ 502058.  This is only needed for F-11, but
-# won't harm other builds.
-export LIBGUESTFS_APPEND="noapic"
-
-%ifarch x86_64
-make check
-%endif
-
-# Quick test:
-#./fish/guestfish -v <<EOT
-#alloc test.img 100M
-#run
-#sfdisk /dev/sda 0 0 0 ,
-#pvcreate /dev/sda1
-#vgcreate VG /dev/sda1
-#lvcreate LV1 VG 10M
-#lvcreate LV2 VG 10M
-#mkfs ext2 /dev/VG/LV1
-#mount /dev/VG/LV1 /
-#ll /
-#lvs
-#sync
-#EOT
+#%ifarch %{ix86}  # try again when 513249 is fixed
+#make check
+#%endif
 
 
 %install
