@@ -5,7 +5,7 @@ Summary:     Access and modify virtual machine disk images
 Name:        libguestfs
 Epoch:       1
 Version:     1.0.64
-Release:     2%{?dist}
+Release:     3%{?dist}
 License:     LGPLv2+
 Group:       Development/Libraries
 URL:         http://libguestfs.org/
@@ -92,7 +92,7 @@ Requires:      qemu-system-ppc >= 0.10.5
 Requires:      chntpw >= 0.99.6-8
 
 # For libguestfs-test-tool.
-Requires:      genisoimage
+Requires:      mkisofs
 
 
 %description
@@ -148,7 +148,7 @@ Group:       Development/Tools
 License:     GPLv2+
 Requires:    %{name} = %{epoch}:%{version}-%{release}
 Requires:    /usr/bin/pod2text
-Requires:    virt-inspector
+#Requires:    virt-inspector
 
 
 %description -n guestfish
@@ -537,6 +537,10 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Mon Jul 27 2009 Richard W.M. Jones <rjones@redhat.com> - 1.0.64-3
+- Fix broken runtime dep on virt-inspector (Dennis Gilmore).
+- Fix broken runtime dep on genisoimage (Dennis Gilmore).
+
 * Thu Jul 23 2009 Richard W.M. Jones <rjones@redhat.com> - 1.0.64-2
 - New upstream release 1.0.64.
 - New tool 'libguestfs-test-tool'.
