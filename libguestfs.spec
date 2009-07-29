@@ -4,8 +4,8 @@
 Summary:     Access and modify virtual machine disk images
 Name:        libguestfs
 Epoch:       1
-Version:     1.0.64
-Release:     3%{?dist}
+Version:     1.0.65
+Release:     1%{?dist}
 License:     LGPLv2+
 Group:       Development/Libraries
 URL:         http://libguestfs.org/
@@ -537,6 +537,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Wed Jul 29 2009 Richard W.M. Jones <rjones@redhat.com> - 1.0.65-1
+- New upstream release 1.0.65.
+
 * Mon Jul 27 2009 Richard W.M. Jones <rjones@redhat.com> - 1.0.64-3
 - Fix broken runtime dep on virt-inspector (Dennis Gilmore).
 - Fix broken runtime dep on genisoimage (Dennis Gilmore).
