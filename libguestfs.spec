@@ -4,8 +4,8 @@
 Summary:     Access and modify virtual machine disk images
 Name:        libguestfs
 Epoch:       1
-Version:     1.0.64
-Release:     3%{?dist}
+Version:     1.0.65
+Release:     1%{?dist}
 License:     LGPLv2+
 Group:       Development/Libraries
 URL:         http://libguestfs.org/
@@ -160,6 +160,9 @@ Group:       Development/Tools
 License:     GPLv2+
 Requires:    %{name} = %{epoch}:%{version}-%{release}
 Requires:    perl-Sys-Virt
+# RHBZ#514309
+Provides:    virt-df2 = %{epoch}:%{version}-%{release}
+Obsoletes:   virt-df2 <= %{epoch}:%{version}-%{release}
 
 
 %description -n virt-df
@@ -336,10 +339,11 @@ export LIBGUESTFS_DEBUG=1
 # 503236   i386         F-12   cryptomgr_test at doublefault_fn
 # 507066   all          F-12   sequence of chroot calls (FIXED)
 # 513249   all          F-12   guestfwd broken in qemu (FIXED)
+# -        ?            F-12   qemu TCG on Xen is broken again
 
-%ifarch x86_64
-make check
-%endif
+#%ifarch x86_64
+#make check
+#%endif
 
 
 %install
@@ -533,6 +537,11 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Wed Jul 29 2009 Richard W.M. Jones <rjones@redhat.com> - 1.0.65-1
+- New upstream release 1.0.65.
+- Add Obsoletes for virt-df2 (RHBZ#514309).
+- Disable tests because of ongoing TCG problems with newest qemu in Rawhide.
+
 * Thu Jul 23 2009 Richard W.M. Jones <rjones@redhat.com> - 1.0.64-3
 - RHBZ#513249 bug in qemu is now fixed, so try to rebuild and run tests.
 - However RHBZ#503236 still prevents us from testing on i386.
