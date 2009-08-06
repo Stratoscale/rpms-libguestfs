@@ -4,7 +4,7 @@
 Summary:     Access and modify virtual machine disk images
 Name:        libguestfs
 Epoch:       1
-Version:     1.0.65
+Version:     1.0.66
 Release:     1%{?dist}
 License:     LGPLv2+
 Group:       Development/Libraries
@@ -339,7 +339,7 @@ export LIBGUESTFS_DEBUG=1
 # 503236   i386         F-12   cryptomgr_test at doublefault_fn
 # 507066   all          F-12   sequence of chroot calls (FIXED)
 # 513249   all          F-12   guestfwd broken in qemu (FIXED)
-# -        ?            F-12   qemu TCG on Xen is broken again
+# 516022   all          F-12   virtio-net gives "Network is unreachable" errors
 
 #%ifarch x86_64
 #make check
@@ -537,6 +537,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Thu Aug  6 2009 Richard W.M. Jones <rjones@redhat.com> - 1.0.66-1
+- New upstream release 1.0.66.
+
 * Wed Jul 29 2009 Richard W.M. Jones <rjones@redhat.com> - 1.0.65-1
 - New upstream release 1.0.65.
 - Add Obsoletes for virt-df2 (RHBZ#514309).
