@@ -1,0 +1,30 @@
+From a8a4ce2bd3fd021e063cb3b939b45059f07ed053 Mon Sep 17 00:00:00 2001
+From: Richard Jones <rjones@trick.home.annexia.org>
+Date: Thu, 6 Aug 2009 18:40:59 +0100
+Subject: [PATCH 1/2] Tests: Don't test block size in statvfs test.
+
+The block size changes between kernel releases, causing
+a false failure in the tests.  The error was:
+
+test_statvfs_0: bsize was 65536, expected 131072
+---
+ src/generator.ml |    3 +--
+ 1 files changed, 1 insertions(+), 2 deletions(-)
+
+diff --git a/src/generator.ml b/src/generator.ml
+index 7ac4ac8..8b0fc66 100755
+--- a/src/generator.ml
++++ b/src/generator.ml
+@@ -1619,8 +1619,7 @@ This is the same as the C<lstat(2)> system call.");
+ 
+   ("statvfs", (RStruct ("statbuf", "statvfs"), [String "path"]), 54, [],
+    [InitSquashFS, Always, TestOutputStruct (
+-      [["statvfs"; "/"]], [CompareWithInt ("namemax", 256);
+-                           CompareWithInt ("bsize", 131072)])],
++      [["statvfs"; "/"]], [CompareWithInt ("namemax", 256)])],
+    "get file system statistics",
+    "\
+ Returns file system statistics for any mounted file system.
+-- 
+1.6.2.5
+

@@ -1,0 +1,30 @@
+From 530a90d3d4d7d107f52ac8db90fdb86c4f3e1737 Mon Sep 17 00:00:00 2001
+From: Richard Jones <rjones@trick.home.annexia.org>
+Date: Thu, 6 Aug 2009 18:46:57 +0100
+Subject: [PATCH 2/2] Always pass mkswap -f parameter.
+
+Otherwise mkswap will give a silly error if you ask it to
+swap on a whole device.
+---
+ daemon/swap.c |    4 ++--
+ 1 files changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/daemon/swap.c b/daemon/swap.c
+index db93e57..3ebdef6 100644
+--- a/daemon/swap.c
++++ b/daemon/swap.c
+@@ -34,9 +34,9 @@ mkswap (char *device, const char *flag, const char *value)
+   int r;
+ 
+   if (!flag)
+-    r = command (NULL, &err, "/sbin/mkswap", device, NULL);
++    r = command (NULL, &err, "/sbin/mkswap", "-f", device, NULL);
+   else
+-    r = command (NULL, &err, "/sbin/mkswap", flag, value, device, NULL);
++    r = command (NULL, &err, "/sbin/mkswap", "-f", flag, value, device, NULL);
+ 
+   if (r == -1) {
+     reply_with_error ("mkswap: %s", err);
+-- 
+1.6.2.5
+
