@@ -340,6 +340,7 @@ export LIBGUESTFS_DEBUG=1
 # 507066   all          F-12   sequence of chroot calls (FIXED)
 # 513249   all          F-12   guestfwd broken in qemu (FIXED)
 # 516022   all          F-12   virtio-net gives "Network is unreachable" errors
+# 516096   ?            F-11   race condition in swapoff/blockdev --rereadpt
 
 #%ifarch x86_64
 #make check
