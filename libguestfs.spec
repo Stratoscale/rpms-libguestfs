@@ -5,7 +5,7 @@ Summary:     Access and modify virtual machine disk images
 Name:        libguestfs
 Epoch:       1
 Version:     1.0.66
-Release:     3%{?dist}
+Release:     4%{?dist}
 License:     LGPLv2+
 Group:       Development/Libraries
 URL:         http://libguestfs.org/
@@ -14,6 +14,7 @@ BuildRoot:   %{_tmppath}/%{name}-%{version}-%{release}-root
 
 Patch0:      0001-Tests-Don-t-test-block-size-in-statvfs-test.patch
 Patch1:      0002-Always-pass-mkswap-f-parameter.patch
+Patch2:      0003-Tests-swapon_device-test-mkswap-dev-sda1-instead-o.patch
 
 # Currently fails on PPC because:
 # "No Package Found for kernel"
@@ -311,6 +312,7 @@ mkdir -p daemon/m4
 
 %patch0 -p1
 %patch1 -p1
+%patch2 -p1
 
 
 %build
@@ -539,6 +541,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Fri Aug  7 2009 Richard W.M. Jones <rjones@redhat.com> - 1.0.66-4
+- Another patch to try to fix the tests.
+
 * Thu Aug  6 2009 Richard W.M. Jones <rjones@redhat.com> - 1.0.66-3
 - New upstream release 1.0.66.
 - Incorporate upstream patches to fix some tests.
