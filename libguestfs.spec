@@ -5,7 +5,7 @@ Summary:     Access and modify virtual machine disk images
 Name:        libguestfs
 Epoch:       1
 Version:     1.0.66
-Release:     4%{?dist}
+Release:     5%{?dist}
 License:     LGPLv2+
 Group:       Development/Libraries
 URL:         http://libguestfs.org/
@@ -13,7 +13,7 @@ Source0:     http://libguestfs.org/download/%{name}-%{version}.tar.gz
 BuildRoot:   %{_tmppath}/%{name}-%{version}-%{release}-root
 
 Patch0:      0001-Allow-network-interface-to-be-configured.patch
-BuildRequires: automake, autoconf, libtool, gettext, gettext-devel
+BuildRequires: automake, autoconf, libtool, gettext, gettext-devel, cvs
 
 # Basic build requirements:
 BuildRequires: /usr/bin/pod2man
@@ -547,7 +547,7 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
-* Fri Aug  7 2009 Richard W.M. Jones <rjones@redhat.com> - 1.0.66-4
+* Fri Aug  7 2009 Richard W.M. Jones <rjones@redhat.com> - 1.0.66-5
 - Set network interface to ne2k_pci (workaround for RHBZ#516022).
 - Rerun autoconf because patch touches configure script.
 
