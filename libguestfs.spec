@@ -336,7 +336,9 @@ export LIBGUESTFS_DEBUG=1
 # 507066   all          F-12   sequence of chroot calls (FIXED)
 # 513249   all          F-12   guestfwd broken in qemu
 # 516022   all          F-12   virtio-net gives "Network is unreachable" errors
+#                                 (WORKAROUND ENABLED)
 # 516096   ?            F-11   race condition in swapoff/blockdev --rereadpt
+# 516543   ?            F-12   qemu-kvm segfaults when run inside a VM
 
 #%ifarch x86_64
 #make check
