@@ -25,6 +25,7 @@ BuildRequires: squashfs-tools
 BuildRequires: qemu-kvm >= 0.10-7
 BuildRequires: createrepo
 BuildRequires: glibc-static
+BuildRequires: libselinux-devel
 
 # This is only needed for RHEL 5 because readline-devel doesn't
 # properly depend on it, but doesn't do any harm on other platforms:
@@ -34,7 +35,7 @@ BuildRequires: ncurses-devel
 BuildRequires: kernel, bash, coreutils, lvm2, ntfs-3g, util-linux-ng
 BuildRequires: MAKEDEV, net-tools, augeas-libs, file
 BuildRequires: module-init-tools, procps, strace, iputils
-BuildRequires: dosfstools, zerofree, lsof, scrub
+BuildRequires: dosfstools, zerofree, lsof, scrub, libselinux
 %ifarch %{ix86} x86_64
 BuildRequires: grub, ntfsprogs
 %endif
@@ -43,7 +44,7 @@ BuildRequires: grub, ntfsprogs
 Requires:      kernel, bash, coreutils, lvm2, ntfs-3g, util-linux-ng
 Requires:      MAKEDEV, net-tools, augeas-libs, file
 Requires:      module-init-tools, procps, strace, iputils
-Requires:      dosfstools, zerofree, lsof, scrub
+Requires:      dosfstools, zerofree, lsof, scrub, libselinux
 %ifarch %{ix86} x86_64
 Requires:      grub, ntfsprogs
 %endif
