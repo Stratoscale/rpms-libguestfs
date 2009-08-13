@@ -5,15 +5,12 @@ Summary:     Access and modify virtual machine disk images
 Name:        libguestfs
 Epoch:       1
 Version:     1.0.67
-Release:     1%{?dist}
+Release:     2%{?dist}
 License:     LGPLv2+
 Group:       Development/Libraries
 URL:         http://libguestfs.org/
 Source0:     http://libguestfs.org/download/%{name}-%{version}.tar.gz
 BuildRoot:   %{_tmppath}/%{name}-%{version}-%{release}-root
-
-Patch0:      0001-Allow-network-interface-to-be-configured.patch
-BuildRequires: automake, autoconf, libtool, gettext, gettext-devel, cvs
 
 # Basic build requirements:
 BuildRequires: /usr/bin/pod2man
@@ -296,9 +293,6 @@ Requires:    jpackage-utils
 
 mkdir -p daemon/m4
 
-%patch0 -p1
-autoreconf -i
-
 
 %build
 %if %{buildnonet}
@@ -310,14 +304,12 @@ createrepo repo
 %define extra %nil
 %endif
 
-# --with-net-if=ne2k_pci is a workaround for RHBZ#516022.
 ./configure \
   --prefix=%{_prefix} --libdir=%{_libdir} \
   --mandir=%{_mandir} \
   --with-qemu="qemu-kvm qemu-system-%{_build_arch} qemu" \
   --enable-debug-command \
   --enable-supermin \
-  --with-net-if=ne2k_pci \
   %{extra}
 
 # This ensures that /usr/sbin/chroot is on the path.  Not needed
@@ -349,7 +341,7 @@ export LIBGUESTFS_DEBUG=1
 # 507066   all          F-12   sequence of chroot calls (FIXED)
 # 513249   all          F-12   guestfwd broken in qemu (FIXED)
 # 516022   all          F-12   virtio-net gives "Network is unreachable" errors
-#                                 (WORKAROUND ENABLED)
+#                                 (FIXED)
 # 516096   ?            F-11   race condition in swapoff/blockdev --rereadpt
 # 516543   ?            F-12   qemu-kvm segfaults when run inside a VM
 
@@ -549,7 +541,7 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
-* Thu Aug 13 2009 Richard W.M. Jones <rjones@redhat.com> - 1.0.67-1
+* Thu Aug 13 2009 Richard W.M. Jones <rjones@redhat.com> - 1.0.67-2
 - New upstream release 1.0.67.
 
 * Fri Aug  7 2009 Richard W.M. Jones <rjones@redhat.com> - 1.0.66-5
