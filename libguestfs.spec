@@ -4,8 +4,8 @@
 Summary:     Access and modify virtual machine disk images
 Name:        libguestfs
 Epoch:       1
-Version:     1.0.66
-Release:     5%{?dist}
+Version:     1.0.67
+Release:     1%{?dist}
 License:     LGPLv2+
 Group:       Development/Libraries
 URL:         http://libguestfs.org/
@@ -549,6 +549,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Thu Aug 13 2009 Richard W.M. Jones <rjones@redhat.com> - 1.0.67-1
+- New upstream release 1.0.67.
+
 * Fri Aug  7 2009 Richard W.M. Jones <rjones@redhat.com> - 1.0.66-5
 - Set network interface to ne2k_pci (workaround for RHBZ#516022).
 - Rerun autoconf because patch touches configure script.
