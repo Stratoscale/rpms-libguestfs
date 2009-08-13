@@ -34,6 +34,7 @@ BuildRequires: qemu-system-x86 >= 0.10.5
 BuildRequires: qemu-system-ppc >= 0.10.5
 %endif
 BuildRequires: createrepo
+BuildRequires: libselinux-devel
 
 # This is only needed for RHEL 5 because readline-devel doesn't
 # properly depend on it, but doesn't do any harm on other platforms:
@@ -43,7 +44,7 @@ BuildRequires: ncurses-devel
 BuildRequires: kernel, bash, coreutils, lvm2
 BuildRequires: MAKEDEV, net-tools, file
 BuildRequires: module-init-tools, procps, strace, iputils
-BuildRequires: dosfstools, lsof, scrub
+BuildRequires: dosfstools, lsof, scrub, libselinux
 # Not supported in EPEL yet: ntfs-3g util-linux-ng zerofree
 # Not working: augeas-libs
 %ifarch %{ix86} x86_64
@@ -54,7 +55,7 @@ BuildRequires: grub, ntfsprogs
 Requires:      kernel, bash, coreutils, lvm2
 Requires:      MAKEDEV, net-tools, file
 Requires:      module-init-tools, procps, strace, iputils
-Requires:      dosfstools, lsof, scrub
+Requires:      dosfstools, lsof, scrub, libselinux
 # Not supported in EPEL yet: ntfs-3g util-linux-ng zerofree
 # Not working: augeas-libs
 %ifarch %{ix86} x86_64
