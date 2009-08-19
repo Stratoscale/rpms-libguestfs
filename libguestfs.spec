@@ -5,7 +5,7 @@ Summary:     Access and modify virtual machine disk images
 Name:        libguestfs
 Epoch:       1
 Version:     1.0.68
-Release:     1%{?dist}
+Release:     2%{?dist}
 License:     LGPLv2+
 Group:       Development/Libraries
 URL:         http://libguestfs.org/
@@ -18,7 +18,7 @@ BuildRequires: /usr/bin/pod2text
 BuildRequires: febootstrap >= 2.3
 BuildRequires: augeas-devel >= 0.5.0
 BuildRequires: readline-devel
-BuildRequires: squashfs-tools
+BuildRequires: genisoimage
 BuildRequires: qemu-kvm >= 0.10-7
 BuildRequires: createrepo
 BuildRequires: glibc-static
@@ -541,8 +541,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
-* Wed Aug 19 2009 Richard W.M. Jones <rjones@redhat.com> - 1.0.68-1
+* Wed Aug 19 2009 Richard W.M. Jones <rjones@redhat.com> - 1.0.68-2
 - New upstream release 1.0.68.
+- BR genisoimage.
 
 * Thu Aug 13 2009 Richard W.M. Jones <rjones@redhat.com> - 1.0.67-2
 - New upstream release 1.0.67.
