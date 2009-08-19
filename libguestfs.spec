@@ -5,7 +5,7 @@ Summary:     Access and modify virtual machine disk images
 Name:        libguestfs
 Epoch:       1
 Version:     1.0.68
-Release:     3%{?dist}
+Release:     4%{?dist}
 License:     LGPLv2+
 Group:       Development/Libraries
 URL:         http://libguestfs.org/
@@ -41,6 +41,7 @@ BuildRequires: kernel, bash, coreutils, lvm2
 BuildRequires: MAKEDEV, net-tools, file
 BuildRequires: module-init-tools, procps, strace, iputils
 BuildRequires: dosfstools, lsof, scrub, libselinux
+BuildRequires: e4fsprogs
 # Not supported in EPEL yet: ntfs-3g util-linux-ng zerofree
 # Not working: augeas-libs
 %ifarch %{ix86} x86_64
@@ -52,6 +53,7 @@ Requires:      kernel, bash, coreutils, lvm2
 Requires:      MAKEDEV, net-tools, file
 Requires:      module-init-tools, procps, strace, iputils
 Requires:      dosfstools, lsof, scrub, libselinux
+Requires:      e4fsprogs
 # Not supported in EPEL yet: ntfs-3g util-linux-ng zerofree
 # Not working: augeas-libs
 %ifarch %{ix86} x86_64
@@ -534,9 +536,10 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
-* Wed Aug 19 2009 Richard W.M. Jones <rjones@redhat.com> - 1.0.68-3
+* Wed Aug 19 2009 Richard W.M. Jones <rjones@redhat.com> - 1.0.68-4
 - New upstream release 1.0.68.
 - BR mkisofs.
+- For EPEL only we need e4fsprogs.
 
 * Thu Aug 13 2009 Richard W.M. Jones <rjones@redhat.com> - 1.0.67-1
 - New upstream release 1.0.67.
