@@ -541,7 +541,7 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
-* Wed Aug 19 2009 Richard W.M. Jones <rjones@redhat.com> - 1.0.68-4
+* Wed Aug 19 2009 Richard W.M. Jones <rjones@redhat.com> - 1.0.68-5
 - New upstream release 1.0.68.
 - BR mkisofs.
 - For EPEL only we need e4fsprogs.
