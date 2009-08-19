@@ -1,0 +1,69 @@
+From 0c92c583d5291e1a3a966b36f107bf48e4bfad93 Mon Sep 17 00:00:00 2001
+From: Richard W.M. Jones <rjones@redhat.com>
+Date: Wed, 19 Aug 2009 21:37:56 +0100
+Subject: [PATCH] tests: Found three more references to the squashfs, replaced with ISO.
+
+---
+ perl/t/510-lib-file-arch.t                         |    4 ++--
+ .../test-cancellation-download-librarycancels.sh   |    4 ++--
+ regressions/test-read_file.sh                      |    4 ++--
+ 3 files changed, 6 insertions(+), 6 deletions(-)
+
+diff --git a/perl/t/510-lib-file-arch.t b/perl/t/510-lib-file-arch.t
+index c4b9d31..5c70449 100644
+--- a/perl/t/510-lib-file-arch.t
++++ b/perl/t/510-lib-file-arch.t
+@@ -35,7 +35,7 @@ use Sys::Guestfs::Lib;
+ my $h = Sys::Guestfs->new ();
+ ok ($h);
+ 
+-$h->add_drive_ro ("../images/test.sqsh");
++$h->add_drive_ro ("../images/test.iso");
+ ok (1);
+ 
+ $h->launch ();
+@@ -43,7 +43,7 @@ ok (1);
+ $h->wait_ready ();
+ ok (1);
+ 
+-$h->mount_vfs ("ro", "squashfs", "/dev/sda", "/");
++$h->mount_ro ("/dev/sda", "/");
+ ok (1);
+ 
+ is (Sys::Guestfs::Lib::file_architecture ($h, "/bin-i586-dynamic"),
+diff --git a/regressions/test-cancellation-download-librarycancels.sh b/regressions/test-cancellation-download-librarycancels.sh
+index b0d78c9..73c5469 100755
+--- a/regressions/test-cancellation-download-librarycancels.sh
++++ b/regressions/test-cancellation-download-librarycancels.sh
+@@ -25,10 +25,10 @@ set -e
+ rm -f test.img
+ 
+ ../fish/guestfish <<'EOF'
+-add ../images/test.sqsh
++add ../images/test.iso
+ run
+ 
+-mount-vfs ro squashfs /dev/sda /
++mount-ro /dev/sda /
+ 
+ # Download a file to /dev/full.
+ echo "Expect: write: /dev/full: No space left on device"
+diff --git a/regressions/test-read_file.sh b/regressions/test-read_file.sh
+index 5840da3..3b9c6ef 100755
+--- a/regressions/test-read_file.sh
++++ b/regressions/test-read_file.sh
+@@ -23,9 +23,9 @@ set -e
+ rm -f test.out
+ 
+ ../fish/guestfish <<'EOF' > test.out
+-add-ro ../images/test.sqsh
++add-ro ../images/test.iso
+ run
+-mount-vfs ro squashfs /dev/sda /
++mount-ro /dev/sda /
+ read-file /helloworld.tar
+ EOF
+ 
+-- 
+1.6.2.5
+

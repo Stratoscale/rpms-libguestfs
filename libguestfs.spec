@@ -5,12 +5,15 @@ Summary:     Access and modify virtual machine disk images
 Name:        libguestfs
 Epoch:       1
 Version:     1.0.68
-Release:     4%{?dist}
+Release:     5%{?dist}
 License:     LGPLv2+
 Group:       Development/Libraries
 URL:         http://libguestfs.org/
 Source0:     http://libguestfs.org/download/%{name}-%{version}.tar.gz
 BuildRoot:   %{_tmppath}/%{name}-%{version}-%{release}-root
+
+# This patch upstream in 1.0.69.
+Patch0:      0001-tests-Found-three-more-references-to-the-squashfs.patch
 
 # Currently fails on PPC because:
 # "No Package Found for kernel"
@@ -307,6 +310,8 @@ Requires:    jpackage-utils
 %prep
 %setup -q
 
+%patch0 -p1
+
 mkdir -p daemon/m4
 
 
@@ -540,6 +545,7 @@ rm -rf $RPM_BUILD_ROOT
 - New upstream release 1.0.68.
 - BR mkisofs.
 - For EPEL only we need e4fsprogs.
+- Pull in upstream patch to fix tests.
 
 * Thu Aug 13 2009 Richard W.M. Jones <rjones@redhat.com> - 1.0.67-1
 - New upstream release 1.0.67.
