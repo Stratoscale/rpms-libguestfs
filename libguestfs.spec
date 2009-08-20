@@ -410,10 +410,6 @@ rm $RPM_BUILD_ROOT%{_libdir}/libguestfs_jni.la
 # Generator shouldn't be executable when we distribute it.
 chmod -x src/generator.ml
 
-# Remove virt-v2v for now, WIP.
-rm $RPM_BUILD_ROOT%{_bindir}/virt-v2v
-rm $RPM_BUILD_ROOT%{_mandir}/man1/virt-v2v.1*
-
 # Find locale files.
 %find_lang %{name}
 
