@@ -4,7 +4,7 @@
 Summary:     Access and modify virtual machine disk images
 Name:        libguestfs
 Epoch:       1
-Version:     1.0.69
+Version:     1.0.70
 Release:     1%{?dist}
 License:     LGPLv2+
 Group:       Development/Libraries
@@ -537,6 +537,10 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Tue Sep 15 2009 Richard W.M. Jones <rjones@redhat.com> - 1.0.70-1
+- New upstream release 1.0.70.
+- Fixes build problem related to old version of GNU gettext.
+
 * Tue Sep 15 2009 Richard W.M. Jones <rjones@redhat.com> - 1.0.69-1
 - New upstream release 1.0.69.
 - Reenable the tests (because RHBZ#516543 is supposed to be fixed).
