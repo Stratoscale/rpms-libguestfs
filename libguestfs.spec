@@ -4,16 +4,13 @@
 Summary:     Access and modify virtual machine disk images
 Name:        libguestfs
 Epoch:       1
-Version:     1.0.68
-Release:     5%{?dist}
+Version:     1.0.69
+Release:     1%{?dist}
 License:     LGPLv2+
 Group:       Development/Libraries
 URL:         http://libguestfs.org/
 Source0:     http://libguestfs.org/download/%{name}-%{version}.tar.gz
 BuildRoot:   %{_tmppath}/%{name}-%{version}-%{release}-root
-
-# This patch upstream in 1.0.69.
-Patch0:      0001-tests-Found-three-more-references-to-the-squashfs.patch
 
 # Currently fails on PPC because:
 # "No Package Found for kernel"
@@ -310,8 +307,6 @@ Requires:    jpackage-utils
 %prep
 %setup -q
 
-%patch0 -p1
-
 mkdir -p daemon/m4
 
 
@@ -541,6 +536,12 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Tue Sep 15 2009 Richard W.M. Jones <rjones@redhat.com> - 1.0.69-1
+- New upstream release 1.0.69.
+- New main loop code should fix RHBZ#501888, RHBZ#504418.
+- Add waitpid along guestfs_close path (fixes RHBZ#518747).
+- Remove fix-tests patch which is now upstream.
+
 * Wed Aug 19 2009 Richard W.M. Jones <rjones@redhat.com> - 1.0.68-5
 - New upstream release 1.0.68.
 - BR mkisofs.
