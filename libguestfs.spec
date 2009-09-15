@@ -4,8 +4,8 @@
 Summary:     Access and modify virtual machine disk images
 Name:        libguestfs
 Epoch:       1
-Version:     1.0.68
-Release:     2%{?dist}
+Version:     1.0.69
+Release:     1%{?dist}
 License:     LGPLv2+
 Group:       Development/Libraries
 URL:         http://libguestfs.org/
@@ -343,11 +343,11 @@ export LIBGUESTFS_DEBUG=1
 # 516022   all          F-12   virtio-net gives "Network is unreachable" errors
 #                                 (FIXED)
 # 516096   ?            F-11   race condition in swapoff/blockdev --rereadpt
-# 516543   ?            F-12   qemu-kvm segfaults when run inside a VM
+# 516543   ?            F-12   qemu-kvm segfaults when run inside a VM (FIXED)
 
-#%ifarch x86_64
-#make check
-#%endif
+%ifarch x86_64
+make check
+%endif
 
 
 %install
@@ -537,6 +537,12 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Tue Sep 15 2009 Richard W.M. Jones <rjones@redhat.com> - 1.0.69-1
+- New upstream release 1.0.69.
+- Reenable the tests (because RHBZ#516543 is supposed to be fixed).
+- New main loop code should fix RHBZ#501888, RHBZ#504418.
+- Add waitpid along guestfs_close path (fixes RHBZ#518747).
+
 * Wed Aug 19 2009 Richard W.M. Jones <rjones@redhat.com> - 1.0.68-2
 - New upstream release 1.0.68.
 - BR genisoimage.
