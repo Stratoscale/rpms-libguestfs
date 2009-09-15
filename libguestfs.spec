@@ -533,6 +533,10 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Tue Sep 15 2009 Richard W.M. Jones <rjones@redhat.com> - 1.0.70-1
+- New upstream release 1.0.70.
+- Fixes build problem related to old version of GNU gettext.
+
 * Tue Sep 15 2009 Richard W.M. Jones <rjones@redhat.com> - 1.0.69-1
 - New upstream release 1.0.69.
 - New main loop code should fix RHBZ#501888, RHBZ#504418.
