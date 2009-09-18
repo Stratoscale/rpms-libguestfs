@@ -5,7 +5,7 @@ Summary:     Access and modify virtual machine disk images
 Name:        libguestfs
 Epoch:       1
 Version:     1.0.70
-Release:     1%{?dist}
+Release:     2%{?dist}
 License:     LGPLv2+
 Group:       Development/Libraries
 URL:         http://libguestfs.org/
@@ -218,6 +218,8 @@ Summary:     Perl bindings for %{name}
 Group:       Development/Libraries
 Requires:    %{name} = %{epoch}:%{version}-%{release}
 Requires:    perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $version))
+# RHBZ#523547
+Requires:    perl-XML-XPath
 
 
 %description -n perl-%{name}
@@ -537,6 +539,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Fri Sep 18 2009 Richard W.M. Jones <rjones@redhat.com> - 1.0.70-2
+- Perl bindings require perl-XML-XPath (fixed RHBZ#523547).
+
 * Tue Sep 15 2009 Richard W.M. Jones <rjones@redhat.com> - 1.0.70-1
 - New upstream release 1.0.70.
 - Fixes build problem related to old version of GNU gettext.
