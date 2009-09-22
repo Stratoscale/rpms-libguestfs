@@ -4,8 +4,8 @@
 Summary:     Access and modify virtual machine disk images
 Name:        libguestfs
 Epoch:       1
-Version:     1.0.70
-Release:     2%{?dist}
+Version:     1.0.71
+Release:     1%{?dist}
 License:     LGPLv2+
 Group:       Development/Libraries
 URL:         http://libguestfs.org/
@@ -535,6 +535,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Tue Sep 22 2009 Richard W.M. Jones <rjones@redhat.com> - 1.0.71-1
+- New upstream release 1.0.71.
+
 * Fri Sep 18 2009 Richard W.M. Jones <rjones@redhat.com> - 1.0.70-2
 - Perl bindings require perl-XML-XPath (fixed RHBZ#523547).
 
