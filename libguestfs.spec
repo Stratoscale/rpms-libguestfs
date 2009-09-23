@@ -304,7 +304,7 @@ find /var/cache/yum -type f -name '*.rpm' -print0 | xargs -0 cp -t repo
 createrepo repo
 %define extra --with-mirror=file://$(pwd)/repo --with-repo=fedora-12 --with-updates=none
 %else
-%define extra %nil
+%define extra --with-mirror=http://download.fedora.redhat.com/pub/fedora/linux/development/x86_64/os/
 %endif
 
 ./configure \
