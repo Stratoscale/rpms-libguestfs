@@ -4,7 +4,7 @@
 Summary:     Access and modify virtual machine disk images
 Name:        libguestfs
 Epoch:       1
-Version:     1.0.71
+Version:     1.0.72
 Release:     1%{?dist}
 License:     LGPLv2+
 Group:       Development/Libraries
@@ -78,7 +78,7 @@ BuildRequires: java >= 1.5.0
 BuildRequires: jpackage-utils
 BuildRequires: java-devel
 
-# For virt-inspector:
+# For libguestfs-tools:
 #BuildRequires: perl-Sys-Virt
 
 # Runtime requires:
@@ -158,51 +158,55 @@ modifying virtual machine disk images from the command line and shell
 scripts.
 
 
-#%package -n virt-inspector
-#Summary:     Display OS version, kernel, drivers, etc in a virtual machine
-#Group:       Development/Tools
-#License:     GPLv2+
-#Requires:    %{name} = %{epoch}:%{version}-%{release}
-#Requires:    guestfish
-#Requires:    perl-Sys-Virt
-#
-#
-#%description -n virt-inspector
-#Virt-inspector examines a virtual machine and tries to determine the
-#version of the OS, the kernel version, what drivers are installed,
-#whether the virtual machine is fully virtualized (FV) or
-#para-virtualized (PV), what applications are installed and more.
+# %package tools
+# Summary:     System administration tools for virtual machines
+# Group:       Development/Tools
+# License:     GPLv2+
+# Requires:    %{name} = %{epoch}:%{version}-%{release}
+# Requires:    guestfish
+# Requires:    perl-Sys-Virt
+
+# # Obsolete and replace earlier packages.
+# Provides:    virt-cat = %{epoch}:%{version}-%{release}
+# Obsoletes:   virt-cat <= %{epoch}:%{version}-%{release}
+# Provides:    virt-df = %{epoch}:%{version}-%{release}
+# Obsoletes:   virt-df <= %{epoch}:%{version}-%{release}
+# Provides:    virt-inspector = %{epoch}:%{version}-%{release}
+# Obsoletes:   virt-inspector <= %{epoch}:%{version}-%{release}
+
+# # RHBZ#514309
+# Provides:    virt-df2 = %{epoch}:%{version}-%{release}
+# Obsoletes:   virt-df2 <= %{epoch}:%{version}-%{release}
+
+# # These were never packages:
+# Provides:    virt-edit = %{epoch}:%{version}-%{release}
+# Provides:    virt-rescue = %{epoch}:%{version}-%{release}
 
 
-#%package -n virt-df
-#Summary:     Display free space on virtual filesystems
-#Group:       Development/Tools
-#License:     GPLv2+
-#Requires:    %{name} = %{epoch}:%{version}-%{release}
-#Requires:    perl-Sys-Virt
-#
-#
-#%description -n virt-df
-#"virt-df" is a command line tool to display free space on virtual
-#machine filesystems.  Unlike other tools, it doesn’t just display the
-#amount of space allocated to a virtual machine, but can look inside
-#the virtual machine to see how much space is really being used.
-#
-#It is like the df(1) command, but for virtual machines, except that it
-#also works for Windows virtual machines.
+# %description tools
+# This package contains miscellaneous system administrator command line
+# tools for virtual machines.
 
+# Virt-cat is a command line tool to display the contents of a file in a
+# virtual machine.
 
-#%package -n virt-cat
-#Summary:     Display a file in a virtual machine
-#Group:       Development/Tools
-#License:     GPLv2+
-#Requires:    %{name} = %{epoch}:%{version}-%{release}
-#Requires:    perl-Sys-Virt
-#
-#
-#%description -n virt-cat
-#"virt-cat" is a command line tool to display the contents
-#of a file in a virtual machine.
+# Virt-df is a command line tool to display free space on virtual
+# machine filesystems.  Unlike other tools, it doesn’t just display the
+# amount of space allocated to a virtual machine, but can look inside
+# the virtual machine to see how much space is really being used.  It is
+# like the df(1) command, but for virtual machines, except that it also
+# works for Windows virtual machines.
+
+# Virt-edit is a command line tool to edit the contents of a file in a
+# virtual machine.
+
+# Virt-inspector examines a virtual machine and tries to determine the
+# version of the OS, the kernel version, what drivers are installed,
+# whether the virtual machine is fully virtualized (FV) or
+# para-virtualized (PV), what applications are installed and more.
+
+# Virt-rescue provides a rescue shell for making interactive,
+# unstructured fixes to virtual machines.
 
 
 %package -n ocaml-%{name}
@@ -455,22 +459,18 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man1/guestfish.1*
 
 
-#%files -n virt-inspector
-#%defattr(-,root,root,-)
-#%{_bindir}/virt-inspector
-#%{_mandir}/man1/virt-inspector.1*
-
-
-#%files -n virt-df
-#%defattr(-,root,root,-)
-#%{_bindir}/virt-df
-#%{_mandir}/man1/virt-df.1*
-
-
-#%files -n virt-cat
-#%defattr(-,root,root,-)
-#%{_bindir}/virt-cat
-#%{_mandir}/man1/virt-cat.1*
+# %files tools
+# %defattr(-,root,root,-)
+# %{_bindir}/virt-cat
+# %{_mandir}/man1/virt-cat.1*
+# %{_bindir}/virt-df
+# %{_mandir}/man1/virt-df.1*
+# %{_bindir}/virt-edit
+# %{_mandir}/man1/virt-edit.1*
+# %{_bindir}/virt-inspector
+# %{_mandir}/man1/virt-inspector.1*
+# %{_bindir}/virt-rescue
+# %{_mandir}/man1/virt-rescue.1*
 
 
 %files -n ocaml-%{name}
@@ -538,6 +538,14 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Wed Sep 23 2009 Richard W.M. Jones <rjones@redhat.com> - 1.0.72-1
+- New upstream release 1.0.72.
+- New tools: virt-edit, virt-rescue.
+- Combine virt-cat, virt-df, virt-edit, virt-inspector and virt-rescue
+  into a single package called libguestfs-tools.
+- libguestfs-tools is still disabled on EPEL because we are
+  waiting for perl(Sys::Virt) to go into RHEL (in 5.4).
+
 * Tue Sep 22 2009 Richard W.M. Jones <rjones@redhat.com> - 1.0.71-1
 - New upstream release 1.0.71.
 
