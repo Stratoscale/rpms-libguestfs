@@ -4,7 +4,7 @@
 Summary:     Access and modify virtual machine disk images
 Name:        libguestfs
 Epoch:       1
-Version:     1.0.72
+Version:     1.0.73
 Release:     1%{?dist}
 License:     LGPLv2+
 Group:       Development/Libraries
@@ -64,6 +64,7 @@ Requires:      grub, ntfsprogs
 # different languages:
 BuildRequires: ocaml
 BuildRequires: ocaml-findlib-devel
+BuildRequires: ocaml-xml-light-devel
 #BuildRequires: perl-devel
 #BuildRequires: perl-Test-Simple
 BuildRequires: perl-Test-Pod
@@ -415,6 +416,10 @@ rm $RPM_BUILD_ROOT%{_libdir}/libguestfs_jni.la
 # Generator shouldn't be executable when we distribute it.
 chmod -x src/generator.ml
 
+# Move installed documentation back to the source directory so
+# we can install it using a %%doc rule.
+#mv $RPM_BUILD_ROOT%{_docdir}/libguestfs installed-docs
+
 # Find locale files.
 %find_lang %{name}
 
@@ -442,7 +447,8 @@ rm -rf $RPM_BUILD_ROOT
 %files devel
 %defattr(-,root,root,-)
 %doc ChangeLog HACKING TODO README ex html/guestfs.3.html html/pod.css
-%doc src/generator.ml
+#%doc src/generator.ml
+%doc installed-docs/*
 %{_libdir}/libguestfs.so
 %{_mandir}/man3/guestfs.3*
 %{_mandir}/man3/libguestfs.3*
@@ -538,6 +544,11 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Wed Oct 14 2009 Richard W.M. Jones <rjones@redhat.com> - 1.0.73-1
+- New upstream release 1.0.73.
+- OCaml library now depends on xml-light.
+- Deal with installed documentation.
+
 * Wed Sep 23 2009 Richard W.M. Jones <rjones@redhat.com> - 1.0.72-1
 - New upstream release 1.0.72.
 - New tools: virt-edit, virt-rescue.
