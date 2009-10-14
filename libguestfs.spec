@@ -5,7 +5,7 @@ Summary:     Access and modify virtual machine disk images
 Name:        libguestfs
 Epoch:       1
 Version:     1.0.73
-Release:     1%{?dist}
+Release:     2%{?dist}
 License:     LGPLv2+
 Group:       Development/Libraries
 URL:         http://libguestfs.org/
@@ -447,8 +447,8 @@ rm -rf $RPM_BUILD_ROOT
 %files devel
 %defattr(-,root,root,-)
 %doc ChangeLog HACKING TODO README ex html/guestfs.3.html html/pod.css
-#%doc src/generator.ml
-%doc installed-docs/*
+%doc src/generator.ml
+#%doc installed-docs/*
 %{_libdir}/libguestfs.so
 %{_mandir}/man3/guestfs.3*
 %{_mandir}/man3/libguestfs.3*
@@ -544,10 +544,11 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
-* Wed Oct 14 2009 Richard W.M. Jones <rjones@redhat.com> - 1.0.73-1
+* Wed Oct 14 2009 Richard W.M. Jones <rjones@redhat.com> - 1.0.73-2
 - New upstream release 1.0.73.
 - OCaml library now depends on xml-light.
 - Deal with installed documentation.
+- Incorrectly commented %%doc rule.
 
 * Wed Sep 23 2009 Richard W.M. Jones <rjones@redhat.com> - 1.0.72-1
 - New upstream release 1.0.72.
