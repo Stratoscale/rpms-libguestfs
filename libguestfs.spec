@@ -4,8 +4,8 @@
 Summary:     Access and modify virtual machine disk images
 Name:        libguestfs
 Epoch:       1
-Version:     1.0.73
-Release:     2%{?dist}
+Version:     1.0.74
+Release:     1%{?dist}
 License:     LGPLv2+
 Group:       Development/Libraries
 URL:         http://libguestfs.org/
@@ -206,8 +206,12 @@ scripts.
 # whether the virtual machine is fully virtualized (FV) or
 # para-virtualized (PV), what applications are installed and more.
 
+# Virt-ls is a command line tool to list out files in a virtual machine.
+
 # Virt-rescue provides a rescue shell for making interactive,
 # unstructured fixes to virtual machines.
+
+# Virt-tar is an archive, backup and upload tool for virtual machines.
 
 
 %package -n ocaml-%{name}
@@ -475,8 +479,12 @@ rm -rf $RPM_BUILD_ROOT
 # %{_mandir}/man1/virt-edit.1*
 # %{_bindir}/virt-inspector
 # %{_mandir}/man1/virt-inspector.1*
+# %{_bindir}/virt-ls
+# %{_mandir}/man1/virt-ls.1*
 # %{_bindir}/virt-rescue
 # %{_mandir}/man1/virt-rescue.1*
+# %{_bindir}/virt-tar
+# %{_mandir}/man1/virt-tar.1*
 
 
 %files -n ocaml-%{name}
@@ -544,6 +552,11 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Tue Oct 20 2009 Richard W.M. Jones <rjones@redhat.com> - 1.0.74-1
+- New upstream release 1.0.74.
+- New API call: guestfs_find0.
+- New tools: virt-ls, virt-tar (not enabled in this release).
+
 * Wed Oct 14 2009 Richard W.M. Jones <rjones@redhat.com> - 1.0.73-2
 - New upstream release 1.0.73.
 - OCaml library now depends on xml-light.
