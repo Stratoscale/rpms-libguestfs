@@ -19,6 +19,7 @@ BuildRequires: febootstrap >= 2.3
 BuildRequires: augeas-devel >= 0.5.0
 BuildRequires: readline-devel
 BuildRequires: genisoimage
+BuildRequires: libxml2-devel
 BuildRequires: qemu-kvm >= 0.10-7
 BuildRequires: createrepo
 BuildRequires: glibc-static
