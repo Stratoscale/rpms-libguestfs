@@ -5,12 +5,16 @@ Summary:     Access and modify virtual machine disk images
 Name:        libguestfs
 Epoch:       1
 Version:     1.0.75
-Release:     1%{?dist}
+Release:     1%{?dist}.2
 License:     LGPLv2+
 Group:       Development/Libraries
 URL:         http://libguestfs.org/
 Source0:     http://libguestfs.org/download/%{name}-%{version}.tar.gz
 BuildRoot:   %{_tmppath}/%{name}-%{version}-%{release}-root
+
+# Next two lines should be removed in 1.0.76:
+Patch0:      0001-RHEL-5-Detect-endianness-functions-and-supply-them.patch
+BuildRequires: autoconf, automake, libtool, gettext-devel
 
 # Currently fails on PPC because:
 # "No Package Found for kernel"
@@ -319,6 +323,9 @@ Requires:    jpackage-utils
 %prep
 %setup -q
 
+%patch0 -p1
+autoconf
+
 mkdir -p daemon/m4
 
 
@@ -564,11 +571,12 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
-* Thu Oct 29 2009 Richard W.M. Jones <rjones@redhat.com> - 1.0.75-1
+* Thu Oct 29 2009 Richard W.M. Jones <rjones@redhat.com> - 1.0.75-1.el5.2
 - New upstream release 1.0.75.
 - New library: libhivex.
 - New tools: virt-win-reg, hivexml, hivexget.
 - Don't require chntpw.
+- Pull in upstream patch to fix missing endianness functions on RHEL 5.
 
 * Tue Oct 20 2009 Richard W.M. Jones <rjones@redhat.com> - 1.0.74-1
 - New upstream release 1.0.74.
