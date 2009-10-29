@@ -5,7 +5,7 @@ Summary:     Access and modify virtual machine disk images
 Name:        libguestfs
 Epoch:       1
 Version:     1.0.75
-Release:     1%{?dist}.6
+Release:     1%{?dist}.7
 License:     LGPLv2+
 Group:       Development/Libraries
 URL:         http://libguestfs.org/
@@ -579,7 +579,7 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
-* Thu Oct 29 2009 Richard W.M. Jones <rjones@redhat.com> - 1.0.75-1.el5.6
+* Thu Oct 29 2009 Richard W.M. Jones <rjones@redhat.com> - 1.0.75-1.el5.7
 - New upstream release 1.0.75.
 - New library: libhivex.
 - New tools: virt-win-reg, hivexml, hivexget.
