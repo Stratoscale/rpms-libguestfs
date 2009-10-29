@@ -1,0 +1,48 @@
+From d707ecc55ac2de267608435bdc1052176aecff46 Mon Sep 17 00:00:00 2001
+From: Richard Jones <rjones@redhat.com>
+Date: Thu, 29 Oct 2009 18:36:12 +0000
+Subject: [PATCH 2/2] RHEL 5: Also add le{16,64}toh functions
+
+---
+ hivex/hivex.c |   12 ++++++++++++
+ 1 files changed, 12 insertions(+), 0 deletions(-)
+
+diff --git a/hivex/hivex.c b/hivex/hivex.c
+index 85d6c7b..a0a730c 100644
+--- a/hivex/hivex.c
++++ b/hivex/hivex.c
+@@ -45,9 +45,15 @@
+ #ifndef be64toh
+ #define be64toh(x) __bswap_64 (x)
+ #endif
++#ifndef le16toh
++#define le32toh(x) (x)
++#endif
+ #ifndef le32toh
+ #define le32toh(x) (x)
+ #endif
++#ifndef le64toh
++#define le32toh(x) (x)
++#endif
+ #else
+ #ifndef be32toh
+ #define be32toh(x) (x)
+@@ -55,9 +61,15 @@
+ #ifndef be64toh
+ #define be64toh(x) (x)
+ #endif
++#ifndef le16toh
++#define le16toh(x) __bswap_16 (x)
++#endif
+ #ifndef le32toh
+ #define le32toh(x) __bswap_32 (x)
+ #endif
++#ifndef le64toh
++#define le64toh(x) __bswap_64 (x)
++#endif
+ #endif
+ 
+ #include "hivex.h"
+-- 
+1.6.5.rc2
+
