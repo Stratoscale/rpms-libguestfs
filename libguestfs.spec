@@ -5,7 +5,7 @@ Summary:     Access and modify virtual machine disk images
 Name:        libguestfs
 Epoch:       1
 Version:     1.0.75
-Release:     1%{?dist}
+Release:     2%{?dist}
 License:     LGPLv2+
 Group:       Development/Libraries
 URL:         http://libguestfs.org/
@@ -19,6 +19,7 @@ BuildRequires: febootstrap >= 2.3
 BuildRequires: augeas-devel >= 0.5.0
 BuildRequires: readline-devel
 BuildRequires: genisoimage
+BuildRequires: libxml2-devel
 BuildRequires: qemu-kvm >= 0.10-7
 BuildRequires: createrepo
 BuildRequires: glibc-static
@@ -561,11 +562,12 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
-* Thu Oct 29 2009 Richard W.M. Jones <rjones@redhat.com> - 1.0.75-1
+* Thu Oct 29 2009 Richard W.M. Jones <rjones@redhat.com> - 1.0.75-2
 - New upstream release 1.0.75.
 - New library: libhivex.
 - New tools: virt-win-reg, hivexml, hivexget.
 - Don't require chntpw.
+- Add BR libxml2-devel, accidentally omitted before.
 
 * Tue Oct 20 2009 Richard W.M. Jones <rjones@redhat.com> - 1.0.74-1
 - New upstream release 1.0.74.
