@@ -4,7 +4,7 @@
 Summary:     Access and modify virtual machine disk images
 Name:        libguestfs
 Epoch:       1
-Version:     1.0.74
+Version:     1.0.75
 Release:     1%{?dist}
 License:     LGPLv2+
 Group:       Development/Libraries
@@ -70,9 +70,6 @@ BuildRequires: perl-Sys-Virt
 
 # Runtime requires:
 Requires:      qemu-kvm >= 0.10-7
-
-# For virt-inspector --windows-registry option.
-Requires:      chntpw >= 0.99.6-8
 
 # For libguestfs-test-tool.
 Requires:      genisoimage
@@ -193,6 +190,9 @@ Virt-rescue provides a rescue shell for making interactive,
 unstructured fixes to virtual machines.
 
 Virt-tar is an archive, backup and upload tool for virtual machines.
+
+Virt-win-reg lets you look inside the Windows Registry for
+Windows virtual machines.
 
 
 %package -n ocaml-%{name}
@@ -374,6 +374,8 @@ rmdir keep
 # Delete static libraries, libtool files.
 rm $RPM_BUILD_ROOT%{_libdir}/libguestfs.a
 rm $RPM_BUILD_ROOT%{_libdir}/libguestfs.la
+rm $RPM_BUILD_ROOT%{_libdir}/libhivex.a
+rm $RPM_BUILD_ROOT%{_libdir}/libhivex.la
 
 # Clean up the examples/ directory which will get installed in %doc.
 # Note we can't delete the original examples/Makefile because that
@@ -440,8 +442,11 @@ rm -rf $RPM_BUILD_ROOT
 %doc COPYING
 %{_bindir}/libguestfs-supermin-helper
 %{_bindir}/libguestfs-test-tool
+%{_bindir}/hivexml
+%{_bindir}/hivexget
 %{_libdir}/guestfs/
 %{_libdir}/libguestfs.so.*
+%{_libdir}/libhivex.so.*
 %{_libexecdir}/libguestfs-test-tool-helper
 %{_mandir}/man1/libguestfs-test-tool.1*
 
@@ -452,8 +457,12 @@ rm -rf $RPM_BUILD_ROOT
 %doc src/generator.ml
 %doc installed-docs/*
 %{_libdir}/libguestfs.so
+%{_libdir}/libhivex.so
+%{_mandir}/man1/hivexml.1*
+%{_mandir}/man1/hivexget.1*
 %{_mandir}/man3/guestfs.3*
 %{_mandir}/man3/libguestfs.3*
+%{_mandir}/man3/hivex.3*
 %{_includedir}/guestfs.h
 %{_includedir}/guestfs-actions.h
 %{_includedir}/guestfs-structs.h
@@ -483,6 +492,8 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man1/virt-rescue.1*
 %{_bindir}/virt-tar
 %{_mandir}/man1/virt-tar.1*
+%{_bindir}/virt-win-reg
+%{_mandir}/man1/virt-win-reg.1*
 
 
 %files -n ocaml-%{name}
@@ -550,6 +561,12 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Thu Oct 29 2009 Richard W.M. Jones <rjones@redhat.com> - 1.0.75-1
+- New upstream release 1.0.75.
+- New library: libhivex.
+- New tools: virt-win-reg, hivexml, hivexget.
+- Don't require chntpw.
+
 * Tue Oct 20 2009 Richard W.M. Jones <rjones@redhat.com> - 1.0.74-1
 - New upstream release 1.0.74.
 - New API call: guestfs_find0.
