@@ -5,7 +5,7 @@ Summary:     Access and modify virtual machine disk images
 Name:        libguestfs
 Epoch:       1
 Version:     1.0.75
-Release:     1%{?dist}.5
+Release:     1%{?dist}.6
 License:     LGPLv2+
 Group:       Development/Libraries
 URL:         http://libguestfs.org/
@@ -15,6 +15,7 @@ BuildRoot:   %{_tmppath}/%{name}-%{version}-%{release}-root
 # Next lines should be removed in 1.0.76:
 Patch0:      0001-RHEL-5-Detect-endianness-functions-and-supply-them.patch
 Patch1:      0002-RHEL-5-Also-add-le-16-64-toh-functions.patch
+Patch2:      0003-Fix-misspelling-in-previous-commit.patch
 BuildRequires: autoconf, automake, libtool, gettext-devel
 
 # Currently fails on PPC because:
@@ -327,6 +328,7 @@ Requires:    jpackage-utils
 # Remove this in 1.0.76:
 %patch0 -p1
 %patch1 -p1
+%patch2 -p1
 mv inspector/Makefile.am inspector/Makefile.am.orig
 echo 'docdir = ${datadir}/doc/${PACKAGE}' > inspector/Makefile.am
 cat inspector/Makefile.am.orig >> inspector/Makefile.am
@@ -577,7 +579,7 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
-* Thu Oct 29 2009 Richard W.M. Jones <rjones@redhat.com> - 1.0.75-1.el5.5
+* Thu Oct 29 2009 Richard W.M. Jones <rjones@redhat.com> - 1.0.75-1.el5.6
 - New upstream release 1.0.75.
 - New library: libhivex.
 - New tools: virt-win-reg, hivexml, hivexget.

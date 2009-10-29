@@ -1,7 +1,7 @@
 From d707ecc55ac2de267608435bdc1052176aecff46 Mon Sep 17 00:00:00 2001
 From: Richard Jones <rjones@redhat.com>
 Date: Thu, 29 Oct 2009 18:36:12 +0000
-Subject: [PATCH 2/2] RHEL 5: Also add le{16,64}toh functions
+Subject: [PATCH 2/3] RHEL 5: Also add le{16,64}toh functions
 
 ---
  hivex/hivex.c |   12 ++++++++++++

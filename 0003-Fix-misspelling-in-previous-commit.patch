@@ -1,0 +1,32 @@
+From 43a8e107ce8ad6eac99da82366bdf63b401e3d31 Mon Sep 17 00:00:00 2001
+From: Richard Jones <rjones@redhat.com>
+Date: Thu, 29 Oct 2009 18:46:46 +0000
+Subject: [PATCH 3/3] Fix misspelling in previous commit.
+
+---
+ hivex/hivex.c |    4 ++--
+ 1 files changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/hivex/hivex.c b/hivex/hivex.c
+index a0a730c..b522ccf 100644
+--- a/hivex/hivex.c
++++ b/hivex/hivex.c
+@@ -46,13 +46,13 @@
+ #define be64toh(x) __bswap_64 (x)
+ #endif
+ #ifndef le16toh
+-#define le32toh(x) (x)
++#define le16toh(x) (x)
+ #endif
+ #ifndef le32toh
+ #define le32toh(x) (x)
+ #endif
+ #ifndef le64toh
+-#define le32toh(x) (x)
++#define le64toh(x) (x)
+ #endif
+ #else
+ #ifndef be32toh
+-- 
+1.6.5.rc2
+
