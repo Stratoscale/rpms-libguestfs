@@ -5,7 +5,7 @@ Summary:     Access and modify virtual machine disk images
 Name:        libguestfs
 Epoch:       1
 Version:     1.0.75
-Release:     1%{?dist}.3
+Release:     1%{?dist}.4
 License:     LGPLv2+
 Group:       Development/Libraries
 URL:         http://libguestfs.org/
@@ -323,7 +323,11 @@ Requires:    jpackage-utils
 %prep
 %setup -q
 
+# Remove this in 1.0.76:
 %patch0 -p1
+mv inspector/Makefile.am inspector/Makefile.am.orig
+echo 'docdir = ${datadir}/doc/${PACKAGE}' > inspector/Makefile.am
+cat inspector/Makefile.am.orig >> inspector/Makefile.am
 autoreconf
 
 mkdir -p daemon/m4
@@ -571,7 +575,7 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
-* Thu Oct 29 2009 Richard W.M. Jones <rjones@redhat.com> - 1.0.75-1.el5.3
+* Thu Oct 29 2009 Richard W.M. Jones <rjones@redhat.com> - 1.0.75-1.el5.4
 - New upstream release 1.0.75.
 - New library: libhivex.
 - New tools: virt-win-reg, hivexml, hivexget.
