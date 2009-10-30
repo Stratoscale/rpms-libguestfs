@@ -5,7 +5,7 @@ Summary:     Access and modify virtual machine disk images
 Name:        libguestfs
 Epoch:       1
 Version:     1.0.76
-Release:     1%{?dist}
+Release:     1%{?dist}.2
 License:     LGPLv2+
 Group:       Development/Libraries
 URL:         http://libguestfs.org/
@@ -20,7 +20,7 @@ ExclusiveArch: %{ix86} x86_64
 BuildRequires: /usr/bin/pod2man
 BuildRequires: /usr/bin/pod2text
 BuildRequires: febootstrap >= 2.3
-#BuildRequires: augeas-devel >= 0.5.0
+BuildRequires: augeas-devel >= 0.5.0
 BuildRequires: readline-devel
 BuildRequires: mkisofs
 BuildRequires: libxml2-devel
@@ -39,24 +39,22 @@ BuildRequires: ncurses-devel
 
 # Build requirements for the appliance (see 'make.sh.in' in the source):
 BuildRequires: kernel, bash, coreutils, lvm2
-BuildRequires: MAKEDEV, net-tools, file
+BuildRequires: MAKEDEV, net-tools, augeas-libs, file
 BuildRequires: module-init-tools, procps, strace, iputils
-BuildRequires: dosfstools, lsof, scrub, libselinux
+BuildRequires: dosfstools, zerofree, lsof, scrub, libselinux
 BuildRequires: e4fsprogs
-# Not supported in EPEL yet: ntfs-3g util-linux-ng zerofree
-# Not working: augeas-libs
+# Not supported in EPEL yet: ntfs-3g util-linux-ng 
 %ifarch %{ix86} x86_64
 BuildRequires: grub, ntfsprogs
 %endif
 
 # Must match the above set of BuildRequires exactly!
 Requires:      kernel, bash, coreutils, lvm2
-Requires:      MAKEDEV, net-tools, file
+Requires:      MAKEDEV, net-tools, augeas-libs, file
 Requires:      module-init-tools, procps, strace, iputils
-Requires:      dosfstools, lsof, scrub, libselinux
+Requires:      dosfstools, zerofree, lsof, scrub, libselinux
 Requires:      e4fsprogs
-# Not supported in EPEL yet: ntfs-3g util-linux-ng zerofree
-# Not working: augeas-libs
+# Not supported in EPEL yet: ntfs-3g util-linux-ng 
 %ifarch %{ix86} x86_64
 Requires:      grub, ntfsprogs
 %endif
@@ -66,13 +64,13 @@ Requires:      grub, ntfsprogs
 BuildRequires: ocaml
 BuildRequires: ocaml-findlib-devel
 BuildRequires: ocaml-xml-light-devel
-#BuildRequires: perl-devel
+BuildRequires: perl-devel
 #BuildRequires: perl-Test-Simple
 BuildRequires: perl-Test-Pod
 BuildRequires: perl-Test-Pod-Coverage
 #BuildRequires: perl-ExtUtils-MakeMaker
 BuildRequires: perl-XML-Writer
-#BuildRequires: perl-libintl
+BuildRequires: perl-libintl
 BuildRequires: python-devel
 BuildRequires: ruby-devel
 BuildRequires: rubygem-rake
@@ -81,7 +79,7 @@ BuildRequires: jpackage-utils
 BuildRequires: java-devel
 
 # For libguestfs-tools:
-#BuildRequires: perl-Sys-Virt
+BuildRequires: perl-Sys-Virt
 
 # Runtime requires:
 %ifarch %{ix86} x86_64
@@ -148,7 +146,7 @@ Group:       Development/Tools
 License:     GPLv2+
 Requires:    %{name} = %{epoch}:%{version}-%{release}
 Requires:    /usr/bin/pod2text
-#Requires:    virt-inspector
+Requires:    virt-inspector
 
 
 %description -n guestfish
@@ -157,62 +155,62 @@ modifying virtual machine disk images from the command line and shell
 scripts.
 
 
-# %package tools
-# Summary:     System administration tools for virtual machines
-# Group:       Development/Tools
-# License:     GPLv2+
-# Requires:    %{name} = %{epoch}:%{version}-%{release}
-# Requires:    guestfish
-# Requires:    perl-Sys-Virt
+%package tools
+Summary:     System administration tools for virtual machines
+Group:       Development/Tools
+License:     GPLv2+
+Requires:    %{name} = %{epoch}:%{version}-%{release}
+Requires:    guestfish
+Requires:    perl-Sys-Virt
 
-# # Obsolete and replace earlier packages.
-# Provides:    virt-cat = %{epoch}:%{version}-%{release}
-# Obsoletes:   virt-cat <= %{epoch}:%{version}-%{release}
-# Provides:    virt-df = %{epoch}:%{version}-%{release}
-# Obsoletes:   virt-df <= %{epoch}:%{version}-%{release}
-# Provides:    virt-inspector = %{epoch}:%{version}-%{release}
-# Obsoletes:   virt-inspector <= %{epoch}:%{version}-%{release}
+# Obsolete and replace earlier packages.
+Provides:    virt-cat = %{epoch}:%{version}-%{release}
+Obsoletes:   virt-cat <= %{epoch}:%{version}-%{release}
+Provides:    virt-df = %{epoch}:%{version}-%{release}
+Obsoletes:   virt-df <= %{epoch}:%{version}-%{release}
+Provides:    virt-inspector = %{epoch}:%{version}-%{release}
+Obsoletes:   virt-inspector <= %{epoch}:%{version}-%{release}
 
-# # RHBZ#514309
-# Provides:    virt-df2 = %{epoch}:%{version}-%{release}
-# Obsoletes:   virt-df2 <= %{epoch}:%{version}-%{release}
+# RHBZ#514309
+Provides:    virt-df2 = %{epoch}:%{version}-%{release}
+Obsoletes:   virt-df2 <= %{epoch}:%{version}-%{release}
 
-# # These were never packages:
-# Provides:    virt-edit = %{epoch}:%{version}-%{release}
-# Provides:    virt-rescue = %{epoch}:%{version}-%{release}
+# These were never packages:
+Provides:    virt-edit = %{epoch}:%{version}-%{release}
+Provides:    virt-rescue = %{epoch}:%{version}-%{release}
 
 
-# %description tools
-# This package contains miscellaneous system administrator command line
-# tools for virtual machines.
+%description tools
+This package contains miscellaneous system administrator command line
+tools for virtual machines.
 
-# Virt-cat is a command line tool to display the contents of a file in a
-# virtual machine.
+Virt-cat is a command line tool to display the contents of a file in a
+virtual machine.
 
-# Virt-df is a command line tool to display free space on virtual
-# machine filesystems.  Unlike other tools, it doesn’t just display the
-# amount of space allocated to a virtual machine, but can look inside
-# the virtual machine to see how much space is really being used.  It is
-# like the df(1) command, but for virtual machines, except that it also
-# works for Windows virtual machines.
+Virt-df is a command line tool to display free space on virtual
+machine filesystems.  Unlike other tools, it doesn’t just display the
+amount of space allocated to a virtual machine, but can look inside
+the virtual machine to see how much space is really being used.  It is
+like the df(1) command, but for virtual machines, except that it also
+works for Windows virtual machines.
 
-# Virt-edit is a command line tool to edit the contents of a file in a
-# virtual machine.
+Virt-edit is a command line tool to edit the contents of a file in a
+virtual machine.
 
-# Virt-inspector examines a virtual machine and tries to determine the
-# version of the OS, the kernel version, what drivers are installed,
-# whether the virtual machine is fully virtualized (FV) or
-# para-virtualized (PV), what applications are installed and more.
+Virt-inspector examines a virtual machine and tries to determine the
+version of the OS, the kernel version, what drivers are installed,
+whether the virtual machine is fully virtualized (FV) or
+para-virtualized (PV), what applications are installed and more.
 
-# Virt-ls is a command line tool to list out files in a virtual machine.
+Virt-ls is a command line tool to list out files in a virtual machine.
 
-# Virt-rescue provides a rescue shell for making interactive,
-# unstructured fixes to virtual machines.
+Virt-rescue provides a rescue shell for making interactive,
+unstructured fixes to virtual machines.
 
-# Virt-tar is an archive, backup and upload tool for virtual machines.
+Virt-tar is an archive, backup and upload tool for virtual machines.
 
-# Virt-win-reg lets you look inside the Windows Registry for
-# Windows virtual machines.
+Virt-win-reg lets you look inside the Windows Registry for
+Windows virtual machines.
 
 
 %package -n ocaml-%{name}
@@ -325,7 +323,7 @@ mkdir -p daemon/m4
 %build
 %if %{buildnonet}
 mkdir repo
-find /var/cache/yum/ -type f -name '*.rpm' -print0 | xargs -0 cp -t repo
+find /var/cache/yum -type f -name '*.rpm' -print0 | xargs -0 cp -t repo
 createrepo repo
 ls -l repo
 %define extra --with-mirror=file://$(pwd)/repo --with-repo=epel-5 --with-updates=none
@@ -333,7 +331,6 @@ ls -l repo
 %define extra --with-mirror=http://mirror.centos.org/centos-5/5.3/os/%{_arch}/ --with-repo=centos-5 --with-updates=none
 %endif
 
-vmchannel_test=no \
 ./configure \
   --prefix=%{_prefix} --libdir=%{_libdir} \
   --mandir=%{_mandir} \
@@ -356,8 +353,9 @@ make INSTALLDIRS=vendor %{?_smp_mflags}
 # it produces masses of output in the build.log.
 export LIBGUESTFS_DEBUG=1
 
+# Tests disabled TEMPORARILY for faster builds of 1.0.76.  Can be REENABLED.
 %ifarch %{ix86}
-make check
+#make check
 %endif
 
 
@@ -425,7 +423,7 @@ chmod -x src/generator.ml
 
 # Move installed documentation back to the source directory so
 # we can install it using a %%doc rule.
-#mv $RPM_BUILD_ROOT%{_docdir}/libguestfs installed-docs
+mv $RPM_BUILD_ROOT%{_docdir}/libguestfs installed-docs
 
 # Find locale files.
 %find_lang %{name}
@@ -458,7 +456,7 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(-,root,root,-)
 %doc ChangeLog HACKING TODO README ex html/guestfs.3.html html/pod.css
 %doc src/generator.ml
-#%doc installed-docs/*
+%doc installed-docs/*
 %{_libdir}/libguestfs.so
 %{_libdir}/libhivex.so
 %{_mandir}/man1/hivexml.1*
@@ -479,24 +477,24 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man1/guestfish.1*
 
 
-# %files tools
-# %defattr(-,root,root,-)
-# %{_bindir}/virt-cat
-# %{_mandir}/man1/virt-cat.1*
-# %{_bindir}/virt-df
-# %{_mandir}/man1/virt-df.1*
-# %{_bindir}/virt-edit
-# %{_mandir}/man1/virt-edit.1*
-# %{_bindir}/virt-inspector
-# %{_mandir}/man1/virt-inspector.1*
-# %{_bindir}/virt-ls
-# %{_mandir}/man1/virt-ls.1*
-# %{_bindir}/virt-rescue
-# %{_mandir}/man1/virt-rescue.1*
-# %{_bindir}/virt-tar
-# %{_mandir}/man1/virt-tar.1*
-# %{_bindir}/virt-win-reg
-# %{_mandir}/man1/virt-win-reg.1*
+%files tools
+%defattr(-,root,root,-)
+%{_bindir}/virt-cat
+%{_mandir}/man1/virt-cat.1*
+%{_bindir}/virt-df
+%{_mandir}/man1/virt-df.1*
+%{_bindir}/virt-edit
+%{_mandir}/man1/virt-edit.1*
+%{_bindir}/virt-inspector
+%{_mandir}/man1/virt-inspector.1*
+%{_bindir}/virt-ls
+%{_mandir}/man1/virt-ls.1*
+%{_bindir}/virt-rescue
+%{_mandir}/man1/virt-rescue.1*
+%{_bindir}/virt-tar
+%{_mandir}/man1/virt-tar.1*
+%{_bindir}/virt-win-reg
+%{_mandir}/man1/virt-win-reg.1*
 
 
 %files -n ocaml-%{name}
@@ -564,6 +562,10 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Fri Oct 30 2009 Richard W.M. Jones <rjones@redhat.com> - 1.0.76-1.el5.2
+- Try building tools now that EPEL may have been rebased to 5.4.
+- Tests disabled *temporarily* to allow faster builds.
+
 * Thu Oct 29 2009 Richard W.M. Jones <rjones@redhat.com> - 1.0.76-1
 - New upstream release 1.0.76.  No changes here except to have
   a prebuilt autoconf environment.
