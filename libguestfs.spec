@@ -5,7 +5,7 @@ Summary:     Access and modify virtual machine disk images
 Name:        libguestfs
 Epoch:       1
 Version:     1.0.76
-Release:     1%{?dist}.2
+Release:     1%{?dist}.3
 License:     LGPLv2+
 Group:       Development/Libraries
 URL:         http://libguestfs.org/
@@ -64,7 +64,7 @@ Requires:      grub, ntfsprogs
 BuildRequires: ocaml
 BuildRequires: ocaml-findlib-devel
 BuildRequires: ocaml-xml-light-devel
-BuildRequires: perl-devel
+#BuildRequires: perl-devel
 #BuildRequires: perl-Test-Simple
 BuildRequires: perl-Test-Pod
 BuildRequires: perl-Test-Pod-Coverage
@@ -562,7 +562,7 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
-* Fri Oct 30 2009 Richard W.M. Jones <rjones@redhat.com> - 1.0.76-1.el5.2
+* Fri Oct 30 2009 Richard W.M. Jones <rjones@redhat.com> - 1.0.76-1.el5.3
 - Try building tools now that EPEL may have been rebased to 5.4.
 - Tests disabled *temporarily* to allow faster builds.
 
