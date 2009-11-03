@@ -4,8 +4,8 @@
 Summary:     Access and modify virtual machine disk images
 Name:        libguestfs
 Epoch:       1
-Version:     1.0.75
-Release:     2%{?dist}
+Version:     1.0.77
+Release:     1%{?dist}
 License:     LGPLv2+
 Group:       Development/Libraries
 URL:         http://libguestfs.org/
@@ -24,6 +24,7 @@ BuildRequires: qemu-kvm >= 0.10-7
 BuildRequires: createrepo
 BuildRequires: glibc-static
 BuildRequires: libselinux-devel
+BuildRequires: fuse-devel
 
 # This is only needed for RHEL 5 because readline-devel doesn't
 # properly depend on it, but doesn't do any harm on other platforms:
@@ -92,13 +93,14 @@ schemes, qcow, qcow2, vmdk.
 
 Libguestfs provides ways to enumerate guest storage (eg. partitions,
 LVs, what filesystem is in each LV, etc.).  It can also run commands
-in the context of the guest.  Also you can access filesystems over FTP.
+in the context of the guest.
 
 Libguestfs is a library that can be linked with C and C++ management
 programs.
 
 See also the 'guestfish' package for shell scripting and command line
-access.
+access, and '%{name}-mount' for mounting guest filesystems on the
+host using FUSE.
 
 For Perl bindings, see 'perl-libguestfs'.
 
@@ -138,6 +140,19 @@ modifying virtual machine disk images from the command line and shell
 scripts.
 
 
+%package mount
+Summary:     Mount guest filesystems on the host using FUSE and libguestfs
+Group:       Development/Tools
+License:     GPLv2+
+Requires:    %{name} = %{epoch}:%{version}-%{release}
+Requires:    virt-inspector
+
+
+%description mount
+The guestmount command lets you mount guest filesystems on the
+host using FUSE and %{name}.
+
+
 %package tools
 Summary:     System administration tools for virtual machines
 Group:       Development/Tools
@@ -148,15 +163,15 @@ Requires:    perl-Sys-Virt
 
 # Obsolete and replace earlier packages.
 Provides:    virt-cat = %{epoch}:%{version}-%{release}
-Obsoletes:   virt-cat <= %{epoch}:%{version}-%{release}
+Obsoletes:   virt-cat < %{epoch}:%{version}-%{release}
 Provides:    virt-df = %{epoch}:%{version}-%{release}
-Obsoletes:   virt-df <= %{epoch}:%{version}-%{release}
+Obsoletes:   virt-df < %{epoch}:%{version}-%{release}
 Provides:    virt-inspector = %{epoch}:%{version}-%{release}
-Obsoletes:   virt-inspector <= %{epoch}:%{version}-%{release}
+Obsoletes:   virt-inspector < %{epoch}:%{version}-%{release}
 
 # RHBZ#514309
 Provides:    virt-df2 = %{epoch}:%{version}-%{release}
-Obsoletes:   virt-df2 <= %{epoch}:%{version}-%{release}
+Obsoletes:   virt-df2 < %{epoch}:%{version}-%{release}
 
 # These were never packages:
 Provides:    virt-edit = %{epoch}:%{version}-%{release}
@@ -398,6 +413,7 @@ popd
 find $RPM_BUILD_ROOT -name perllocal.pod -delete
 find $RPM_BUILD_ROOT -name .packlist -delete
 find $RPM_BUILD_ROOT -name '*.bs' -delete
+find $RPM_BUILD_ROOT -name 'bindtests.pl' -delete
 
 rm $RPM_BUILD_ROOT%{python_sitearch}/libguestfsmod.a
 rm $RPM_BUILD_ROOT%{python_sitearch}/libguestfsmod.la
@@ -441,14 +457,16 @@ rm -rf $RPM_BUILD_ROOT
 %files -f %{name}.lang
 %defattr(-,root,root,-)
 %doc COPYING
-%{_bindir}/libguestfs-supermin-helper
-%{_bindir}/libguestfs-test-tool
 %{_bindir}/hivexml
 %{_bindir}/hivexget
+%{_bindir}/libguestfs-supermin-helper
+%{_bindir}/libguestfs-test-tool
 %{_libdir}/guestfs/
 %{_libdir}/libguestfs.so.*
 %{_libdir}/libhivex.so.*
 %{_libexecdir}/libguestfs-test-tool-helper
+%{_mandir}/man1/hivexml.1*
+%{_mandir}/man1/hivexget.1*
 %{_mandir}/man1/libguestfs-test-tool.1*
 
 
@@ -459,8 +477,6 @@ rm -rf $RPM_BUILD_ROOT
 %doc installed-docs/*
 %{_libdir}/libguestfs.so
 %{_libdir}/libhivex.so
-%{_mandir}/man1/hivexml.1*
-%{_mandir}/man1/hivexget.1*
 %{_mandir}/man3/guestfs.3*
 %{_mandir}/man3/libguestfs.3*
 %{_mandir}/man3/hivex.3*
@@ -475,6 +491,13 @@ rm -rf $RPM_BUILD_ROOT
 %doc html/guestfish.1.html html/pod.css recipes/
 %{_bindir}/guestfish
 %{_mandir}/man1/guestfish.1*
+
+
+%files mount
+%defattr(-,root,root,-)
+%doc COPYING
+%{_bindir}/guestmount
+%{_mandir}/man1/guestmount.1*
 
 
 %files tools
@@ -562,6 +585,14 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Tue Nov  3 2009 Richard W.M. Jones <rjones@redhat.com> - 1.0.77-1
+- New upstream release 1.0.77.
+- Support for mounting guest in host using FUSE (guestmount command).
+- hivex*(1) man pages should be in main package, not -devel, since
+  they are user commands.
+- libguestfs-tools: Fix "self-obsoletion" issue raised by rpmlint.
+- perl: Remove bogus script Sys/bindtests.pl.
+
 * Thu Oct 29 2009 Richard W.M. Jones <rjones@redhat.com> - 1.0.75-2
 - New upstream release 1.0.75.
 - New library: libhivex.
