@@ -4,7 +4,7 @@
 Summary:     Access and modify virtual machine disk images
 Name:        libguestfs
 Epoch:       1
-Version:     1.0.77
+Version:     1.0.78
 Release:     1%{?dist}
 License:     LGPLv2+
 Group:       Development/Libraries
@@ -35,6 +35,9 @@ BuildRequires: kernel, bash, coreutils, lvm2, ntfs-3g, util-linux-ng
 BuildRequires: MAKEDEV, net-tools, augeas-libs, file
 BuildRequires: module-init-tools, procps, strace, iputils
 BuildRequires: dosfstools, zerofree, lsof, scrub, libselinux
+BuildRequires: parted, btrfs-progs, gfs-utils, gfs2-utils
+BuildRequires: hfsplus-tools, nilfs-utils, reiserfs-utils
+BuildRequires: jfsutils, xfsprogs
 %ifarch %{ix86} x86_64
 BuildRequires: grub, ntfsprogs
 %endif
@@ -44,6 +47,9 @@ Requires:      kernel, bash, coreutils, lvm2, ntfs-3g, util-linux-ng
 Requires:      MAKEDEV, net-tools, augeas-libs, file
 Requires:      module-init-tools, procps, strace, iputils
 Requires:      dosfstools, zerofree, lsof, scrub, libselinux
+Requires:      parted, btrfs-progs, gfs-utils, gfs2-utils
+Requires:      hfsplus-tools, nilfs-utils, reiserfs-utils
+Requires:      jfsutils, xfsprogs
 %ifarch %{ix86} x86_64
 Requires:      grub, ntfsprogs
 %endif
@@ -585,6 +591,11 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Tue Nov 10 2009 Richard W.M. Jones <rjones@redhat.com> - 1.0.78-1
+- New upstream release 1.0.78.
+- Many more filesystem types supported by this release - add them
+  as dependencies.
+
 * Tue Nov  3 2009 Richard W.M. Jones <rjones@redhat.com> - 1.0.77-1
 - New upstream release 1.0.77.
 - Support for mounting guest in host using FUSE (guestmount command).
