@@ -4,8 +4,8 @@
 Summary:     Access and modify virtual machine disk images
 Name:        libguestfs
 Epoch:       1
-Version:     1.0.78
-Release:     2%{?dist}
+Version:     1.0.79
+Release:     1%{?dist}
 License:     LGPLv2+
 Group:       Development/Libraries
 URL:         http://libguestfs.org/
@@ -591,6 +591,12 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Wed Nov 18 2009 Richard W.M. Jones <rjones@redhat.com> - 1.0.79-1
+- New upstream release 1.0.79.
+- Adds FUSE test script and multiple fixes for FUSE (RHBZ#538069).
+- Fix virt-df in Xen (RHBZ#538041).
+- Improve speed of supermin appliance.
+
 * Tue Nov 10 2009 Richard W.M. Jones <rjones@redhat.com> - 1.0.78-2
 - New upstream release 1.0.78.
 - Many more filesystem types supported by this release - add them
