@@ -5,12 +5,15 @@ Summary:     Access and modify virtual machine disk images
 Name:        libguestfs
 Epoch:       1
 Version:     1.0.79
-Release:     1%{?dist}
+Release:     2%{?dist}
 License:     LGPLv2+
 Group:       Development/Libraries
 URL:         http://libguestfs.org/
 Source0:     http://libguestfs.org/download/%{name}-%{version}.tar.gz
 BuildRoot:   %{_tmppath}/%{name}-%{version}-%{release}-root
+
+# Disable FUSE tests, not supported in Koji at the moment.
+Patch0:      libguestfs-1.0.79-no-fuse-test.patch
 
 # Basic build requirements:
 BuildRequires: /usr/bin/pod2man
@@ -321,6 +324,8 @@ Requires:    jpackage-utils
 %prep
 %setup -q
 
+%patch0 -p1
+
 mkdir -p daemon/m4
 
 
@@ -591,11 +596,13 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
-* Wed Nov 18 2009 Richard W.M. Jones <rjones@redhat.com> - 1.0.79-1
+* Wed Nov 18 2009 Richard W.M. Jones <rjones@redhat.com> - 1.0.79-2
 - New upstream release 1.0.79.
 - Adds FUSE test script and multiple fixes for FUSE (RHBZ#538069).
 - Fix virt-df in Xen (RHBZ#538041).
 - Improve speed of supermin appliance.
+- Disable FUSE-related tests because Koji doesn't currently allow them.
+  fuse: device not found, try 'modprobe fuse' first
 
 * Tue Nov 10 2009 Richard W.M. Jones <rjones@redhat.com> - 1.0.78-2
 - New upstream release 1.0.78.
