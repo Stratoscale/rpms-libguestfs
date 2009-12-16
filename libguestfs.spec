@@ -5,7 +5,7 @@ Summary:     Access and modify virtual machine disk images
 Name:        libguestfs
 Epoch:       1
 Version:     1.0.80
-Release:     1%{?dist}
+Release:     2%{?dist}
 License:     LGPLv2+
 Group:       Development/Libraries
 URL:         http://libguestfs.org/
@@ -382,10 +382,11 @@ export LIBGUESTFS_DEBUG=1
 #                                 (FIXED)
 # 516096   ?            F-11   race condition in swapoff/blockdev --rereadpt
 # 516543   ?            F-12   qemu-kvm segfaults when run inside a VM (FIXED)
+# 548121   all          F-13   udevsettle command is broken
 
-%ifarch x86_64
-make check
-%endif
+#%ifarch x86_64  # reenable if we fix 548121
+#make check
+#%endif
 
 
 %install
@@ -601,6 +602,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Wed Dec 16 2009 Richard W.M. Jones <rjones@redhat.com> - 1.0.80-2
+- Disable tests because of RHBZ#548121.
+
 * Wed Dec 16 2009 Richard W.M. Jones <rjones@redhat.com> - 1.0.80-1
 - New upstream release 1.0.80.
 - New Polish translations (RHBZ#502533).
