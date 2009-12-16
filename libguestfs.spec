@@ -4,8 +4,8 @@
 Summary:     Access and modify virtual machine disk images
 Name:        libguestfs
 Epoch:       1
-Version:     1.0.79
-Release:     3%{?dist}
+Version:     1.0.80
+Release:     1%{?dist}
 License:     LGPLv2+
 Group:       Development/Libraries
 URL:         http://libguestfs.org/
@@ -596,6 +596,11 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Wed Dec 16 2009 Richard W.M. Jones <rjones@redhat.com> - 1.0.80-1
+- New upstream release 1.0.80.
+- New Polish translations (RHBZ#502533).
+- Give a meaningful error if no usable kernels are found (RHBZ#539746).
+
 * Fri Dec  4 2009 Stepan Kasal <skasal@redhat.com> - 1:1.0.79-3
 - rebuild against perl 5.10.1
 
