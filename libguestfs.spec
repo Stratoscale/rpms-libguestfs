@@ -209,6 +209,9 @@ version of the OS, the kernel version, what drivers are installed,
 whether the virtual machine is fully virtualized (FV) or
 para-virtualized (PV), what applications are installed and more.
 
+Virt-list-filesystems can be used to list out the filesystems in a
+virtual machine image (for shell scripts etc).
+
 Virt-ls is a command line tool to list out files in a virtual machine.
 
 Virt-rescue provides a rescue shell for making interactive,
@@ -521,6 +524,8 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man1/virt-edit.1*
 %{_bindir}/virt-inspector
 %{_mandir}/man1/virt-inspector.1*
+%{_bindir}/virt-list-filesystems
+%{_mandir}/man1/virt-list-filesystems.1*
 %{_bindir}/virt-ls
 %{_mandir}/man1/virt-ls.1*
 %{_bindir}/virt-rescue
@@ -600,6 +605,7 @@ rm -rf $RPM_BUILD_ROOT
 - New upstream release 1.0.80.
 - New Polish translations (RHBZ#502533).
 - Give a meaningful error if no usable kernels are found (RHBZ#539746).
+- New tool: virt-list-filesystems
 
 * Fri Dec  4 2009 Stepan Kasal <skasal@redhat.com> - 1:1.0.79-3
 - rebuild against perl 5.10.1
