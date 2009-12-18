@@ -5,7 +5,7 @@ Summary:     Access and modify virtual machine disk images
 Name:        libguestfs
 Epoch:       1
 Version:     1.0.80
-Release:     2%{?dist}
+Release:     3%{?dist}
 License:     LGPLv2+
 Group:       Development/Libraries
 URL:         http://libguestfs.org/
@@ -14,6 +14,9 @@ BuildRoot:   %{_tmppath}/%{name}-%{version}-%{release}-root
 
 # Disable FUSE tests, not supported in Koji at the moment.
 Patch0:      libguestfs-1.0.79-no-fuse-test.patch
+
+# Work around udevsettle command broken in Fedora 13 (RHBZ#548121).
+Patch1:      libguestfs-1.0.80-daemon-Work-around-udevsettle-issue-RHBZ-548121.patch
 
 # Basic build requirements:
 BuildRequires: /usr/bin/pod2man
@@ -328,6 +331,7 @@ Requires:    jpackage-utils
 %setup -q
 
 %patch0 -p1
+%patch1 -p1
 
 mkdir -p daemon/m4
 
@@ -382,11 +386,11 @@ export LIBGUESTFS_DEBUG=1
 #                                 (FIXED)
 # 516096   ?            F-11   race condition in swapoff/blockdev --rereadpt
 # 516543   ?            F-12   qemu-kvm segfaults when run inside a VM (FIXED)
-# 548121   all          F-13   udevsettle command is broken
+# 548121   all          F-13   udevsettle command is broken (WORKAROUND)
 
-#%ifarch x86_64  # reenable if we fix 548121
-#make check
-#%endif
+%ifarch x86_64
+make check
+%endif
 
 
 %install
@@ -602,6 +606,10 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Fri Dec 18 2009 Richard W.M. Jones <rjones@redhat.com> - 1.0.80-3
+- Work around udevsettle command problem (RHBZ#548121).
+- Enable tests.
+
 * Wed Dec 16 2009 Richard W.M. Jones <rjones@redhat.com> - 1.0.80-2
 - Disable tests because of RHBZ#548121.
 
