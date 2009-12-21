@@ -5,7 +5,7 @@ Summary:     Access and modify virtual machine disk images
 Name:        libguestfs
 Epoch:       1
 Version:     1.0.80
-Release:     3%{?dist}
+Release:     9%{?dist}
 License:     LGPLv2+
 Group:       Development/Libraries
 URL:         http://libguestfs.org/
@@ -87,6 +87,12 @@ Requires:      qemu-kvm >= 0.10-7
 
 # For libguestfs-test-tool.
 Requires:      genisoimage
+
+# Provide our own custom requires for the supermin appliance.
+Source1:     libguestfs-find-requires.sh
+%global _use_internal_dependency_generator 0
+%global __find_provides %{_rpmconfigdir}/find-provides
+%global __find_requires %{SOURCE1} %{_rpmconfigdir}/find-requires
 
 
 %description
@@ -606,6 +612,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Mon Dec 21 2009 Richard W.M. Jones <rjones@redhat.com> - 1.0.80-9
+- Generate additional requires for supermin (RHBZ#547496).
+
 * Fri Dec 18 2009 Richard W.M. Jones <rjones@redhat.com> - 1.0.80-3
 - Work around udevsettle command problem (RHBZ#548121).
 - Enable tests.
