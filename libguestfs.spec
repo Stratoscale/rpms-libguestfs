@@ -5,7 +5,7 @@ Summary:     Access and modify virtual machine disk images
 Name:        libguestfs
 Epoch:       1
 Version:     1.0.80
-Release:     9%{?dist}
+Release:     10%{?dist}
 License:     LGPLv2+
 Group:       Development/Libraries
 URL:         http://libguestfs.org/
@@ -612,6 +612,10 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Tue Dec 29 2009 Richard W.M. Jones <rjones@redhat.com> - 1.0.80-10
+- Remove some debugging statements which were left in the requires
+  script by accident.
+
 * Mon Dec 21 2009 Richard W.M. Jones <rjones@redhat.com> - 1.0.80-9
 - Generate additional requires for supermin (RHBZ#547496).
 

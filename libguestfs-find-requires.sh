@@ -1,12 +1,6 @@
 #!/bin/sh -
 # Additional custom requires for libguestfs package.
 
-exec 5>>/tmp/requires.log
-
-echo >&5
-time >&5
-echo args "$@" >&5
-
 original_find_requires="$1"
 shift
 
@@ -18,7 +12,6 @@ echo $files | tr [:blank:] '\n' | $original_find_requires
 
 # Is initramfs.*.supermin.hostfiles included in the list of files?
 hostfiles=`echo $files | tr [:blank:] '\n' | grep 'initramfs\..*\.supermin\.hostfiles$'`
-echo hostfiles $hostfiles >&5
 
 if [ -z "$hostfiles" ]; then
     exit 0
