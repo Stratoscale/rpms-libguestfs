@@ -5,7 +5,7 @@ Summary:     Access and modify virtual machine disk images
 Name:        libguestfs
 Epoch:       1
 Version:     1.0.80
-Release:     10%{?dist}
+Release:     11%{?dist}
 License:     LGPLv2+
 Group:       Development/Libraries
 URL:         http://libguestfs.org/
@@ -17,6 +17,9 @@ Patch0:      libguestfs-1.0.79-no-fuse-test.patch
 
 # Work around udevsettle command broken in Fedora 13 (RHBZ#548121).
 Patch1:      libguestfs-1.0.80-daemon-Work-around-udevsettle-issue-RHBZ-548121.patch
+
+# Fix regression in qemu -serial stdio option.
+Patch2:      libguestfs-1.0.80-qemu-Upstream-regression-of-stdio-serial-option.patch
 
 # Basic build requirements:
 BuildRequires: /usr/bin/pod2man
@@ -41,7 +44,7 @@ BuildRequires: kernel, bash, coreutils, lvm2, ntfs-3g, util-linux-ng
 BuildRequires: MAKEDEV, net-tools, augeas-libs, file
 BuildRequires: module-init-tools, procps, strace, iputils
 BuildRequires: dosfstools, zerofree, lsof, scrub, libselinux
-BuildRequires: parted, btrfs-progs, gfs-utils, gfs2-utils
+BuildRequires: parted, btrfs-progs, gfs2-utils
 BuildRequires: hfsplus-tools, nilfs-utils, reiserfs-utils
 BuildRequires: jfsutils, xfsprogs
 %ifarch %{ix86} x86_64
@@ -53,7 +56,7 @@ Requires:      kernel, bash, coreutils, lvm2, ntfs-3g, util-linux-ng
 Requires:      MAKEDEV, net-tools, augeas-libs, file
 Requires:      module-init-tools, procps, strace, iputils
 Requires:      dosfstools, zerofree, lsof, scrub, libselinux
-Requires:      parted, btrfs-progs, gfs-utils, gfs2-utils
+Requires:      parted, btrfs-progs, gfs2-utils
 Requires:      hfsplus-tools, nilfs-utils, reiserfs-utils
 Requires:      jfsutils, xfsprogs
 %ifarch %{ix86} x86_64
@@ -338,6 +341,7 @@ Requires:    jpackage-utils
 
 %patch0 -p1
 %patch1 -p1
+%patch2 -p1
 
 mkdir -p daemon/m4
 
@@ -612,6 +616,11 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Thu Jan  7 2010 Richard W.M. Jones <rjones@redhat.com> - 1.0.80-11
+- Remove gfs-utils (deprecated and removed from Fedora 13 by the
+  upstream Cluster Suite developers).
+- Include patch to fix regression in qemu -serial stdio option.
+
 * Tue Dec 29 2009 Richard W.M. Jones <rjones@redhat.com> - 1.0.80-10
 - Remove some debugging statements which were left in the requires
   script by accident.
