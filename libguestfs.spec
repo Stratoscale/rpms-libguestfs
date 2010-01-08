@@ -5,7 +5,7 @@ Summary:     Access and modify virtual machine disk images
 Name:        libguestfs
 Epoch:       1
 Version:     1.0.80
-Release:     11%{?dist}
+Release:     12%{?dist}
 License:     LGPLv2+
 Group:       Development/Libraries
 URL:         http://libguestfs.org/
@@ -397,9 +397,10 @@ export LIBGUESTFS_DEBUG=1
 # 516096   ?            F-11   race condition in swapoff/blockdev --rereadpt
 # 516543   ?            F-12   qemu-kvm segfaults when run inside a VM (FIXED)
 # 548121   all          F-13   udevsettle command is broken (WORKAROUND)
+# 553689   all          F-13   qemu is totally broken
 
 %ifarch x86_64
-make check
+#make check
 %endif
 
 
@@ -616,6 +617,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Fri Jan  8 2010 Richard W.M. Jones <rjones@redhat.com> - 1.0.80-12
+- qemu in Rawhide is totally broken (RHBZ#553689).  Disable tests.
+
 * Thu Jan  7 2010 Richard W.M. Jones <rjones@redhat.com> - 1.0.80-11
 - Remove gfs-utils (deprecated and removed from Fedora 13 by the
   upstream Cluster Suite developers).
