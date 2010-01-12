@@ -5,7 +5,7 @@ Summary:     Access and modify virtual machine disk images
 Name:        libguestfs
 Epoch:       1
 Version:     1.0.80
-Release:     12%{?dist}
+Release:     13%{?dist}
 License:     LGPLv2+
 Group:       Development/Libraries
 URL:         http://libguestfs.org/
@@ -617,6 +617,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Tue Jan 12 2010 Richard W.M. Jones <rjones@redhat.com> - 1.0.80-13
+- Rebuild because of libparted soname bump (1.9 -> 2.1).
+
 * Fri Jan  8 2010 Richard W.M. Jones <rjones@redhat.com> - 1.0.80-12
 - qemu in Rawhide is totally broken (RHBZ#553689).  Disable tests.
 
