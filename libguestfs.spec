@@ -5,7 +5,7 @@ Summary:     Access and modify virtual machine disk images
 Name:        libguestfs
 Epoch:       1
 Version:     1.0.80
-Release:     13%{?dist}
+Release:     14%{?dist}
 License:     LGPLv2+
 Group:       Development/Libraries
 URL:         http://libguestfs.org/
@@ -397,10 +397,10 @@ export LIBGUESTFS_DEBUG=1
 # 516096   ?            F-11   race condition in swapoff/blockdev --rereadpt
 # 516543   ?            F-12   qemu-kvm segfaults when run inside a VM (FIXED)
 # 548121   all          F-13   udevsettle command is broken (WORKAROUND)
-# 553689   all          F-13   qemu is totally broken
+# 553689   all          F-13   missing SeaBIOS (FIXED)
 
 %ifarch x86_64
-#make check
+make check
 %endif
 
 
@@ -617,6 +617,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Tue Jan 12 2010 Richard W.M. Jones <rjones@redhat.com> - 1.0.80-14
+- Reenable tests because RHBZ#553689 is fixed.
+
 * Tue Jan 12 2010 Richard W.M. Jones <rjones@redhat.com> - 1.0.80-13
 - Rebuild because of libparted soname bump (1.9 -> 2.1).
 
