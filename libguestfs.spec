@@ -4,13 +4,16 @@
 Summary:     Access and modify virtual machine disk images
 Name:        libguestfs
 Epoch:       1
-Version:     1.0.75
-Release:     1%{?dist}
+Version:     1.0.81
+Release:     1%{?dist}.1
 License:     LGPLv2+
 Group:       Development/Libraries
 URL:         http://libguestfs.org/
 Source0:     http://libguestfs.org/download/%{name}-%{version}.tar.gz
 BuildRoot:   %{_tmppath}/%{name}-%{version}-%{release}-root
+
+# Disable FUSE tests, not supported in Koji at the moment.
+Patch0:      libguestfs-1.0.79-no-fuse-test.patch
 
 # Basic build requirements:
 BuildRequires: /usr/bin/pod2man
@@ -24,6 +27,7 @@ BuildRequires: qemu-kvm >= 0.10-7
 BuildRequires: createrepo
 BuildRequires: glibc-static
 BuildRequires: libselinux-devel
+BuildRequires: fuse-devel
 
 # This is only needed for RHEL 5 because readline-devel doesn't
 # properly depend on it, but doesn't do any harm on other platforms:
@@ -34,6 +38,9 @@ BuildRequires: kernel, bash, coreutils, lvm2, ntfs-3g, util-linux-ng
 BuildRequires: MAKEDEV, net-tools, augeas-libs, file
 BuildRequires: module-init-tools, procps, strace, iputils
 BuildRequires: dosfstools, zerofree, lsof, scrub, libselinux
+BuildRequires: parted, btrfs-progs, gfs2-utils
+BuildRequires: hfsplus-tools, nilfs-utils, reiserfs-utils
+BuildRequires: jfsutils, xfsprogs
 %ifarch %{ix86} x86_64
 BuildRequires: grub, ntfsprogs
 %endif
@@ -43,6 +50,9 @@ Requires:      kernel, bash, coreutils, lvm2, ntfs-3g, util-linux-ng
 Requires:      MAKEDEV, net-tools, augeas-libs, file
 Requires:      module-init-tools, procps, strace, iputils
 Requires:      dosfstools, zerofree, lsof, scrub, libselinux
+Requires:      parted, btrfs-progs, gfs2-utils
+Requires:      hfsplus-tools, nilfs-utils, reiserfs-utils
+Requires:      jfsutils, xfsprogs
 %ifarch %{ix86} x86_64
 Requires:      grub, ntfsprogs
 %endif
@@ -75,6 +85,12 @@ Requires:      qemu-kvm >= 0.10-7
 # For libguestfs-test-tool.
 Requires:      genisoimage
 
+# Provide our own custom requires for the supermin appliance.
+Source1:     libguestfs-find-requires.sh
+%global _use_internal_dependency_generator 0
+%global __find_provides %{_rpmconfigdir}/find-provides
+%global __find_requires %{SOURCE1} %{_rpmconfigdir}/find-requires
+
 
 %description
 Libguestfs is a library for accessing and modifying guest disk images.
@@ -92,13 +108,14 @@ schemes, qcow, qcow2, vmdk.
 
 Libguestfs provides ways to enumerate guest storage (eg. partitions,
 LVs, what filesystem is in each LV, etc.).  It can also run commands
-in the context of the guest.  Also you can access filesystems over FTP.
+in the context of the guest.
 
 Libguestfs is a library that can be linked with C and C++ management
 programs.
 
 See also the 'guestfish' package for shell scripting and command line
-access.
+access, and '%{name}-mount' for mounting guest filesystems on the
+host using FUSE.
 
 For Perl bindings, see 'perl-libguestfs'.
 
@@ -138,6 +155,19 @@ modifying virtual machine disk images from the command line and shell
 scripts.
 
 
+%package mount
+Summary:     Mount guest filesystems on the host using FUSE and libguestfs
+Group:       Development/Tools
+License:     GPLv2+
+Requires:    %{name} = %{epoch}:%{version}-%{release}
+Requires:    virt-inspector
+
+
+%description mount
+The guestmount command lets you mount guest filesystems on the
+host using FUSE and %{name}.
+
+
 %package tools
 Summary:     System administration tools for virtual machines
 Group:       Development/Tools
@@ -148,15 +178,15 @@ Requires:    perl-Sys-Virt
 
 # Obsolete and replace earlier packages.
 Provides:    virt-cat = %{epoch}:%{version}-%{release}
-Obsoletes:   virt-cat <= %{epoch}:%{version}-%{release}
+Obsoletes:   virt-cat < %{epoch}:%{version}-%{release}
 Provides:    virt-df = %{epoch}:%{version}-%{release}
-Obsoletes:   virt-df <= %{epoch}:%{version}-%{release}
+Obsoletes:   virt-df < %{epoch}:%{version}-%{release}
 Provides:    virt-inspector = %{epoch}:%{version}-%{release}
-Obsoletes:   virt-inspector <= %{epoch}:%{version}-%{release}
+Obsoletes:   virt-inspector < %{epoch}:%{version}-%{release}
 
 # RHBZ#514309
 Provides:    virt-df2 = %{epoch}:%{version}-%{release}
-Obsoletes:   virt-df2 <= %{epoch}:%{version}-%{release}
+Obsoletes:   virt-df2 < %{epoch}:%{version}-%{release}
 
 # These were never packages:
 Provides:    virt-edit = %{epoch}:%{version}-%{release}
@@ -184,6 +214,9 @@ Virt-inspector examines a virtual machine and tries to determine the
 version of the OS, the kernel version, what drivers are installed,
 whether the virtual machine is fully virtualized (FV) or
 para-virtualized (PV), what applications are installed and more.
+
+Virt-list-filesystems can be used to list out the filesystems in a
+virtual machine image (for shell scripts etc).
 
 Virt-ls is a command line tool to list out files in a virtual machine.
 
@@ -300,6 +333,8 @@ Requires:    jpackage-utils
 %prep
 %setup -q
 
+%patch0 -p1
+
 mkdir -p daemon/m4
 
 
@@ -353,6 +388,8 @@ export LIBGUESTFS_DEBUG=1
 #                                 (FIXED)
 # 516096   ?            F-11   race condition in swapoff/blockdev --rereadpt
 # 516543   ?            F-12   qemu-kvm segfaults when run inside a VM (FIXED)
+# 548121   all          F-13   udevsettle command is broken (WORKAROUND)
+# 553689   all          F-13   missing SeaBIOS (FIXED)
 
 %ifarch x86_64
 make check
@@ -398,6 +435,7 @@ popd
 find $RPM_BUILD_ROOT -name perllocal.pod -delete
 find $RPM_BUILD_ROOT -name .packlist -delete
 find $RPM_BUILD_ROOT -name '*.bs' -delete
+find $RPM_BUILD_ROOT -name 'bindtests.pl' -delete
 
 rm $RPM_BUILD_ROOT%{python_sitearch}/libguestfsmod.a
 rm $RPM_BUILD_ROOT%{python_sitearch}/libguestfsmod.la
@@ -441,14 +479,16 @@ rm -rf $RPM_BUILD_ROOT
 %files -f %{name}.lang
 %defattr(-,root,root,-)
 %doc COPYING
-%{_bindir}/libguestfs-supermin-helper
-%{_bindir}/libguestfs-test-tool
 %{_bindir}/hivexml
 %{_bindir}/hivexget
+%{_bindir}/libguestfs-supermin-helper
+%{_bindir}/libguestfs-test-tool
 %{_libdir}/guestfs/
 %{_libdir}/libguestfs.so.*
 %{_libdir}/libhivex.so.*
 %{_libexecdir}/libguestfs-test-tool-helper
+%{_mandir}/man1/hivexml.1*
+%{_mandir}/man1/hivexget.1*
 %{_mandir}/man1/libguestfs-test-tool.1*
 
 
@@ -459,8 +499,6 @@ rm -rf $RPM_BUILD_ROOT
 %doc installed-docs/*
 %{_libdir}/libguestfs.so
 %{_libdir}/libhivex.so
-%{_mandir}/man1/hivexml.1*
-%{_mandir}/man1/hivexget.1*
 %{_mandir}/man3/guestfs.3*
 %{_mandir}/man3/libguestfs.3*
 %{_mandir}/man3/hivex.3*
@@ -477,6 +515,13 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man1/guestfish.1*
 
 
+%files mount
+%defattr(-,root,root,-)
+%doc COPYING
+%{_bindir}/guestmount
+%{_mandir}/man1/guestmount.1*
+
+
 %files tools
 %defattr(-,root,root,-)
 %{_bindir}/virt-cat
@@ -487,6 +532,8 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man1/virt-edit.1*
 %{_bindir}/virt-inspector
 %{_mandir}/man1/virt-inspector.1*
+%{_bindir}/virt-list-filesystems
+%{_mandir}/man1/virt-list-filesystems.1*
 %{_bindir}/virt-ls
 %{_mandir}/man1/virt-ls.1*
 %{_bindir}/virt-rescue
@@ -562,11 +609,78 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
-* Thu Oct 29 2009 Richard W.M. Jones <rjones@redhat.com> - 1.0.75-1
+* Wed Jan 13 2010 Richard W.M. Jones <rjones@redhat.com> - 1.0.81-1.fc12.1
+- Backport libguestfs 1.0.81 from Rawhide to F-12.
+
+* Wed Jan 13 2010 Richard W.M. Jones <rjones@redhat.com> - 1.0.81-1
+- New upstream version 1.0.81.
+- Remove two upstream patches.
+- virt-inspector: Make RPM application data more specific (RHBZ#552718).
+
+* Tue Jan 12 2010 Richard W.M. Jones <rjones@redhat.com> - 1.0.80-14
+- Reenable tests because RHBZ#553689 is fixed.
+
+* Tue Jan 12 2010 Richard W.M. Jones <rjones@redhat.com> - 1.0.80-13
+- Rebuild because of libparted soname bump (1.9 -> 2.1).
+
+* Fri Jan  8 2010 Richard W.M. Jones <rjones@redhat.com> - 1.0.80-12
+- qemu in Rawhide is totally broken (RHBZ#553689).  Disable tests.
+
+* Thu Jan  7 2010 Richard W.M. Jones <rjones@redhat.com> - 1.0.80-11
+- Remove gfs-utils (deprecated and removed from Fedora 13 by the
+  upstream Cluster Suite developers).
+- Include patch to fix regression in qemu -serial stdio option.
+
+* Tue Dec 29 2009 Richard W.M. Jones <rjones@redhat.com> - 1.0.80-10
+- Remove some debugging statements which were left in the requires
+  script by accident.
+
+* Mon Dec 21 2009 Richard W.M. Jones <rjones@redhat.com> - 1.0.80-9
+- Generate additional requires for supermin (RHBZ#547496).
+
+* Fri Dec 18 2009 Richard W.M. Jones <rjones@redhat.com> - 1.0.80-3
+- Work around udevsettle command problem (RHBZ#548121).
+- Enable tests.
+
+* Wed Dec 16 2009 Richard W.M. Jones <rjones@redhat.com> - 1.0.80-2
+- Disable tests because of RHBZ#548121.
+
+* Wed Dec 16 2009 Richard W.M. Jones <rjones@redhat.com> - 1.0.80-1
+- New upstream release 1.0.80.
+- New Polish translations (RHBZ#502533).
+- Give a meaningful error if no usable kernels are found (RHBZ#539746).
+- New tool: virt-list-filesystems
+
+* Fri Dec  4 2009 Stepan Kasal <skasal@redhat.com> - 1:1.0.79-3
+- rebuild against perl 5.10.1
+
+* Wed Nov 18 2009 Richard W.M. Jones <rjones@redhat.com> - 1.0.79-2
+- New upstream release 1.0.79.
+- Adds FUSE test script and multiple fixes for FUSE (RHBZ#538069).
+- Fix virt-df in Xen (RHBZ#538041).
+- Improve speed of supermin appliance.
+- Disable FUSE-related tests because Koji doesn't currently allow them.
+  fuse: device not found, try 'modprobe fuse' first
+
+* Tue Nov 10 2009 Richard W.M. Jones <rjones@redhat.com> - 1.0.78-2
+- New upstream release 1.0.78.
+- Many more filesystem types supported by this release - add them
+  as dependencies.
+
+* Tue Nov  3 2009 Richard W.M. Jones <rjones@redhat.com> - 1.0.77-1
+- New upstream release 1.0.77.
+- Support for mounting guest in host using FUSE (guestmount command).
+- hivex*(1) man pages should be in main package, not -devel, since
+  they are user commands.
+- libguestfs-tools: Fix "self-obsoletion" issue raised by rpmlint.
+- perl: Remove bogus script Sys/bindtests.pl.
+
+* Thu Oct 29 2009 Richard W.M. Jones <rjones@redhat.com> - 1.0.75-2
 - New upstream release 1.0.75.
 - New library: libhivex.
 - New tools: virt-win-reg, hivexml, hivexget.
 - Don't require chntpw.
+- Add BR libxml2-devel, accidentally omitted before.
 
 * Tue Oct 20 2009 Richard W.M. Jones <rjones@redhat.com> - 1.0.74-1
 - New upstream release 1.0.74.
