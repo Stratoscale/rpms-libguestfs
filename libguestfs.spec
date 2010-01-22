@@ -5,7 +5,7 @@ Summary:     Access and modify virtual machine disk images
 Name:        libguestfs
 Epoch:       1
 Version:     1.0.81
-Release:     4%{?dist}
+Release:     5%{?dist}
 License:     LGPLv2+
 Group:       Development/Libraries
 URL:         http://libguestfs.org/
@@ -18,7 +18,7 @@ Patch0:      libguestfs-1.0.79-no-fuse-test.patch
 # Basic build requirements:
 BuildRequires: /usr/bin/pod2man
 BuildRequires: /usr/bin/pod2text
-BuildRequires: febootstrap >= 2.3
+BuildRequires: febootstrap >= 2.6
 BuildRequires: augeas-devel >= 0.5.0
 BuildRequires: readline-devel
 BuildRequires: genisoimage
@@ -609,6 +609,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Fri Jan 22 2010 Richard W.M. Jones <rjones@redhat.com> - 1.0.81-5
+- Require febootstrap >= 2.6 (RHBZ#557262).
+
 * Thu Jan 21 2010 Richard W.M. Jones <rjones@redhat.com> - 1.0.81-4
 - Rebuild for unannounced soname bump (libntfs-3g.so).
 
