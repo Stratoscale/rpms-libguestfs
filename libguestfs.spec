@@ -5,7 +5,7 @@ Summary:     Access and modify virtual machine disk images
 Name:        libguestfs
 Epoch:       1
 Version:     1.0.81
-Release:     1%{?dist}.2
+Release:     1%{?dist}.3
 License:     LGPLv2+
 Group:       Development/Libraries
 URL:         http://libguestfs.org/
@@ -609,6 +609,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Tue Jan 26 2010 Richard W.M. Jones <rjones@redhat.com> - 1.0.81-1.fc12.3
+- Rebuild because of unannounced soname bump (libgcc_s.so).
+
 * Mon Jan 25 2010 Richard W.M. Jones <rjones@redhat.com> - 1.0.81-1.fc12.2
 - Rebuild because of unannounced soname bump (libntfs-3g.so).
 
