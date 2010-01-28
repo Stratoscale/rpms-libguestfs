@@ -1,0 +1,104 @@
+From 74fe427460bd2d455d2860c937ae81a8b5a1d1e7 Mon Sep 17 00:00:00 2001
+From: Richard Jones <rjones@redhat.com>
+Date: Thu, 28 Jan 2010 22:06:27 +0000
+Subject: [PATCH 1/2] Implement 'vgrename' and 'lvrename' APIs.
+
+---
+ daemon/lvm.c     |   44 ++++++++++++++++++++++++++++++++++++++++++++
+ src/MAX_PROC_NR  |    2 +-
+ src/generator.ml |   20 ++++++++++++++++++++
+ 3 files changed, 65 insertions(+), 1 deletions(-)
+
+diff --git a/daemon/lvm.c b/daemon/lvm.c
+index 564517c..7a05a54 100644
+--- a/daemon/lvm.c
++++ b/daemon/lvm.c
+@@ -468,3 +468,47 @@ do_vg_activate_all (int activate)
+   char *empty[] = { NULL };
+   return do_vg_activate (activate, empty);
+ }
++
++int
++do_lvrename (const char *logvol, const char *newlogvol)
++{
++  char *err;
++  int r;
++
++  r = command (NULL, &err,
++               "/sbin/lvm", "lvrename",
++               logvol, newlogvol, NULL);
++  if (r == -1) {
++    reply_with_error ("lvrename: %s -> %s: %s", logvol, newlogvol, err);
++    free (err);
++    return -1;
++  }
++
++  free (err);
++
++  udev_settle ();
++
++  return 0;
++}
++
++int
++do_vgrename (const char *volgroup, const char *newvolgroup)
++{
++  char *err;
++  int r;
++
++  r = command (NULL, &err,
++               "/sbin/lvm", "vgrename",
++               volgroup, newvolgroup, NULL);
++  if (r == -1) {
++    reply_with_error ("vgrename: %s -> %s: %s", volgroup, newvolgroup, err);
++    free (err);
++    return -1;
++  }
++
++  free (err);
++
++  udev_settle ();
++
++  return 0;
++}
+diff --git a/src/MAX_PROC_NR b/src/MAX_PROC_NR
+index dc6f4a8..3d4c7bf 100644
+--- a/src/MAX_PROC_NR
++++ b/src/MAX_PROC_NR
+@@ -1 +1 @@
+-218
++220
+diff --git a/src/generator.ml b/src/generator.ml
+index 58c39e6..6de2c7f 100755
+--- a/src/generator.ml
++++ b/src/generator.ml
+@@ -4204,6 +4204,26 @@ To get other stats about a file, use C<guestfs_stat>, C<guestfs_lstat>,
+ C<guestfs_is_dir>, C<guestfs_is_file> etc.
+ To get the size of block devices, use C<guestfs_blockdev_getsize64>.");
+ 
++  ("lvrename", (RErr, [String "logvol"; String "newlogvol"]), 219, [],
++   [InitBasicFSonLVM, Always, TestOutputList (
++      [["lvrename"; "/dev/VG/LV"; "/dev/VG/LV2"];
++       ["lvs"]], ["/dev/VG/LV2"])],
++   "rename an LVM logical volume",
++   "\
++Rename a logical volume C<logvol> with the new name C<newlogvol>.");
++
++  ("vgrename", (RErr, [String "volgroup"; String "newvolgroup"]), 220, [],
++   [InitBasicFSonLVM, Always, TestOutputList (
++      [["umount"; "/"];
++       ["vg_activate"; "false"; "VG"];
++       ["vgrename"; "VG"; "VG2"];
++       ["vg_activate"; "true"; "VG2"];
++       ["mount"; "/dev/VG2/LV"; "/"];
++       ["vgs"]], ["VG2"])],
++   "rename an LVM volume group",
++   "\
++Rename a volume group C<volgroup> with the new name C<newvolgroup>.");
++
+ ]
+ 
+ let all_functions = non_daemon_functions @ daemon_functions
+-- 
+1.6.5.2
+

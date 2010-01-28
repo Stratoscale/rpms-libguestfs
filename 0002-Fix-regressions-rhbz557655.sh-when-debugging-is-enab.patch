@@ -1,0 +1,33 @@
+From 3cd7ce75f1ce5048a4d9f6aeaf66aff3194e1096 Mon Sep 17 00:00:00 2001
+From: Richard Jones <rjones@redhat.com>
+Date: Thu, 28 Jan 2010 22:35:16 +0000
+Subject: [PATCH 2/2] Fix regressions/rhbz557655.sh when debugging is enabled.
+
+The regression test for RHBZ#557655 would fail if debugging was
+enabled, because debug output would get mixed up with the test
+output.
+
+To reproduce the error do:
+
+LIBGUESTFS_DEBUG=1 make -C regressions TESTS=rhbz557655.sh check
+
+This commit disables debug for just this test.
+---
+ regressions/rhbz557655.sh |    1 +
+ 1 files changed, 1 insertions(+), 0 deletions(-)
+
+diff --git a/regressions/rhbz557655.sh b/regressions/rhbz557655.sh
+index 6ef0b70..aa74bc1 100755
+--- a/regressions/rhbz557655.sh
++++ b/regressions/rhbz557655.sh
+@@ -23,6 +23,7 @@
+ set -e
+ rm -f test.out
+ export LANG=C
++unset LIBGUESTFS_DEBUG
+ 
+ ../fish/guestfish >> test.out 2>&1 <<EOF
+ # set-memsize is just a convenient non-daemon function that
+-- 
+1.6.5.2
+
