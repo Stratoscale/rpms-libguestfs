@@ -5,7 +5,7 @@ Summary:     Access and modify virtual machine disk images
 Name:        libguestfs
 Epoch:       1
 Version:     1.0.81
-Release:     7%{?dist}
+Release:     8%{?dist}
 License:     LGPLv2+
 Group:       Development/Libraries
 URL:         http://libguestfs.org/
@@ -343,7 +343,7 @@ Requires:    jpackage-utils
 
 %patch0 -p1
 %patch1 -p1
-%patch1 -p2
+%patch2 -p1
 
 mkdir -p daemon/m4
 
@@ -619,7 +619,7 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
-* Thu Jan 28 2010 Richard W.M. Jones <rjones@redhat.com> - 1.0.81-7
+* Thu Jan 28 2010 Richard W.M. Jones <rjones@redhat.com> - 1.0.81-8
 - Backport special handling of libgcc_s.so.
 - Backport unreadable files patch from RHEL 6 / upstream.
 
