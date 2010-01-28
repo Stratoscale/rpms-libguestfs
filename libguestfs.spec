@@ -5,7 +5,7 @@ Summary:     Access and modify virtual machine disk images
 Name:        libguestfs
 Epoch:       1
 Version:     1.0.82
-Release:     2%{?dist}
+Release:     3%{?dist}
 License:     LGPLv2+
 Group:       Development/Libraries
 URL:         http://libguestfs.org/
@@ -15,11 +15,8 @@ BuildRoot:   %{_tmppath}/%{name}-%{version}-%{release}-root
 # Disable FUSE tests, not supported in Koji at the moment.
 Patch0:      libguestfs-1.0.79-no-fuse-test.patch
 
-# Backport vgrename/lvrename functions from upstream.
-Patch1:      0001-Implement-vgrename-and-lvrename-APIs.patch
-
 # Backport RHBZ557655 test fix from upstream.
-Patch2:      0002-Fix-regressions-rhbz557655.sh-when-debugging-is-enab.patch
+Patch1:      0002-Fix-regressions-rhbz557655.sh-when-debugging-is-enab.patch
 
 # Basic build requirements:
 BuildRequires: /usr/bin/pod2man
@@ -341,7 +338,6 @@ Requires:    jpackage-utils
 
 %patch0 -p1
 %patch1 -p1
-%patch2 -p1
 
 mkdir -p daemon/m4
 
@@ -617,8 +613,7 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
-* Thu Jan 28 2010 Richard W.M. Jones <rjones@redhat.com> - 1.0.82-2
-- Backport vgrename/lvrename functions from upstream.
+* Thu Jan 28 2010 Richard W.M. Jones <rjones@redhat.com> - 1.0.82-3
 - Backport RHBZ557655 test fix from upstream.
 
 * Thu Jan 28 2010 Richard W.M. Jones <rjones@redhat.com> - 1.0.82-1
