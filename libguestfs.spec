@@ -4,8 +4,8 @@
 Summary:     Access and modify virtual machine disk images
 Name:        libguestfs
 Epoch:       1
-Version:     1.0.81
-Release:     8%{?dist}
+Version:     1.0.82
+Release:     1%{?dist}
 License:     LGPLv2+
 Group:       Development/Libraries
 URL:         http://libguestfs.org/
@@ -14,14 +14,6 @@ BuildRoot:   %{_tmppath}/%{name}-%{version}-%{release}-root
 
 # Disable FUSE tests, not supported in Koji at the moment.
 Patch0:      libguestfs-1.0.79-no-fuse-test.patch
-
-# Backport special handling of libgcc_s dependency.
-# http://git.annexia.org/?p=libguestfs.git;a=commit;h=dab98a0e52b9bb9930048b94d637a2fdb218fc45
-Patch1:      0001-supermin-Add-special-case-for-libgcc_s-.so.N.patch
-
-# Backport unreadable files patch from RHEL 6 / upstream:
-# http://git.annexia.org/?p=libguestfs.git;a=commitdiff;h=3c398c8928d3860ca9e3c413046b6f38318bb6ef
-Patch2:      libguestfs-1.0.81-more-unreadable-files.patch
 
 # Basic build requirements:
 BuildRequires: /usr/bin/pod2man
@@ -342,8 +334,6 @@ Requires:    jpackage-utils
 %setup -q
 
 %patch0 -p1
-%patch1 -p1
-%patch2 -p1
 
 mkdir -p daemon/m4
 
@@ -619,6 +609,21 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Thu Jan 28 2010 Richard W.M. Jones <rjones@redhat.com> - 1.0.82-1
+- New upstream version 1.0.82.  This includes the two patches
+  we were carrying, so those are now removed.
+- This release fixes:
+  RHBZ#559498 (Oriya translation).
+  RHBZ#559480 (Punjabi translation).
+  RHBZ#558593 (Should prevent corruption by multilib).
+  RHBZ#559237 (Telugu translation).
+  RHBZ#557655 (Use xstrtol/xstrtoll to parse integers in guestfish).
+  RHBZ#557195 (Missing crc kernel modules for recent Linux).
+- In addition this contains numerous fixes to the hivex library
+  for parsing Windows Registry files, making hivex* and virt-win-reg
+  more robust.
+- New API call 'filesize'.
+
 * Thu Jan 28 2010 Richard W.M. Jones <rjones@redhat.com> - 1.0.81-8
 - Backport special handling of libgcc_s.so.
 - Backport unreadable files patch from RHEL 6 / upstream.
