@@ -5,7 +5,7 @@ Summary:     Access and modify virtual machine disk images
 Name:        libguestfs
 Epoch:       1
 Version:     1.0.81
-Release:     6%{?dist}
+Release:     7%{?dist}
 License:     LGPLv2+
 Group:       Development/Libraries
 URL:         http://libguestfs.org/
@@ -18,6 +18,10 @@ Patch0:      libguestfs-1.0.79-no-fuse-test.patch
 # Backport special handling of libgcc_s dependency.
 # http://git.annexia.org/?p=libguestfs.git;a=commit;h=dab98a0e52b9bb9930048b94d637a2fdb218fc45
 Patch1:      0001-supermin-Add-special-case-for-libgcc_s-.so.N.patch
+
+# Backport unreadable files patch from RHEL 6 / upstream:
+# http://git.annexia.org/?p=libguestfs.git;a=commitdiff;h=3c398c8928d3860ca9e3c413046b6f38318bb6ef
+Patch2:      libguestfs-1.0.81-more-unreadable-files.patch
 
 # Basic build requirements:
 BuildRequires: /usr/bin/pod2man
@@ -339,6 +343,7 @@ Requires:    jpackage-utils
 
 %patch0 -p1
 %patch1 -p1
+%patch1 -p2
 
 mkdir -p daemon/m4
 
@@ -614,8 +619,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
-* Thu Jan 28 2010 Richard W.M. Jones <rjones@redhat.com> - 1.0.81-6
+* Thu Jan 28 2010 Richard W.M. Jones <rjones@redhat.com> - 1.0.81-7
 - Backport special handling of libgcc_s.so.
+- Backport unreadable files patch from RHEL 6 / upstream.
 
 * Fri Jan 22 2010 Richard W.M. Jones <rjones@redhat.com> - 1.0.81-5
 - Require febootstrap >= 2.6 (RHBZ#557262).
