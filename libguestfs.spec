@@ -5,7 +5,7 @@ Summary:     Access and modify virtual machine disk images
 Name:        libguestfs
 Epoch:       1
 Version:     1.0.82
-Release:     5%{?dist}
+Release:     6%{?dist}
 License:     LGPLv2+
 Group:       Development/Libraries
 URL:         http://libguestfs.org/
@@ -17,6 +17,9 @@ Patch0:      libguestfs-1.0.79-no-fuse-test.patch
 
 # Backport RHBZ557655 test fix from upstream.
 Patch1:      libguestfs-1.0.82-fix-rhbz557655-regression-test.patch
+
+# Backport fix for unreadable yum.log from upstream.
+Patch2:      libguestfs-1.0.82-another-unreadable-file-var-log-yum-log.patch
 
 # Basic build requirements:
 BuildRequires: /usr/bin/pod2man
@@ -338,6 +341,7 @@ Requires:    jpackage-utils
 
 %patch0 -p1
 %patch1 -p1
+%patch2 -p1
 
 mkdir -p daemon/m4
 
@@ -613,8 +617,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
-* Fri Jan 29 2010 Richard W.M. Jones <rjones@redhat.com> - 1.0.82-5
+* Fri Jan 29 2010 Richard W.M. Jones <rjones@redhat.com> - 1.0.82-6
 - Backport a better fix for RHBZ557655 test from upstream.
+- Backport fix for unreadable yum.log from upstream.
 
 * Thu Jan 28 2010 Richard W.M. Jones <rjones@redhat.com> - 1.0.82-3
 - Backport RHBZ557655 test fix from upstream.

@@ -1,0 +1,24 @@
+From 088d0c53cfe0dcb20b87707a9055175b2fd6b72f Mon Sep 17 00:00:00 2001
+From: Richard Jones <rjones@redhat.com>
+Date: Fri, 29 Jan 2010 14:24:54 +0000
+Subject: [PATCH] Another unreadable file: /var/log/yum.log
+
+---
+ appliance/make.sh.in |    1 +
+ 1 files changed, 1 insertions(+), 0 deletions(-)
+
+diff --git a/appliance/make.sh.in b/appliance/make.sh.in
+index 677e995..515df34 100755
+--- a/appliance/make.sh.in
++++ b/appliance/make.sh.in
+@@ -115,6 +115,7 @@ if [ "@DIST@" = "REDHAT" ]; then
+     /var/log/spooler \
+     /var/log/messages \
+     /var/log/btmp \
++    /var/log/yum.log \
+     $(cd initramfs && echo usr/sbin/glibc_post_upgrade.*)
+ 
+   # Kernel modules take up nearly half of the image.  Only include ones
+-- 
+1.6.5.2
+
