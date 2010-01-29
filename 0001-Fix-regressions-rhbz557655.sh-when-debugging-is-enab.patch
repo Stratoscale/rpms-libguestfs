@@ -1,0 +1,143 @@
+From 2a224424acc47dc0f50fe605463bf2936fceb27c Mon Sep 17 00:00:00 2001
+From: Richard Jones <rjones@redhat.com>
+Date: Fri, 29 Jan 2010 09:02:14 +0000
+Subject: [PATCH] Fix regressions/rhbz557655.sh when debugging is enabled (v2).
+
+The previous fix didn't cope with ordinary warnings emitted by
+qemu (eg. "open /dev/kvm: No such file or directory").  This
+is a hopefully more complete fix for the problem.
+
+See also commit 3cd7ce75f1ce5048a4d9f6aeaf66aff3194e1096.
+---
+ .gitignore                             |    1 +
+ regressions/rhbz557655-expected.out    |   22 ----------------------
+ regressions/rhbz557655-expected.stderr |   14 ++++++++++++++
+ regressions/rhbz557655-expected.stdout |    8 ++++++++
+ regressions/rhbz557655.sh              |   21 +++++++++++++++------
+ 5 files changed, 38 insertions(+), 28 deletions(-)
+ delete mode 100644 regressions/rhbz557655-expected.out
+ create mode 100644 regressions/rhbz557655-expected.stderr
+ create mode 100644 regressions/rhbz557655-expected.stdout
+
+diff --git a/.gitignore b/.gitignore
+index 829f807..5b4d356 100644
+--- a/.gitignore
++++ b/.gitignore
+@@ -203,6 +203,7 @@ python/guestfs.py
+ python/guestfs-py.c
+ python/guestfs.pyc
+ regressions/test1.img
++regressions/test.err
+ regressions/test.out
+ ruby/bindtests.rb
+ ruby/ext/guestfs/extconf.h
+diff --git a/regressions/rhbz557655-expected.out b/regressions/rhbz557655-expected.out
+deleted file mode 100644
+index 7d37e84..0000000
+--- a/regressions/rhbz557655-expected.out
++++ /dev/null
+@@ -1,22 +0,0 @@
+-0
+-16
+-8
+--1073741824
+-1073741823
+-set-memsize: memsize: integer out of range
+-set-memsize: memsize: integer out of range
+-set-memsize: memsize: integer out of range
+-set-memsize: memsize: integer out of range
+-set-memsize: memsize: invalid integer parameter (xstrtol returned 4)
+-set-memsize: memsize: invalid integer parameter (xstrtol returned 2)
+-set-memsize: memsize: invalid integer parameter (xstrtol returned 2)
+-set-memsize: memsize: invalid integer parameter (xstrtol returned 2)
+-1234
+-1234
+-1234
+-libguestfs: error: truncate_size: ftruncate: /test: File too large
+-truncate-size: size: invalid integer parameter (xstrtoll returned 1)
+-truncate-size: size: invalid integer parameter (xstrtoll returned 4)
+-truncate-size: size: invalid integer parameter (xstrtoll returned 2)
+-truncate-size: size: invalid integer parameter (xstrtoll returned 2)
+-truncate-size: size: invalid integer parameter (xstrtoll returned 2)
+diff --git a/regressions/rhbz557655-expected.stderr b/regressions/rhbz557655-expected.stderr
+new file mode 100644
+index 0000000..ea560e8
+--- /dev/null
++++ b/regressions/rhbz557655-expected.stderr
+@@ -0,0 +1,14 @@
++set-memsize: memsize: integer out of range
++set-memsize: memsize: integer out of range
++set-memsize: memsize: integer out of range
++set-memsize: memsize: integer out of range
++set-memsize: memsize: invalid integer parameter (xstrtol returned 4)
++set-memsize: memsize: invalid integer parameter (xstrtol returned 2)
++set-memsize: memsize: invalid integer parameter (xstrtol returned 2)
++set-memsize: memsize: invalid integer parameter (xstrtol returned 2)
++libguestfs: error: truncate_size: ftruncate: /test: File too large
++truncate-size: size: invalid integer parameter (xstrtoll returned 1)
++truncate-size: size: invalid integer parameter (xstrtoll returned 4)
++truncate-size: size: invalid integer parameter (xstrtoll returned 2)
++truncate-size: size: invalid integer parameter (xstrtoll returned 2)
++truncate-size: size: invalid integer parameter (xstrtoll returned 2)
+diff --git a/regressions/rhbz557655-expected.stdout b/regressions/rhbz557655-expected.stdout
+new file mode 100644
+index 0000000..80bc8bc
+--- /dev/null
++++ b/regressions/rhbz557655-expected.stdout
+@@ -0,0 +1,8 @@
++0
++16
++8
++-1073741824
++1073741823
++1234
++1234
++1234
+diff --git a/regressions/rhbz557655.sh b/regressions/rhbz557655.sh
+index aa74bc1..85cfb1e 100755
+--- a/regressions/rhbz557655.sh
++++ b/regressions/rhbz557655.sh
+@@ -21,11 +21,10 @@
+ # "guestfish number parsing should not use atoi, should support '0...' for octal and '0x...' for hexadecimal"
+ 
+ set -e
+-rm -f test.out
++rm -f test.out test.err
+ export LANG=C
+-unset LIBGUESTFS_DEBUG
+ 
+-../fish/guestfish >> test.out 2>&1 <<EOF
++../fish/guestfish >> test.out 2>> test.err <<EOF
+ # set-memsize is just a convenient non-daemon function that
+ # takes a single integer argument.
+ set-memsize 0
+@@ -50,7 +49,7 @@ get-memsize
+ -set-memsize 123L
+ EOF
+ 
+-../fish/guestfish >> test.out 2>&1 <<EOF
++../fish/guestfish >> test.out 2>> test.err <<EOF
+ alloc test1.img 10M
+ run
+ part-disk /dev/sda mbr
+@@ -80,5 +79,15 @@ filesize /test
+ -truncate-size /test 123L
+ EOF
+ 
+-diff -u test.out rhbz557655-expected.out
+-rm test.out test1.img
++# If we are running with debugging enabled (or even if not), then
++# other messages and warnings can end up in the test.err (stderr) log.
++# Thus filter out only lines we expect.  'proc 200' is the procedure
++# number of truncate_size.
++mv test.err test.err~
++grep -E 'set[-_]memsize|truncate[-_]size' test.err~ |
++  grep -Ev 'proc 200' > test.err
++rm test.err~
++
++diff -u test.out rhbz557655-expected.stdout
++diff -u test.err rhbz557655-expected.stderr
++rm test.out test.err test1.img
+-- 
+1.6.5.2
+
