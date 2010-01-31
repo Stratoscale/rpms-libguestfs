@@ -5,7 +5,7 @@ Summary:     Access and modify virtual machine disk images
 Name:        libguestfs
 Epoch:       1
 Version:     1.0.82
-Release:     6%{?dist}
+Release:     7%{?dist}
 License:     LGPLv2+
 Group:       Development/Libraries
 URL:         http://libguestfs.org/
@@ -617,6 +617,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sun Jan 31 2010 Richard W.M. Jones <rjones@redhat.com> - 1:1.0.82-7
+- Bump and rebuild.
+
 * Fri Jan 29 2010 Richard W.M. Jones <rjones@redhat.com> - 1.0.82-6
 - Backport a better fix for RHBZ557655 test from upstream.
 - Backport fix for unreadable yum.log from upstream.
