@@ -487,16 +487,18 @@ rm -rf $RPM_BUILD_ROOT
 %files -f %{name}.lang
 %defattr(-,root,root,-)
 %doc COPYING
-%{_bindir}/hivexml
 %{_bindir}/hivexget
+%{_bindir}/hivexml
+%{_bindir}/hivexsh
 %{_bindir}/libguestfs-supermin-helper
 %{_bindir}/libguestfs-test-tool
 %{_libdir}/guestfs/
 %{_libdir}/libguestfs.so.*
 %{_libdir}/libhivex.so.*
 %{_libexecdir}/libguestfs-test-tool-helper
-%{_mandir}/man1/hivexml.1*
 %{_mandir}/man1/hivexget.1*
+%{_mandir}/man1/hivexml.1*
+%{_mandir}/man1/hivexsh.1*
 %{_mandir}/man1/libguestfs-test-tool.1*
 
 
@@ -628,6 +630,7 @@ rm -rf $RPM_BUILD_ROOT
   Add Tamil translation (RHBZ#559877) (thanks to I.Felix)
   Update Punjabi translation (RHBZ#559480) (thanks Jaswinder Singh)
 - There are significant fixes to hive file handling.
+- Add hivexsh and manual page.
 
 * Sun Jan 31 2010 Richard W.M. Jones <rjones@redhat.com> - 1:1.0.82-7
 - Bump and rebuild.
