@@ -5,7 +5,7 @@ Summary:     Access and modify virtual machine disk images
 Name:        libguestfs
 Epoch:       1
 Version:     1.0.83
-Release:     2%{?dist}
+Release:     3%{?dist}
 License:     LGPLv2+
 Group:       Development/Libraries
 URL:         http://libguestfs.org/
@@ -611,6 +611,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Fri Feb  5 2010 Richard W.M. Jones <rjones@redhat.com> - 1.0.83-3
+- Rebuild: possible timing-related build problem in Koji.
+
 * Fri Feb  5 2010 Richard W.M. Jones <rjones@redhat.com> - 1.0.83-2
 - New upstream release 1.0.83.
 - This release fixes:
