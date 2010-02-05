@@ -4,8 +4,8 @@
 Summary:     Access and modify virtual machine disk images
 Name:        libguestfs
 Epoch:       1
-Version:     1.0.82
-Release:     7%{?dist}
+Version:     1.0.83
+Release:     1%{?dist}
 License:     LGPLv2+
 Group:       Development/Libraries
 URL:         http://libguestfs.org/
@@ -617,6 +617,18 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Fri Feb  5 2010 Richard W.M. Jones <rjones@redhat.com> - 1.0.83-1
+- New upstream release 1.0.83.
+- This release fixes:
+  Add Marathi translations (RHBZ#561671).
+  Polish translations (RHBZ#502533).
+  Add Gujarti translations (Sweta Kothari) (RHBZ#560918).
+  Update Oriya translations (thanks Manoj Kumar Giri) (RHBZ#559498).
+  Set locale in C programs so l10n works (RHBZ#559962).
+  Add Tamil translation (RHBZ#559877) (thanks to I.Felix)
+  Update Punjabi translation (RHBZ#559480) (thanks Jaswinder Singh)
+- There are significant fixes to hive file handling.
+
 * Sun Jan 31 2010 Richard W.M. Jones <rjones@redhat.com> - 1:1.0.82-7
 - Bump and rebuild.
 
