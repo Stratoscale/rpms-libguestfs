@@ -5,7 +5,7 @@ Summary:     Access and modify virtual machine disk images
 Name:        libguestfs
 Epoch:       1
 Version:     1.0.83
-Release:     4%{?dist}
+Release:     5%{?dist}
 License:     LGPLv2+
 Group:       Development/Libraries
 URL:         http://libguestfs.org/
@@ -175,6 +175,7 @@ License:     GPLv2+
 Requires:    %{name} = %{epoch}:%{version}-%{release}
 Requires:    guestfish
 Requires:    perl-Sys-Virt
+Requires:    perl-XML-Writer
 
 # Obsolete and replace earlier packages.
 Provides:    virt-cat = %{epoch}:%{version}-%{release}
@@ -612,6 +613,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Mon Feb  8 2010 Richard W.M. Jones <rjones@redhat.com> - 1.0.83-5
+- libguestfs-tools should require perl-XML-Writer (RHBZ#562858).
+
 * Mon Feb  8 2010 Richard W.M. Jones <rjones@redhat.com> - 1.0.83-4
 - Use virtio for block device access (RHBZ#509383 is fixed).
 
