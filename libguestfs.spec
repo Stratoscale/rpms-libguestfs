@@ -5,7 +5,7 @@ Summary:     Access and modify virtual machine disk images
 Name:        libguestfs
 Epoch:       1
 Version:     1.0.83
-Release:     3%{?dist}
+Release:     4%{?dist}
 License:     LGPLv2+
 Group:       Development/Libraries
 URL:         http://libguestfs.org/
@@ -354,6 +354,7 @@ createrepo repo
   --with-qemu="qemu-kvm qemu-system-%{_build_arch} qemu" \
   --enable-debug-command \
   --enable-supermin \
+  --with-drive-if=virtio \
   %{extra}
 
 # This ensures that /usr/sbin/chroot is on the path.  Not needed
@@ -611,6 +612,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Mon Feb  8 2010 Richard W.M. Jones <rjones@redhat.com> - 1.0.83-4
+- Use virtio for block device access (RHBZ#509383 is fixed).
+
 * Fri Feb  5 2010 Richard W.M. Jones <rjones@redhat.com> - 1.0.83-3
 - Rebuild: possible timing-related build problem in Koji.
 
