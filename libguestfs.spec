@@ -5,7 +5,7 @@ Summary:     Access and modify virtual machine disk images
 Name:        libguestfs
 Epoch:       1
 Version:     1.0.81
-Release:     1%{?dist}.5
+Release:     1%{?dist}.6
 License:     LGPLv2+
 Group:       Development/Libraries
 URL:         http://libguestfs.org/
@@ -22,7 +22,7 @@ Patch1:      0001-supermin-Add-special-case-for-libgcc_s-.so.N.patch
 # Basic build requirements:
 BuildRequires: /usr/bin/pod2man
 BuildRequires: /usr/bin/pod2text
-BuildRequires: febootstrap >= 2.3
+BuildRequires: febootstrap >= 2.6
 BuildRequires: augeas-devel >= 0.5.0
 BuildRequires: readline-devel
 BuildRequires: genisoimage
@@ -615,8 +615,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
-* Mon Feb  8 2010 Richard W.M. Jones <rjones@redhat.com> - 1.0.81-1.fc12.5
+* Mon Feb  8 2010 Richard W.M. Jones <rjones@redhat.com> - 1.0.81-1.fc12.6
 - libguestfs-tools should require perl-XML-Writer (RHBZ#562858).
+- Backport fix for RHBZ#557262 from Rawhide.
 
 * Thu Jan 28 2010 Richard W.M. Jones <rjones@redhat.com> - 1.0.81-1.fc12.4
 - Backport special handling of libgcc_s.so.
