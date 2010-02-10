@@ -1,11 +1,44 @@
-# Enable to build w/o network.
-%global buildnonet 1
+# Enable to build using a network repo
+# Default is disabled
+%if %{defined libguestfs_buildnet}
+%global buildnet %{libguestfs_buildnet}
+%else
+%global buildnet 0
+%endif 
+
+# Enable to make the appliance use virtio_blk
+# Default is enabled
+%if %{defined libguestfs_virtio}
+%global with_virtio %{libguestfs_virtio}
+%else
+%global with_virtio 1
+%endif 
+
+# Mirror and updates repositories to use if building with network repo
+%if %{defined libguestfs_mirror}
+%global mirror %{libguestfs_mirror}
+%else
+%global mirror http://download.fedora.redhat.com/pub/fedora/linux/development/%{_arch}/os/
+%endif
+%if %{defined libguestfs_updates}
+%global updates %{libguestfs_updates}
+%else
+%global updates none
+%endif
+
+# Enable to run tests during check
+# Default is enabled
+%if %{defined libguestfs_runtests}
+%global runtests %{libguestfs_runtests}
+%else
+%global runtests 1
+%endif
 
 Summary:     Access and modify virtual machine disk images
 Name:        libguestfs
 Epoch:       1
 Version:     1.0.83
-Release:     5%{?dist}
+Release:     6%{?dist}
 License:     LGPLv2+
 Group:       Development/Libraries
 URL:         http://libguestfs.org/
@@ -340,13 +373,13 @@ mkdir -p daemon/m4
 
 
 %build
-%if %{buildnonet}
+%if %{buildnet}
+%define extra --with-mirror=%{mirror} --with-updates=%{updates}
+%else
 mkdir repo
 find /var/cache/yum -type f -name '*.rpm' -print0 | xargs -0 cp -t repo
 createrepo repo
 %define extra --with-mirror=file://$(pwd)/repo --with-repo=fedora-12 --with-updates=none
-%else
-%define extra --with-mirror=http://download.fedora.redhat.com/pub/fedora/linux/development/x86_64/os/
 %endif
 
 ./configure \
@@ -355,7 +388,9 @@ createrepo repo
   --with-qemu="qemu-kvm qemu-system-%{_build_arch} qemu" \
   --enable-debug-command \
   --enable-supermin \
+%if %{with_virtio}
   --with-drive-if=virtio \
+%endif
   %{extra}
 
 # This ensures that /usr/sbin/chroot is on the path.  Not needed
@@ -393,7 +428,7 @@ export LIBGUESTFS_DEBUG=1
 # 548121   all          F-13   udevsettle command is broken (WORKAROUND)
 # 553689   all          F-13   missing SeaBIOS (FIXED)
 
-%ifarch x86_64
+%if %{runtests} && %{_arch} == "x86_64"
 make check
 %endif
 
@@ -613,6 +648,11 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Tue Feb  9 2010 Matthew Booth <mbooth@redhat.com> - 1.0.83-6
+- Change buildnonet to buildnet
+- Allow buildnet, mirror, updates, virtio and runtests to be configured by user
+  macros.
+
 * Mon Feb  8 2010 Richard W.M. Jones <rjones@redhat.com> - 1.0.83-5
 - libguestfs-tools should require perl-XML-Writer (RHBZ#562858).
 
