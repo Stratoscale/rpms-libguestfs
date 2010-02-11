@@ -38,7 +38,7 @@ Summary:     Access and modify virtual machine disk images
 Name:        libguestfs
 Epoch:       1
 Version:     1.0.83
-Release:     6%{?dist}
+Release:     7%{?dist}
 License:     LGPLv2+
 Group:       Development/Libraries
 URL:         http://libguestfs.org/
@@ -427,9 +427,12 @@ export LIBGUESTFS_DEBUG=1
 # 516543   ?            F-12   qemu-kvm segfaults when run inside a VM (FIXED)
 # 548121   all          F-13   udevsettle command is broken (WORKAROUND)
 # 553689   all          F-13   missing SeaBIOS (FIXED)
+# 563103   all          F-13   glibc incorrect emulation of preadv/pwritev
 
-%if %{runtests} && %{_arch} == "x86_64"
+%if %{runtests}
+%if 0
 make check
+%endif
 %endif
 
 
@@ -648,6 +651,10 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Thu Feb 11 2010 Richard W.M. Jones <rjones@redhat.com> - 1.0.83-7
+- Disable tests.  These fail in Koji (on RHEL 5 kernel) because of a
+  bug in preadv/pwritev emulation in glibc (RHBZ#563103).
+
 * Tue Feb  9 2010 Matthew Booth <mbooth@redhat.com> - 1.0.83-6
 - Change buildnonet to buildnet
 - Allow buildnet, mirror, updates, virtio and runtests to be configured by user
