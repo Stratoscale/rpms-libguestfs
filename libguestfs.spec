@@ -38,7 +38,7 @@ Summary:     Access and modify virtual machine disk images
 Name:        libguestfs
 Epoch:       1
 Version:     1.0.83
-Release:     7%{?dist}
+Release:     8%{?dist}
 License:     LGPLv2+
 Group:       Development/Libraries
 URL:         http://libguestfs.org/
@@ -651,6 +651,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Fri Feb 12 2010 Richard W.M. Jones <rjones@redhat.com> - 1:1.0.83-8
+- Bump and rebuild.
+
 * Thu Feb 11 2010 Richard W.M. Jones <rjones@redhat.com> - 1.0.83-7
 - Disable tests.  These fail in Koji (on RHEL 5 kernel) because of a
   bug in preadv/pwritev emulation in glibc (RHBZ#563103).
