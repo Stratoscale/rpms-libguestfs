@@ -34,19 +34,19 @@
 %global runtests 1
 %endif
 
-Summary:     Access and modify virtual machine disk images
-Name:        libguestfs
-Epoch:       1
-Version:     1.0.84
-Release:     3%{?dist}
-License:     LGPLv2+
-Group:       Development/Libraries
-URL:         http://libguestfs.org/
-Source0:     http://libguestfs.org/download/%{name}-%{version}.tar.gz
-BuildRoot:   %{_tmppath}/%{name}-%{version}-%{release}-root
+Summary:       Access and modify virtual machine disk images
+Name:          libguestfs
+Epoch:         1
+Version:       1.0.84
+Release:       4%{?dist}
+License:       LGPLv2+
+Group:         Development/Libraries
+URL:           http://libguestfs.org/
+Source0:       http://libguestfs.org/download/%{name}-%{version}.tar.gz
+BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root
 
 # Disable FUSE tests, not supported in Koji at the moment.
-Patch0:      libguestfs-1.0.79-no-fuse-test.patch
+Patch0:        libguestfs-1.0.79-no-fuse-test.patch
 
 # Basic build requirements:
 BuildRequires: /usr/bin/pod2man
@@ -119,7 +119,7 @@ Requires:      qemu-kvm >= 0.10-7
 Requires:      genisoimage
 
 # Provide our own custom requires for the supermin appliance.
-Source1:     libguestfs-find-requires.sh
+Source1:       libguestfs-find-requires.sh
 %global _use_internal_dependency_generator 0
 %global __find_provides %{_rpmconfigdir}/find-provides
 %global __find_requires %{SOURCE1} %{_rpmconfigdir}/find-requires
@@ -162,10 +162,10 @@ For Java bindings, see 'libguestfs-java-devel'.
 
 
 %package devel
-Summary:     Development tools and libraries for %{name}
-Group:       Development/Libraries
-Requires:    %{name} = %{epoch}:%{version}-%{release}
-Requires:    pkgconfig
+Summary:       Development tools and libraries for %{name}
+Group:         Development/Libraries
+Requires:      %{name} = %{epoch}:%{version}-%{release}
+Requires:      pkgconfig
 
 
 %description devel
@@ -174,12 +174,12 @@ for %{name}.
 
 
 %package -n guestfish
-Summary:     Shell for accessing and modifying virtual machine disk images
-Group:       Development/Tools
-License:     GPLv2+
-Requires:    %{name} = %{epoch}:%{version}-%{release}
-Requires:    /usr/bin/pod2text
-Requires:    virt-inspector
+Summary:       Shell for accessing and modifying virtual machine disk images
+Group:         Development/Tools
+License:       GPLv2+
+Requires:      %{name} = %{epoch}:%{version}-%{release}
+Requires:      /usr/bin/pod2text
+Requires:      virt-inspector
 
 
 %description -n guestfish
@@ -189,11 +189,11 @@ scripts.
 
 
 %package mount
-Summary:     Mount guest filesystems on the host using FUSE and libguestfs
-Group:       Development/Tools
-License:     GPLv2+
-Requires:    %{name} = %{epoch}:%{version}-%{release}
-Requires:    virt-inspector
+Summary:       Mount guest filesystems on the host using FUSE and libguestfs
+Group:         Development/Tools
+License:       GPLv2+
+Requires:      %{name} = %{epoch}:%{version}-%{release}
+Requires:      virt-inspector
 
 
 %description mount
@@ -202,29 +202,29 @@ host using FUSE and %{name}.
 
 
 %package tools
-Summary:     System administration tools for virtual machines
-Group:       Development/Tools
-License:     GPLv2+
-Requires:    %{name} = %{epoch}:%{version}-%{release}
-Requires:    guestfish
-Requires:    perl-Sys-Virt
-Requires:    perl-XML-Writer
+Summary:       System administration tools for virtual machines
+Group:         Development/Tools
+License:       GPLv2+
+Requires:      %{name} = %{epoch}:%{version}-%{release}
+Requires:      guestfish
+Requires:      perl-Sys-Virt
+Requires:      perl-XML-Writer
 
 # Obsolete and replace earlier packages.
-Provides:    virt-cat = %{epoch}:%{version}-%{release}
-Obsoletes:   virt-cat < %{epoch}:%{version}-%{release}
-Provides:    virt-df = %{epoch}:%{version}-%{release}
-Obsoletes:   virt-df < %{epoch}:%{version}-%{release}
-Provides:    virt-inspector = %{epoch}:%{version}-%{release}
-Obsoletes:   virt-inspector < %{epoch}:%{version}-%{release}
+Provides:      virt-cat = %{epoch}:%{version}-%{release}
+Obsoletes:     virt-cat < %{epoch}:%{version}-%{release}
+Provides:      virt-df = %{epoch}:%{version}-%{release}
+Obsoletes:     virt-df < %{epoch}:%{version}-%{release}
+Provides:      virt-inspector = %{epoch}:%{version}-%{release}
+Obsoletes:     virt-inspector < %{epoch}:%{version}-%{release}
 
 # RHBZ#514309
-Provides:    virt-df2 = %{epoch}:%{version}-%{release}
-Obsoletes:   virt-df2 < %{epoch}:%{version}-%{release}
+Provides:      virt-df2 = %{epoch}:%{version}-%{release}
+Obsoletes:     virt-df2 < %{epoch}:%{version}-%{release}
 
 # These were never packages:
-Provides:    virt-edit = %{epoch}:%{version}-%{release}
-Provides:    virt-rescue = %{epoch}:%{version}-%{release}
+Provides:      virt-edit = %{epoch}:%{version}-%{release}
+Provides:      virt-rescue = %{epoch}:%{version}-%{release}
 
 
 %description tools
@@ -264,9 +264,9 @@ Windows virtual machines.
 
 
 %package -n ocaml-%{name}
-Summary:     OCaml bindings for %{name}
-Group:       Development/Libraries
-Requires:    %{name} = %{epoch}:%{version}-%{release}
+Summary:       OCaml bindings for %{name}
+Group:         Development/Libraries
+Requires:      %{name} = %{epoch}:%{version}-%{release}
 
 
 %description -n ocaml-%{name}
@@ -277,9 +277,9 @@ programs which use %{name} you will also need ocaml-%{name}-devel.
 
 
 %package -n ocaml-%{name}-devel
-Summary:     OCaml bindings for %{name}
-Group:       Development/Libraries
-Requires:    ocaml-%{name} = %{epoch}:%{version}-%{release}
+Summary:       OCaml bindings for %{name}
+Group:         Development/Libraries
+Requires:      ocaml-%{name} = %{epoch}:%{version}-%{release}
 
 
 %description -n ocaml-%{name}-devel
@@ -288,12 +288,12 @@ required to use the OCaml bindings for %{name}.
 
 
 %package -n perl-%{name}
-Summary:     Perl bindings for %{name}
-Group:       Development/Libraries
-Requires:    %{name} = %{epoch}:%{version}-%{release}
-Requires:    perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $version))
+Summary:       Perl bindings for %{name}
+Group:         Development/Libraries
+Requires:      %{name} = %{epoch}:%{version}-%{release}
+Requires:      perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $version))
 # RHBZ#523547
-Requires:    perl-XML-XPath
+Requires:      perl-XML-XPath
 
 
 %description -n perl-%{name}
@@ -301,9 +301,9 @@ perl-%{name} contains Perl bindings for %{name}.
 
 
 %package -n python-%{name}
-Summary:     Python bindings for %{name}
-Group:       Development/Libraries
-Requires:    %{name} = %{epoch}:%{version}-%{release}
+Summary:       Python bindings for %{name}
+Group:         Development/Libraries
+Requires:      %{name} = %{epoch}:%{version}-%{release}
 
 %{!?python_sitelib: %global python_sitelib %(%{__python} -c "from distutils.sysconfig import get_python_lib; print get_python_lib()")}
 %{!?python_sitearch: %global python_sitearch %(%{__python} -c "from distutils.sysconfig import get_python_lib; print get_python_lib(1)")}
@@ -313,11 +313,11 @@ python-%{name} contains Python bindings for %{name}.
 
 
 %package -n ruby-%{name}
-Summary:     Ruby bindings for %{name}
-Group:       Development/Libraries
-Requires:    %{name} = %{epoch}:%{version}-%{release}
-Requires:    ruby(abi) = 1.8
-Provides:    ruby(guestfs) = %{version}
+Summary:       Ruby bindings for %{name}
+Group:         Development/Libraries
+Requires:      %{name} = %{epoch}:%{version}-%{release}
+Requires:      ruby(abi) = 1.8
+Provides:      ruby(guestfs) = %{version}
 
 %{!?ruby_sitelib: %define ruby_sitelib %(ruby -rrbconfig -e "puts Config::CONFIG['sitelibdir']")}
 %{!?ruby_sitearch: %define ruby_sitearch %(ruby -rrbconfig -e "puts Config::CONFIG['sitearchdir']")}
@@ -327,11 +327,11 @@ ruby-%{name} contains Ruby bindings for %{name}.
 
 
 %package java
-Summary:     Java bindings for %{name}
-Group:       Development/Libraries
-Requires:    %{name} = %{epoch}:%{version}-%{release}
-Requires:    java >= 1.5.0
-Requires:    jpackage-utils
+Summary:       Java bindings for %{name}
+Group:         Development/Libraries
+Requires:      %{name} = %{epoch}:%{version}-%{release}
+Requires:      java >= 1.5.0
+Requires:      jpackage-utils
 
 %description java
 %{name}-java contains Java bindings for %{name}.
@@ -341,10 +341,10 @@ you will also need %{name}-java-devel.
 
 
 %package java-devel
-Summary:     Java development package for %{name}
-Group:       Development/Libraries
-Requires:    %{name} = %{epoch}:%{version}-%{release}
-Requires:    %{name}-java = %{epoch}:%{version}-%{release}
+Summary:       Java development package for %{name}
+Group:         Development/Libraries
+Requires:      %{name} = %{epoch}:%{version}-%{release}
+Requires:      %{name}-java = %{epoch}:%{version}-%{release}
 
 %description java-devel
 %{name}-java-devel contains the tools for developing Java software
@@ -354,11 +354,11 @@ See also %{name}-javadoc.
 
 
 %package javadoc
-Summary:     Java documentation for %{name}
-Group:       Development/Libraries
-Requires:    %{name} = %{epoch}:%{version}-%{release}
-Requires:    %{name}-java = %{epoch}:%{version}-%{release}
-Requires:    jpackage-utils
+Summary:       Java documentation for %{name}
+Group:         Development/Libraries
+Requires:      %{name} = %{epoch}:%{version}-%{release}
+Requires:      %{name}-java = %{epoch}:%{version}-%{release}
+Requires:      jpackage-utils
 
 %description javadoc
 %{name}-javadoc contains the Java documentation for %{name}.
@@ -376,6 +376,10 @@ mkdir -p daemon/m4
 %if %{buildnet}
 %define extra --with-mirror=%{mirror} --with-updates=%{updates}
 %else
+# Build a local repository containing the packages used to
+# install the current buildroot (assuming we are being built
+# with mock or Koji).  Then tell febootstrap to reference this
+# local repository when building the appliance.
 mkdir repo
 find /var/cache/yum -type f -name '*.rpm' -print0 | xargs -0 cp -t repo
 createrepo repo
@@ -496,9 +500,6 @@ install -p -m0755 ruby/ext/guestfs/_guestfs.so $RPM_BUILD_ROOT%{ruby_sitearch}
 rm $RPM_BUILD_ROOT%{_libdir}/libguestfs_jni.a
 rm $RPM_BUILD_ROOT%{_libdir}/libguestfs_jni.la
 
-# Generator shouldn't be executable when we distribute it.
-chmod -x src/generator.ml
-
 # Move installed documentation back to the source directory so
 # we can install it using a %%doc rule.
 mv $RPM_BUILD_ROOT%{_docdir}/libguestfs installed-docs
@@ -537,7 +538,6 @@ rm -rf $RPM_BUILD_ROOT
 %files devel
 %defattr(-,root,root,-)
 %doc ChangeLog HACKING TODO README ex html/guestfs.3.html html/pod.css
-%doc src/generator.ml
 %doc installed-docs/*
 %{_libdir}/libguestfs.so
 %{_libdir}/libhivex.so
@@ -651,6 +651,11 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Mon Feb 22 2010 Richard W.M. Jones <rjones@redhat.com> - 1:1.0.84-4
+- Don't include generator.ml in rpm.  It's 400K and almost no one will need it.
+- Add comments to spec file about how repo building works.
+- Whitespace changes in the spec file.
+
 * Mon Feb 22 2010 Richard W.M. Jones <rjones@redhat.com> - 1:1.0.84-3
 - Bump and rebuild.
 
