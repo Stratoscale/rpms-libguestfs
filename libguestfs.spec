@@ -1,28 +1,62 @@
-# Enable to build w/o network.
-%global buildnonet 1
+# If you have trouble building locally ('make local') try adding
+#   %libguestfs_buildnet 1
+# to your ~/.rpmmacros file.
 
-Summary:     Access and modify virtual machine disk images
-Name:        libguestfs
-Epoch:       1
-Version:     1.0.81
-Release:     1%{?dist}.6
-License:     LGPLv2+
-Group:       Development/Libraries
-URL:         http://libguestfs.org/
-Source0:     http://libguestfs.org/download/%{name}-%{version}.tar.gz
-BuildRoot:   %{_tmppath}/%{name}-%{version}-%{release}-root
+# Enable to build using a network repo
+# Default is disabled
+%if %{defined libguestfs_buildnet}
+%global buildnet %{libguestfs_buildnet}
+%else
+%global buildnet 0
+%endif 
+
+# Enable to make the appliance use virtio_blk
+# Default is enabled
+%if %{defined libguestfs_virtio}
+%global with_virtio %{libguestfs_virtio}
+%else
+%global with_virtio 1
+%endif 
+
+# Mirror and updates repositories to use if building with network repo
+%if %{defined libguestfs_mirror}
+%global mirror %{libguestfs_mirror}
+%else
+%global mirror http://download.fedora.redhat.com/pub/fedora/linux/development/%{_arch}/os/
+%endif
+%if %{defined libguestfs_updates}
+%global updates %{libguestfs_updates}
+%else
+%global updates none
+%endif
+
+# Enable to run tests during check
+# Default is enabled
+%if %{defined libguestfs_runtests}
+%global runtests %{libguestfs_runtests}
+%else
+%global runtests 1
+%endif
+
+Summary:       Access and modify virtual machine disk images
+Name:          libguestfs
+Epoch:         1
+Version:       1.0.85
+Release:       1%{?dist}
+License:       LGPLv2+
+Group:         Development/Libraries
+URL:           http://libguestfs.org/
+Source0:       http://libguestfs.org/download/%{name}-%{version}.tar.gz
+BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root
 
 # Disable FUSE tests, not supported in Koji at the moment.
-Patch0:      libguestfs-1.0.79-no-fuse-test.patch
-
-# Backport special handling of libgcc_s dependency.
-# http://git.annexia.org/?p=libguestfs.git;a=commit;h=dab98a0e52b9bb9930048b94d637a2fdb218fc45
-Patch1:      0001-supermin-Add-special-case-for-libgcc_s-.so.N.patch
+Patch0:        libguestfs-1.0.79-no-fuse-test.patch
 
 # Basic build requirements:
 BuildRequires: /usr/bin/pod2man
 BuildRequires: /usr/bin/pod2text
 BuildRequires: febootstrap >= 2.6
+BuildRequires: hivex-devel >= 1.2.0
 BuildRequires: augeas-devel >= 0.5.0
 BuildRequires: readline-devel
 BuildRequires: genisoimage
@@ -90,7 +124,7 @@ Requires:      qemu-kvm >= 0.10-7
 Requires:      genisoimage
 
 # Provide our own custom requires for the supermin appliance.
-Source1:     libguestfs-find-requires.sh
+Source1:       libguestfs-find-requires.sh
 %global _use_internal_dependency_generator 0
 %global __find_provides %{_rpmconfigdir}/find-provides
 %global __find_requires %{SOURCE1} %{_rpmconfigdir}/find-requires
@@ -133,10 +167,10 @@ For Java bindings, see 'libguestfs-java-devel'.
 
 
 %package devel
-Summary:     Development tools and libraries for %{name}
-Group:       Development/Libraries
-Requires:    %{name} = %{epoch}:%{version}-%{release}
-Requires:    pkgconfig
+Summary:       Development tools and libraries for %{name}
+Group:         Development/Libraries
+Requires:      %{name} = %{epoch}:%{version}-%{release}
+Requires:      pkgconfig
 
 
 %description devel
@@ -145,12 +179,12 @@ for %{name}.
 
 
 %package -n guestfish
-Summary:     Shell for accessing and modifying virtual machine disk images
-Group:       Development/Tools
-License:     GPLv2+
-Requires:    %{name} = %{epoch}:%{version}-%{release}
-Requires:    /usr/bin/pod2text
-Requires:    virt-inspector
+Summary:       Shell for accessing and modifying virtual machine disk images
+Group:         Development/Tools
+License:       GPLv2+
+Requires:      %{name} = %{epoch}:%{version}-%{release}
+Requires:      /usr/bin/pod2text
+Requires:      virt-inspector
 
 
 %description -n guestfish
@@ -160,11 +194,11 @@ scripts.
 
 
 %package mount
-Summary:     Mount guest filesystems on the host using FUSE and libguestfs
-Group:       Development/Tools
-License:     GPLv2+
-Requires:    %{name} = %{epoch}:%{version}-%{release}
-Requires:    virt-inspector
+Summary:       Mount guest filesystems on the host using FUSE and libguestfs
+Group:         Development/Tools
+License:       GPLv2+
+Requires:      %{name} = %{epoch}:%{version}-%{release}
+Requires:      virt-inspector
 
 
 %description mount
@@ -173,29 +207,30 @@ host using FUSE and %{name}.
 
 
 %package tools
-Summary:     System administration tools for virtual machines
-Group:       Development/Tools
-License:     GPLv2+
-Requires:    %{name} = %{epoch}:%{version}-%{release}
-Requires:    guestfish
-Requires:    perl-Sys-Virt
-Requires:    perl-XML-Writer
+Summary:       System administration tools for virtual machines
+Group:         Development/Tools
+License:       GPLv2+
+Requires:      %{name} = %{epoch}:%{version}-%{release}
+Requires:      guestfish
+Requires:      perl-Sys-Virt
+Requires:      perl-XML-Writer
+Requires:      hivex
 
 # Obsolete and replace earlier packages.
-Provides:    virt-cat = %{epoch}:%{version}-%{release}
-Obsoletes:   virt-cat < %{epoch}:%{version}-%{release}
-Provides:    virt-df = %{epoch}:%{version}-%{release}
-Obsoletes:   virt-df < %{epoch}:%{version}-%{release}
-Provides:    virt-inspector = %{epoch}:%{version}-%{release}
-Obsoletes:   virt-inspector < %{epoch}:%{version}-%{release}
+Provides:      virt-cat = %{epoch}:%{version}-%{release}
+Obsoletes:     virt-cat < %{epoch}:%{version}-%{release}
+Provides:      virt-df = %{epoch}:%{version}-%{release}
+Obsoletes:     virt-df < %{epoch}:%{version}-%{release}
+Provides:      virt-inspector = %{epoch}:%{version}-%{release}
+Obsoletes:     virt-inspector < %{epoch}:%{version}-%{release}
 
 # RHBZ#514309
-Provides:    virt-df2 = %{epoch}:%{version}-%{release}
-Obsoletes:   virt-df2 < %{epoch}:%{version}-%{release}
+Provides:      virt-df2 = %{epoch}:%{version}-%{release}
+Obsoletes:     virt-df2 < %{epoch}:%{version}-%{release}
 
 # These were never packages:
-Provides:    virt-edit = %{epoch}:%{version}-%{release}
-Provides:    virt-rescue = %{epoch}:%{version}-%{release}
+Provides:      virt-edit = %{epoch}:%{version}-%{release}
+Provides:      virt-rescue = %{epoch}:%{version}-%{release}
 
 
 %description tools
@@ -235,9 +270,9 @@ Windows virtual machines.
 
 
 %package -n ocaml-%{name}
-Summary:     OCaml bindings for %{name}
-Group:       Development/Libraries
-Requires:    %{name} = %{epoch}:%{version}-%{release}
+Summary:       OCaml bindings for %{name}
+Group:         Development/Libraries
+Requires:      %{name} = %{epoch}:%{version}-%{release}
 
 
 %description -n ocaml-%{name}
@@ -248,9 +283,9 @@ programs which use %{name} you will also need ocaml-%{name}-devel.
 
 
 %package -n ocaml-%{name}-devel
-Summary:     OCaml bindings for %{name}
-Group:       Development/Libraries
-Requires:    ocaml-%{name} = %{epoch}:%{version}-%{release}
+Summary:       OCaml bindings for %{name}
+Group:         Development/Libraries
+Requires:      ocaml-%{name} = %{epoch}:%{version}-%{release}
 
 
 %description -n ocaml-%{name}-devel
@@ -259,12 +294,12 @@ required to use the OCaml bindings for %{name}.
 
 
 %package -n perl-%{name}
-Summary:     Perl bindings for %{name}
-Group:       Development/Libraries
-Requires:    %{name} = %{epoch}:%{version}-%{release}
-Requires:    perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $version))
+Summary:       Perl bindings for %{name}
+Group:         Development/Libraries
+Requires:      %{name} = %{epoch}:%{version}-%{release}
+Requires:      perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $version))
 # RHBZ#523547
-Requires:    perl-XML-XPath
+Requires:      perl-XML-XPath
 
 
 %description -n perl-%{name}
@@ -272,9 +307,9 @@ perl-%{name} contains Perl bindings for %{name}.
 
 
 %package -n python-%{name}
-Summary:     Python bindings for %{name}
-Group:       Development/Libraries
-Requires:    %{name} = %{epoch}:%{version}-%{release}
+Summary:       Python bindings for %{name}
+Group:         Development/Libraries
+Requires:      %{name} = %{epoch}:%{version}-%{release}
 
 %{!?python_sitelib: %global python_sitelib %(%{__python} -c "from distutils.sysconfig import get_python_lib; print get_python_lib()")}
 %{!?python_sitearch: %global python_sitearch %(%{__python} -c "from distutils.sysconfig import get_python_lib; print get_python_lib(1)")}
@@ -284,11 +319,11 @@ python-%{name} contains Python bindings for %{name}.
 
 
 %package -n ruby-%{name}
-Summary:     Ruby bindings for %{name}
-Group:       Development/Libraries
-Requires:    %{name} = %{epoch}:%{version}-%{release}
-Requires:    ruby(abi) = 1.8
-Provides:    ruby(guestfs) = %{version}
+Summary:       Ruby bindings for %{name}
+Group:         Development/Libraries
+Requires:      %{name} = %{epoch}:%{version}-%{release}
+Requires:      ruby(abi) = 1.8
+Provides:      ruby(guestfs) = %{version}
 
 %{!?ruby_sitelib: %define ruby_sitelib %(ruby -rrbconfig -e "puts Config::CONFIG['sitelibdir']")}
 %{!?ruby_sitearch: %define ruby_sitearch %(ruby -rrbconfig -e "puts Config::CONFIG['sitearchdir']")}
@@ -298,11 +333,11 @@ ruby-%{name} contains Ruby bindings for %{name}.
 
 
 %package java
-Summary:     Java bindings for %{name}
-Group:       Development/Libraries
-Requires:    %{name} = %{epoch}:%{version}-%{release}
-Requires:    java >= 1.5.0
-Requires:    jpackage-utils
+Summary:       Java bindings for %{name}
+Group:         Development/Libraries
+Requires:      %{name} = %{epoch}:%{version}-%{release}
+Requires:      java >= 1.5.0
+Requires:      jpackage-utils
 
 %description java
 %{name}-java contains Java bindings for %{name}.
@@ -312,10 +347,10 @@ you will also need %{name}-java-devel.
 
 
 %package java-devel
-Summary:     Java development package for %{name}
-Group:       Development/Libraries
-Requires:    %{name} = %{epoch}:%{version}-%{release}
-Requires:    %{name}-java = %{epoch}:%{version}-%{release}
+Summary:       Java development package for %{name}
+Group:         Development/Libraries
+Requires:      %{name} = %{epoch}:%{version}-%{release}
+Requires:      %{name}-java = %{epoch}:%{version}-%{release}
 
 %description java-devel
 %{name}-java-devel contains the tools for developing Java software
@@ -325,11 +360,11 @@ See also %{name}-javadoc.
 
 
 %package javadoc
-Summary:     Java documentation for %{name}
-Group:       Development/Libraries
-Requires:    %{name} = %{epoch}:%{version}-%{release}
-Requires:    %{name}-java = %{epoch}:%{version}-%{release}
-Requires:    jpackage-utils
+Summary:       Java documentation for %{name}
+Group:         Development/Libraries
+Requires:      %{name} = %{epoch}:%{version}-%{release}
+Requires:      %{name}-java = %{epoch}:%{version}-%{release}
+Requires:      jpackage-utils
 
 %description javadoc
 %{name}-javadoc contains the Java documentation for %{name}.
@@ -339,19 +374,22 @@ Requires:    jpackage-utils
 %setup -q
 
 %patch0 -p1
-%patch1 -p1
 
 mkdir -p daemon/m4
 
 
 %build
-%if %{buildnonet}
+%if %{buildnet}
+%define extra --with-mirror=%{mirror} --with-updates=%{updates}
+%else
+# Build a local repository containing the packages used to
+# install the current buildroot (assuming we are being built
+# with mock or Koji).  Then tell febootstrap to reference this
+# local repository when building the appliance.
 mkdir repo
 find /var/cache/yum -type f -name '*.rpm' -print0 | xargs -0 cp -t repo
 createrepo repo
 %define extra --with-mirror=file://$(pwd)/repo --with-repo=fedora-12 --with-updates=none
-%else
-%define extra --with-mirror=http://download.fedora.redhat.com/pub/fedora/linux/development/x86_64/os/
 %endif
 
 ./configure \
@@ -360,6 +398,9 @@ createrepo repo
   --with-qemu="qemu-kvm qemu-system-%{_build_arch} qemu" \
   --enable-debug-command \
   --enable-supermin \
+%if %{with_virtio}
+  --with-drive-if=virtio \
+%endif
   %{extra}
 
 # This ensures that /usr/sbin/chroot is on the path.  Not needed
@@ -396,8 +437,9 @@ export LIBGUESTFS_DEBUG=1
 # 516543   ?            F-12   qemu-kvm segfaults when run inside a VM (FIXED)
 # 548121   all          F-13   udevsettle command is broken (WORKAROUND)
 # 553689   all          F-13   missing SeaBIOS (FIXED)
+# 563103   all          F-13   glibc incorrect emulation of preadv/pwritev
 
-%ifarch x86_64
+%if %{runtests}
 make check
 %endif
 
@@ -418,8 +460,6 @@ rmdir keep
 # Delete static libraries, libtool files.
 rm $RPM_BUILD_ROOT%{_libdir}/libguestfs.a
 rm $RPM_BUILD_ROOT%{_libdir}/libguestfs.la
-rm $RPM_BUILD_ROOT%{_libdir}/libhivex.a
-rm $RPM_BUILD_ROOT%{_libdir}/libhivex.la
 
 # Clean up the examples/ directory which will get installed in %doc.
 # Note we can't delete the original examples/Makefile because that
@@ -462,9 +502,6 @@ install -p -m0755 ruby/ext/guestfs/_guestfs.so $RPM_BUILD_ROOT%{ruby_sitearch}
 rm $RPM_BUILD_ROOT%{_libdir}/libguestfs_jni.a
 rm $RPM_BUILD_ROOT%{_libdir}/libguestfs_jni.la
 
-# Generator shouldn't be executable when we distribute it.
-chmod -x src/generator.ml
-
 # Move installed documentation back to the source directory so
 # we can install it using a %%doc rule.
 mv $RPM_BUILD_ROOT%{_docdir}/libguestfs installed-docs
@@ -485,29 +522,21 @@ rm -rf $RPM_BUILD_ROOT
 %files -f %{name}.lang
 %defattr(-,root,root,-)
 %doc COPYING
-%{_bindir}/hivexml
-%{_bindir}/hivexget
 %{_bindir}/libguestfs-supermin-helper
 %{_bindir}/libguestfs-test-tool
 %{_libdir}/guestfs/
 %{_libdir}/libguestfs.so.*
-%{_libdir}/libhivex.so.*
 %{_libexecdir}/libguestfs-test-tool-helper
-%{_mandir}/man1/hivexml.1*
-%{_mandir}/man1/hivexget.1*
 %{_mandir}/man1/libguestfs-test-tool.1*
 
 
 %files devel
 %defattr(-,root,root,-)
 %doc ChangeLog HACKING TODO README ex html/guestfs.3.html html/pod.css
-%doc src/generator.ml
 %doc installed-docs/*
 %{_libdir}/libguestfs.so
-%{_libdir}/libhivex.so
 %{_mandir}/man3/guestfs.3*
 %{_mandir}/man3/libguestfs.3*
-%{_mandir}/man3/hivex.3*
 %{_includedir}/guestfs.h
 %{_includedir}/guestfs-actions.h
 %{_includedir}/guestfs-structs.h
@@ -615,21 +644,105 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
-* Mon Feb  8 2010 Richard W.M. Jones <rjones@redhat.com> - 1.0.81-1.fc12.6
+* Mon Mar  1 2010 Richard W.M. Jones <rjones@redhat.com> - 1:1.0.85-1
+- New upstream version 1.0.85.
+- Remove hivex, now a separate upstream project and package.
+- Remove supermin quoting patch, now upstream.
+
+* Mon Mar  1 2010 Richard W.M. Jones <rjones@redhat.com> - 1:1.0.84-6
+- Fix quoting in supermin-split script (RHBZ#566511).
+- Don't include bogus './builddir' entries in supermin hostfiles
+  (RHBZ#566512).
+
+* Mon Feb 22 2010 Richard W.M. Jones <rjones@redhat.com> - 1:1.0.84-4
+- Don't include generator.ml in rpm.  It's 400K and almost no one will need it.
+- Add comments to spec file about how repo building works.
+- Whitespace changes in the spec file.
+
+* Mon Feb 22 2010 Richard W.M. Jones <rjones@redhat.com> - 1:1.0.84-3
+- Bump and rebuild.
+
+* Tue Feb 16 2010 Richard W.M. Jones <rjones@redhat.com> - 1:1.0.84-2
+- Bump and rebuild.
+
+* Fri Feb 12 2010 Richard W.M. Jones <rjones@redhat.com> - 1:1.0.84-1
+- New upstream version 1.0.84.
+
+* Fri Feb 12 2010 Richard W.M. Jones <rjones@redhat.com> - 1:1.0.83-8
+- Bump and rebuild.
+
+* Thu Feb 11 2010 Richard W.M. Jones <rjones@redhat.com> - 1.0.83-7
+- Disable tests.  These fail in Koji (on RHEL 5 kernel) because of a
+  bug in preadv/pwritev emulation in glibc (RHBZ#563103).
+
+* Tue Feb  9 2010 Matthew Booth <mbooth@redhat.com> - 1.0.83-6
+- Change buildnonet to buildnet
+- Allow buildnet, mirror, updates, virtio and runtests to be configured by user
+  macros.
+
+* Mon Feb  8 2010 Richard W.M. Jones <rjones@redhat.com> - 1.0.83-5
 - libguestfs-tools should require perl-XML-Writer (RHBZ#562858).
-- Backport fix for RHBZ#557262 from Rawhide.
 
-* Thu Jan 28 2010 Richard W.M. Jones <rjones@redhat.com> - 1.0.81-1.fc12.4
+* Mon Feb  8 2010 Richard W.M. Jones <rjones@redhat.com> - 1.0.83-4
+- Use virtio for block device access (RHBZ#509383 is fixed).
+
+* Fri Feb  5 2010 Richard W.M. Jones <rjones@redhat.com> - 1.0.83-3
+- Rebuild: possible timing-related build problem in Koji.
+
+* Fri Feb  5 2010 Richard W.M. Jones <rjones@redhat.com> - 1.0.83-2
+- New upstream release 1.0.83.
+- This release fixes:
+  Add Marathi translations (RHBZ#561671).
+  Polish translations (RHBZ#502533).
+  Add Gujarti translations (Sweta Kothari) (RHBZ#560918).
+  Update Oriya translations (thanks Manoj Kumar Giri) (RHBZ#559498).
+  Set locale in C programs so l10n works (RHBZ#559962).
+  Add Tamil translation (RHBZ#559877) (thanks to I.Felix)
+  Update Punjabi translation (RHBZ#559480) (thanks Jaswinder Singh)
+- There are significant fixes to hive file handling.
+- Add hivexsh and manual page.
+- Remove two patches, now upstream.
+
+* Sun Jan 31 2010 Richard W.M. Jones <rjones@redhat.com> - 1:1.0.82-7
+- Bump and rebuild.
+
+* Fri Jan 29 2010 Richard W.M. Jones <rjones@redhat.com> - 1.0.82-6
+- Backport a better fix for RHBZ557655 test from upstream.
+- Backport fix for unreadable yum.log from upstream.
+
+* Thu Jan 28 2010 Richard W.M. Jones <rjones@redhat.com> - 1.0.82-3
+- Backport RHBZ557655 test fix from upstream.
+
+* Thu Jan 28 2010 Richard W.M. Jones <rjones@redhat.com> - 1.0.82-1
+- New upstream version 1.0.82.  This includes the two patches
+  we were carrying, so those are now removed.
+- This release fixes:
+  RHBZ#559498 (Oriya translation).
+  RHBZ#559480 (Punjabi translation).
+  RHBZ#558593 (Should prevent corruption by multilib).
+  RHBZ#559237 (Telugu translation).
+  RHBZ#557655 (Use xstrtol/xstrtoll to parse integers in guestfish).
+  RHBZ#557195 (Missing crc kernel modules for recent Linux).
+- In addition this contains numerous fixes to the hivex library
+  for parsing Windows Registry files, making hivex* and virt-win-reg
+  more robust.
+- New API call 'filesize'.
+
+* Thu Jan 28 2010 Richard W.M. Jones <rjones@redhat.com> - 1.0.81-8
 - Backport special handling of libgcc_s.so.
+- Backport unreadable files patch from RHEL 6 / upstream.
 
-* Tue Jan 26 2010 Richard W.M. Jones <rjones@redhat.com> - 1.0.81-1.fc12.3
-- Rebuild because of unannounced soname bump (libgcc_s.so).
+* Fri Jan 22 2010 Richard W.M. Jones <rjones@redhat.com> - 1.0.81-5
+- Require febootstrap >= 2.6 (RHBZ#557262).
 
-* Mon Jan 25 2010 Richard W.M. Jones <rjones@redhat.com> - 1.0.81-1.fc12.2
-- Rebuild because of unannounced soname bump (libntfs-3g.so).
+* Thu Jan 21 2010 Richard W.M. Jones <rjones@redhat.com> - 1.0.81-4
+- Rebuild for unannounced soname bump (libntfs-3g.so).
 
-* Wed Jan 13 2010 Richard W.M. Jones <rjones@redhat.com> - 1.0.81-1.fc12.1
-- Backport libguestfs 1.0.81 from Rawhide to F-12.
+* Fri Jan 15 2010 Richard W.M. Jones <rjones@redhat.com> - 1.0.81-3
+- Rebuild for unannounced soname bump (libplybootsplash.so).
+
+* Thu Jan 14 2010 Richard W.M. Jones <rjones@redhat.com> - 1.0.81-2
+- Rebuild for broken dependency (iptables soname bump).
 
 * Wed Jan 13 2010 Richard W.M. Jones <rjones@redhat.com> - 1.0.81-1
 - New upstream version 1.0.81.
