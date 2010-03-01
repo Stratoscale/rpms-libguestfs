@@ -1,3 +1,7 @@
+# If you have trouble building locally ('make local') try adding
+#   %libguestfs_buildnet 1
+# to your ~/.rpmmacros file.
+
 # Enable to build using a network repo
 # Default is disabled
 %if %{defined libguestfs_buildnet}
@@ -38,7 +42,7 @@ Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
 Version:       1.0.84
-Release:       4%{?dist}
+Release:       6%{?dist}
 License:       LGPLv2+
 Group:         Development/Libraries
 URL:           http://libguestfs.org/
@@ -47,6 +51,11 @@ BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root
 
 # Disable FUSE tests, not supported in Koji at the moment.
 Patch0:        libguestfs-1.0.79-no-fuse-test.patch
+
+# RHBZ#566511 and RHBZ#566512.  Not upstream yet.  Needs to go
+# upstream in both libguestfs and febootstrap once we have done more
+# testing, and worked out if this works with older versions of bash.
+Patch1:        libguestfs-1.0.84-supermin-split-quoting.patch
 
 # Basic build requirements:
 BuildRequires: /usr/bin/pod2man
@@ -368,6 +377,7 @@ Requires:      jpackage-utils
 %setup -q
 
 %patch0 -p1
+%patch1 -p1
 
 mkdir -p daemon/m4
 
@@ -651,6 +661,11 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Mon Mar  1 2010 Richard W.M. Jones <rjones@redhat.com> - 1:1.0.84-6
+- Fix quoting in supermin-split script (RHBZ#566511).
+- Don't include bogus './builddir' entries in supermin hostfiles
+  (RHBZ#566512).
+
 * Mon Feb 22 2010 Richard W.M. Jones <rjones@redhat.com> - 1:1.0.84-4
 - Don't include generator.ml in rpm.  It's 400K and almost no one will need it.
 - Add comments to spec file about how repo building works.
