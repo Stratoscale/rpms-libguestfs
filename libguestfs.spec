@@ -41,8 +41,8 @@
 Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
-Version:       1.0.84
-Release:       6%{?dist}
+Version:       1.0.85
+Release:       1%{?dist}
 License:       LGPLv2+
 Group:         Development/Libraries
 URL:           http://libguestfs.org/
@@ -52,15 +52,11 @@ BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root
 # Disable FUSE tests, not supported in Koji at the moment.
 Patch0:        libguestfs-1.0.79-no-fuse-test.patch
 
-# RHBZ#566511 and RHBZ#566512.  Not upstream yet.  Needs to go
-# upstream in both libguestfs and febootstrap once we have done more
-# testing, and worked out if this works with older versions of bash.
-Patch1:        libguestfs-1.0.84-supermin-split-quoting.patch
-
 # Basic build requirements:
 BuildRequires: /usr/bin/pod2man
 BuildRequires: /usr/bin/pod2text
 BuildRequires: febootstrap >= 2.6
+BuildRequires: hivex-devel >= 1.2.0
 BuildRequires: augeas-devel >= 0.5.0
 BuildRequires: readline-devel
 BuildRequires: genisoimage
@@ -218,6 +214,7 @@ Requires:      %{name} = %{epoch}:%{version}-%{release}
 Requires:      guestfish
 Requires:      perl-Sys-Virt
 Requires:      perl-XML-Writer
+Requires:      hivex
 
 # Obsolete and replace earlier packages.
 Provides:      virt-cat = %{epoch}:%{version}-%{release}
@@ -377,7 +374,6 @@ Requires:      jpackage-utils
 %setup -q
 
 %patch0 -p1
-%patch1 -p1
 
 mkdir -p daemon/m4
 
@@ -466,8 +462,6 @@ rmdir keep
 # Delete static libraries, libtool files.
 rm $RPM_BUILD_ROOT%{_libdir}/libguestfs.a
 rm $RPM_BUILD_ROOT%{_libdir}/libguestfs.la
-rm $RPM_BUILD_ROOT%{_libdir}/libhivex.a
-rm $RPM_BUILD_ROOT%{_libdir}/libhivex.la
 
 # Clean up the examples/ directory which will get installed in %doc.
 # Note we can't delete the original examples/Makefile because that
@@ -530,18 +524,11 @@ rm -rf $RPM_BUILD_ROOT
 %files -f %{name}.lang
 %defattr(-,root,root,-)
 %doc COPYING
-%{_bindir}/hivexget
-%{_bindir}/hivexml
-%{_bindir}/hivexsh
 %{_bindir}/libguestfs-supermin-helper
 %{_bindir}/libguestfs-test-tool
 %{_libdir}/guestfs/
 %{_libdir}/libguestfs.so.*
-%{_libdir}/libhivex.so.*
 %{_libexecdir}/libguestfs-test-tool-helper
-%{_mandir}/man1/hivexget.1*
-%{_mandir}/man1/hivexml.1*
-%{_mandir}/man1/hivexsh.1*
 %{_mandir}/man1/libguestfs-test-tool.1*
 
 
@@ -550,10 +537,8 @@ rm -rf $RPM_BUILD_ROOT
 %doc ChangeLog HACKING TODO README ex html/guestfs.3.html html/pod.css
 %doc installed-docs/*
 %{_libdir}/libguestfs.so
-%{_libdir}/libhivex.so
 %{_mandir}/man3/guestfs.3*
 %{_mandir}/man3/libguestfs.3*
-%{_mandir}/man3/hivex.3*
 %{_includedir}/guestfs.h
 %{_includedir}/guestfs-actions.h
 %{_includedir}/guestfs-structs.h
@@ -661,6 +646,11 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Mon Mar  1 2010 Richard W.M. Jones <rjones@redhat.com> - 1:1.0.85-1
+- New upstream version 1.0.85.
+- Remove hivex, now a separate upstream project and package.
+- Remove supermin quoting patch, now upstream.
+
 * Mon Mar  1 2010 Richard W.M. Jones <rjones@redhat.com> - 1:1.0.84-6
 - Fix quoting in supermin-split script (RHBZ#566511).
 - Don't include bogus './builddir' entries in supermin hostfiles
