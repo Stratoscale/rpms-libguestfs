@@ -42,7 +42,7 @@ Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
 Version:       1.0.85
-Release:       1%{?dist}
+Release:       1%{?dist}.1
 License:       LGPLv2+
 Group:         Development/Libraries
 URL:           http://libguestfs.org/
@@ -420,6 +420,14 @@ export PATH=/usr/sbin:$PATH
 # not the site dir.
 make INSTALLDIRS=vendor %{?_smp_mflags}
 
+# Useful for debugging appliance problems.
+echo "==== files in initramfs ===="
+find initramfs -type f
+echo "==== hostfiles ===="
+ls -l appliance/*.supermin.hostfiles
+cat appliance/*.supermin.hostfiles
+echo "============"
+
 
 %check
 # Enable debugging - very useful if a test does fail, although
@@ -653,6 +661,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Tue Mar  2 2010 Richard W.M. Jones <rjones@redhat.com> - 1:1.0.85-1.el5.1
+- Add some debugging to chase NTFS-3g in appliance problem.
+
 * Mon Mar  1 2010 Richard W.M. Jones <rjones@redhat.com> - 1:1.0.85-1
 - New upstream version 1.0.85.
 - Remove hivex, now a separate upstream project and package.
