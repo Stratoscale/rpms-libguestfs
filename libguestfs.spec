@@ -411,6 +411,14 @@ export PATH=/usr/sbin:$PATH
 # not the site dir.
 make INSTALLDIRS=vendor %{?_smp_mflags}
 
+# Useful for debugging appliance problems.
+echo "==== files in initramfs ===="
+find initramfs -type f
+echo "==== hostfiles ===="
+ls -l appliance/*.supermin.hostfiles
+cat appliance/*.supermin.hostfiles
+echo "============"
+
 
 %check
 # Enable debugging - very useful if a test does fail, although
@@ -438,6 +446,7 @@ export LIBGUESTFS_DEBUG=1
 # 548121   all          F-13   udevsettle command is broken (WORKAROUND)
 # 553689   all          F-13   missing SeaBIOS (FIXED)
 # 563103   all          F-13   glibc incorrect emulation of preadv/pwritev
+# 567567   32-bit       all    guestfish xstrtol test failure on 32-bit
 
 %if %{runtests}
 %if 0
