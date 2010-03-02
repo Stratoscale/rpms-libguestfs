@@ -42,7 +42,7 @@ Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
 Version:       1.0.85
-Release:       1%{?dist}.4
+Release:       1%{?dist}.5
 License:       LGPLv2+
 Group:         Development/Libraries
 URL:           http://libguestfs.org/
@@ -138,8 +138,8 @@ Requires:      mkisofs
 # Provide our own custom requires for the supermin appliance.
 Source1:       libguestfs-find-requires.sh
 %global _use_internal_dependency_generator 0
-%global __find_provides %{_rpmconfigdir}/find-provides
-%global __find_requires %{SOURCE1} %{_rpmconfigdir}/find-requires
+%global __find_provides /usr/lib/rpm/find-provides
+%global __find_requires %{SOURCE1} /usr/lib/rpm/find-requires
 
 
 %description
@@ -679,6 +679,10 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Tue Mar  2 2010 Richard W.M. Jones <rjones@redhat.com> - 1:1.0.85-1.el5.5
+- Expand %%{_rpmconfigdir} macro, which doesn't seem to expand or exist
+  on EPEL 5.
+
 * Tue Mar  2 2010 Richard W.M. Jones <rjones@redhat.com> - 1:1.0.85-1.el5.4
 - Disable tests on i386 because of guestfish / 32 bit xstrtol test problem
   (RHBZ#567567).
