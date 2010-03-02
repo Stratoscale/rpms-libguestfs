@@ -42,7 +42,7 @@ Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
 Version:       1.0.85
-Release:       1%{?dist}.1
+Release:       1%{?dist}.2
 License:       LGPLv2+
 Group:         Development/Libraries
 URL:           http://libguestfs.org/
@@ -444,7 +444,9 @@ export LIBGUESTFS_DEBUG=1
 # 563103   all          F-13   glibc incorrect emulation of preadv/pwritev
 
 %if %{runtests}
+%ifarch x86_64
 make check
+%endif
 %endif
 
 
@@ -648,6 +650,10 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Tue Mar  2 2010 Richard W.M. Jones <rjones@redhat.com> - 1:1.0.85-1.fc12.2
+- Tests on i386 fail because of RHBZ#502074.
+- Run tests only on x86_64.
+
 * Tue Mar  2 2010 Richard W.M. Jones <rjones@redhat.com> - 1:1.0.85-1.fc12.1
 - Attempt a more complete fix for bash regexp quoting problem (RHBZ#566511).
 
