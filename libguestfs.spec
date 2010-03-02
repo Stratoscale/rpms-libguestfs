@@ -42,7 +42,7 @@ Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
 Version:       1.0.85
-Release:       1%{?dist}.2
+Release:       1%{?dist}.3
 License:       LGPLv2+
 Group:         Development/Libraries
 URL:           http://libguestfs.org/
@@ -461,7 +461,18 @@ export LIBGUESTFS_DEBUG=1
 # 563103   all          F-13   glibc incorrect emulation of preadv/pwritev
 
 %if %{runtests}
+
+# Parted in EPEL 5 doesn't support -m (machine-friendly) option, and
+# (not being very machine-friendly) doesn't make it easy to detect
+# this fact.  You would see errors like this:
+#
+#   /sbin/parted -m -- /dev/vda unit b print
+#   /sbin/parted: invalid option -- m
+#   guestfsd: error: unknown signature, expected "BYT;" [...]
+export SKIP_TEST_PART_GET_PARTTYPE=1
+
 make check
+
 %endif
 
 
@@ -665,6 +676,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Tue Mar  2 2010 Richard W.M. Jones <rjones@redhat.com> - 1:1.0.85-1.el5.3
+- Skip parted test which will always fail on old parted in RHEL 5.
+
 * Tue Mar  2 2010 Richard W.M. Jones <rjones@redhat.com> - 1:1.0.85-1.el5.2
 - Attempt a more complete fix for bash regexp quoting problem (RHBZ#566511).
 
