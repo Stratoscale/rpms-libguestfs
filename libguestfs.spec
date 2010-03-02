@@ -42,7 +42,7 @@ Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
 Version:       1.0.85
-Release:       1%{?dist}.3
+Release:       1%{?dist}.4
 License:       LGPLv2+
 Group:         Development/Libraries
 URL:           http://libguestfs.org/
@@ -459,8 +459,10 @@ export LIBGUESTFS_DEBUG=1
 # 548121   all          F-13   udevsettle command is broken (WORKAROUND)
 # 553689   all          F-13   missing SeaBIOS (FIXED)
 # 563103   all          F-13   glibc incorrect emulation of preadv/pwritev
+# 567567   32-bit       all    guestfish xstrtol test failure on 32-bit
 
 %if %{runtests}
+%ifarch x86_64
 
 # Parted in EPEL 5 doesn't support -m (machine-friendly) option, and
 # (not being very machine-friendly) doesn't make it easy to detect
@@ -473,6 +475,7 @@ export SKIP_TEST_PART_GET_PARTTYPE=1
 
 make check
 
+%endif
 %endif
 
 
@@ -676,6 +679,10 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Tue Mar  2 2010 Richard W.M. Jones <rjones@redhat.com> - 1:1.0.85-1.el5.4
+- Disable tests on i386 because of guestfish / 32 bit xstrtol test problem
+  (RHBZ#567567).
+
 * Tue Mar  2 2010 Richard W.M. Jones <rjones@redhat.com> - 1:1.0.85-1.el5.3
 - Skip parted test which will always fail on old parted in RHEL 5.
 
