@@ -42,7 +42,7 @@ Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
 Version:       1.0.85
-Release:       1%{?dist}
+Release:       2%{?dist}
 License:       LGPLv2+
 Group:         Development/Libraries
 URL:           http://libguestfs.org/
@@ -435,7 +435,7 @@ export LIBGUESTFS_DEBUG=1
 # 504273   ppc, ppc64          "no opcode defined"
 # 505109   ppc, ppc64          "Boot failure! No secondary bootloader specified"
 # 502058   i386, x86-64 F-11   need to boot with noapic (WORKAROUND ENABLED)
-# 502074   i386         F-11   commands segfault randomly
+# 502074   i386         all    commands segfault randomly
 # 503236   i386         F-12   cryptomgr_test at doublefault_fn
 # 507066   all          F-12   sequence of chroot calls (FIXED)
 # 513249   all          F-12   guestfwd broken in qemu (FIXED)
@@ -655,6 +655,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sat Mar 06 2010 Richard W.M. Jones <rjones@redhat.com> - 1:1.0.85-2
+- Bump and rebuild.
+
 * Mon Mar  1 2010 Richard W.M. Jones <rjones@redhat.com> - 1:1.0.85-1
 - New upstream version 1.0.85.
 - Remove hivex, now a separate upstream project and package.
