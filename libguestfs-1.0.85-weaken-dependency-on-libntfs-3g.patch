@@ -1,0 +1,63 @@
+From: Richard Jones <rjones@redhat.com>
+Date: Fri, 12 Mar 2010 15:10:28 +0000 (+0000)
+Subject: Special case hostfiles handling for libntfs-3g.so
+X-Git-Url: http://git.annexia.org/?p=libguestfs.git;a=commitdiff_plain;h=599f94c9c14c970dcfd7cec8d6898cd3b46af8ca
+
+Special case hostfiles handling for libntfs-3g.so
+
+The ntfs-3g project keeps bumping their soname, and this causes
+dependency problems for the Fedora package.  The root of the problem
+is we depend on /lib/libntfs-3g.so.<N>, but if <N> keeps bumping,
+the dependency keeps breaking.
+
+This commit changes the hostfiles (and hence dependency) to be on
+/lib/libntfs-3g.so.* instead.  The downside to this is we could end
+up pulling more files into the appliance than are strictly required,
+but it will fix the Fedora packaging problems being felt by the
+Fedora maintainer of ntfs-3g.
+
+After applying this commit, the change to hostfiles looks like this:
+
+@@ -1489,7 +1489,7 @@
+ ./lib/libpam_misc.so.0
+ ./lib/libdmraid.so
+ ./lib/libidn.so.11
+-./lib/libntfs-3g.so.74
++./lib/libntfs-3g.so.*
+ ./lib/libext2fs.so.2.*
+ ./lib/libpam.so.0
+ ./lib/libsepol.so.1
+@@ -1520,7 +1520,6 @@
+ ./lib/libnss_files-*.so
+ ./lib/libgio-2.0.so.0
+ ./lib/libpam_misc.so.0.*
+-./lib/libntfs-3g.so.74.*
+ ./lib/libanl.so.1
+ ./lib/libdevmapper-event-lvm2.so.2.*
+ ./lib/libpthread.so.0
+---
+
+diff --git a/appliance/supermin-split.sh.in b/appliance/supermin-split.sh.in
+index cd29b8a..94990dd 100755
+--- a/appliance/supermin-split.sh.in
++++ b/appliance/supermin-split.sh.in
+@@ -63,6 +63,7 @@ for path in $(find -not -name fakeroot.log); do
+     p_ld_so='^ld-[.0-9]+\.so$'
+     p_libbfd='^libbfd-.*\.so$'
+     p_libgcc='^libgcc_s-.*\.so\.([0-9]+)$'
++    p_libntfs3g='^libntfs-3g\.so\..*$'
+     p_lib123so='^lib(.*)-[-.0-9]+\.so$'
+     p_lib123so123='^lib(.*)-[-.0-9]+\.so\.([0-9]+)\.'
+     p_libso123='^lib(.*)\.so\.([0-9]+)\.'
+@@ -104,6 +105,11 @@ for path in $(find -not -name fakeroot.log); do
+     elif [[ "$file" =~ $p_libgcc ]]; then
+         echo "$dir/libgcc_s-*.so.${BASH_REMATCH[1]}" >&6
+ 
++    # Special case for libntfs-3g.so.*
++    elif [[ "$file" =~ $p_libntfs3g ]]; then
++	[ -n "$libntfs3g_once" ] || echo "$dir/libntfs-3g.so.*" >&6
++	libntfs3g_once=1
++
+     # libfoo-1.2.3.so
+     elif [[ "$file" =~ $p_lib123so ]]; then
+         echo "$dir/lib${BASH_REMATCH[1]}-*.so" >&6

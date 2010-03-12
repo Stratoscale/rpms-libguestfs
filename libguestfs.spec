@@ -42,7 +42,7 @@ Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
 Version:       1.0.85
-Release:       1%{?dist}.2
+Release:       1%{?dist}.3
 License:       LGPLv2+
 Group:         Development/Libraries
 URL:           http://libguestfs.org/
@@ -54,6 +54,9 @@ Patch0:        libguestfs-1.0.79-no-fuse-test.patch
 
 # More complete fix for bash regexp quoting screw-up.
 Patch1:        libguestfs-1.0.85-bash-regexp-quoting-fix-for-rhel-5.patch
+
+# Backport upstream commit to weaken dependency on libntfs-3g.so.N.
+Patch2:        libguestfs-1.0.85-weaken-dependency-on-libntfs-3g.patch
 
 # Basic build requirements:
 BuildRequires: /usr/bin/pod2man
@@ -378,6 +381,7 @@ Requires:      jpackage-utils
 
 %patch0 -p1
 %patch1 -p1
+%patch2 -p1
 
 mkdir -p daemon/m4
 
@@ -650,6 +654,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Fri Mar 12 2010 Richard W.M. Jones <rjones@redhat.com> - 1:1.0.85-1.fc12.3
+- Backport upstream patch to remove dependency on /lib/libntfs-3g.so.N.
+
 * Tue Mar  2 2010 Richard W.M. Jones <rjones@redhat.com> - 1:1.0.85-1.fc12.2
 - Tests on i386 fail because of RHBZ#502074.
 - Run tests only on x86_64.
