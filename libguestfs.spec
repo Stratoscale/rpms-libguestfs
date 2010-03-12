@@ -41,8 +41,8 @@
 Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
-Version:       1.0.85
-Release:       4%{?dist}
+Version:       1.0.86
+Release:       1%{?dist}
 License:       LGPLv2+
 Group:         Development/Libraries
 URL:           http://libguestfs.org/
@@ -655,6 +655,19 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Fri Mar 12 2010 Richard W.M. Jones <rjones@redhat.com> - 1:1.0.86-1
+- New upstream version 1.0.86.
+- libguestfs-supermin-helper rewritten in C (from shell), reduces
+  appliance boot time by 2-3 seconds.
+- Fix parsing of integers in guestfish on 32 bit platforms (RHBZ#569757
+  and RHBZ#567567).
+- Enhance virt-inspector output for Windows guests.
+- Add product_name field to virt-inspector output for all guests.
+- Weaken dependencies on libntfs-3g.so, don't include SONAME in dep.
+- Remove false dependency on libply (plymouth libraries).
+- Spanish translation (RHBZ#570181).
+- Fix bash regexp quoting bug.
+
 * Fri Mar 12 2010 Richard W.M. Jones <rjones@redhat.com> - 1:1.0.85-4
 - Bump and rebuild.
 
