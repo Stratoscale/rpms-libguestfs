@@ -258,10 +258,15 @@ para-virtualized (PV), what applications are installed and more.
 Virt-list-filesystems can be used to list out the filesystems in a
 virtual machine image (for shell scripts etc).
 
+Virt-list-partitions can be used to list out the partitions in a
+virtual machine image.
+
 Virt-ls is a command line tool to list out files in a virtual machine.
 
 Virt-rescue provides a rescue shell for making interactive,
 unstructured fixes to virtual machines.
+
+Virt-resize can resize existing virtual machine disk images.
 
 Virt-tar is an archive, backup and upload tool for virtual machines.
 
@@ -580,10 +585,14 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man1/virt-inspector.1*
 %{_bindir}/virt-list-filesystems
 %{_mandir}/man1/virt-list-filesystems.1*
+%{_bindir}/virt-list-partitions
+%{_mandir}/man1/virt-list-partitions.1*
 %{_bindir}/virt-ls
 %{_mandir}/man1/virt-ls.1*
 %{_bindir}/virt-rescue
 %{_mandir}/man1/virt-rescue.1*
+%{_bindir}/virt-resize
+%{_mandir}/man1/virt-resize.1*
 %{_bindir}/virt-tar
 %{_mandir}/man1/virt-tar.1*
 %{_bindir}/virt-win-reg
@@ -655,6 +664,13 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Tue Mar 23 2010 Richard W.M. Jones <rjones@redhat.com> - 1:1.0.87-1
+- New upstream version 1.0.87.
+- New tools: virt-resize and virt-list-partitions.
+- New APIs: guestfs_copy_size; APIs for querying the relationship between
+  LVM objects.
+- Add vim to the virt-rescue appliance.
+
 * Fri Mar 12 2010 Richard W.M. Jones <rjones@redhat.com> - 1:1.0.86-1
 - New upstream version 1.0.86.
 - libguestfs-supermin-helper rewritten in C (from shell), reduces
