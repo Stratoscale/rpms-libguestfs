@@ -42,7 +42,7 @@ Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
 Version:       1.0.85
-Release:       1%{?dist}.6
+Release:       1%{?dist}.7
 License:       LGPLv2+
 Group:         Development/Libraries
 URL:           http://libguestfs.org/
@@ -683,8 +683,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
-* Wed Mar 24 2010 Richard W.M. Jones <rjones@redhat.com> - 1:1.0.85-1.el5.6
+* Wed Mar 24 2010 Richard W.M. Jones <rjones@redhat.com> - 1:1.0.85-1.el5.7
 - Backport patch to weaken dependency on ntfs-3g.
+- Fix patch2 for this old version of patch.
 
 * Tue Mar  2 2010 Richard W.M. Jones <rjones@redhat.com> - 1:1.0.85-1.el5.5
 - Expand %%{_rpmconfigdir} macro, which doesn't seem to expand or exist

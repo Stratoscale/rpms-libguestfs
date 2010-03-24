@@ -16,25 +16,6 @@ up pulling more files into the appliance than are strictly required,
 but it will fix the Fedora packaging problems being felt by the
 Fedora maintainer of ntfs-3g.
 
-After applying this commit, the change to hostfiles looks like this:
-
-@@ -1489,7 +1489,7 @@
- ./lib/libpam_misc.so.0
- ./lib/libdmraid.so
- ./lib/libidn.so.11
--./lib/libntfs-3g.so.74
-+./lib/libntfs-3g.so.*
- ./lib/libext2fs.so.2.*
- ./lib/libpam.so.0
- ./lib/libsepol.so.1
-@@ -1520,7 +1520,6 @@
- ./lib/libnss_files-*.so
- ./lib/libgio-2.0.so.0
- ./lib/libpam_misc.so.0.*
--./lib/libntfs-3g.so.74.*
- ./lib/libanl.so.1
- ./lib/libdevmapper-event-lvm2.so.2.*
- ./lib/libpthread.so.0
 ---
 
 diff --git a/appliance/supermin-split.sh.in b/appliance/supermin-split.sh.in
