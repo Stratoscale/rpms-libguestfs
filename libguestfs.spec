@@ -42,7 +42,7 @@ Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
 Version:       1.0.85
-Release:       1%{?dist}.7
+Release:       1%{?dist}.8
 License:       LGPLv2+
 Group:         Development/Libraries
 URL:           http://libguestfs.org/
@@ -61,6 +61,9 @@ Patch1:        libguestfs-1.0.85-bash-regexp-quoting-fix-for-rhel-5.patch
 
 # Backport patch to weaken dependency on libntfs-3g.
 Patch2:        libguestfs-1.0.85-weaken-dependency-on-libntfs-3g.patch
+
+# Backport patch to use ext4 tools on RHEL 5 (RHBZ#576688).
+Patch3:        libguestfs-1.0.87-use-ext4-dev-tools.patch
 
 # Basic build requirements:
 BuildRequires: /usr/bin/pod2man
@@ -391,6 +394,7 @@ Requires:      jpackage-utils
 %patch0 -p1
 %patch1 -p1
 %patch2 -p1
+%patch3 -p1
 
 mkdir -p daemon/m4
 
@@ -683,6 +687,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Wed Mar 24 2010 Richard W.M. Jones <rjones@redhat.com> - 1:1.0.85-1.el5.8
+- Backport patch to use ext4 tools on RHEL 5 (RHBZ#576688).
+
 * Wed Mar 24 2010 Richard W.M. Jones <rjones@redhat.com> - 1:1.0.85-1.el5.7
 - Backport patch to weaken dependency on ntfs-3g.
 - Fix patch2 for this old version of patch.
