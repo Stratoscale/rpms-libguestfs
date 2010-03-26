@@ -41,8 +41,8 @@
 Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
-Version:       1.0.87
-Release:       2%{?dist}
+Version:       1.0.88
+Release:       1%{?dist}
 License:       LGPLv2+
 Group:         Development/Libraries
 URL:           http://libguestfs.org/
@@ -666,6 +666,13 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Fri Mar 26 2010 Richard W.M. Jones <rjones@redhat.com> - 1:1.0.88-1
+- New upstream version 1.0.88.
+- Mainly small bugfixes.
+- Update Spanish translation of libguestfs (RHBZ#576876).
+- Use ext4 dev tools on RHEL 5 (RHBZ#576688).
+- Add support for minix filesystem (RHBZ#576689).
+
 * Fri Mar 26 2010 Richard W.M. Jones <rjones@redhat.com> - 1:1.0.87-2
 - Add vim-minimal to BR, it is now required by the appliance.
 
