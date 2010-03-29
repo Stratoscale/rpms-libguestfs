@@ -484,6 +484,7 @@ export SKIP_TEST_PART_GET_PARTTYPE=1
 # This fails for unknown reasons:
 # /sbin/e4fsck -p -f /dev/VG/LV
 # guestfsd: error: [no message sent to stderr]
+# This issue is now fixed by upstream commit 00a9ae7365e6bad2.
 export SKIP_TEST_LVRESIZE=1
 
 make check
