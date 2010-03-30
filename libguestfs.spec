@@ -42,7 +42,7 @@ Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
 Version:       1.0.88
-Release:       2%{?dist}
+Release:       3%{?dist}
 License:       LGPLv2+
 Group:         Development/Libraries
 URL:           http://libguestfs.org/
@@ -453,12 +453,23 @@ export LIBGUESTFS_DEBUG=1
 # 548121   all          F-13   udevsettle command is broken (WORKAROUND)
 # 553689   all          F-13   missing SeaBIOS (FIXED)
 # 563103   all          F-13   glibc incorrect emulation of preadv/pwritev
-# 567567   32-bit       all    guestfish xstrtol test failure on 32-bit
+#                                 (WORKAROUND using LD_PRELOAD)
+# 567567   32-bit       all    guestfish xstrtol test failure on 32-bit (FIXED)
+
+# Workaround #563103
+cat > rhbz563103.c <<EOF
+#include <stdlib.h>
+#include <errno.h>
+ssize_t preadv (int fd,...) { errno = ENOSYS; return -1; }
+ssize_t pwritev (int fd,...) { errno = ENOSYS; return -1; }
+EOF
+gcc -fPIC -c rhbz563103.c
+gcc -shared -Wl,-soname,rhbz563103.so.1 rhbz563103.o -o rhbz563103.so
+LD_PRELOAD=$(pwd)/rhbz563103.so
+export LD_PRELOAD
 
 %if %{runtests}
-%if 0
 make check
-%endif
 %endif
 
 
@@ -666,6 +677,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Tue Mar 30 2010 Richard W.M. Jones <rjones@redhat.com> - 1:1.0.88-3
+- Attempted workaround for RHBZ#563103, so we can reenable tests.
+
 * Fri Mar 26 2010 Richard W.M. Jones <rjones@redhat.com> - 1:1.0.88-2
 - Remember to check in the new sources.
 
