@@ -42,7 +42,7 @@ Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
 Version:       1.0.88
-Release:       3%{?dist}
+Release:       4%{?dist}
 License:       LGPLv2+
 Group:         Development/Libraries
 URL:           http://libguestfs.org/
@@ -457,9 +457,11 @@ export LIBGUESTFS_DEBUG=1
 # 567567   32-bit       all    guestfish xstrtol test failure on 32-bit (FIXED)
 
 # Workaround #563103
-cat > rhbz563103.c <<EOF
+cat > rhbz563103.c <<'EOF'
 #include <stdlib.h>
 #include <errno.h>
+static void init () __attribute__((constructor));
+static void init () { write (2, "Enable workaround for incorrect preadv/pwritev emulation in glibc (RHBZ#563103)\n", 80); }
 ssize_t preadv (int fd,...) { errno = ENOSYS; return -1; }
 ssize_t pwritev (int fd,...) { errno = ENOSYS; return -1; }
 EOF
@@ -677,7 +679,7 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
-* Tue Mar 30 2010 Richard W.M. Jones <rjones@redhat.com> - 1:1.0.88-3
+* Tue Mar 30 2010 Richard W.M. Jones <rjones@redhat.com> - 1:1.0.88-4
 - Attempted workaround for RHBZ#563103, so we can reenable tests.
 
 * Fri Mar 26 2010 Richard W.M. Jones <rjones@redhat.com> - 1:1.0.88-2
