@@ -42,7 +42,7 @@ Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
 Version:       1.0.88
-Release:       5%{?dist}
+Release:       6%{?dist}
 License:       LGPLv2+
 Group:         Development/Libraries
 URL:           http://libguestfs.org/
@@ -51,6 +51,9 @@ BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root
 
 # Disable FUSE tests, not supported in Koji at the moment.
 Patch0:        libguestfs-1.0.79-no-fuse-test.patch
+
+# Backport of TERM=dumb patch from upstream.
+Patch1:        libguestfs-1.0.88-daemon-Set-TERM-dumb-inside-the-daemon.patch
 
 # Basic build requirements:
 BuildRequires: /usr/bin/pod2man
@@ -381,6 +384,7 @@ Requires:      jpackage-utils
 %setup -q
 
 %patch0 -p1
+%patch1 -p1
 
 mkdir -p daemon/m4
 
@@ -680,6 +684,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Tue Mar 30 2010 Richard W.M. Jones <rjones@redhat.com> - 1:1.0.88-6
+- Backport of TERM=dumb patch from upstream.
+
 * Tue Mar 30 2010 Richard W.M. Jones <rjones@redhat.com> - 1:1.0.88-5
 - Attempted workaround for RHBZ#563103, so we can reenable tests.
 
