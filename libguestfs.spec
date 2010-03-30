@@ -41,8 +41,8 @@
 Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
-Version:       1.0.88
-Release:       7%{?dist}
+Version:       1.0.89
+Release:       1%{?dist}
 License:       LGPLv2+
 Group:         Development/Libraries
 URL:           http://libguestfs.org/
@@ -52,14 +52,11 @@ BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root
 # Disable FUSE tests, not supported in Koji at the moment.
 Patch0:        libguestfs-1.0.79-no-fuse-test.patch
 
-# Backport of TERM=dumb patch from upstream.
-Patch1:        libguestfs-1.0.88-daemon-Set-TERM-dumb-inside-the-daemon.patch
-
 # Basic build requirements:
 BuildRequires: /usr/bin/pod2man
 BuildRequires: /usr/bin/pod2text
 BuildRequires: febootstrap >= 2.6
-BuildRequires: hivex-devel >= 1.2.0
+BuildRequires: hivex-devel >= 1.2.1
 BuildRequires: augeas-devel >= 0.5.0
 BuildRequires: readline-devel
 BuildRequires: genisoimage
@@ -219,7 +216,7 @@ Requires:      %{name} = %{epoch}:%{version}-%{release}
 Requires:      guestfish
 Requires:      perl-Sys-Virt
 Requires:      perl-XML-Writer
-Requires:      hivex
+Requires:      hivex >= 1.2.1
 
 # Obsolete and replace earlier packages.
 Provides:      virt-cat = %{epoch}:%{version}-%{release}
@@ -384,7 +381,6 @@ Requires:      jpackage-utils
 %setup -q
 
 %patch0 -p1
-%patch1 -p1
 
 mkdir -p daemon/m4
 
@@ -693,6 +689,13 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Tue Mar 30 2010 Richard W.M. Jones <rjones@redhat.com> - 1:1.0.89-1
+- New upstream version 1.0.89.
+- Improved version of virt-win-reg.
+- Many smaller bugfixes.
+- Requires hivex >= 1.2.1.
+- Remove TERM=dumb patch which is now upstream.
+
 * Tue Mar 30 2010 Richard W.M. Jones <rjones@redhat.com> - 1:1.0.88-7
 - Backport of TERM=dumb patch from upstream.
 - Workaround failure caused by RHBZ#575734.
