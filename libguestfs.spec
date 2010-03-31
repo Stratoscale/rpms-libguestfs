@@ -42,7 +42,7 @@ Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
 Version:       1.0.85
-Release:       1%{?dist}.9
+Release:       1%{?dist}.10
 License:       LGPLv2+
 Group:         Development/Libraries
 URL:           http://libguestfs.org/
@@ -75,7 +75,7 @@ BuildRequires: readline-devel
 BuildRequires: mkisofs
 BuildRequires: libxml2-devel
 %ifarch %{ix86} x86_64
-BuildRequires: qemu-system-x86 >= 0.10.5
+BuildRequires: kvm
 %endif
 %ifarch ppc ppc64
 BuildRequires: qemu-system-ppc >= 0.10.5
@@ -693,6 +693,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Wed Mar 31 2010 Richard W.M. Jones <rjones@redhat.com> - 1:1.0.85-1.el5.10
+- BuildRequire kvm on x86 platforms.
+
 * Wed Mar 24 2010 Richard W.M. Jones <rjones@redhat.com> - 1:1.0.85-1.el5.9
 - Skip failing lvresize test.
 
