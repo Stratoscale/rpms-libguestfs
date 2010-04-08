@@ -41,8 +41,8 @@
 Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
-Version:       1.0.85
-Release:       2%{?dist}.4
+Version:       1.2.1
+Release:       1%{?dist}
 License:       LGPLv2+
 Group:         Development/Libraries
 URL:           http://libguestfs.org/
@@ -52,17 +52,11 @@ BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root
 # Disable FUSE tests, not supported in Koji at the moment.
 Patch0:        libguestfs-1.0.79-no-fuse-test.patch
 
-# More complete fix for bash regexp quoting screw-up.
-Patch1:        libguestfs-1.0.85-bash-regexp-quoting-fix-for-rhel-5.patch
-
-# Backport upstream commit to weaken dependency on libntfs-3g.so.N.
-Patch2:        libguestfs-1.0.85-weaken-dependency-on-libntfs-3g.patch
-
 # Basic build requirements:
 BuildRequires: /usr/bin/pod2man
 BuildRequires: /usr/bin/pod2text
 BuildRequires: febootstrap >= 2.6
-BuildRequires: hivex-devel >= 1.2.0
+BuildRequires: hivex-devel >= 1.2.1
 BuildRequires: augeas-devel >= 0.5.0
 BuildRequires: readline-devel
 BuildRequires: genisoimage
@@ -85,6 +79,7 @@ BuildRequires: dosfstools, zerofree, lsof, scrub, libselinux
 BuildRequires: parted, btrfs-progs, gfs2-utils
 BuildRequires: hfsplus-tools, nilfs-utils, reiserfs-utils
 BuildRequires: jfsutils, xfsprogs
+BuildRequires: vim-minimal
 %ifarch %{ix86} x86_64
 BuildRequires: grub, ntfsprogs
 %endif
@@ -97,6 +92,7 @@ Requires:      dosfstools, zerofree, lsof, scrub, libselinux
 Requires:      parted, btrfs-progs, gfs2-utils
 Requires:      hfsplus-tools, nilfs-utils, reiserfs-utils
 Requires:      jfsutils, xfsprogs
+Requires:      vim-minimal
 %ifarch %{ix86} x86_64
 Requires:      grub, ntfsprogs
 %endif
@@ -220,7 +216,7 @@ Requires:      %{name} = %{epoch}:%{version}-%{release}
 Requires:      guestfish
 Requires:      perl-Sys-Virt
 Requires:      perl-XML-Writer
-Requires:      hivex
+Requires:      hivex >= 1.2.1
 
 # Obsolete and replace earlier packages.
 Provides:      virt-cat = %{epoch}:%{version}-%{release}
@@ -264,10 +260,15 @@ para-virtualized (PV), what applications are installed and more.
 Virt-list-filesystems can be used to list out the filesystems in a
 virtual machine image (for shell scripts etc).
 
+Virt-list-partitions can be used to list out the partitions in a
+virtual machine image.
+
 Virt-ls is a command line tool to list out files in a virtual machine.
 
 Virt-rescue provides a rescue shell for making interactive,
 unstructured fixes to virtual machines.
+
+Virt-resize can resize existing virtual machine disk images.
 
 Virt-tar is an archive, backup and upload tool for virtual machines.
 
@@ -380,8 +381,6 @@ Requires:      jpackage-utils
 %setup -q
 
 %patch0 -p1
-%patch1 -p1
-%patch2 -p1
 
 mkdir -p daemon/m4
 
@@ -419,6 +418,14 @@ export PATH=/usr/sbin:$PATH
 # not the site dir.
 make INSTALLDIRS=vendor %{?_smp_mflags}
 
+# Useful for debugging appliance problems.
+echo "==== files in initramfs ===="
+find initramfs -type f
+echo "==== hostfiles ===="
+ls -l appliance/*.supermin.hostfiles
+cat appliance/*.supermin.hostfiles
+echo "============"
+
 
 %check
 # Enable debugging - very useful if a test does fail, although
@@ -435,7 +442,7 @@ export LIBGUESTFS_DEBUG=1
 # 504273   ppc, ppc64          "no opcode defined"
 # 505109   ppc, ppc64          "Boot failure! No secondary bootloader specified"
 # 502058   i386, x86-64 F-11   need to boot with noapic (WORKAROUND ENABLED)
-# 502074   i386         F-11   commands segfault randomly
+# 502074   i386         all    commands segfault randomly
 # 503236   i386         F-12   cryptomgr_test at doublefault_fn
 # 507066   all          F-12   sequence of chroot calls (FIXED)
 # 513249   all          F-12   guestfwd broken in qemu (FIXED)
@@ -446,11 +453,35 @@ export LIBGUESTFS_DEBUG=1
 # 548121   all          F-13   udevsettle command is broken (WORKAROUND)
 # 553689   all          F-13   missing SeaBIOS (FIXED)
 # 563103   all          F-13   glibc incorrect emulation of preadv/pwritev
+#                                 (WORKAROUND using LD_PRELOAD)
+# 567567   32-bit       all    guestfish xstrtol test failure on 32-bit (FIXED)
+# 575734   all          F-14   microsecond resolution for blkid cache
+#                                 (FIXED upstream but still broken in F-14)
+
+# Workaround #563103
+cat > rhbz563103.c <<'EOF'
+#include <stdlib.h>
+#include <unistd.h>
+#include <errno.h>
+ssize_t preadv (int fd,...) { errno = ENOSYS; return -1; }
+ssize_t preadv64 (int fd,...) { errno = ENOSYS; return -1; }
+ssize_t pwritev (int fd,...) { errno = ENOSYS; return -1; }
+ssize_t pwritev64 (int fd,...) { errno = ENOSYS; return -1; }
+EOF
+gcc -fPIC -c rhbz563103.c
+gcc -shared -Wl,-soname,rhbz563103.so.1 rhbz563103.o -o rhbz563103.so
+LD_PRELOAD=$(pwd)/rhbz563103.so
+export LD_PRELOAD
+
+# Workaround #575734 in F-14
+export SKIP_TEST_MKE2JOURNAL_U=1
+export SKIP_TEST_MKE2JOURNAL_L=1
+
+# Unknown why this fails - could be also #575734.
+export SKIP_TEST_SWAPON_LABEL=1
 
 %if %{runtests}
-%if 0
 make check
-%endif
 %endif
 
 
@@ -579,10 +610,14 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man1/virt-inspector.1*
 %{_bindir}/virt-list-filesystems
 %{_mandir}/man1/virt-list-filesystems.1*
+%{_bindir}/virt-list-partitions
+%{_mandir}/man1/virt-list-partitions.1*
 %{_bindir}/virt-ls
 %{_mandir}/man1/virt-ls.1*
 %{_bindir}/virt-rescue
 %{_mandir}/man1/virt-rescue.1*
+%{_bindir}/virt-resize
+%{_mandir}/man1/virt-resize.1*
 %{_bindir}/virt-tar
 %{_mandir}/man1/virt-tar.1*
 %{_bindir}/virt-win-reg
@@ -654,6 +689,14 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Thu Apr  8 2010 Richard W.M. Jones <rjones@redhat.com> - 1:1.2.1-1
+- New upstream stable branch version 1.2.1.
+- Includes the new tools virt-list-partitions, virt-resize, and
+  updated virt-rescue and virt-win-reg (with regedit support).
+- Reenable tests.
+- Fixes bugs: 580650, 579155, 580246, 579664, 578123, 509597,
+  505329, 576876, 576688, 576689, 569757, 567567, 570181.
+
 * Fri Mar 12 2010 Richard W.M. Jones <rjones@redhat.com> - 1:1.0.85-2.4
 - Backport upstream patch to remove dependency on /lib/libntfs-3g.so.N.
 - The above depends on the bash quoting patch, so apply that first.
