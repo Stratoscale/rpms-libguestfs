@@ -41,7 +41,7 @@
 Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
-Version:       1.0.89
+Version:       1.3.1
 Release:       1%{?dist}
 License:       LGPLv2+
 Group:         Development/Libraries
@@ -107,6 +107,7 @@ BuildRequires: perl-Test-Simple
 BuildRequires: perl-Test-Pod
 BuildRequires: perl-Test-Pod-Coverage
 BuildRequires: perl-ExtUtils-MakeMaker
+BuildRequires: perl-String-ShellQuote
 BuildRequires: perl-XML-Writer
 BuildRequires: perl-libintl
 BuildRequires: python-devel
@@ -264,6 +265,9 @@ Virt-list-partitions can be used to list out the partitions in a
 virtual machine image.
 
 Virt-ls is a command line tool to list out files in a virtual machine.
+
+Virt-make-fs is a command line tool to build a filesystem out of
+a collection of files or a tarball.
 
 Virt-rescue provides a rescue shell for making interactive,
 unstructured fixes to virtual machines.
@@ -614,6 +618,8 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man1/virt-list-partitions.1*
 %{_bindir}/virt-ls
 %{_mandir}/man1/virt-ls.1*
+%{_bindir}/virt-make-fs
+%{_mandir}/man1/virt-make-fs.1*
 %{_bindir}/virt-rescue
 %{_mandir}/man1/virt-rescue.1*
 %{_bindir}/virt-resize
@@ -689,6 +695,18 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Thu Apr  8 2010 Richard W.M. Jones <rjones@redhat.com> - 1:1.3.1-1
+- New upstream version 1.3.1.
+- For explanation of apparently large version jump, see:
+  https://www.redhat.com/archives/libguestfs/2010-April/msg00057.html
+- New tool: virt-make-fs.
+- New API: guestfs_zero_device.
+- Fixes RHBZ#580246 (tar-in command hangs if uploading more than
+  available space)
+- Fixes RHBZ#579664 (guestfish doesn't report error when there is not
+  enough space for image allocation)
+- +BR perl-String-ShellQuote (for virt-make-fs).
+
 * Tue Mar 30 2010 Richard W.M. Jones <rjones@redhat.com> - 1:1.0.89-1
 - New upstream version 1.0.89.
 - Improved version of virt-win-reg.
