@@ -42,7 +42,7 @@ Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
 Version:       1.3.1
-Release:       1%{?dist}
+Release:       2%{?dist}
 License:       LGPLv2+
 Group:         Development/Libraries
 URL:           http://libguestfs.org/
@@ -119,9 +119,11 @@ BuildRequires: java-devel
 
 # For libguestfs-tools:
 BuildRequires: perl-Sys-Virt
+BuildRequires: qemu-img
 
 # Runtime requires:
 Requires:      qemu-kvm >= 0.10-7
+Requires:      qemu-img
 
 # For libguestfs-test-tool.
 Requires:      genisoimage
@@ -695,6 +697,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Thu Apr  8 2010 Richard W.M. Jones <rjones@redhat.com> - 1:1.3.1-2
+- Missing BR on qemu-img package.
+
 * Thu Apr  8 2010 Richard W.M. Jones <rjones@redhat.com> - 1:1.3.1-1
 - New upstream version 1.3.1.
 - For explanation of apparently large version jump, see:
