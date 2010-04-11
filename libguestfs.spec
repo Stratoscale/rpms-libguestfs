@@ -42,7 +42,7 @@ Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
 Version:       1.3.2
-Release:       2%{?dist}
+Release:       3%{?dist}
 License:       LGPLv2+
 Group:         Development/Libraries
 URL:           http://libguestfs.org/
@@ -487,6 +487,11 @@ export SKIP_TEST_MKE2JOURNAL_L=1
 # Unknown why this fails - could be also #575734.
 export SKIP_TEST_SWAPON_LABEL=1
 
+# This test fails because we build the ISO after encoding the checksum
+# of the ISO in the test itself.  Need to fix the test to work out the
+# checksum at runtime.
+export SKIP_TEST_CHECKSUM_DEVICE=1
+
 %if %{runtests}
 make check
 %endif
@@ -698,6 +703,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sun Apr 11 2010 Richard W.M. Jones <rjones@redhat.com> - 1:1.3.2-3
+- Disable checksum-device test.
+
 * Sat Apr 10 2010 Richard W.M. Jones <rjones@redhat.com> - 1:1.3.2-2
 - Bump and rebuild.
 
