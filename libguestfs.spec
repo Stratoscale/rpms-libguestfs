@@ -41,8 +41,8 @@
 Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
-Version:       1.0.85
-Release:       1%{?dist}.10
+Version:       1.2.2
+Release:       1%{?dist}
 License:       LGPLv2+
 Group:         Development/Libraries
 URL:           http://libguestfs.org/
@@ -56,25 +56,17 @@ ExclusiveArch: %{ix86} x86_64
 # Disable FUSE tests, not supported in Koji at the moment.
 Patch0:        libguestfs-1.0.79-no-fuse-test.patch
 
-# More complete fix for bash regexp quoting screw-up.
-Patch1:        libguestfs-1.0.85-bash-regexp-quoting-fix-for-rhel-5.patch
-
-# Backport patch to weaken dependency on libntfs-3g.
-Patch2:        libguestfs-1.0.85-weaken-dependency-on-libntfs-3g.patch
-
-# Backport patch to use ext4 tools on RHEL 5 (RHBZ#576688).
-Patch3:        libguestfs-1.0.87-use-ext4-dev-tools.patch
-
 # Basic build requirements:
 BuildRequires: /usr/bin/pod2man
 BuildRequires: /usr/bin/pod2text
 BuildRequires: febootstrap >= 2.6
-BuildRequires: hivex-devel >= 1.2.0
+BuildRequires: hivex-devel >= 1.2.1
 BuildRequires: augeas-devel >= 0.5.0
 BuildRequires: readline-devel
 BuildRequires: mkisofs
 BuildRequires: libxml2-devel
 %ifarch %{ix86} x86_64
+# https://fedorahosted.org/rel-eng/ticket/2982#comment:3
 BuildRequires: kvm
 %endif
 %ifarch ppc ppc64
@@ -132,7 +124,7 @@ BuildRequires: perl-Sys-Virt
 
 # Runtime requires:
 %ifarch %{ix86} x86_64
-Requires:      qemu-system-x86 >= 0.10.5
+Requires:      kvm
 %endif
 %ifarch ppc ppc64
 Requires:      qemu-system-ppc >= 0.10.5
@@ -232,7 +224,7 @@ Requires:      %{name} = %{epoch}:%{version}-%{release}
 Requires:      guestfish
 Requires:      perl-Sys-Virt
 Requires:      perl-XML-Writer
-Requires:      hivex
+Requires:      hivex >= 1.2.1
 
 # Obsolete and replace earlier packages.
 Provides:      virt-cat = %{epoch}:%{version}-%{release}
@@ -276,10 +268,15 @@ para-virtualized (PV), what applications are installed and more.
 Virt-list-filesystems can be used to list out the filesystems in a
 virtual machine image (for shell scripts etc).
 
+Virt-list-partitions can be used to list out the partitions in a
+virtual machine image.
+
 Virt-ls is a command line tool to list out files in a virtual machine.
 
 Virt-rescue provides a rescue shell for making interactive,
 unstructured fixes to virtual machines.
+
+Virt-resize can resize existing virtual machine disk images.
 
 Virt-tar is an archive, backup and upload tool for virtual machines.
 
@@ -392,9 +389,6 @@ Requires:      jpackage-utils
 %setup -q
 
 %patch0 -p1
-%patch1 -p1
-%patch2 -p1
-%patch3 -p1
 
 mkdir -p daemon/m4
 
@@ -456,7 +450,7 @@ export LIBGUESTFS_DEBUG=1
 # 504273   ppc, ppc64          "no opcode defined"
 # 505109   ppc, ppc64          "Boot failure! No secondary bootloader specified"
 # 502058   i386, x86-64 F-11   need to boot with noapic (WORKAROUND ENABLED)
-# 502074   i386         F-11   commands segfault randomly
+# 502074   i386         all   commands segfault randomly
 # 503236   i386         F-12   cryptomgr_test at doublefault_fn
 # 507066   all          F-12   sequence of chroot calls (FIXED)
 # 513249   all          F-12   guestfwd broken in qemu (FIXED)
@@ -467,6 +461,9 @@ export LIBGUESTFS_DEBUG=1
 # 548121   all          F-13   udevsettle command is broken (WORKAROUND)
 # 553689   all          F-13   missing SeaBIOS (FIXED)
 # 563103   all          F-13   glibc incorrect emulation of preadv/pwritev
+# 567567   32-bit       all    guestfish xstrtol test failure on 32-bit (FIXED)
+# 575734   all          F-14   microsecond resolution for blkid cache
+#                                 (FIXED upstream but still broken in F-14)
 # 567567   32-bit       all    guestfish xstrtol test failure on 32-bit
 
 %if %{runtests}
@@ -480,12 +477,6 @@ export LIBGUESTFS_DEBUG=1
 #   /sbin/parted: invalid option -- m
 #   guestfsd: error: unknown signature, expected "BYT;" [...]
 export SKIP_TEST_PART_GET_PARTTYPE=1
-
-# This fails for unknown reasons:
-# /sbin/e4fsck -p -f /dev/VG/LV
-# guestfsd: error: [no message sent to stderr]
-# This issue is now fixed by upstream commit 00a9ae7365e6bad2.
-export SKIP_TEST_LVRESIZE=1
 
 make check
 
@@ -618,10 +609,14 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man1/virt-inspector.1*
 %{_bindir}/virt-list-filesystems
 %{_mandir}/man1/virt-list-filesystems.1*
+%{_bindir}/virt-list-partitions
+%{_mandir}/man1/virt-list-partitions.1*
 %{_bindir}/virt-ls
 %{_mandir}/man1/virt-ls.1*
 %{_bindir}/virt-rescue
 %{_mandir}/man1/virt-rescue.1*
+%{_bindir}/virt-resize
+%{_mandir}/man1/virt-resize.1*
 %{_bindir}/virt-tar
 %{_mandir}/man1/virt-tar.1*
 %{_bindir}/virt-win-reg
@@ -693,6 +688,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Mon Apr 12 2010 Richard W.M. Jones <rjones@redhat.com> - 1:1.2.2-1
+- New upstream stable branch version 1.2.2.
+
 * Wed Mar 31 2010 Richard W.M. Jones <rjones@redhat.com> - 1:1.0.85-1.el5.10
 - BuildRequire kvm on x86 platforms.
 
