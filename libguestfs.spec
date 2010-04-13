@@ -42,7 +42,7 @@ Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
 Version:       1.2.2
-Release:       1%{?dist}.2
+Release:       1%{?dist}.3
 License:       LGPLv2+
 Group:         Development/Libraries
 URL:           http://libguestfs.org/
@@ -478,6 +478,7 @@ export LIBGUESTFS_DEBUG=1
 #   /sbin/parted: invalid option -- m
 #   guestfsd: error: unknown signature, expected "BYT;" [...]
 export SKIP_TEST_PART_GET_PARTTYPE=1
+export SKIP_TEST_PART_GET_BOOTABLE=1
 
 make check
 
@@ -689,8 +690,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
-* Tue Apr 13 2010 Richard W.M. Jones <rjones@redhat.com> - 1:1.2.2-1.el5.2
+* Tue Apr 13 2010 Richard W.M. Jones <rjones@redhat.com> - 1:1.2.2-1.el5.3
 - Disable KVM again (see rel-eng ticket 2982).
+- Disable part-get-bootable test, fails with old version of parted.
 
 * Mon Apr 12 2010 Richard W.M. Jones <rjones@redhat.com> - 1:1.2.2-1
 - New upstream stable branch version 1.2.2.
