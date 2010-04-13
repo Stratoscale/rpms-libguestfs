@@ -42,7 +42,7 @@ Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
 Version:       1.2.2
-Release:       1%{?dist}
+Release:       1%{?dist}.2
 License:       LGPLv2+
 Group:         Development/Libraries
 URL:           http://libguestfs.org/
@@ -65,9 +65,10 @@ BuildRequires: augeas-devel >= 0.5.0
 BuildRequires: readline-devel
 BuildRequires: mkisofs
 BuildRequires: libxml2-devel
-%ifarch %{ix86} x86_64
+# Should depend on KVM here, however:
 # https://fedorahosted.org/rel-eng/ticket/2982#comment:3
-BuildRequires: kvm
+%ifarch %{ix86} x86_64
+BuildRequires: qemu-system-x86 >= 0.10.5
 %endif
 %ifarch ppc ppc64
 BuildRequires: qemu-system-ppc >= 0.10.5
@@ -124,7 +125,7 @@ BuildRequires: perl-Sys-Virt
 
 # Runtime requires:
 %ifarch %{ix86} x86_64
-Requires:      kvm
+Requires:      qemu-system-x86 >= 0.10.5
 %endif
 %ifarch ppc ppc64
 Requires:      qemu-system-ppc >= 0.10.5
@@ -688,6 +689,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Tue Apr 13 2010 Richard W.M. Jones <rjones@redhat.com> - 1:1.2.2-1.el5.2
+- Disable KVM again (see rel-eng ticket 2982).
+
 * Mon Apr 12 2010 Richard W.M. Jones <rjones@redhat.com> - 1:1.2.2-1
 - New upstream stable branch version 1.2.2.
 
