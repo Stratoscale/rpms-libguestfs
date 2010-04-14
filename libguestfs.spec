@@ -42,7 +42,7 @@ Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
 Version:       1.2.2
-Release:       1%{?dist}.4
+Release:       1%{?dist}.5
 License:       LGPLv2+
 Group:         Development/Libraries
 URL:           http://libguestfs.org/
@@ -423,6 +423,10 @@ createrepo repo
 %endif
   %{extra}
 
+# Patch 1 updates the generator, so:
+make -C images test.iso
+src/generator.ml
+
 # This ensures that /usr/sbin/chroot is on the path.  Not needed
 # except for RHEL 5, it shouldn't do any harm on other platforms.
 export PATH=/usr/sbin:$PATH
@@ -694,7 +698,7 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
-* Wed Apr 14 2010 Richard W.M. Jones <rjones@redhat.com> - 1:1.2.2-1.el5.4
+* Wed Apr 14 2010 Richard W.M. Jones <rjones@redhat.com> - 1:1.2.2-1.el5.5
 - Backport the new API aug_clear from upstream development branch.
 
 * Tue Apr 13 2010 Richard W.M. Jones <rjones@redhat.com> - 1:1.2.2-1.el5.3
