@@ -42,12 +42,14 @@ Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
 Version:       1.2.3
-Release:       1%{?dist}
+Release:       1%{?dist}.1
 License:       LGPLv2+
 Group:         Development/Libraries
 URL:           http://libguestfs.org/
 Source0:       http://libguestfs.org/download/%{name}-%{version}.tar.gz
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root
+
+ExclusiveArch: %{ix86} x86_64
 
 # Disable FUSE tests, not supported in Koji at the moment.
 Patch0:        libguestfs-1.0.79-no-fuse-test.patch
@@ -689,6 +691,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Tue Apr 20 2010 Richard W.M. Jones <rjones@redhat.com> - 1:1.2.3-1.fc12.1
+- ExclusiveArch ix86 x86_64.
+
 * Tue Apr 20 2010 Richard W.M. Jones <rjones@redhat.com> - 1:1.2.3-1
 - New upstream stable branch version 1.2.3.
 - Fixes: 582548, 583554, 582948, 582901, 582929, 582899, 582953,
