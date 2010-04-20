@@ -41,8 +41,8 @@
 Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
-Version:       1.2.2
-Release:       1%{?dist}.6
+Version:       1.2.3
+Release:       1%{?dist}
 License:       LGPLv2+
 Group:         Development/Libraries
 URL:           http://libguestfs.org/
@@ -699,6 +699,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Tue Apr 20 2010 Richard W.M. Jones <rjones@redhat.com> - 1:1.2.3-1
+- New upstream stable branch version 1.2.3.
+
 * Wed Apr 14 2010 Richard W.M. Jones <rjones@redhat.com> - 1:1.2.2-1.el5.6
 - Backport the new API aug_clear from upstream development branch.
 
