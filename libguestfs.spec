@@ -10,14 +10,6 @@
 %global buildnet 0
 %endif 
 
-# Enable to make the appliance use virtio_blk
-# Default is enabled
-%if %{defined libguestfs_virtio}
-%global with_virtio %{libguestfs_virtio}
-%else
-%global with_virtio 1
-%endif 
-
 # Mirror and updates repositories to use if building with network repo
 %if %{defined libguestfs_mirror}
 %global mirror %{libguestfs_mirror}
@@ -42,7 +34,7 @@ Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
 Version:       1.2.3
-Release:       1%{?dist}.2
+Release:       1%{?dist}.3
 License:       LGPLv2+
 Group:         Development/Libraries
 URL:           http://libguestfs.org/
@@ -405,9 +397,7 @@ createrepo repo
   --with-qemu="qemu-kvm qemu-system-%{_build_arch} qemu" \
   --enable-debug-command \
   --enable-supermin \
-%if %{with_virtio}
-  --with-drive-if=virtio \
-%endif
+  --with-drive-if=ide \
   %{extra}
 
 # This ensures that /usr/sbin/chroot is on the path.  Not needed
@@ -689,6 +679,10 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Wed Apr 21 2010 Richard W.M. Jones <rjones@redhat.com> - 1:1.2.3-1.fc12.3
+- Try setting default block device to ide (virtio seems to cause
+  this old version of qemu to segfault abruptly).
+
 * Tue Apr 20 2010 Richard W.M. Jones <rjones@redhat.com> - 1:1.2.3-1.fc12.2
 - Try rebuild.
 
