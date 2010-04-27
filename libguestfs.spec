@@ -41,7 +41,7 @@
 Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
-Version:       1.3.7
+Version:       1.3.8
 Release:       1%{?dist}
 License:       LGPLv2+
 Group:         Development/Libraries
@@ -695,6 +695,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Tue Apr 27 2010 Richard W.M. Jones <rjones@redhat.com> - 1:1.3.8-1
+- New upstream version 1.3.8.
+
 * Fri Apr 23 2010 Richard W.M. Jones <rjones@redhat.com> - 1:1.3.7-1
 - New upstream version 1.3.7.
 - NOTE: fixes a segfault in guestfish 1.3.6 when using the -a option.
