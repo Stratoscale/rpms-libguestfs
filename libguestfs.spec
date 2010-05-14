@@ -42,7 +42,7 @@ Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
 Version:       1.3.12
-Release:       1%{?dist}
+Release:       3%{?dist}
 License:       LGPLv2+
 Group:         Development/Libraries
 URL:           http://libguestfs.org/
@@ -51,6 +51,9 @@ BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root
 
 # Disable FUSE tests, not supported in Koji at the moment.
 Patch0:        libguestfs-1.0.79-no-fuse-test.patch
+
+# Small build fix for supermin backported from upstream.
+Patch1:        libguestfs-1.3.12-ensure-ordinary-appliance-is-updated.patch
 
 # Basic build requirements:
 BuildRequires: /usr/bin/pod2man
@@ -389,6 +392,7 @@ Requires:      jpackage-utils
 %setup -q
 
 %patch0 -p1
+%patch1 -p1
 
 mkdir -p daemon/m4
 
@@ -430,8 +434,8 @@ make INSTALLDIRS=vendor %{?_smp_mflags}
 echo "==== files in initramfs ===="
 find initramfs -type f
 echo "==== hostfiles ===="
-ls -l appliance/*.supermin.hostfiles
-cat appliance/*.supermin.hostfiles
+ls -l appliance/supermin.d/hostfiles
+cat appliance/supermin.d/hostfiles
 echo "============"
 
 
@@ -497,11 +501,7 @@ make DESTDIR=$RPM_BUILD_ROOT install
 
 # Delete the ordinary appliance, leaving just the supermin appliance.
 rm $RPM_BUILD_ROOT%{_libdir}/guestfs/vmlinuz.*
-mkdir keep
-mv $RPM_BUILD_ROOT%{_libdir}/guestfs/initramfs.*.supermin.img keep
-rm $RPM_BUILD_ROOT%{_libdir}/guestfs/initramfs.*.img
-mv keep/* $RPM_BUILD_ROOT%{_libdir}/guestfs/
-rmdir keep
+rm $RPM_BUILD_ROOT%{_libdir}/guestfs/initramfs.*
 
 # Delete static libraries, libtool files.
 rm $RPM_BUILD_ROOT%{_libdir}/libguestfs.a
@@ -568,7 +568,6 @@ rm -rf $RPM_BUILD_ROOT
 %files -f %{name}.lang
 %defattr(-,root,root,-)
 %doc COPYING
-%{_bindir}/libguestfs-supermin-helper
 %{_bindir}/libguestfs-test-tool
 %{_libdir}/guestfs/
 %{_libdir}/libguestfs.so.*
@@ -696,6 +695,10 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Fri May 14 2010 Richard W.M. Jones <rjones@redhat.com> - 1:1.3.12-3
+- Backport supermin build fix from upstream.
+- Further changes required for new layout of supermin appliance.
+
 * Fri May 14 2010 Richard W.M. Jones <rjones@redhat.com> - 1:1.3.12-1
 - New upstream version 1.3.12.
 - febootstrap >= 2.7 is required at compile time and at runtime (at runtime

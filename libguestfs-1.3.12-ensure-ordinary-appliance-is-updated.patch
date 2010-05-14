@@ -1,0 +1,38 @@
+diff -ur libguestfs-1.3.12/appliance/Makefile.am libguestfs-1.3.12.new/appliance/Makefile.am
+--- libguestfs-1.3.12/appliance/Makefile.am	2010-05-13 18:30:37.000000000 +0100
++++ libguestfs-1.3.12.new/appliance/Makefile.am	2010-05-14 15:44:54.941717073 +0100
+@@ -87,13 +87,13 @@
+ if SUPERMIN
+ 
+ supermin.d/base.img supermin.d/hostfiles: stamp-supermin
+-stamp-supermin: $(top_builddir)/initramfs/fakeroot.log $(top_builddir)/initramfs/init
++stamp-supermin: $(INITRAMFSIMG)
+ 	mkdir -p supermin.d
+ 	rm -f $@ supermin.d/base.img supermin.d/hostfiles
+ 	febootstrap-to-supermin $(top_builddir)/initramfs supermin.d/base.img supermin.d/hostfiles
+ 	touch $@
+ 
+-supermin.d/daemon.img: $(top_builddir)/initramfs/sbin/guestfsd
++supermin.d/daemon.img: $(INITRAMFSIMG)
+ 	mkdir -p supermin.d
+ 	rm -f $@ $@-t
+ 	(cd $(top_builddir)/initramfs && \
+diff -ur libguestfs-1.3.12/appliance/Makefile.in libguestfs-1.3.12.new/appliance/Makefile.in
+--- libguestfs-1.3.12/appliance/Makefile.in	2010-05-14 12:19:39.000000000 +0100
++++ libguestfs-1.3.12.new/appliance/Makefile.in	2010-05-14 15:44:59.237342261 +0100
+@@ -1275,13 +1275,13 @@
+ # to read the README file.
+ 
+ @SUPERMIN_TRUE@supermin.d/base.img supermin.d/hostfiles: stamp-supermin
+-@SUPERMIN_TRUE@stamp-supermin: $(top_builddir)/initramfs/fakeroot.log $(top_builddir)/initramfs/init
++@SUPERMIN_TRUE@stamp-supermin: $(INITRAMFSIMG)
+ @SUPERMIN_TRUE@	mkdir -p supermin.d
+ @SUPERMIN_TRUE@	rm -f $@ supermin.d/base.img supermin.d/hostfiles
+ @SUPERMIN_TRUE@	febootstrap-to-supermin $(top_builddir)/initramfs supermin.d/base.img supermin.d/hostfiles
+ @SUPERMIN_TRUE@	touch $@
+ 
+-@SUPERMIN_TRUE@supermin.d/daemon.img: $(top_builddir)/initramfs/sbin/guestfsd
++@SUPERMIN_TRUE@supermin.d/daemon.img: $(INITRAMFSIMG)
+ @SUPERMIN_TRUE@	mkdir -p supermin.d
+ @SUPERMIN_TRUE@	rm -f $@ $@-t
+ @SUPERMIN_TRUE@	(cd $(top_builddir)/initramfs && \
