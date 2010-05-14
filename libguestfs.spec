@@ -41,7 +41,7 @@
 Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
-Version:       1.3.11
+Version:       1.3.12
 Release:       1%{?dist}
 License:       LGPLv2+
 Group:         Development/Libraries
@@ -55,7 +55,7 @@ Patch0:        libguestfs-1.0.79-no-fuse-test.patch
 # Basic build requirements:
 BuildRequires: /usr/bin/pod2man
 BuildRequires: /usr/bin/pod2text
-BuildRequires: febootstrap >= 2.6
+BuildRequires: febootstrap >= 2.7
 BuildRequires: hivex-devel >= 1.2.1
 BuildRequires: augeas-devel >= 0.5.0
 BuildRequires: readline-devel
@@ -123,6 +123,7 @@ BuildRequires: qemu-img
 
 # Runtime requires:
 Requires:      qemu-kvm >= 0.10-7
+Requires:      febootstrap >= 2.7
 
 # For libguestfs-test-tool.
 Requires:      genisoimage
@@ -695,6 +696,12 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Fri May 14 2010 Richard W.M. Jones <rjones@redhat.com> - 1:1.3.12-1
+- New upstream version 1.3.12.
+- febootstrap >= 2.7 is required at compile time and at runtime (at runtime
+  because of the new febootstrap-supermin-helper).
+- Bugs fixed: 591155 591250 576879 591142 588651 507810 521674 559963 516096.
+
 * Sat May  8 2010 Richard W.M. Jones <rjones@redhat.com> - 1:1.3.11-1
 - New upstream version 1.3.11.
 
