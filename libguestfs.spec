@@ -41,8 +41,8 @@
 Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
-Version:       1.3.12
-Release:       3%{?dist}
+Version:       1.3.13
+Release:       1%{?dist}
 License:       LGPLv2+
 Group:         Development/Libraries
 URL:           http://libguestfs.org/
@@ -52,14 +52,11 @@ BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root
 # Disable FUSE tests, not supported in Koji at the moment.
 Patch0:        libguestfs-1.0.79-no-fuse-test.patch
 
-# Small build fix for supermin backported from upstream.
-Patch1:        libguestfs-1.3.12-ensure-ordinary-appliance-is-updated.patch
-
 # Basic build requirements:
 BuildRequires: /usr/bin/pod2man
 BuildRequires: /usr/bin/pod2text
 BuildRequires: febootstrap >= 2.7
-BuildRequires: hivex-devel >= 1.2.1
+BuildRequires: hivex-devel >= 1.2.2
 BuildRequires: augeas-devel >= 0.5.0
 BuildRequires: readline-devel
 BuildRequires: genisoimage
@@ -223,7 +220,7 @@ Requires:      guestfish
 Requires:      perl-Sys-Virt
 Requires:      perl-String-ShellQuote
 Requires:      perl-XML-Writer
-Requires:      hivex >= 1.2.1
+Requires:      hivex >= 1.2.2
 Requires:      qemu-img
 
 # Obsolete and replace earlier packages.
@@ -392,7 +389,6 @@ Requires:      jpackage-utils
 %setup -q
 
 %patch0 -p1
-%patch1 -p1
 
 mkdir -p daemon/m4
 
@@ -577,7 +573,7 @@ rm -rf $RPM_BUILD_ROOT
 
 %files devel
 %defattr(-,root,root,-)
-%doc ChangeLog HACKING TODO README ex html/guestfs.3.html html/pod.css
+%doc BUGS ChangeLog HACKING TODO README ex html/guestfs.3.html html/pod.css
 %doc installed-docs/*
 %{_libdir}/libguestfs.so
 %{_mandir}/man3/guestfs.3*
@@ -695,6 +691,13 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sun May 16 2010 Richard W.M. Jones <rjones@redhat.com> - 1:1.3.13-1
+- New upstream version 1.3.13.
+- Add BUGS to documentation.
+- Force update of hivex dependency to 1.2.2 since it contains
+  important registry import fixes.
+- Remove patch1, now upstream.
+
 * Fri May 14 2010 Richard W.M. Jones <rjones@redhat.com> - 1:1.3.12-3
 - Backport supermin build fix from upstream.
 - Further changes required for new layout of supermin appliance.
