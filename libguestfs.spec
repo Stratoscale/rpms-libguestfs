@@ -41,8 +41,8 @@
 Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
-Version:       1.2.3
-Release:       1%{?dist}.6
+Version:       1.2.7
+Release:       1%{?dist}
 License:       LGPLv2+
 Group:         Development/Libraries
 URL:           http://libguestfs.org/
@@ -579,7 +579,7 @@ rm -rf $RPM_BUILD_ROOT
 
 %files devel
 %defattr(-,root,root,-)
-%doc ChangeLog HACKING TODO README ex html/guestfs.3.html html/pod.css
+%doc BUGS ChangeLog HACKING TODO README ex html/guestfs.3.html html/pod.css
 %doc installed-docs/*
 %{_libdir}/libguestfs.so
 %{_mandir}/man3/guestfs.3*
@@ -695,6 +695,10 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Mon May 17 2010 Richard W.M. Jones <rjones@redhat.com> - 1:1.2.7-1
+- New upstream stable branch version 1.2.7.
+- Add BUGS file to documentation section.
+
 * Wed Apr 21 2010 Richard W.M. Jones <rjones@redhat.com> - 1:1.2.3-1.fc12.6
 - Patch appliance so it doesn't call hwclock (causes qemu to segfault).
 - Disable checks because qemu-kvm in F-12 keeps segfaulting.
