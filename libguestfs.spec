@@ -42,7 +42,7 @@ Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
 Version:       1.3.16
-Release:       2%{?dist}
+Release:       3%{?dist}
 License:       LGPLv2+
 Group:         Development/Libraries
 URL:           http://libguestfs.org/
@@ -425,12 +425,14 @@ export PATH=/usr/sbin:$PATH
 
 # 'INSTALLDIRS' ensures that perl libs are installed in the vendor dir
 # not the site dir.
-# Run 'make' twice because of:
+# Run 'make' a number of times because of:
 # /usr/bin/perl Makefile.PL "INSTALLDIRS=vendor" "PREFIX=/usr"
 # Warning: -L../src/.libs changed to -L..../perl/../src/.libs
 # Writing Makefile-pl for Sys::Guestfs
 # ==> Your Makefile has been rebuilt. <==
 # ==> Please rerun the make command.  <==
+make INSTALLDIRS=vendor %{?_smp_mflags} ||:
+make INSTALLDIRS=vendor %{?_smp_mflags} ||:
 make INSTALLDIRS=vendor %{?_smp_mflags} ||:
 make INSTALLDIRS=vendor %{?_smp_mflags}
 
@@ -700,7 +702,7 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
-* Tue May 25 2010 Richard W.M. Jones <rjones@redhat.com> - 1:1.3.16-2
+* Tue May 25 2010 Richard W.M. Jones <rjones@redhat.com> - 1:1.3.16-3
 - New upstream version 1.3.16.
 - Add guestfish bash tab completion script.
 
