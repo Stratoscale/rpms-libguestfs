@@ -41,7 +41,7 @@
 Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
-Version:       1.3.14
+Version:       1.3.15
 Release:       1%{?dist}
 License:       LGPLv2+
 Group:         Development/Libraries
@@ -410,6 +410,7 @@ createrepo repo
 ./configure \
   --prefix=%{_prefix} --libdir=%{_libdir} \
   --mandir=%{_mandir} \
+  --sysconfdir=%{_sysconfdir} \
   --with-qemu="qemu-kvm qemu-system-%{_build_arch} qemu" \
   --enable-debug-command \
   --enable-supermin \
@@ -589,6 +590,7 @@ rm -rf $RPM_BUILD_ROOT
 %doc html/guestfish.1.html html/pod.css recipes/
 %{_bindir}/guestfish
 %{_mandir}/man1/guestfish.1*
+%{_sysconfdir}/bash_completion.d/guestfish-bash-completion.sh
 
 
 %files mount
@@ -691,6 +693,10 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Tue May 25 2010 Richard W.M. Jones <rjones@redhat.com> - 1:1.3.15-1
+- New upstream version 1.3.15.
+- Add guestfish bash tab completion script.
+
 * Mon May 24 2010 Richard W.M. Jones <rjones@redhat.com> - 1:1.3.14-1
 - New upstream version 1.3.14.
 
