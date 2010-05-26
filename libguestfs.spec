@@ -42,7 +42,7 @@ Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
 Version:       1.3.16
-Release:       5%{?dist}
+Release:       6%{?dist}
 License:       LGPLv2+
 Group:         Development/Libraries
 URL:           http://libguestfs.org/
@@ -190,7 +190,6 @@ License:       GPLv2+
 Requires:      %{name} = %{epoch}:%{version}-%{release}
 Requires:      /usr/bin/pod2text
 Requires:      virt-inspector
-Requires:      bash-completion
 
 
 %description -n guestfish
@@ -598,6 +597,7 @@ rm -rf $RPM_BUILD_ROOT
 %doc html/guestfish.1.html html/pod.css recipes/
 %{_bindir}/guestfish
 %{_mandir}/man1/guestfish.1*
+%dir %{_sysconfdir}/bash_completion.d
 %{_sysconfdir}/bash_completion.d/guestfish-bash-completion.sh
 
 
@@ -701,8 +701,8 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
-* Wed May 26 2010 Richard W.M. Jones <rjones@redhat.com> - 1:1.3.16-5
-- guestfish should now require bash-completion.
+* Wed May 26 2010 Richard W.M. Jones <rjones@redhat.com> - 1:1.3.16-6
+- Co-own bash_completion.d directory.
 
 * Tue May 25 2010 Richard W.M. Jones <rjones@redhat.com> - 1:1.3.16-4
 - New upstream version 1.3.16.
