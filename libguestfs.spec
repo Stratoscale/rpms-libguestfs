@@ -41,8 +41,8 @@
 Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
-Version:       1.3.16
-Release:       6%{?dist}
+Version:       1.3.17
+Release:       1%{?dist}
 License:       LGPLv2+
 Group:         Development/Libraries
 URL:           http://libguestfs.org/
@@ -404,7 +404,7 @@ mkdir -p daemon/m4
 mkdir repo
 find /var/cache/yum -type f -name '*.rpm' -print0 | xargs -0 cp -t repo
 createrepo repo
-%define extra --with-mirror=file://$(pwd)/repo --with-repo=fedora-12 --with-updates=none
+%define extra --with-mirror=file://$(pwd)/repo --with-repo=fedora-14 --with-updates=none
 %endif
 
 ./configure \
@@ -701,6 +701,10 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Thu May 27 2010 Richard W.M. Jones <rjones@redhat.com> - 1:1.3.17-1
+- New upstream version 1.3.17.
+- Change repo name to 'fedora-14'.
+
 * Wed May 26 2010 Richard W.M. Jones <rjones@redhat.com> - 1:1.3.16-6
 - Co-own bash_completion.d directory.
 
