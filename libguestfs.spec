@@ -41,7 +41,7 @@
 Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
-Version:       1.2.8
+Version:       1.2.9
 Release:       1%{?dist}
 License:       LGPLv2+
 Group:         Development/Libraries
@@ -399,7 +399,7 @@ mkdir -p daemon/m4
 mkdir repo
 find /var/cache/yum -type f -name '*.rpm' -print0 | xargs -0 cp -t repo
 createrepo repo
-%define extra --with-mirror=file://$(pwd)/repo --with-repo=fedora-12 --with-updates=none
+%define extra --with-mirror=file://$(pwd)/repo --with-repo=fedora-13 --with-updates=none
 %endif
 
 ./configure \
@@ -692,6 +692,10 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Wed Jun  2 2010 Richard W.M. Jones <rjones@redhat.com> - 1:1.2.9-1
+- New stable version 1.2.9.
+- Fixes bugs 598807, 598309, 597145, 597135, 597118, 596776, 582993.
+
 * Mon May 24 2010 Richard W.M. Jones <rjones@redhat.com> - 1:1.2.8-1
 - New upstream branch version 1.2.8.
 - Fixes RHBZ#501894.
