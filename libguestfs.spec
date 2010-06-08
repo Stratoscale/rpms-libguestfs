@@ -494,13 +494,6 @@ make check
 %install
 rm -rf $RPM_BUILD_ROOT
 
-# Run 'make install' a number of times because of:
-# /usr/bin/perl Makefile.PL "INSTALLDIRS=vendor" "PREFIX=/usr"
-# Warning: -L../src/.libs changed to -L..../perl/../src/.libs
-# Writing Makefile-pl for Sys::Guestfs
-# ==> Your Makefile has been rebuilt. <==
-# ==> Please rerun the make command.  <==
-make DESTDIR=$RPM_BUILD_ROOT install ||:
 make DESTDIR=$RPM_BUILD_ROOT install
 
 # Delete the ordinary appliance, leaving just the supermin appliance.
@@ -703,6 +696,8 @@ rm -rf $RPM_BUILD_ROOT
 %changelog
 * Tue Jun  8 2010 Richard W.M. Jones <rjones@redhat.com> - 1:1.3.20-1
 - New upstream version 1.3.20.
+- Since upstream commit a043b6854a0c4 we don't need to run make install
+  twice.
 
 * Fri Jun  4 2010 Richard W.M. Jones <rjones@redhat.com> - 1:1.3.19-1
 - New upstream version 1.3.19.
