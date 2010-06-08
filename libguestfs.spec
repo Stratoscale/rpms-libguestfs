@@ -42,7 +42,7 @@ Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
 Version:       1.2.9
-Release:       1%{?dist}
+Release:       2%{?dist}
 License:       LGPLv2+
 Group:         Development/Libraries
 URL:           http://libguestfs.org/
@@ -67,8 +67,8 @@ BuildRequires: glibc-static
 BuildRequires: libselinux-devel
 BuildRequires: fuse-devel
 
-# Temporary BR because openssl libcrypto moved location (RHBZ#594475).
-BuildRequires: openssl >= 1.0.0-4
+# Temporary BR because openssl libcrypto moved location again.
+BuildRequires: openssl >= 1.0.0a-1
 
 # This is only needed for RHEL 5 because readline-devel doesn't
 # properly depend on it, but doesn't do any harm on other platforms:
@@ -692,6 +692,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Tue Jun  8 2010 Richard W.M. Jones <rjones@redhat.com> - 1:1.2.9-2
+- Bump and rebuild for new openssl.
+
 * Wed Jun  2 2010 Richard W.M. Jones <rjones@redhat.com> - 1:1.2.9-1
 - New stable version 1.2.9.
 - Fixes bugs 598807, 598309, 597145, 597135, 597118, 596776, 582993.
