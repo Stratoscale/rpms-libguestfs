@@ -694,7 +694,7 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
-* Wed Jun 16 2010 Richard W.M. Jones <rjones@redhat.com> - 1:1.3.21-3
+* Mon Jun 28 2010 Richard W.M. Jones <rjones@redhat.com> - 1:1.3.21-3
 - Explicitly depend on e2fsprogs.
 
 * Fri Jun 25 2010 Mamoru Tasaka <mtasaka@ioa.s.u-tokyo.ac.jp> - 1:1.3.21-2
