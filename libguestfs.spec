@@ -42,7 +42,7 @@ Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
 Version:       1.2.9
-Release:       1%{?dist}.1
+Release:       1%{?dist}.2
 License:       LGPLv2+
 Group:         Development/Libraries
 URL:           http://libguestfs.org/
@@ -57,7 +57,12 @@ ExclusiveArch: %{ix86} x86_64
 Patch0:        libguestfs-1.0.79-no-fuse-test.patch
 
 # Backport the new API aug_clear from upstream development branch.
-Patch1:        libguestfs-1.2.2-aug-clear.patch
+Patch1:        libguestfs-1.2.9-aug-clear-full.patch
+
+# Use link-local addresses to avoid 10.x network clash.  We also
+# need a patch to use ip=.. syntax for the old KVM in RHEL 5.
+Patch2:        libguestfs-1.2.7-link_local_addresses.patch
+Patch3:        libguestfs-1.2.7-use_old_slirp_syntax.patch
 
 # Basic build requirements:
 BuildRequires: /usr/bin/pod2man
@@ -394,6 +399,8 @@ Requires:      jpackage-utils
 
 %patch0 -p1
 %patch1 -p1
+%patch2 -p1
+%patch3 -p1
 
 mkdir -p daemon/m4
 
@@ -689,6 +696,12 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Thu Jul  1 2010 Richard W.M. Jones <rjones@redhat.com> - 1:1.2.9-1.el5.2
+- Include three patches for virt-v2v:
+  * aug_clear (already included, updated to libguestfs 1.2.9)
+  * link_local_addresses (avoid 10.x network clash)
+  * use_old_slirp_syntax (workaround for ip=.. syntax for old KVM in RHEL 5)
+
 * Thu Jun  3 2010 Richard W.M. Jones <rjones@redhat.com> - 1:1.2.9-1.el5.1
 - Don't skip parted tests, these should now pass.
 

@@ -1,0 +1,26 @@
+commit a9985a761c98c7c980d7b9f80a4737a07ae0d21a
+Author: Matthew Booth <mbooth@redhat.com>
+Date:   Mon May 24 10:47:33 2010 +0100
+
+    RHEL 5: Use old ip= syntax to set slirp network
+
+diff --git a/src/guestfs.c b/src/guestfs.c
+index 027e08c..2aff72b 100644
+--- a/src/guestfs.c
++++ b/src/guestfs.c
+@@ -1208,7 +1208,14 @@ guestfs__launch (guestfs_h *g)
+      */
+     if (null_vmchannel_sock) {
+       add_cmdline (g, "-net");
+-      add_cmdline (g, "user,vlan=0,net=" NETWORK);
++
++      /* The slirp stack in RHEL 5's qemu-kvm only supports an old, undocumented
++       * option, ip=x.x.x.0, to modify the default network configuration.
++       * Despite being called 'ip', it actually refers to the class C network
++       * from which default IP address will be allocated. It must end in .0, or
++       * it will not work predictably. */
++      add_cmdline (g, "user,vlan=0,ip=169.254.2.0");
++      /* add_cmdline (g, "user,vlan=0,net=" NETWORK); */
+ 
+       snprintf (buf, sizeof buf,
+                 "guestfs_vmchannel=tcp:" ROUTER ":%d",
