@@ -41,8 +41,8 @@
 Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
-Version:       1.2.9
-Release:       3%{?dist}
+Version:       1.4.0
+Release:       1%{?dist}
 License:       LGPLv2+
 Group:         Development/Libraries
 URL:           http://libguestfs.org/
@@ -52,14 +52,11 @@ BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root
 # Disable FUSE tests, not supported in Koji at the moment.
 Patch0:        libguestfs-1.0.79-no-fuse-test.patch
 
-# Add development aug_clear API call, needed by virt-v2v.
-Patch1:        libguestfs-1.2.9-aug-clear-full.patch
-
 # Basic build requirements:
 BuildRequires: /usr/bin/pod2man
 BuildRequires: /usr/bin/pod2text
-BuildRequires: febootstrap >= 2.6
-BuildRequires: hivex-devel >= 1.2.1
+BuildRequires: febootstrap >= 2.7
+BuildRequires: hivex-devel >= 1.2.2
 BuildRequires: augeas-devel >= 0.5.0
 BuildRequires: readline-devel
 BuildRequires: genisoimage
@@ -82,7 +79,7 @@ BuildRequires: kernel, bash, coreutils, lvm2, ntfs-3g, util-linux-ng
 BuildRequires: MAKEDEV, net-tools, augeas-libs, file
 BuildRequires: module-init-tools, procps, strace, iputils
 BuildRequires: dosfstools, zerofree, lsof, scrub, libselinux
-BuildRequires: parted, btrfs-progs, gfs2-utils
+BuildRequires: parted, e2fsprogs, btrfs-progs, gfs2-utils
 BuildRequires: hfsplus-tools, nilfs-utils, reiserfs-utils
 BuildRequires: jfsutils, xfsprogs
 BuildRequires: vim-minimal
@@ -95,7 +92,7 @@ Requires:      kernel, bash, coreutils, lvm2, ntfs-3g, util-linux-ng
 Requires:      MAKEDEV, net-tools, augeas-libs, file
 Requires:      module-init-tools, procps, strace, iputils
 Requires:      dosfstools, zerofree, lsof, scrub, libselinux
-Requires:      parted, btrfs-progs, gfs2-utils
+Requires:      parted, e2fsprogs, btrfs-progs, gfs2-utils
 Requires:      hfsplus-tools, nilfs-utils, reiserfs-utils
 Requires:      jfsutils, xfsprogs
 Requires:      vim-minimal
@@ -113,6 +110,7 @@ BuildRequires: perl-Test-Simple
 BuildRequires: perl-Test-Pod
 BuildRequires: perl-Test-Pod-Coverage
 BuildRequires: perl-ExtUtils-MakeMaker
+BuildRequires: perl-String-ShellQuote
 BuildRequires: perl-XML-Writer
 BuildRequires: perl-libintl
 BuildRequires: python-devel
@@ -124,9 +122,11 @@ BuildRequires: java-devel
 
 # For libguestfs-tools:
 BuildRequires: perl-Sys-Virt
+BuildRequires: qemu-img
 
 # Runtime requires:
 Requires:      qemu-kvm >= 0.10-7
+Requires:      febootstrap >= 2.7
 
 # For libguestfs-test-tool.
 Requires:      genisoimage
@@ -221,8 +221,10 @@ License:       GPLv2+
 Requires:      %{name} = %{epoch}:%{version}-%{release}
 Requires:      guestfish
 Requires:      perl-Sys-Virt
+Requires:      perl-String-ShellQuote
 Requires:      perl-XML-Writer
-Requires:      hivex >= 1.2.1
+Requires:      hivex >= 1.2.2
+Requires:      qemu-img
 
 # Obsolete and replace earlier packages.
 Provides:      virt-cat = %{epoch}:%{version}-%{release}
@@ -270,6 +272,9 @@ Virt-list-partitions can be used to list out the partitions in a
 virtual machine image.
 
 Virt-ls is a command line tool to list out files in a virtual machine.
+
+Virt-make-fs is a command line tool to build a filesystem out of
+a collection of files or a tarball.
 
 Virt-rescue provides a rescue shell for making interactive,
 unstructured fixes to virtual machines.
@@ -387,7 +392,6 @@ Requires:      jpackage-utils
 %setup -q
 
 %patch0 -p1
-%patch1 -p1
 
 mkdir -p daemon/m4
 
@@ -409,6 +413,7 @@ createrepo repo
 ./configure \
   --prefix=%{_prefix} --libdir=%{_libdir} \
   --mandir=%{_mandir} \
+  --sysconfdir=%{_sysconfdir} \
   --with-qemu="qemu-kvm qemu-system-%{_build_arch} qemu" \
   --enable-debug-command \
   --enable-supermin \
@@ -429,8 +434,8 @@ make INSTALLDIRS=vendor %{?_smp_mflags}
 echo "==== files in initramfs ===="
 find initramfs -type f
 echo "==== hostfiles ===="
-ls -l appliance/*.supermin.hostfiles
-cat appliance/*.supermin.hostfiles
+ls -l appliance/supermin.d/hostfiles
+cat appliance/supermin.d/hostfiles
 echo "============"
 
 
@@ -480,12 +485,10 @@ gcc -shared -Wl,-soname,rhbz563103.so.1 rhbz563103.o -o rhbz563103.so
 LD_PRELOAD=$(pwd)/rhbz563103.so
 export LD_PRELOAD
 
-# Workaround #575734 in F-14
-export SKIP_TEST_MKE2JOURNAL_U=1
-export SKIP_TEST_MKE2JOURNAL_L=1
-
-# Unknown why this fails - could be also #575734.
-export SKIP_TEST_SWAPON_LABEL=1
+# This test fails because we build the ISO after encoding the checksum
+# of the ISO in the test itself.  Need to fix the test to work out the
+# checksum at runtime.
+export SKIP_TEST_CHECKSUM_DEVICE=1
 
 %if %{runtests}
 make check
@@ -499,11 +502,7 @@ make DESTDIR=$RPM_BUILD_ROOT install
 
 # Delete the ordinary appliance, leaving just the supermin appliance.
 rm $RPM_BUILD_ROOT%{_libdir}/guestfs/vmlinuz.*
-mkdir keep
-mv $RPM_BUILD_ROOT%{_libdir}/guestfs/initramfs.*.supermin.img keep
-rm $RPM_BUILD_ROOT%{_libdir}/guestfs/initramfs.*.img
-mv keep/* $RPM_BUILD_ROOT%{_libdir}/guestfs/
-rmdir keep
+rm $RPM_BUILD_ROOT%{_libdir}/guestfs/initramfs.*
 
 # Delete static libraries, libtool files.
 rm $RPM_BUILD_ROOT%{_libdir}/libguestfs.a
@@ -570,7 +569,6 @@ rm -rf $RPM_BUILD_ROOT
 %files -f %{name}.lang
 %defattr(-,root,root,-)
 %doc COPYING
-%{_bindir}/libguestfs-supermin-helper
 %{_bindir}/libguestfs-test-tool
 %{_libdir}/guestfs/
 %{_libdir}/libguestfs.so.*
@@ -596,6 +594,8 @@ rm -rf $RPM_BUILD_ROOT
 %doc html/guestfish.1.html html/pod.css recipes/
 %{_bindir}/guestfish
 %{_mandir}/man1/guestfish.1*
+%dir %{_sysconfdir}/bash_completion.d
+%{_sysconfdir}/bash_completion.d/guestfish-bash-completion.sh
 
 
 %files mount
@@ -621,6 +621,8 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man1/virt-list-partitions.1*
 %{_bindir}/virt-ls
 %{_mandir}/man1/virt-ls.1*
+%{_bindir}/virt-make-fs
+%{_mandir}/man1/virt-make-fs.1*
 %{_bindir}/virt-rescue
 %{_mandir}/man1/virt-rescue.1*
 %{_bindir}/virt-resize
@@ -696,6 +698,15 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Thu Jul  8 2010 Richard W.M. Jones <rjones@redhat.com> - 1:1.4.0-1
+- New upstream stable branch 1.4.0.
+- Uses febootstrap-supermin-helper, and a different way of constructing
+  the supermin appliance.
+- Remove aug_clear patch, since this is included in 1.4 branch.
+- Update BRs and Requires by comparing with Rawhide.
+- New tool: virt-make-fs.
+- New bash completion script.
+
 * Thu Jul  1 2010 Richard W.M. Jones <rjones@redhat.com> - 1:1.2.9-3
 - Add development aug_clear API call, needed by virt-v2v.
 
