@@ -42,7 +42,7 @@ Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
 Version:       1.4.0
-Release:       1%{?dist}
+Release:       2%{?dist}
 License:       LGPLv2+
 Group:         Development/Libraries
 URL:           http://libguestfs.org/
@@ -578,7 +578,8 @@ rm -rf $RPM_BUILD_ROOT
 
 %files devel
 %defattr(-,root,root,-)
-%doc BUGS ChangeLog HACKING TODO README ex html/guestfs.3.html html/pod.css
+%doc BUGS ChangeLog HACKING TODO README RELEASE-NOTES
+%doc ex html/guestfs.3.html html/pod.css
 %doc installed-docs/*
 %{_libdir}/libguestfs.so
 %{_mandir}/man3/guestfs.3*
@@ -698,6 +699,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Thu Jul  8 2010 Richard W.M. Jones <rjones@redhat.com> - 1:1.4.0-2
+- Include RELEASE-NOTES in devel package.
+
 * Thu Jul  8 2010 Richard W.M. Jones <rjones@redhat.com> - 1:1.4.0-1
 - New upstream stable branch 1.4.0.
 - Uses febootstrap-supermin-helper, and a different way of constructing
