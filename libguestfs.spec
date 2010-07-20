@@ -42,7 +42,7 @@ Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
 Version:       1.5.0
-Release:       6%{?dist}
+Release:       7%{?dist}
 License:       LGPLv2+
 Group:         Development/Libraries
 URL:           http://libguestfs.org/
@@ -80,6 +80,7 @@ BuildRequires: parted, e2fsprogs, btrfs-progs, gfs2-utils
 BuildRequires: hfsplus-tools, nilfs-utils, reiserfs-utils
 BuildRequires: jfsutils, xfsprogs
 BuildRequires: vim-minimal
+BuildRequires: binutils
 %ifarch %{ix86} x86_64
 BuildRequires: grub, ntfsprogs
 %endif
@@ -93,6 +94,7 @@ Requires:      parted, e2fsprogs, btrfs-progs, gfs2-utils
 Requires:      hfsplus-tools, nilfs-utils, reiserfs-utils
 Requires:      jfsutils, xfsprogs
 Requires:      vim-minimal
+Requires:      binutils
 %ifarch %{ix86} x86_64
 Requires:      grub, ntfsprogs
 %endif
@@ -704,6 +706,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Tue Jul 20 2010 Richard W.M. Jones <rjones@redhat.com> - 1:1.5.0-7
+- Requires binutils (RHBZ#616437).
+
 * Mon Jul 19 2010 Richard W.M. Jones <rjones@redhat.com> - 1:1.5.0-6
 - Fix libguestfs-find-requires.sh for new location of hostfiles (RHBZ#615946).
 
