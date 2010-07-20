@@ -42,7 +42,7 @@ Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
 Version:       1.2.10
-Release:       1%{?dist}
+Release:       1.1%{?dist}
 License:       LGPLv2+
 Group:         Development/Libraries
 URL:           http://libguestfs.org/
@@ -95,6 +95,7 @@ BuildRequires: MAKEDEV, net-tools, augeas-libs, file
 BuildRequires: module-init-tools, procps, strace, iputils
 BuildRequires: dosfstools, zerofree, lsof, scrub, libselinux
 BuildRequires: e4fsprogs
+BuildRequires: binutils
 %ifarch %{ix86} x86_64
 BuildRequires: grub, ntfsprogs
 %endif
@@ -105,6 +106,7 @@ Requires:      MAKEDEV, net-tools, augeas-libs, file
 Requires:      module-init-tools, procps, strace, iputils
 Requires:      dosfstools, zerofree, lsof, scrub, libselinux
 Requires:      e4fsprogs
+Requires:      binutils
 %ifarch %{ix86} x86_64
 Requires:      grub, ntfsprogs
 %endif
@@ -696,6 +698,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Tue Jul 20 2010 Richard W.M. Jones <rjones@redhat.com> - 1:1.2.10-1.1
+- Requires binutils (RHBZ#616437).
+
 * Mon Jul 12 2010 Richard W.M. Jones <rjones@redhat.com> - 1:1.2.10-1
 - New stable branch version 1.2.10.
 
