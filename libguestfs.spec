@@ -42,7 +42,7 @@ Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
 Version:       1.5.2
-Release:       1%{?dist}
+Release:       2%{?dist}
 License:       LGPLv2+
 Group:         Development/Libraries
 URL:           http://libguestfs.org/
@@ -81,6 +81,7 @@ BuildRequires: hfsplus-tools, nilfs-utils, reiserfs-utils
 BuildRequires: jfsutils, xfsprogs
 BuildRequires: vim-minimal
 BuildRequires: binutils
+BuildRequires: cryptsetup-luks
 %ifarch %{ix86} x86_64
 BuildRequires: grub, ntfsprogs
 %endif
@@ -95,6 +96,7 @@ Requires:      hfsplus-tools, nilfs-utils, reiserfs-utils
 Requires:      jfsutils, xfsprogs
 Requires:      vim-minimal
 Requires:      binutils
+Requires:      cryptsetup-luks
 %ifarch %{ix86} x86_64
 Requires:      grub, ntfsprogs
 %endif
@@ -706,8 +708,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
-* Thu Jul 22 2010 Richard W.M. Jones <rjones@redhat.com> - 1:1.5.2-1
+* Thu Jul 22 2010 Richard W.M. Jones <rjones@redhat.com> - 1:1.5.2-2
 - New upstream development version 1.5.2.
+- +BuildRequires: cryptsetup-luks.
 
 * Wed Jul 21 2010 Richard W.M. Jones <rjones@redhat.com> - 1:1.5.1-1
 - New upstream development version 1.5.1.
