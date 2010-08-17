@@ -42,7 +42,7 @@ Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
 Version:       1.2.11
-Release:       1%{?dist}
+Release:       1.1%{?dist}
 License:       LGPLv2+
 Group:         Development/Libraries
 URL:           http://libguestfs.org/
@@ -63,6 +63,10 @@ Patch1:        libguestfs-1.2.9-aug-clear-full.patch
 # need a patch to use ip=.. syntax for the old KVM in RHEL 5.
 Patch2:        libguestfs-1.2.7-link_local_addresses.patch
 Patch3:        libguestfs-1.2.7-use_old_slirp_syntax.patch
+
+# Backport of a patch which was missed from libguestfs 1.2 branch
+# so far.  This fixes build for old Python 2.4 in RHEL 5.
+Patch4:        libguestfs-1.2.11-build-workaround-python-2.4.patch
 
 # Basic build requirements:
 BuildRequires: /usr/bin/pod2man
@@ -403,6 +407,7 @@ Requires:      jpackage-utils
 %patch1 -p1
 %patch2 -p1
 %patch3 -p1
+%patch4 -p1
 
 mkdir -p daemon/m4
 
@@ -698,8 +703,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
-* Tue Aug 17 2010 Richard W.M. Jones <rjones@redhat.com> - 1:1.2.11-1
+* Tue Aug 17 2010 Richard W.M. Jones <rjones@redhat.com> - 1:1.2.11-1.1
 - New stable branch version 1.2.11.
+- Backport missed patch which fixes build on old Python 2.4 in RHEL 5.
 
 * Tue Jul 20 2010 Richard W.M. Jones <rjones@redhat.com> - 1:1.2.10-1.1
 - Requires binutils (RHBZ#616437).

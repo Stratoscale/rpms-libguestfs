@@ -1,0 +1,29 @@
+From: Richard W.M. Jones <rjones@redhat.com>
+Date: Fri, 21 May 2010 17:20:28 +0000 (+0100)
+Subject: Build workaround for Python 2.4.x in RHEL 5.
+X-Git-Tag: 1.3.14~4
+X-Git-Url: http://git.annexia.org/?p=libguestfs.git;a=commitdiff_plain;h=012b1c71f4eda3ae779da51d7d81c199d90f667d
+
+Build workaround for Python 2.4.x in RHEL 5.
+
+See:
+http://www.python.org/dev/peps/pep-0353/#conversion-guidelines
+---
+
+diff --git a/src/generator.ml b/src/generator.ml
+index d2da8ec..1212a5a 100755
+--- a/src/generator.ml
++++ b/src/generator.ml
+@@ -9113,6 +9113,12 @@ and generate_python_c () =
+ #define PY_SSIZE_T_CLEAN 1
+ #include <Python.h>
+ 
++#if PY_VERSION_HEX < 0x02050000
++typedef int Py_ssize_t;
++#define PY_SSIZE_T_MAX INT_MAX
++#define PY_SSIZE_T_MIN INT_MIN
++#endif
++
+ #include <stdio.h>
+ #include <stdlib.h>
+ #include <assert.h>
