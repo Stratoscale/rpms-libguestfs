@@ -41,8 +41,8 @@
 Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
-Version:       1.5.2
-Release:       6%{?dist}
+Version:       1.5.3
+Release:       1%{?dist}
 License:       LGPLv2+
 Group:         Development/Libraries
 URL:           http://libguestfs.org/
@@ -66,6 +66,9 @@ BuildRequires: createrepo
 BuildRequires: glibc-static
 BuildRequires: libselinux-devel
 BuildRequires: fuse-devel
+BuildRequires: pcre-devel
+BuildRequires: file-devel
+BuildRequires: libvirt-devel
 
 # This is only needed for RHEL 5 because readline-devel doesn't
 # properly depend on it, but doesn't do any harm on other platforms:
@@ -708,6 +711,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Tue Aug 17 2010 Richard Jones <rjones@redhat.com> - 1:1.5.3-1
+- New upstream development version 1.5.3.
+
 * Wed Aug 11 2010 Richard Jones <rjones@redhat.com> - 1:1.5.2-6
 - Bump and rebuild.
 
