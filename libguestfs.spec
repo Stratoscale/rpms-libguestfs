@@ -42,7 +42,7 @@ Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
 Version:       1.5.3
-Release:       1%{?dist}
+Release:       2%{?dist}
 License:       LGPLv2+
 Group:         Development/Libraries
 URL:           http://libguestfs.org/
@@ -472,6 +472,7 @@ export LIBGUESTFS_DEBUG=1
 #                                 (WORKAROUND using LD_PRELOAD)
 # 567567   32-bit       all    guestfish xstrtol test failure on 32-bit (FIXED)
 # 575734   all          F-14   microsecond resolution for blkid cache (FIXED)
+# 624854   all          F-15   kernel hangs during boot
 
 # Workaround #563103
 cat > rhbz563103.c <<'EOF'
@@ -503,7 +504,7 @@ chmod +x $borked
 popd
 
 %if %{runtests}
-make check
+#make check # RHBZ#624854
 %endif
 
 
@@ -711,6 +712,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Wed Aug 18 2010 Richard Jones <rjones@redhat.com> - 1:1.5.3-2
+- Disable tests because of RHBZ#624854.
+
 * Tue Aug 17 2010 Richard Jones <rjones@redhat.com> - 1:1.5.3-1
 - New upstream development version 1.5.3.
 
