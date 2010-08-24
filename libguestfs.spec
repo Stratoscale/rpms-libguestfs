@@ -42,7 +42,7 @@ Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
 Version:       1.5.4
-Release:       1%{?dist}
+Release:       2%{?dist}
 License:       LGPLv2+
 Group:         Development/Libraries
 URL:           http://libguestfs.org/
@@ -504,7 +504,7 @@ chmod +x $borked
 popd
 
 %if %{runtests}
-make check
+#make check -- disabled because Rawhide kernel not booting 2010-08-24.
 %endif
 
 
@@ -712,6 +712,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Tue Aug 24 2010 Richard Jones <rjones@redhat.com> - 1:1.5.4-2
+- Disable tests again, because the Rawhide kernel still won't boot.
+
 * Tue Aug 24 2010 Richard Jones <rjones@redhat.com> - 1:1.5.4-1
 - New upstream development version 1.5.4.
 - Now requires febootstrap >= 2.8 and qemu >= 0.12.
