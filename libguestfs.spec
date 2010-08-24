@@ -41,12 +41,12 @@
 Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
-Version:       1.5.3
-Release:       2%{?dist}
+Version:       1.5.4
+Release:       1%{?dist}
 License:       LGPLv2+
 Group:         Development/Libraries
 URL:           http://libguestfs.org/
-Source0:       http://libguestfs.org/download/%{name}-%{version}.tar.gz
+Source0:       http://libguestfs.org/download/1.5-development/%{name}-%{version}.tar.gz
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root
 
 # Disable FUSE tests, not supported in Koji at the moment.
@@ -55,7 +55,7 @@ Patch0:        libguestfs-1.0.79-no-fuse-test.patch
 # Basic build requirements:
 BuildRequires: /usr/bin/pod2man
 BuildRequires: /usr/bin/pod2text
-BuildRequires: febootstrap >= 2.7
+BuildRequires: febootstrap >= 2.8
 BuildRequires: hivex-devel >= 1.2.2
 BuildRequires: augeas-devel >= 0.5.0
 BuildRequires: readline-devel
@@ -129,8 +129,8 @@ BuildRequires: perl-Sys-Virt
 BuildRequires: qemu-img
 
 # Runtime requires:
-Requires:      qemu-kvm >= 0.10-7
-Requires:      febootstrap >= 2.7
+Requires:      qemu-kvm >= 0.12
+Requires:      febootstrap >= 2.8
 
 # For libguestfs-test-tool.
 Requires:      genisoimage
@@ -504,7 +504,7 @@ chmod +x $borked
 popd
 
 %if %{runtests}
-#make check # RHBZ#624854
+make check
 %endif
 
 
@@ -712,6 +712,12 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Tue Aug 24 2010 Richard Jones <rjones@redhat.com> - 1:1.5.4-1
+- New upstream development version 1.5.4.
+- Now requires febootstrap >= 2.8 and qemu >= 0.12.
+- Re-enable tests because RHBZ#624854 is supposed to be fixed.
+- Upstream Source URL has changed.
+
 * Wed Aug 18 2010 Richard Jones <rjones@redhat.com> - 1:1.5.3-2
 - Disable tests because of RHBZ#624854.
 
