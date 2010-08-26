@@ -41,12 +41,12 @@
 Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
-Version:       1.5.2
-Release:       7%{?dist}
+Version:       1.5.5
+Release:       1%{?dist}
 License:       LGPLv2+
 Group:         Development/Libraries
 URL:           http://libguestfs.org/
-Source0:       http://libguestfs.org/download/%{name}-%{version}.tar.gz
+Source0:       http://libguestfs.org/download/1.5-development/%{name}-%{version}.tar.gz
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root
 
 # Disable FUSE tests, not supported in Koji at the moment.
@@ -55,7 +55,7 @@ Patch0:        libguestfs-1.0.79-no-fuse-test.patch
 # Basic build requirements:
 BuildRequires: /usr/bin/pod2man
 BuildRequires: /usr/bin/pod2text
-BuildRequires: febootstrap >= 2.7
+BuildRequires: febootstrap >= 2.8
 BuildRequires: hivex-devel >= 1.2.2
 BuildRequires: augeas-devel >= 0.5.0
 BuildRequires: readline-devel
@@ -66,6 +66,9 @@ BuildRequires: createrepo
 BuildRequires: glibc-static
 BuildRequires: libselinux-devel
 BuildRequires: fuse-devel
+BuildRequires: pcre-devel
+BuildRequires: file-devel
+BuildRequires: libvirt-devel
 
 # This is only needed for RHEL 5 because readline-devel doesn't
 # properly depend on it, but doesn't do any harm on other platforms:
@@ -126,8 +129,8 @@ BuildRequires: perl-Sys-Virt
 BuildRequires: qemu-img
 
 # Runtime requires:
-Requires:      qemu-kvm >= 0.10-7
-Requires:      febootstrap >= 2.7
+Requires:      qemu-kvm >= 0.12
+Requires:      febootstrap >= 2.8
 
 # For libguestfs-test-tool.
 Requires:      genisoimage
@@ -469,6 +472,7 @@ export LIBGUESTFS_DEBUG=1
 #                                 (WORKAROUND using LD_PRELOAD)
 # 567567   32-bit       all    guestfish xstrtol test failure on 32-bit (FIXED)
 # 575734   all          F-14   microsecond resolution for blkid cache (FIXED)
+# 624854   all          F-15   kernel hangs during boot
 
 # Workaround #563103
 cat > rhbz563103.c <<'EOF'
@@ -708,6 +712,10 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Thu Aug 26 2010 Richard W.M. Jones <rjones@redhat.com> - 1:1.5.5-1
+- New upstream development version 1.5.5.
+- Requires febootstrap 2.8 and other BRs.
+
 * Sat Aug 14 2010 Richard W.M. Jones <rjones@redhat.com> - 1:1.5.2-7
 - Bump and rebuild.
 
