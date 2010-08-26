@@ -41,8 +41,8 @@
 Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
-Version:       1.5.4
-Release:       2%{?dist}
+Version:       1.5.5
+Release:       1%{?dist}
 License:       LGPLv2+
 Group:         Development/Libraries
 URL:           http://libguestfs.org/
@@ -712,6 +712,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Thu Aug 26 2010 Richard Jones <rjones@redhat.com> - 1:1.5.5-1
+- New upstream version 1.5.5.
+
 * Tue Aug 24 2010 Richard Jones <rjones@redhat.com> - 1:1.5.4-2
 - Disable tests again, because the Rawhide kernel still won't boot.
 
