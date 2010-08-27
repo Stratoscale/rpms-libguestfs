@@ -22,7 +22,7 @@
 %if %{defined libguestfs_mirror}
 %global mirror %{libguestfs_mirror}
 %else
-%global mirror http://download.fedora.redhat.com/pub/fedora/linux/development/%{_arch}/os/
+%global mirror http://www.mirrorservice.org/sites/download.fedora.redhat.com/pub/fedora/linux/releases/13/Fedora/%{_arch}/os/
 %endif
 %if %{defined libguestfs_updates}
 %global updates %{libguestfs_updates}
@@ -42,7 +42,7 @@ Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
 Version:       1.4.3
-Release:       3%{?dist}
+Release:       4%{?dist}
 License:       LGPLv2+
 Group:         Development/Libraries
 URL:           http://libguestfs.org/
@@ -783,6 +783,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Fri Aug 27 2010 Richard Jones <rjones@redhat.com> - 1:1.4.3-4
+- Change the mirror so local builds use Fedora 13 repo.
+
 * Fri Aug 27 2010 Richard Jones <rjones@redhat.com> - 1:1.4.3-3
 - Use bug-fixed febootstrap 2.9.
 
