@@ -42,7 +42,7 @@ Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
 Version:       1.4.3
-Release:       2%{?dist}
+Release:       3%{?dist}
 License:       LGPLv2+
 Group:         Development/Libraries
 URL:           http://libguestfs.org/
@@ -81,7 +81,7 @@ Patch9999:     libguestfs-1.4.3-configure-extra.patch
 # Basic build requirements:
 BuildRequires: /usr/bin/pod2man
 BuildRequires: /usr/bin/pod2text
-BuildRequires: febootstrap >= 2.8
+BuildRequires: febootstrap >= 2.9
 BuildRequires: hivex-devel >= 1.2.2
 BuildRequires: augeas-devel >= 0.5.0
 BuildRequires: readline-devel
@@ -159,7 +159,7 @@ BuildRequires: qemu-img
 
 # Runtime requires:
 Requires:      qemu-kvm >= 0.12
-Requires:      febootstrap >= 2.8
+Requires:      febootstrap >= 2.9
 
 # For libguestfs-test-tool.
 Requires:      genisoimage
@@ -783,6 +783,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Fri Aug 26 2010 Richard Jones <rjones@redhat.com> - 1:1.4.3-3
+- Use bug-fixed febootstrap 2.9.
+
 * Fri Aug 27 2010 Richard W.M. Jones <rjones@redhat.com> - 1:1.4.3-2
 - Patch program doesn't restore permissions on new files correctly, so
   chmod the new files by hand.
