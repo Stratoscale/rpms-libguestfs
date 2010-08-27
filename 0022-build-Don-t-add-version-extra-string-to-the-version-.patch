@@ -1,0 +1,91 @@
+From 28b3847e96157ace009a906ac70cddbed3a07b4f Mon Sep 17 00:00:00 2001
+From: Richard Jones <rjones@redhat.com>
+Date: Fri, 27 Aug 2010 13:38:49 +0100
+Subject: [PATCH] build: Don't add version extra string to the version number.
+
+If this string was non-empty, then it broke a lot of things because
+autoconf and other parts of the build system were expecting this
+string to contain a simple MAJOR.MINOR.RELEASE version number.
+
+This requires changes to guestfish and guestmount so they use the
+guestfs_version API to fetch the version from the library.  (The
+Perl tools were already doing it this way).  In a way this is more
+accurate, because it's no longer hard-coded in the binary, but
+fetched from the dynamically linked libguestfs.so.
+(cherry picked from commit 4932fdca3ca1e9002164a1c0b73876f32739d34d)
+---
+ configure.ac      |    2 +-
+ fish/fish.c       |    8 ++++++--
+ fuse/guestmount.c |    8 ++++++--
+ 3 files changed, 13 insertions(+), 5 deletions(-)
+
+diff --git a/configure.ac b/configure.ac
+index 8d4d63e..97c797c 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -22,7 +22,7 @@ m4_define([libguestfs_release], [3])
+ # extra can be any string
+ m4_define([libguestfs_extra],   [])
+ 
+-AC_INIT([libguestfs],libguestfs_major.libguestfs_minor.libguestfs_release[]libguestfs_extra)
++AC_INIT([libguestfs],libguestfs_major.libguestfs_minor.libguestfs_release)
+ AC_CONFIG_AUX_DIR([build-aux])
+ AM_INIT_AUTOMAKE([foreign])
+ 
+diff --git a/fish/fish.c b/fish/fish.c
+index a896a92..c535e06 100644
+--- a/fish/fish.c
++++ b/fish/fish.c
+@@ -20,6 +20,7 @@
+ 
+ #include <stdio.h>
+ #include <stdlib.h>
++#include <inttypes.h>
+ #include <string.h>
+ #include <unistd.h>
+ #include <fcntl.h>
+@@ -381,9 +382,12 @@ main (int argc, char *argv[])
+       guestfs_set_verbose (g, verbose);
+       break;
+ 
+-    case 'V':
+-      printf ("%s %s\n", program_name, PACKAGE_VERSION);
++    case 'V': {
++      struct guestfs_version *v = guestfs_version (g);
++      printf ("%s %"PRIi64".%"PRIi64".%"PRIi64"%s\n", program_name,
++              v->major, v->minor, v->release, v->extra);
+       exit (EXIT_SUCCESS);
++    }
+ 
+     case 'x':
+       guestfs_set_trace (g, 1);
+diff --git a/fuse/guestmount.c b/fuse/guestmount.c
+index e1cb2d8..9b7e520 100644
+--- a/fuse/guestmount.c
++++ b/fuse/guestmount.c
+@@ -29,6 +29,7 @@
+ #include <stdio.h>
+ #include <stdlib.h>
+ #include <stdint.h>
++#include <inttypes.h>
+ #include <string.h>
+ #include <unistd.h>
+ #include <getopt.h>
+@@ -1074,9 +1075,12 @@ main (int argc, char *argv[])
+       guestfs_set_verbose (g, verbose);
+       break;
+ 
+-    case 'V':
+-      printf ("%s %s\n", program_name, PACKAGE_VERSION);
++    case 'V': {
++      struct guestfs_version *v = guestfs_version (g);
++      printf ("%s %"PRIi64".%"PRIi64".%"PRIi64"%s\n", program_name,
++              v->major, v->minor, v->release, v->extra);
+       exit (EXIT_SUCCESS);
++    }
+ 
+     case HELP_OPTION:
+       usage (EXIT_SUCCESS);
+-- 
+1.7.1
+

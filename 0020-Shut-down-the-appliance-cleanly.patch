@@ -1,0 +1,36 @@
+From 02547e818821efdcf5aadb18f5764740fd6d4a17 Mon Sep 17 00:00:00 2001
+From: Matthew Booth <mbooth@redhat.com>
+Date: Thu, 26 Aug 2010 14:34:44 +0100
+Subject: [PATCH] Shut down the appliance cleanly
+
+When guestfsd exits, or the user exits the virt-rescue shell, the init script
+exits which causes the kernel to panic. This isn't really a functional issue, as
+all useful work is done by this point. However, it does cause virt-rescue to
+display an unsightly error message.
+
+This patch causes the appliance to power off cleanly before the init script
+exits. Note it actually does a reboot rather than a poweroff. This is because
+ACPI is disabled in the appliance, meaning poweroff doesn't work, but qemu is
+configured not to restart on reboot.
+(cherry picked from commit d3fc7e1e4d592dbdc6b8b9edf92dddc0a67eac28)
+---
+ appliance/init |    2 +-
+ 1 files changed, 1 insertions(+), 1 deletions(-)
+
+diff --git a/appliance/init b/appliance/init
+index 90da1cb..1c01195 100755
+--- a/appliance/init
++++ b/appliance/init
+@@ -110,8 +110,8 @@ else
+   bash -i
+   echo
+   echo "virt-rescue: Syncing the disk now before exiting ..."
+-  echo "(Don't worry if you see a 'Kernel panic' message below)"
+   echo
+ fi
+ 
+ sync
++/sbin/reboot -f
+-- 
+1.7.1
+

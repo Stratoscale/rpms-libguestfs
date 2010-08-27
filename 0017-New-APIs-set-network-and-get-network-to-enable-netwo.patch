@@ -1,0 +1,142 @@
+From 4804fe0472a333f9876be1862ec768375ee5dda1 Mon Sep 17 00:00:00 2001
+From: Richard Jones <rjones@redhat.com>
+Date: Tue, 24 Aug 2010 11:53:40 +0100
+Subject: [PATCH] New APIs: set-network and get-network to enable network support.
+
+guestfs_set_network (g, true) enables network support in the appliance.
+(cherry picked from commit 4963be850090933e5769f9d3412d9eb86f522b1b)
+---
+ configure.ac           |    6 +++---
+ src/generator.ml       |   19 +++++++++++++++++++
+ src/guestfs-internal.h |    1 +
+ src/guestfs.c          |   13 +++++++++++++
+ src/guestfs.pod        |    5 +++++
+ src/launch.c           |    8 ++++++++
+ 6 files changed, 49 insertions(+), 3 deletions(-)
+
+diff --git a/configure.ac b/configure.ac
+index a1c8fe0..8d4d63e 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -300,14 +300,14 @@ AC_ARG_WITH([drive-if],
+ AC_DEFINE_UNQUOTED([DRIVE_IF],["$with_drive_if"],[Default drive interface.])
+ 
+ dnl Set interface used by the network.  Normally you should
+-dnl leave this at the default (virtio) but you can use the
++dnl leave this at the default (virtio-net-pci) but you can use the
+ dnl alternative (ne2k_pci) because of bugs in virtio networking
+ dnl eg. https://bugzilla.redhat.com/show_bug.cgi?id=516022
+ AC_ARG_WITH([net-if],
+         [AS_HELP_STRING([--with-net-if],
+-          [set default net driver (virtio|ne2k_pci) @<:@default=virtio@:>@])],
++          [set default net driver (virtio-net-pci|ne2k_pci) @<:@default=virtio-net-pci@:>@])],
+         [],
+-        [with_net_if=virtio])
++        [with_net_if=virtio-net-pci])
+ AC_DEFINE_UNQUOTED([NET_IF],["$with_net_if"],[Default network interface.])
+ 
+ dnl Check for febootstrap etc.
+diff --git a/src/generator.ml b/src/generator.ml
+index 8fb1477..1d41539 100755
+--- a/src/generator.ml
++++ b/src/generator.ml
+@@ -1289,6 +1289,25 @@ for a filesystem to be shared between operating systems.
+ Please read L<guestfs(3)/INSPECTION> for more details.
+ See also C<guestfs_inspect_get_mountpoints>.");
+ 
++  ("set_network", (RErr, [Bool "network"]), -1, [FishAlias "network"],
++   [],
++   "set enable network flag",
++   "\
++If C<network> is true, then the network is enabled in the
++libguestfs appliance.  The default is false.
++
++This affects whether commands are able to access the network
++(see L<guestfs(3)/RUNNING COMMANDS>).
++
++You must call this before calling C<guestfs_launch>, otherwise
++it has no effect.");
++
++  ("get_network", (RBool "network", []), -1, [],
++   [],
++   "get enable network flag",
++   "\
++This returns the enable network flag.");
++
+ ]
+ 
+ (* daemon_functions are any functions which cause some action
+diff --git a/src/guestfs-internal.h b/src/guestfs-internal.h
+index b534b6a..e37c9c2 100644
+--- a/src/guestfs-internal.h
++++ b/src/guestfs-internal.h
+@@ -98,6 +98,7 @@ struct guestfs_h
+   int autosync;
+   int direct;
+   int recovery_proc;
++  int enable_network;
+ 
+   char *path;			/* Path to kernel, initrd. */
+   char *qemu;			/* Qemu binary. */
+diff --git a/src/guestfs.c b/src/guestfs.c
+index 74de38c..eaacd39 100644
+--- a/src/guestfs.c
++++ b/src/guestfs.c
+@@ -601,6 +601,19 @@ guestfs__get_recovery_proc (guestfs_h *g)
+   return g->recovery_proc;
+ }
+ 
++int
++guestfs__set_network (guestfs_h *g, int v)
++{
++  g->enable_network = !!v;
++  return 0;
++}
++
++int
++guestfs__get_network (guestfs_h *g)
++{
++  return g->enable_network;
++}
++
+ void
+ guestfs_set_log_message_callback (guestfs_h *g,
+                                   guestfs_log_message_cb cb, void *opaque)
+diff --git a/src/guestfs.pod b/src/guestfs.pod
+index 5deccb5..e986d77 100644
+--- a/src/guestfs.pod
++++ b/src/guestfs.pod
+@@ -358,6 +358,11 @@ The command will be running in limited memory.
+ 
+ =item *
+ 
++The network may not be available unless you enable it
++(see L</guestfs_set_network>).
++
++=item *
++
+ Only supports Linux guests (not Windows, BSD, etc).
+ 
+ =item *
+diff --git a/src/launch.c b/src/launch.c
+index 95ed25f..287cc40 100644
+--- a/src/launch.c
++++ b/src/launch.c
+@@ -413,6 +413,14 @@ guestfs__launch (guestfs_h *g)
+     add_cmdline (g, "-device");
+     add_cmdline (g, "virtserialport,chardev=channel0,name=org.libguestfs.channel.0");
+ 
++    /* Enable user networking. */
++    if (g->enable_network) {
++      add_cmdline (g, "-netdev");
++      add_cmdline (g, "user,id=usernet");
++      add_cmdline (g, "-device");
++      add_cmdline (g, NET_IF ",netdev=usernet");
++    }
++
+ #define LINUX_CMDLINE							\
+     "panic=1 "         /* force kernel to panic if daemon exits */	\
+     "console=ttyS0 "   /* serial console */				\
+-- 
+1.7.1
+

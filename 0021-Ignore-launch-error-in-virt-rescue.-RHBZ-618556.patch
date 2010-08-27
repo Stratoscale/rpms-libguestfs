@@ -1,0 +1,40 @@
+From f83e639a46bf374a483efb547c9da1f91cf385a6 Mon Sep 17 00:00:00 2001
+From: Matthew Booth <mbooth@redhat.com>
+Date: Thu, 26 Aug 2010 15:08:20 +0100
+Subject: [PATCH] Ignore launch() error in virt-rescue. (RHBZ#618556)
+
+launch() expects guestfsd to start, which it never does in virt-rescue, so it
+always returns an error about the appliance shutting down unexpectedly.
+(cherry picked from commit c3194e4d370d917db9900a31ea18f10492554da4)
+---
+ tools/virt-rescue |    7 ++++++-
+ 1 files changed, 6 insertions(+), 1 deletions(-)
+
+diff --git a/tools/virt-rescue b/tools/virt-rescue
+index ec0bb5e..7a87fbc 100755
+--- a/tools/virt-rescue
++++ b/tools/virt-rescue
+@@ -19,6 +19,7 @@
+ use warnings;
+ use strict;
+ 
++use Errno;
+ use Sys::Guestfs;
+ use Sys::Guestfs::Lib qw(open_guest);
+ use Pod::Usage;
+@@ -214,7 +215,11 @@ $g->set_append ($str);
+ 
+ # Run the appliance.  This won't return until the user quits the
+ # appliance.
+-$g->launch ();
++eval { $g->launch (); };
++
++# launch() expects guestfsd to start. However, virt-rescue doesn't run guestfsd,
++# so this will always fail with ECHILD when the appliance exits unexpectedly.
++die $@ unless $!{ECHILD};
+ 
+ exit 0;
+ 
+-- 
+1.7.1
+

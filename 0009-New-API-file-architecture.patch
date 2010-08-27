@@ -1,0 +1,775 @@
+From 3bce04c39a55bfa02ee1d9eec4e09f6c0ec6a70f Mon Sep 17 00:00:00 2001
+From: Richard Jones <rjones@redhat.com>
+Date: Wed, 28 Jul 2010 15:38:57 +0100
+Subject: [PATCH] New API: file-architecture
+
+This change simply converts the existing Perl-only function
+file_architecture into a core API call.  The core API call is
+written in C and available in all languages and from guestfish.
+(cherry picked from commit ad4cff2625651bda9de25de9aba96bdf213d0a0a)
+---
+ README                      |    4 +
+ configure.ac                |   19 +++
+ perl/lib/Sys/Guestfs/Lib.pm |  147 +----------------------
+ perl/t/510-lib-file-arch.t  |   70 -----------
+ po/POTFILES.in              |    1 +
+ src/Makefile.am             |    3 +-
+ src/generator.ml            |  128 ++++++++++++++++++++
+ src/inspect.c               |  280 +++++++++++++++++++++++++++++++++++++++++++
+ 8 files changed, 437 insertions(+), 215 deletions(-)
+ delete mode 100644 perl/t/510-lib-file-arch.t
+ create mode 100644 src/inspect.c
+
+diff --git a/README b/README
+index ea1da1f..867bc56 100644
+--- a/README
++++ b/README
+@@ -48,6 +48,10 @@ Requirements
+ 
+ - XDR, rpcgen (on Linux these are provided by glibc)
+ 
++- pcre (Perl Compatible Regular Expressions C library)
++
++- libmagic (the library that corresponds to the 'file' command)
++
+ - squashfs-tools (mksquashfs only)
+ 
+ - genisoimage / mkisofs
+diff --git a/configure.ac b/configure.ac
+index 7daa2ac..5e884ea 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -185,6 +185,15 @@ AC_ARG_ENABLE([appliance],
+ AM_CONDITIONAL([ENABLE_APPLIANCE],[test "x$enable_appliance" = "xyes"])
+ AC_MSG_RESULT([$enable_appliance])
+ 
++dnl Check for PCRE.
++AC_CHECK_LIB([pcre],[pcre_compile],
++        [AC_SUBST([LIBPCRE], ["-lpcre"])],
++        [AC_MSG_FAILURE(
++             [Perl Compatible Regular Expressions library (PCRE) is required])])
++AC_CHECK_HEADER([pcre.h],[],
++        [AC_MSG_FAILURE(
++             [Perl Compatible Regular Expressions library (PCRE) header file pcre.h is required])])
++
+ dnl Check for rpcgen and XDR library.  rpcgen is optional.
+ AC_CHECK_PROG([RPCGEN],[rpcgen],[rpcgen],[no])
+ AM_CONDITIONAL([HAVE_RPCGEN],[test "x$RPCGEN" != "xno"])
+@@ -449,6 +458,16 @@ dnl For i18n.
+ AM_GNU_GETTEXT([external])
+ AM_GNU_GETTEXT_VERSION([0.17])
+ 
++dnl libmagic (required)
++AC_CHECK_LIB([magic],[magic_file],[
++        AC_SUBST([LIBMAGIC], ["-lmagic"])
++    ],[
++        AC_MSG_FAILURE([libmagic is required])
++    ])
++AC_CHECK_HEADER([magic.h],[],[
++        AC_MSG_FAILURE([magic.h header file is required])
++    ])
++
+ dnl hivex library (highly recommended).
+ dnl This used to be a part of libguestfs, but was spun off into its
+ dnl own separate upstream project in libguestfs 1.0.85.
+diff --git a/perl/lib/Sys/Guestfs/Lib.pm b/perl/lib/Sys/Guestfs/Lib.pm
+index bdc788e..bb97506 100644
+--- a/perl/lib/Sys/Guestfs/Lib.pm
++++ b/perl/lib/Sys/Guestfs/Lib.pm
+@@ -347,159 +347,18 @@ sub resolve_windows_path
+ 
+ =head2 file_architecture
+ 
+- $arch = file_architecture ($g, $path)
++Deprecated function.  Replace any calls to this function with:
+ 
+-The C<file_architecture> function lets you get the architecture for a
+-particular binary or library in the guest.  By "architecture" we mean
+-what processor it is compiled for (eg. C<i586> or C<x86_64>).
+-
+-The function works on at least the following types of files:
+-
+-=over 4
+-
+-=item *
+-
+-many types of Un*x binary
+-
+-=item *
+-
+-many types of Un*x shared library
+-
+-=item *
+-
+-Windows Win32 and Win64 binaries
+-
+-=item *
+-
+-Windows Win32 and Win64 DLLs
+-
+-Win32 binaries and DLLs return C<i386>.
+-
+-Win64 binaries and DLLs return C<x86_64>.
+-
+-=item *
+-
+-Linux kernel modules
+-
+-=item *
+-
+-Linux new-style initrd images
+-
+-=item *
+-
+-some non-x86 Linux vmlinuz kernels
+-
+-=back
+-
+-What it can't do currently:
+-
+-=over 4
+-
+-=item *
+-
+-static libraries (libfoo.a)
+-
+-=item *
+-
+-Linux old-style initrd as compressed ext2 filesystem (RHEL 3)
+-
+-=item *
+-
+-x86 Linux vmlinuz kernels
+-
+-x86 vmlinuz images (bzImage format) consist of a mix of 16-, 32- and
+-compressed code, and are horribly hard to unpack.  If you want to find
+-the architecture of a kernel, use the architecture of the associated
+-initrd or kernel module(s) instead.
+-
+-=back
++ $g->file_architecture ($path);
+ 
+ =cut
+ 
+-sub _elf_arch_to_canonical
+-{
+-    local $_ = shift;
+-
+-    if ($_ eq "Intel 80386") {
+-        return "i386";
+-    } elsif ($_ eq "Intel 80486") {
+-        return "i486";	# probably not in the wild
+-    } elsif ($_ eq "x86-64") {
+-        return "x86_64";
+-    } elsif ($_ eq "AMD x86-64") {
+-        return "x86_64";
+-    } elsif (/SPARC32/) {
+-        return "sparc";
+-    } elsif (/SPARC V9/) {
+-        return "sparc64";
+-    } elsif ($_ eq "IA-64") {
+-        return "ia64";
+-    } elsif (/64.*PowerPC/) {
+-        return "ppc64";
+-    } elsif (/PowerPC/) {
+-        return "ppc";
+-    } else {
+-        warn __x("returning non-canonical architecture type '{arch}'",
+-                 arch => $_);
+-        return $_;
+-    }
+-}
+-
+-my @_initrd_binaries = ("nash", "modprobe", "sh", "bash");
+-
+ sub file_architecture
+ {
+-    local $_;
+     my $g = shift;
+     my $path = shift;
+ 
+-    # Our basic tool is 'file' ...
+-    my $file = $g->file ($path);
+-
+-    if ($file =~ /ELF.*(?:executable|shared object|relocatable), (.+?),/) {
+-        # ELF executable or shared object.  We need to convert
+-        # what file(1) prints into the canonical form.
+-        return _elf_arch_to_canonical ($1);
+-    } elsif ($file =~ /PE32 executable/) {
+-        return "i386";		# Win32 executable or DLL
+-    } elsif ($file =~ /PE32\+ executable/) {
+-        return "x86_64";	# Win64 executable or DLL
+-    }
+-
+-    elsif ($file =~ /cpio archive/) {
+-        # Probably an initrd.
+-        my $zcat = "cat";
+-        if ($file =~ /gzip/) {
+-            $zcat = "zcat";
+-        } elsif ($file =~ /bzip2/) {
+-            $zcat = "bzcat";
+-        }
+-
+-        # Download and unpack it to find a binary file.
+-        my $dir = tempdir (CLEANUP => 1);
+-        $g->download ($path, "$dir/initrd");
+-
+-        my $bins = join " ", map { "bin/$_" } @_initrd_binaries;
+-        my $cmd = "cd $dir && $zcat initrd | cpio --quiet -id $bins";
+-        my $r = system ($cmd);
+-        die __x("cpio command failed: {error}", error => $?)
+-            unless $r == 0;
+-
+-        foreach my $bin (@_initrd_binaries) {
+-            if (-f "$dir/bin/$bin") {
+-                $_ = `file $dir/bin/$bin`;
+-                if (/ELF.*executable, (.+?),/) {
+-                    return _elf_arch_to_canonical ($1);
+-                }
+-            }
+-        }
+-
+-        die __x("file_architecture: no known binaries found in initrd image: {path}",
+-                path => $path);
+-    }
+-
+-    die __x("file_architecture: unknown architecture: {path}",
+-            path => $path);
++    return $g->file_architecture ($path);
+ }
+ 
+ =head1 OPERATING SYSTEM INSPECTION FUNCTIONS
+diff --git a/perl/t/510-lib-file-arch.t b/perl/t/510-lib-file-arch.t
+deleted file mode 100644
+index dfe32bc..0000000
+--- a/perl/t/510-lib-file-arch.t
++++ /dev/null
+@@ -1,70 +0,0 @@
+-# libguestfs Perl bindings -*- perl -*-
+-# Copyright (C) 2009 Red Hat Inc.
+-#
+-# This program is free software; you can redistribute it and/or modify
+-# it under the terms of the GNU General Public License as published by
+-# the Free Software Foundation; either version 2 of the License, or
+-# (at your option) any later version.
+-#
+-# This program is distributed in the hope that it will be useful,
+-# but WITHOUT ANY WARRANTY; without even the implied warranty of
+-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+-# GNU General Public License for more details.
+-#
+-# You should have received a copy of the GNU General Public License
+-# along with this program; if not, write to the Free Software
+-# Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+-
+-use strict;
+-use warnings;
+-
+-BEGIN {
+-    use Test::More;
+-    eval "use Locale::TextDomain";;
+-    if (exists $INC{"Locale/TextDomain.pm"}) {
+-        plan tests => 16;
+-    } else {
+-        plan skip_all => "no perl-libintl module";
+-        exit 0;
+-    }
+-}
+-
+-use Sys::Guestfs;
+-use Sys::Guestfs::Lib;
+-
+-my $h = Sys::Guestfs->new ();
+-ok ($h);
+-
+-$h->add_drive_ro ("../images/test.iso");
+-ok (1);
+-
+-$h->launch ();
+-ok (1);
+-
+-$h->mount_ro ("/dev/sda", "/");
+-ok (1);
+-
+-is (Sys::Guestfs::Lib::file_architecture ($h, "/bin-i586-dynamic"),
+-    "i386");
+-is (Sys::Guestfs::Lib::file_architecture ($h, "/bin-sparc-dynamic"),
+-    "sparc");
+-is (Sys::Guestfs::Lib::file_architecture ($h, "/bin-win32.exe"),
+-    "i386");
+-is (Sys::Guestfs::Lib::file_architecture ($h, "/bin-win64.exe"),
+-    "x86_64");
+-is (Sys::Guestfs::Lib::file_architecture ($h, "/bin-x86_64-dynamic"),
+-    "x86_64");
+-is (Sys::Guestfs::Lib::file_architecture ($h, "/lib-i586.so"),
+-    "i386");
+-is (Sys::Guestfs::Lib::file_architecture ($h, "/lib-sparc.so"),
+-    "sparc");
+-is (Sys::Guestfs::Lib::file_architecture ($h, "/lib-win32.dll"),
+-    "i386");
+-is (Sys::Guestfs::Lib::file_architecture ($h, "/lib-win64.dll"),
+-    "x86_64");
+-is (Sys::Guestfs::Lib::file_architecture ($h, "/lib-x86_64.so"),
+-    "x86_64");
+-is (Sys::Guestfs::Lib::file_architecture ($h, "/initrd-x86_64.img"),
+-    "x86_64");
+-is (Sys::Guestfs::Lib::file_architecture ($h, "/initrd-x86_64.img.gz"),
+-    "x86_64");
+diff --git a/po/POTFILES.in b/po/POTFILES.in
+index fdc2b70..bf066ea 100644
+--- a/po/POTFILES.in
++++ b/po/POTFILES.in
+@@ -102,6 +102,7 @@ ruby/ext/guestfs/_guestfs.c
+ src/actions.c
+ src/bindtests.c
+ src/guestfs.c
++src/inspect.c
+ src/launch.c
+ src/proto.c
+ test-tool/helper.c
+diff --git a/src/Makefile.am b/src/Makefile.am
+index 4135c8c..61cec04 100644
+--- a/src/Makefile.am
++++ b/src/Makefile.am
+@@ -126,11 +126,12 @@ libguestfs_la_SOURCES = \
+ 	gettext.h \
+ 	actions.c \
+ 	bindtests.c \
++	inspect.c \
+ 	launch.c \
+ 	proto.c \
+ 	libguestfs.syms
+ 
+-libguestfs_la_LIBADD = $(LTLIBTHREAD) ../gnulib/lib/libgnu.la
++libguestfs_la_LIBADD = $(LIBPCRE) $(LIBMAGIC) $(LTLIBTHREAD) ../gnulib/lib/libgnu.la
+ 
+ # Make libguestfs include the convenience library.
+ noinst_LTLIBRARIES = libprotocol.la
+diff --git a/src/generator.ml b/src/generator.ml
+index b5da6cf..b0cdb6e 100755
+--- a/src/generator.ml
++++ b/src/generator.ml
+@@ -940,6 +940,134 @@ to specify the QEMU interface emulation to use at run time.");
+ This is the same as C<guestfs_add_drive_ro> but it allows you
+ to specify the QEMU interface emulation to use at run time.");
+ 
++  ("file_architecture", (RString "arch", [Pathname "filename"]), -1, [],
++   [InitISOFS, Always, TestOutput (
++      [["file_architecture"; "/bin-i586-dynamic"]], "i386");
++    InitISOFS, Always, TestOutput (
++      [["file_architecture"; "/bin-sparc-dynamic"]], "sparc");
++    InitISOFS, Always, TestOutput (
++      [["file_architecture"; "/bin-win32.exe"]], "i386");
++    InitISOFS, Always, TestOutput (
++      [["file_architecture"; "/bin-win64.exe"]], "x86_64");
++    InitISOFS, Always, TestOutput (
++      [["file_architecture"; "/bin-x86_64-dynamic"]], "x86_64");
++    InitISOFS, Always, TestOutput (
++      [["file_architecture"; "/lib-i586.so"]], "i386");
++    InitISOFS, Always, TestOutput (
++      [["file_architecture"; "/lib-sparc.so"]], "sparc");
++    InitISOFS, Always, TestOutput (
++      [["file_architecture"; "/lib-win32.dll"]], "i386");
++    InitISOFS, Always, TestOutput (
++      [["file_architecture"; "/lib-win64.dll"]], "x86_64");
++    InitISOFS, Always, TestOutput (
++      [["file_architecture"; "/lib-x86_64.so"]], "x86_64");
++    InitISOFS, Always, TestOutput (
++      [["file_architecture"; "/initrd-x86_64.img"]], "x86_64");
++    InitISOFS, Always, TestOutput (
++      [["file_architecture"; "/initrd-x86_64.img.gz"]], "x86_64");],
++   "detect the architecture of a binary file",
++   "\
++This detects the architecture of the binary C<filename>,
++and returns it if known.
++
++Currently defined architectures are:
++
++=over 4
++
++=item \"i386\"
++
++This string is returned for all 32 bit i386, i486, i586, i686 binaries
++irrespective of the precise processor requirements of the binary.
++
++=item \"x86_64\"
++
++64 bit x86-64.
++
++=item \"sparc\"
++
++32 bit SPARC.
++
++=item \"sparc64\"
++
++64 bit SPARC V9 and above.
++
++=item \"ia64\"
++
++Intel Itanium.
++
++=item \"ppc\"
++
++32 bit Power PC.
++
++=item \"ppc64\"
++
++64 bit Power PC.
++
++=back
++
++Libguestfs may return other architecture strings in future.
++
++The function works on at least the following types of files:
++
++=over 4
++
++=item *
++
++many types of Un*x and Linux binary
++
++=item *
++
++many types of Un*x and Linux shared library
++
++=item *
++
++Windows Win32 and Win64 binaries
++
++=item *
++
++Windows Win32 and Win64 DLLs
++
++Win32 binaries and DLLs return C<i386>.
++
++Win64 binaries and DLLs return C<x86_64>.
++
++=item *
++
++Linux kernel modules
++
++=item *
++
++Linux new-style initrd images
++
++=item *
++
++some non-x86 Linux vmlinuz kernels
++
++=back
++
++What it can't do currently:
++
++=over 4
++
++=item *
++
++static libraries (libfoo.a)
++
++=item *
++
++Linux old-style initrd as compressed ext2 filesystem (RHEL 3)
++
++=item *
++
++x86 Linux vmlinuz kernels
++
++x86 vmlinuz images (bzImage format) consist of a mix of 16-, 32- and
++compressed code, and are horribly hard to unpack.  If you want to find
++the architecture of a kernel, use the architecture of the associated
++initrd or kernel module(s) instead.
++
++=back");
++
+ ]
+ 
+ (* daemon_functions are any functions which cause some action
+diff --git a/src/inspect.c b/src/inspect.c
+new file mode 100644
+index 0000000..d19e23b
+--- /dev/null
++++ b/src/inspect.c
+@@ -0,0 +1,280 @@
++/* libguestfs
++ * Copyright (C) 2010 Red Hat Inc.
++ *
++ * This library is free software; you can redistribute it and/or
++ * modify it under the terms of the GNU Lesser General Public
++ * License as published by the Free Software Foundation; either
++ * version 2 of the License, or (at your option) any later version.
++ *
++ * This library is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
++ * Lesser General Public License for more details.
++ *
++ * You should have received a copy of the GNU Lesser General Public
++ * License along with this library; if not, write to the Free Software
++ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
++ */
++
++#include <config.h>
++
++#include <stdio.h>
++#include <stdlib.h>
++#include <stdint.h>
++#include <inttypes.h>
++#include <unistd.h>
++#include <string.h>
++#include <sys/stat.h>
++
++#include <pcre.h>
++#include <magic.h>
++
++#include "ignore-value.h"
++
++#include "guestfs.h"
++#include "guestfs-internal.h"
++#include "guestfs-internal-actions.h"
++#include "guestfs_protocol.h"
++
++/* Compile all the regular expressions once when the shared library is
++ * loaded.  PCRE is thread safe so we're supposedly OK here if
++ * multiple threads call into the libguestfs API functions below
++ * simultaneously.
++ */
++static pcre *re_file_elf;
++static pcre *re_file_win64;
++static pcre *re_elf_ppc64;
++
++static void compile_regexps (void) __attribute__((constructor));
++static void
++compile_regexps (void)
++{
++  const char *err;
++  int offset;
++
++#define COMPILE(re,pattern,options)                                     \
++  do {                                                                  \
++    re = pcre_compile ((pattern), (options), &err, &offset, NULL);      \
++    if (re == NULL) {                                                   \
++      ignore_value (write (2, err, strlen (err)));                      \
++      abort ();                                                         \
++    }                                                                   \
++  } while (0)
++
++  COMPILE (re_file_elf,
++           "ELF.*(?:executable|shared object|relocatable), (.+?),", 0);
++  COMPILE (re_elf_ppc64, "64.*PowerPC", 0);
++}
++
++/* Match a regular expression which contains no captures.  Returns
++ * true if it matches or false if it doesn't.
++ */
++static int
++match (guestfs_h *g, const char *str, const pcre *re)
++{
++  size_t len = strlen (str);
++  int vec[30], r;
++
++  r = pcre_exec (re, NULL, str, len, 0, 0, vec, sizeof vec / sizeof vec[0]);
++  if (r == PCRE_ERROR_NOMATCH)
++    return 0;
++  if (r != 1) {
++    /* Internal error -- should not happen. */
++    fprintf (stderr, "libguestfs: %s: %s: internal error: pcre_exec returned unexpected error code %d when matching against the string \"%s\"\n",
++             __FILE__, __func__, r, str);
++    return 0;
++  }
++
++  return 1;
++}
++
++/* Match a regular expression which contains exactly one capture.  If
++ * the string matches, return the capture, otherwise return NULL.  The
++ * caller must free the result.
++ */
++static char *
++match1 (guestfs_h *g, const char *str, const pcre *re)
++{
++  size_t len = strlen (str);
++  int vec[30], r;
++
++  r = pcre_exec (re, NULL, str, len, 0, 0, vec, sizeof vec / sizeof vec[0]);
++  if (r == PCRE_ERROR_NOMATCH)
++    return NULL;
++  if (r != 2) {
++    /* Internal error -- should not happen. */
++    fprintf (stderr, "libguestfs: %s: %s: internal error: pcre_exec returned unexpected error code %d when matching against the string \"%s\"\n",
++             __FILE__, __func__, r, str);
++    return NULL;
++  }
++
++  return safe_strndup (g, &str[vec[2]], vec[3]-vec[2]);
++}
++
++/* Convert output from 'file' command on ELF files to the canonical
++ * architecture string.  Caller must free the result.
++ */
++static char *
++canonical_elf_arch (guestfs_h *g, const char *elf_arch)
++{
++  const char *r;
++
++  if (strstr (elf_arch, "Intel 80386"))
++    r = "i386";
++  else if (strstr (elf_arch, "Intel 80486"))
++    r = "i486";
++  else if (strstr (elf_arch, "x86-64"))
++    r = "x86_64";
++  else if (strstr (elf_arch, "AMD x86-64"))
++    r = "x86_64";
++  else if (strstr (elf_arch, "SPARC32"))
++    r = "sparc";
++  else if (strstr (elf_arch, "SPARC V9"))
++    r = "sparc64";
++  else if (strstr (elf_arch, "IA-64"))
++    r = "ia64";
++  else if (match (g, elf_arch, re_elf_ppc64))
++    r = "ppc64";
++  else if (strstr (elf_arch, "PowerPC"))
++    r = "ppc";
++  else
++    r = elf_arch;
++
++  char *ret = safe_strdup (g, r);
++  return ret;
++}
++
++static int
++is_regular_file (const char *filename)
++{
++  struct stat statbuf;
++
++  return lstat (filename, &statbuf) == 0 && S_ISREG (statbuf.st_mode);
++}
++
++/* Download and uncompress the cpio file to find binaries within.
++ * Notes:
++ * (1) Two lists must be identical.
++ * (2) Implicit limit of 31 bytes for length of each element (see code
++ * below).
++ */
++#define INITRD_BINARIES1 "bin/ls bin/rm bin/modprobe sbin/modprobe bin/sh bin/bash bin/dash bin/nash"
++#define INITRD_BINARIES2 {"bin/ls", "bin/rm", "bin/modprobe", "sbin/modprobe", "bin/sh", "bin/bash", "bin/dash", "bin/nash"}
++
++static char *
++cpio_arch (guestfs_h *g, const char *file, const char *path)
++{
++  char *ret = NULL;
++
++  const char *method;
++  if (strstr (file, "gzip"))
++    method = "zcat";
++  else if (strstr (file, "bzip2"))
++    method = "bzcat";
++  else
++    method = "cat";
++
++  char dir[] = "/tmp/initrd.XXXXXX";
++#define dir_len (sizeof dir)
++  if (mkdtemp (dir) == NULL) {
++    perrorf (g, "mkdtemp");
++    goto out;
++  }
++
++  char dir_initrd[dir_len + 16];
++  snprintf (dir_initrd, dir_len + 16, "%s/initrd", dir);
++  if (guestfs_download (g, path, dir_initrd) == -1)
++    goto out;
++
++  char cmd[dir_len + 256];
++  snprintf (cmd, dir_len + 256,
++            "cd %s && %s initrd | cpio --quiet -id " INITRD_BINARIES1,
++            dir, method);
++  int r = system (cmd);
++  if (r == -1 || WEXITSTATUS (r) != 0) {
++    perrorf (g, "cpio command failed");
++    goto out;
++  }
++
++  char bin[dir_len + 32];
++  const char *bins[] = INITRD_BINARIES2;
++  size_t i;
++  for (i = 0; i < sizeof bins / sizeof bins[0]; ++i) {
++    snprintf (bin, dir_len + 32, "%s/%s", dir, bins[i]);
++
++    if (is_regular_file (bin)) {
++      int flags = g->verbose ? MAGIC_DEBUG : 0;
++      flags |= MAGIC_ERROR | MAGIC_RAW;
++
++      magic_t m = magic_open (flags);
++      if (m == NULL) {
++        perrorf (g, "magic_open");
++        goto out;
++      }
++
++      if (magic_load (m, NULL) == -1) {
++        perrorf (g, "magic_load: default magic database file");
++        magic_close (m);
++        goto out;
++      }
++
++      const char *line = magic_file (m, bin);
++      if (line == NULL) {
++        perrorf (g, "magic_file: %s", bin);
++        magic_close (m);
++        goto out;
++      }
++
++      char *elf_arch;
++      if ((elf_arch = match1 (g, line, re_file_elf)) != NULL) {
++        ret = canonical_elf_arch (g, elf_arch);
++        free (elf_arch);
++        magic_close (m);
++        goto out;
++      }
++      magic_close (m);
++    }
++  }
++  error (g, "file_architecture: could not determine architecture of cpio archive");
++
++ out:
++  /* Free up the temporary directory.  Note the directory name cannot
++   * contain shell meta-characters because of the way it was
++   * constructed above.
++   */
++  snprintf (cmd, dir_len + 256, "rm -rf %s", dir);
++  ignore_value (system (cmd));
++
++  return ret;
++#undef dir_len
++}
++
++char *
++guestfs__file_architecture (guestfs_h *g, const char *path)
++{
++  char *file = NULL;
++  char *elf_arch = NULL;
++  char *ret = NULL;
++
++  /* Get the output of the "file" command.  Note that because this
++   * runs in the daemon, LANG=C so it's in English.
++   */
++  file = guestfs_file (g, path);
++  if (file == NULL)
++    return NULL;
++
++  if ((elf_arch = match1 (g, file, re_file_elf)) != NULL)
++    ret = canonical_elf_arch (g, elf_arch);
++  else if (strstr (file, "PE32 executable"))
++    ret = safe_strdup (g, "i386");
++  else if (strstr (file, "PE32+ executable"))
++    ret = safe_strdup (g, "x86_64");
++  else if (strstr (file, "cpio archive"))
++    ret = cpio_arch (g, file, path);
++  else
++    error (g, "file_architecture: unknown architecture: %s", path);
++
++  free (file);
++  free (elf_arch);
++  return ret;                   /* caller frees */
++}
+-- 
+1.7.1
+

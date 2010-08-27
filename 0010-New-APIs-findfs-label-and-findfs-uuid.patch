@@ -1,0 +1,202 @@
+From 1bc37cbac535010063b07fce95089e7739c787ff Mon Sep 17 00:00:00 2001
+From: Richard Jones <rjones@redhat.com>
+Date: Wed, 28 Jul 2010 23:11:38 +0100
+Subject: [PATCH] New APIs: findfs-label and findfs-uuid
+
+These two calls wrap up the /sbin/findfs command, allowing you
+to find a filesystem by only knowing its label or UUID.
+
+This is especially useful when resolving LABEL=... or UUID=...
+entries in /etc/fstab.
+
+Sample guestfish session:
+
+><fs> vfs-uuid /dev/vda1
+277dd61c-bf34-4253-a8dc-df500a05e7df
+><fs> findfs-uuid 277dd61c-bf34-4253-a8dc-df500a05e7df
+/dev/vda1
+><fs> vfs-label /dev/vda1
+/boot
+><fs> findfs-label /boot
+/dev/vda1
+><fs> vfs-uuid /dev/VolGroup00/LogVol00
+40ce7c36-82ce-4a12-a99d-48f5e054162c
+><fs> findfs-uuid 40ce7c36-82ce-4a12-a99d-48f5e054162c
+/dev/mapper/VolGroup00-LogVol00
+><fs> findfs-uuid 12345678
+libguestfs: error: findfs_uuid: findfs: unable to resolve 'UUID=12345678'
+(cherry picked from commit 65e9ac4595fbace8f301030469932be518456246)
+---
+ daemon/Makefile.am |    1 +
+ daemon/findfs.c    |   72 ++++++++++++++++++++++++++++++++++++++++++++++++++++
+ po/POTFILES.in     |    1 +
+ src/MAX_PROC_NR    |    2 +-
+ src/generator.ml   |   28 ++++++++++++++++++-
+ 5 files changed, 101 insertions(+), 3 deletions(-)
+ create mode 100644 daemon/findfs.c
+
+diff --git a/daemon/Makefile.am b/daemon/Makefile.am
+index 27fca2a..0c8be08 100644
+--- a/daemon/Makefile.am
++++ b/daemon/Makefile.am
+@@ -84,6 +84,7 @@ guestfsd_SOURCES = \
+ 	ext2.c \
+ 	fallocate.c \
+ 	file.c \
++	findfs.c \
+ 	fill.c \
+ 	find.c \
+ 	fsck.c \
+diff --git a/daemon/findfs.c b/daemon/findfs.c
+new file mode 100644
+index 0000000..0520f18
+--- /dev/null
++++ b/daemon/findfs.c
+@@ -0,0 +1,72 @@
++/* libguestfs - the guestfsd daemon
++ * Copyright (C) 2010 Red Hat Inc.
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License as published by
++ * the Free Software Foundation; either version 2 of the License, or
++ * (at your option) any later version.
++ *
++ * This program is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * GNU General Public License for more details.
++ *
++ * You should have received a copy of the GNU General Public License
++ * along with this program; if not, write to the Free Software
++ * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
++ */
++
++#include <config.h>
++
++#include <stdio.h>
++#include <stdlib.h>
++#include <string.h>
++#include <unistd.h>
++
++#include "daemon.h"
++#include "actions.h"
++
++static char *
++findfs (const char *tag, const char *label_or_uuid)
++{
++  /* Kill the cache file, forcing blkid to reread values from the
++   * original filesystems.  In blkid there is a '-p' option which is
++   * supposed to do this, but (a) it doesn't work and (b) that option
++   * is not supported in RHEL 5.
++   */
++  unlink ("/etc/blkid/blkid.tab");
++
++  size_t len = strlen (tag) + strlen (label_or_uuid) + 2;
++  char arg[len];
++  snprintf (arg, len, "%s=%s", tag, label_or_uuid);
++
++  char *out, *err;
++  int r = command (&out, &err, "findfs", arg, NULL);
++  if (r == -1) {
++    reply_with_error ("%s", err);
++    free (out);
++    free (err);
++    return NULL;
++  }
++
++  free (err);
++
++  /* Trim trailing \n if present. */
++  len = strlen (out);
++  if (len > 0 && out[len-1] == '\n')
++    out[len-1] = '\0';
++
++  return out;                   /* caller frees */
++}
++
++char *
++do_findfs_uuid (const char *uuid)
++{
++  return findfs ("UUID", uuid);
++}
++
++char *
++do_findfs_label (const char *label)
++{
++  return findfs ("LABEL", label);
++}
+diff --git a/po/POTFILES.in b/po/POTFILES.in
+index bf066ea..8ce5c97 100644
+--- a/po/POTFILES.in
++++ b/po/POTFILES.in
+@@ -21,6 +21,7 @@ daemon/fallocate.c
+ daemon/file.c
+ daemon/fill.c
+ daemon/find.c
++daemon/findfs.c
+ daemon/fsck.c
+ daemon/glob.c
+ daemon/grep.c
+diff --git a/src/MAX_PROC_NR b/src/MAX_PROC_NR
+index 10b0c0d..c1d1ffb 100644
+--- a/src/MAX_PROC_NR
++++ b/src/MAX_PROC_NR
+@@ -1 +1 @@
+-264
++266
+diff --git a/src/generator.ml b/src/generator.ml
+index b0cdb6e..2153e23 100755
+--- a/src/generator.ml
++++ b/src/generator.ml
+@@ -4952,7 +4952,9 @@ a file in the host and attach it as a device.");
+ This returns the filesystem label of the filesystem on
+ C<device>.
+ 
+-If the filesystem is unlabeled, this returns the empty string.");
++If the filesystem is unlabeled, this returns the empty string.
++
++To find a filesystem from the label, use C<guestfs_findfs_label>.");
+ 
+   ("vfs_uuid", (RString "uuid", [Device "device"]), 254, [],
+    (let uuid = uuidgen () in
+@@ -4964,7 +4966,9 @@ If the filesystem is unlabeled, this returns the empty string.");
+ This returns the filesystem UUID of the filesystem on
+ C<device>.
+ 
+-If the filesystem does not have a UUID, this returns the empty string.");
++If the filesystem does not have a UUID, this returns the empty string.
++
++To find a filesystem from the UUID, use C<guestfs_findfs_uuid>.");
+ 
+   ("lvm_set_filter", (RErr, [DeviceList "devices"]), 255, [Optional "lvm2"],
+    (* Can't be tested with the current framework because
+@@ -5091,6 +5095,26 @@ I<other> keys.");
+ This command tests whether C<device> is a logical volume, and
+ returns true iff this is the case.");
+ 
++  ("findfs_uuid", (RString "device", [String "uuid"]), 265, [],
++   [],
++   "find a filesystem by UUID",
++   "\
++This command searches the filesystems and returns the one
++which has the given UUID.  An error is returned if no such
++filesystem can be found.
++
++To find the UUID of a filesystem, use C<guestfs_vfs_uuid>.");
++
++  ("findfs_label", (RString "device", [String "label"]), 266, [],
++   [],
++   "find a filesystem by label",
++   "\
++This command searches the filesystems and returns the one
++which has the given label.  An error is returned if no such
++filesystem can be found.
++
++To find the label of a filesystem, use C<guestfs_vfs_label>.");
++
+ ]
+ 
+ let all_functions = non_daemon_functions @ daemon_functions
+-- 
+1.7.1
+
