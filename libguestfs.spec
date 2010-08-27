@@ -712,7 +712,7 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
-* Fri Aug 26 2010 Richard Jones <rjones@redhat.com> - 1:1.5.5-2
+* Fri Aug 27 2010 Richard Jones <rjones@redhat.com> - 1:1.5.5-2
 - Use bug-fixed febootstrap 2.9.
 
 * Thu Aug 26 2010 Richard Jones <rjones@redhat.com> - 1:1.5.5-1
