@@ -42,7 +42,7 @@ Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
 Version:       1.4.3
-Release:       1%{?dist}
+Release:       2%{?dist}
 License:       LGPLv2+
 Group:         Development/Libraries
 URL:           http://libguestfs.org/
@@ -427,10 +427,12 @@ Requires:      jpackage-utils
 %patch1 -p1
 %patch2 -p1
 %patch3 -p1
+chmod +x regressions/test-lvm-filtering.sh
 %patch4 -p1
 %patch5 -p1
 %patch6 -p1
 %patch7 -p1
+chmod +x regressions/test-luks.sh
 %patch8 -p1
 %patch9 -p1
 %patch10 -p1
@@ -781,6 +783,10 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Fri Aug 27 2010 Richard W.M. Jones <rjones@redhat.com> - 1:1.4.3-2
+- Patch program doesn't restore permissions on new files correctly, so
+  chmod the new files by hand.
+
 * Fri Aug 27 2010 Richard W.M. Jones <rjones@redhat.com> - 1:1.4.3-1
 - New stable branch version 1.4.3.
 - Backport major features from development branch, see:
