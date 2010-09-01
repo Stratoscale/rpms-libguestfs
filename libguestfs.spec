@@ -41,7 +41,7 @@
 Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
-Version:       1.5.6
+Version:       1.5.7
 Release:       1%{?dist}
 License:       LGPLv2+
 Group:         Development/Libraries
@@ -419,7 +419,6 @@ createrepo repo
   --mandir=%{_mandir} \
   --sysconfdir=%{_sysconfdir} \
   --with-qemu="qemu-kvm qemu-system-%{_build_arch} qemu" \
-  --enable-debug-command \
   --enable-supermin \
 %if %{with_virtio}
   --with-drive-if=virtio \
@@ -712,6 +711,10 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Wed Sep  1 2010 Richard Jones <rjones@redhat.com> - 1:1.5.7-1
+- New upstream version 1.5.7.
+- 'debug' command is enabled by default now.
+
 * Fri Aug 27 2010 Richard Jones <rjones@redhat.com> - 1:1.5.6-1
 - New upstream version 1.5.6.
 
