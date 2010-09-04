@@ -41,7 +41,7 @@
 Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
-Version:       1.5.7
+Version:       1.5.8
 Release:       1%{?dist}
 License:       LGPLv2+
 Group:         Development/Libraries
@@ -69,6 +69,8 @@ BuildRequires: fuse-devel
 BuildRequires: pcre-devel
 BuildRequires: file-devel
 BuildRequires: libvirt-devel
+BuildRequires: po4a
+BuildRequires: php-devel
 
 # This is only needed for RHEL 5 because readline-devel doesn't
 # properly depend on it, but doesn't do any harm on other platforms:
@@ -176,6 +178,8 @@ For Python bindings, see 'python-libguestfs'.
 For Ruby bindings, see 'ruby-libguestfs'.
 
 For Java bindings, see 'libguestfs-java-devel'.
+
+For PHP bindings, see 'php-libguestfs'.
 
 
 %package devel
@@ -392,6 +396,16 @@ Requires:      jpackage-utils
 %{name}-javadoc contains the Java documentation for %{name}.
 
 
+%package -n php-%{name}
+Summary:       PHP bindings for %{name}
+Group:         Development/Libraries
+Requires:      %{name} = %{epoch}:%{version}-%{release}
+Requires:      php
+
+%description -n php-%{name}
+php-%{name} contains PHP bindings for %{name}.
+
+
 %prep
 %setup -q
 
@@ -565,6 +579,11 @@ rm $RPM_BUILD_ROOT%{_libdir}/libguestfs_jni.la
 # we can install it using a %%doc rule.
 mv $RPM_BUILD_ROOT%{_docdir}/libguestfs installed-docs
 
+# Remove Japanese manpages, since these are not translated fully at
+# the moment.  When these are translated properly we intend to add
+# them back.
+rm -rf $RPM_BUILD_ROOT%{_mandir}/ja/man{1,3}/
+
 # Find locale files.
 %find_lang %{name}
 
@@ -710,7 +729,21 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/javadoc/%{name}-java-%{version}
 
 
+%files -n php-%{name}
+%defattr(-,root,root,-)
+%doc php/README-PHP
+%dir %{_sysconfdir}/php.d
+%{_sysconfdir}/php.d/guestfs_php.ini
+%{_libdir}/php/modules/guestfs_php.so
+
+
 %changelog
+* Sat Sep  4 2010 Richard Jones <rjones@redhat.com> - 1:1.5.8-1
+- New upstream version 1.5.8.
+- Add BR po4a for translations of man pages.
+- Add PHP bindings.
+- Remove partially-translated Japanese webpages.
+
 * Wed Sep  1 2010 Richard Jones <rjones@redhat.com> - 1:1.5.7-1
 - New upstream version 1.5.7.
 - 'debug' command is enabled by default now.
