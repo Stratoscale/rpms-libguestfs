@@ -42,7 +42,7 @@ Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
 Version:       1.5.8
-Release:       1%{?dist}
+Release:       2%{?dist}
 License:       LGPLv2+
 Group:         Development/Libraries
 URL:           http://libguestfs.org/
@@ -51,6 +51,9 @@ BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root
 
 # Disable FUSE tests, not supported in Koji at the moment.
 Patch0:        libguestfs-1.0.79-no-fuse-test.patch
+
+# Workaround for bug 630583: kernel hangs setting scheduler to noop.
+Patch1:        libguestfs-1.5.8-rhbz630583-no-set-scheduler-noop.patch
 
 # Basic build requirements:
 BuildRequires: /usr/bin/pod2man
@@ -410,6 +413,7 @@ php-%{name} contains PHP bindings for %{name}.
 %setup -q
 
 %patch0 -p1
+%patch1 -p1
 
 mkdir -p daemon/m4
 
@@ -485,7 +489,7 @@ export LIBGUESTFS_DEBUG=1
 #                                 (WORKAROUND using LD_PRELOAD)
 # 567567   32-bit       all    guestfish xstrtol test failure on 32-bit (FIXED)
 # 575734   all          F-14   microsecond resolution for blkid cache (FIXED)
-# 624854   all          F-15   kernel hangs during boot
+# 630583   all          all    kernel hangs setting scheduler to noop
 
 # Workaround #563103
 cat > rhbz563103.c <<'EOF'
@@ -517,7 +521,7 @@ chmod +x $borked
 popd
 
 %if %{runtests}
-#make check -- disabled because Rawhide kernel not booting 2010-08-24.
+make check
 %endif
 
 
@@ -738,6 +742,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Mon Sep  6 2010 Richard Jones <rjones@redhat.com> - 1:1.5.8-2
+- Add patch to work around RHBZ#630583 and reenable tests.
+
 * Sat Sep  4 2010 Richard Jones <rjones@redhat.com> - 1:1.5.8-1
 - New upstream version 1.5.8.
 - Add BR po4a for translations of man pages.
