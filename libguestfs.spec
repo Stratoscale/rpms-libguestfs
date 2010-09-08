@@ -41,8 +41,8 @@
 Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
-Version:       1.5.5
-Release:       2%{?dist}
+Version:       1.5.9
+Release:       1%{?dist}
 License:       LGPLv2+
 Group:         Development/Libraries
 URL:           http://libguestfs.org/
@@ -69,6 +69,8 @@ BuildRequires: fuse-devel
 BuildRequires: pcre-devel
 BuildRequires: file-devel
 BuildRequires: libvirt-devel
+BuildRequires: po4a
+BuildRequires: php-devel
 
 # This is only needed for RHEL 5 because readline-devel doesn't
 # properly depend on it, but doesn't do any harm on other platforms:
@@ -176,6 +178,8 @@ For Python bindings, see 'python-libguestfs'.
 For Ruby bindings, see 'ruby-libguestfs'.
 
 For Java bindings, see 'libguestfs-java-devel'.
+
+For PHP bindings, see 'php-libguestfs'.
 
 
 %package devel
@@ -392,6 +396,16 @@ Requires:      jpackage-utils
 %{name}-javadoc contains the Java documentation for %{name}.
 
 
+%package -n php-%{name}
+Summary:       PHP bindings for %{name}
+Group:         Development/Libraries
+Requires:      %{name} = %{epoch}:%{version}-%{release}
+Requires:      php
+
+%description -n php-%{name}
+php-%{name} contains PHP bindings for %{name}.
+
+
 %prep
 %setup -q
 
@@ -419,7 +433,6 @@ createrepo repo
   --mandir=%{_mandir} \
   --sysconfdir=%{_sysconfdir} \
   --with-qemu="qemu-kvm qemu-system-%{_build_arch} qemu" \
-  --enable-debug-command \
   --enable-supermin \
 %if %{with_virtio}
   --with-drive-if=virtio \
@@ -472,7 +485,8 @@ export LIBGUESTFS_DEBUG=1
 #                                 (WORKAROUND using LD_PRELOAD)
 # 567567   32-bit       all    guestfish xstrtol test failure on 32-bit (FIXED)
 # 575734   all          F-14   microsecond resolution for blkid cache (FIXED)
-# 624854   all          F-15   kernel hangs during boot
+# 630583   all          all    kernel hangs setting scheduler to noop
+# 630777   all          F-15   task lvm blocked for more than 120 seconds
 
 # Workaround #563103
 cat > rhbz563103.c <<'EOF'
@@ -565,6 +579,11 @@ rm $RPM_BUILD_ROOT%{_libdir}/libguestfs_jni.la
 # Move installed documentation back to the source directory so
 # we can install it using a %%doc rule.
 mv $RPM_BUILD_ROOT%{_docdir}/libguestfs installed-docs
+
+# Remove Japanese manpages, since these are not translated fully at
+# the moment.  When these are translated properly we intend to add
+# them back.
+rm -rf $RPM_BUILD_ROOT%{_mandir}/ja/man{1,3}/
 
 # Find locale files.
 %find_lang %{name}
@@ -711,7 +730,22 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/javadoc/%{name}-java-%{version}
 
 
+%files -n php-%{name}
+%defattr(-,root,root,-)
+%doc php/README-PHP
+%dir %{_sysconfdir}/php.d
+%{_sysconfdir}/php.d/guestfs_php.ini
+%{_libdir}/php/modules/guestfs_php.so
+
+
 %changelog
+* Wed Sep  9 2010 Richard Jones <rjones@redhat.com> - 1:1.5.9-1
+- New upstream development version 1.5.9.
+- Add BR po4a for translations of man pages.
+- Add PHP bindings.
+- Remove partially-translated Japanese webpages.
+- 'debug' command is enabled by default now.
+
 * Fri Aug 27 2010 Richard Jones <rjones@redhat.com> - 1:1.5.5-2
 - Use bug-fixed febootstrap 2.9.
 
