@@ -41,7 +41,7 @@
 Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
-Version:       1.5.11
+Version:       1.5.12
 Release:       1%{?dist}
 License:       LGPLv2+
 Group:         Development/Libraries
@@ -743,6 +743,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sat Sep 11 2010 Richard Jones <rjones@redhat.com> - 1:1.5.12-1
+- New upstream version 1.5.12.
+
 * Fri Sep 10 2010 Richard Jones <rjones@redhat.com> - 1:1.5.11-1
 - New upstream version 1.5.11.
 - Note: fixes a serious bug in guestfish 'copy-out' command.
