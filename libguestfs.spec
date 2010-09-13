@@ -41,7 +41,7 @@
 Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
-Version:       1.5.12
+Version:       1.5.13
 Release:       1%{?dist}
 License:       LGPLv2+
 Group:         Development/Libraries
@@ -51,9 +51,6 @@ BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root
 
 # Disable FUSE tests, not supported in Koji at the moment.
 Patch0:        libguestfs-1.0.79-no-fuse-test.patch
-
-# Workaround for bug 630583: kernel hangs setting scheduler to noop.
-Patch1:        libguestfs-1.5.8-rhbz630583-no-set-scheduler-noop.patch
 
 # Basic build requirements:
 BuildRequires: /usr/bin/pod2man
@@ -413,7 +410,6 @@ php-%{name} contains PHP bindings for %{name}.
 %setup -q
 
 %patch0 -p1
-%patch1 -p1
 
 mkdir -p daemon/m4
 
@@ -743,6 +739,11 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Mon Sep 13 2010 Richard Jones <rjones@redhat.com> - 1:1.5.13-1
+- New upstream version 1.5.13.
+- Removed the patch workaround for RHBZ#630583.  The same workaround
+  is now upstream (the bug is not fixed).
+
 * Sat Sep 11 2010 Richard Jones <rjones@redhat.com> - 1:1.5.12-1
 - New upstream version 1.5.12.
 
