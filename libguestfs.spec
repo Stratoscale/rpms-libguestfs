@@ -70,7 +70,6 @@ BuildRequires: pcre-devel
 BuildRequires: file-devel
 BuildRequires: libvirt-devel
 BuildRequires: po4a
-BuildRequires: php-devel
 
 # This is only needed for RHEL 5 because readline-devel doesn't
 # properly depend on it, but doesn't do any harm on other platforms:
@@ -125,6 +124,7 @@ BuildRequires: rubygem-rake
 BuildRequires: java >= 1.5.0
 BuildRequires: jpackage-utils
 BuildRequires: java-devel
+BuildRequires: php-devel
 
 # For libguestfs-tools:
 BuildRequires: perl-Sys-Virt
@@ -201,6 +201,7 @@ License:       GPLv2+
 Requires:      %{name} = %{epoch}:%{version}-%{release}
 Requires:      /usr/bin/pod2text
 Requires:      virt-inspector
+Requires:      /usr/bin/hexedit
 
 
 %description -n guestfish
@@ -739,6 +740,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Tue Sep 21 2010 Richard Jones <rjones@redhat.com> - 1:1.5.17-1
+- New upstream development version 1.5.17.
+
 * Wed Sep 15 2010 Richard Jones <rjones@redhat.com> - 1:1.5.16-1
 - New upstream development version 1.5.16.
 
