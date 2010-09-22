@@ -42,7 +42,7 @@ Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
 Version:       1.5.18
-Release:       1%{?dist}.1
+Release:       1%{?dist}.2
 License:       LGPLv2+
 Group:         Development/Libraries
 URL:           http://libguestfs.org/
@@ -54,6 +54,9 @@ Patch0:        libguestfs-1.0.79-no-fuse-test.patch
 
 # Disable test-copy.sh because of missing /dev/fd bug in mock (RHBZ#526414).
 Patch1:        libguestfs-1.5.18-disable-test-copy.patch
+
+# Fix tests so they test the built guestfish (upstream).
+Patch2:        libguestfs-1.5.18-test-built-guestfish.patch
 
 # Basic build requirements:
 BuildRequires: /usr/bin/pod2man
@@ -415,6 +418,7 @@ php-%{name} contains PHP bindings for %{name}.
 
 %patch0 -p1
 %patch1 -p1
+%patch2 -p1
 
 mkdir -p daemon/m4
 
@@ -744,6 +748,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Wed Sep 22 2010 Richard Jones <rjones@redhat.com> - 1:1.5.18-1.fc14.2
+- Fix tests so they test the built guestfish, not /usr/bin/guestfish.
+
 * Wed Sep 22 2010 Richard Jones <rjones@redhat.com> - 1:1.5.18-1.fc14.1
 - Rebase test-copy patch.
 
