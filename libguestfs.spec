@@ -41,7 +41,7 @@
 Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
-Version:       1.5.17
+Version:       1.5.18
 Release:       1%{?dist}
 License:       LGPLv2+
 Group:         Development/Libraries
@@ -744,6 +744,11 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Wed Sep 22 2010 Richard Jones <rjones@redhat.com> - 1:1.5.18-1
+- New upstream development version 1.5.18.
+- Note that guestfish '-a' and '-d' options were broken in 1.5.17, so
+  upgrading to this version is highly recommended.
+
 * Tue Sep 21 2010 Richard Jones <rjones@redhat.com> - 1:1.5.17
 - New upstream development version 1.5.17.
 
