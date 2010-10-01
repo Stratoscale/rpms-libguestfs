@@ -42,7 +42,7 @@ Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
 Version:       1.5.21
-Release:       1%{?dist}
+Release:       1%{?dist}.2
 License:       LGPLv2+
 Group:         Development/Libraries
 URL:           http://libguestfs.org/
@@ -51,6 +51,9 @@ BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root
 
 # Disable FUSE tests, not supported in Koji at the moment.
 Patch0:        libguestfs-1.0.79-no-fuse-test.patch
+
+# Disable test-copy since it requires /dev/fd which is not yet created by mock.
+Patch1:        libguestfs-1.5.18-disable-test-copy.patch
 
 # Basic build requirements:
 BuildRequires: /usr/bin/pod2man
@@ -411,6 +414,7 @@ php-%{name} contains PHP bindings for %{name}.
 %setup -q
 
 %patch0 -p1
+%patch1 -p1
 
 mkdir -p daemon/m4
 
@@ -740,6 +744,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Fri Oct  1 2010 Richard Jones <rjones@redhat.com> - 1:1.5.21-1.fc14.2
+- Put the /dev/fd avoidance patch back in, mock still not fixed.
+
 * Fri Oct  1 2010 Richard Jones <rjones@redhat.com> - 1:1.5.21-1
 - New upstream development version 1.5.21.
 - Remove upstream patch.
