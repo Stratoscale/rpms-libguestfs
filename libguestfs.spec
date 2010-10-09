@@ -42,7 +42,7 @@ Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
 Version:       1.5.21
-Release:       1%{?dist}
+Release:       2%{?dist}
 License:       LGPLv2+
 Group:         Development/Libraries
 URL:           http://libguestfs.org/
@@ -200,7 +200,6 @@ Group:         Development/Tools
 License:       GPLv2+
 Requires:      %{name} = %{epoch}:%{version}-%{release}
 Requires:      /usr/bin/pod2text
-Requires:      virt-inspector
 Requires:      /usr/bin/hexedit
 
 
@@ -740,6 +739,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sat Oct  9 2010 Richard Jones <rjones@redhat.com> - 1:1.5.21-2
+- guestfish no longer requires virt-inspector.
+
 * Fri Oct  1 2010 Richard Jones <rjones@redhat.com> - 1:1.5.21-1
 - New upstream development version 1.5.21.
 
