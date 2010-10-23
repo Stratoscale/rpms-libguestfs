@@ -41,7 +41,7 @@
 Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
-Version:       1.5.22
+Version:       1.5.23
 Release:       1%{?dist}
 License:       LGPLv2+
 Group:         Development/Libraries
@@ -739,6 +739,10 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sat Oct 23 2010 Richard Jones <rjones@redhat.com> - 1:1.5.23-1
+- Fix for libguestfs: missing disk format specifier when adding a disk
+  (RHBZ#642934, CVE-2010-3851).
+
 * Tue Oct 19 2010 Richard Jones <rjones@redhat.com> - 1:1.5.22-1
 - New upstream development version 1.5.22.
 
