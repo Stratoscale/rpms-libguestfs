@@ -41,8 +41,8 @@
 Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
-Version:       1.5.21
-Release:       1%{?dist}.4
+Version:       1.5.23
+Release:       1
 License:       LGPLv2+
 Group:         Development/Libraries
 URL:           http://libguestfs.org/
@@ -51,10 +51,6 @@ BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root
 
 # Disable FUSE tests, not supported in Koji at the moment.
 Patch0:        libguestfs-1.0.79-no-fuse-test.patch
-
-# Upstream patches to skip problematic tests in some circumstances.
-Patch1:        libguestfs-1.5.21-skip-test-copy.patch
-Patch2:        libguestfs-1.5.21-skip-test-virt-resize.patch
 
 # Basic build requirements:
 BuildRequires: /usr/bin/pod2man
@@ -414,8 +410,6 @@ php-%{name} contains PHP bindings for %{name}.
 %setup -q
 
 %patch0 -p1
-%patch1 -p1
-%patch2 -p1
 
 mkdir -p daemon/m4
 
@@ -745,6 +739,10 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sat Oct 23 2010 Richard Jones <rjones@redhat.com> - 1:1.5.23-1
+- Fix for libguestfs: missing disk format specifier when adding a disk
+  (RHBZ#642934, CVE-2010-3851).
+
 * Sat Oct  9 2010 Richard Jones <rjones@redhat.com> - 1:1.5.21-1.fc14.4
 - guestfish no longer requires virt-inspector.
 
