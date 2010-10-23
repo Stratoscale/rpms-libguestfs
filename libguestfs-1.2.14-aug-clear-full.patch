@@ -1,7 +1,7 @@
-diff -ur libguestfs-1.2.9.orig/capitests/tests.c libguestfs-1.2.9/capitests/tests.c
---- libguestfs-1.2.9.orig/capitests/tests.c	2010-06-02 19:53:56.000000000 +0100
-+++ libguestfs-1.2.9/capitests/tests.c	2010-07-01 09:46:34.576550154 +0100
-@@ -164,6 +164,7 @@
+diff -urN libguestfs-1.2.14/capitests/tests.c libguestfs-1.2.14.aug-clear/capitests/tests.c
+--- libguestfs-1.2.14/capitests/tests.c	2010-10-23 13:13:14.000000000 +0100
++++ libguestfs-1.2.14.aug-clear/capitests/tests.c	2010-10-23 14:51:24.022775717 +0100
+@@ -177,6 +177,7 @@
    fprintf (stderr, "warning: \"guestfs_lvuuid\" has no tests\n");
    fprintf (stderr, "warning: \"guestfs_vgpvuuids\" has no tests\n");
    fprintf (stderr, "warning: \"guestfs_vglvuuids\" has no tests\n");
@@ -9,17 +9,17 @@ diff -ur libguestfs-1.2.9.orig/capitests/tests.c libguestfs-1.2.9/capitests/test
  }
  
  static int test_part_get_mbr_id_0_skip (void)
-diff -ur libguestfs-1.2.9.orig/daemon/actions.h libguestfs-1.2.9/daemon/actions.h
---- libguestfs-1.2.9.orig/daemon/actions.h	2010-04-12 19:13:30.000000000 +0100
-+++ libguestfs-1.2.9/daemon/actions.h	2010-07-01 09:46:34.580800684 +0100
+diff -urN libguestfs-1.2.14/daemon/actions.h libguestfs-1.2.14.aug-clear/daemon/actions.h
+--- libguestfs-1.2.14/daemon/actions.h	2010-09-16 17:15:35.000000000 +0100
++++ libguestfs-1.2.14.aug-clear/daemon/actions.h	2010-10-23 14:51:24.024775830 +0100
 @@ -253,3 +253,4 @@
  extern int do_part_get_bootable (const char *device, int partnum);
  extern int do_part_get_mbr_id (const char *device, int partnum);
  extern int do_part_set_mbr_id (const char *device, int partnum, int idbyte);
 +extern int do_aug_clear (const char *augpath);
-diff -ur libguestfs-1.2.9.orig/daemon/augeas.c libguestfs-1.2.9/daemon/augeas.c
---- libguestfs-1.2.9.orig/daemon/augeas.c	2010-04-12 19:03:41.000000000 +0100
-+++ libguestfs-1.2.9/daemon/augeas.c	2010-07-01 09:46:34.580800684 +0100
+diff -urN libguestfs-1.2.14/daemon/augeas.c libguestfs-1.2.14.aug-clear/daemon/augeas.c
+--- libguestfs-1.2.14/daemon/augeas.c	2010-09-16 17:15:33.000000000 +0100
++++ libguestfs-1.2.14.aug-clear/daemon/augeas.c	2010-10-23 14:51:24.052777407 +0100
 @@ -210,6 +210,26 @@
  }
  
@@ -47,19 +47,19 @@ diff -ur libguestfs-1.2.9.orig/daemon/augeas.c libguestfs-1.2.9/daemon/augeas.c
  do_aug_insert (const char *path, const char *label, int before)
  {
  #ifdef HAVE_AUGEAS
-diff -ur libguestfs-1.2.9.orig/daemon/names.c libguestfs-1.2.9/daemon/names.c
---- libguestfs-1.2.9.orig/daemon/names.c	2010-04-12 19:13:30.000000000 +0100
-+++ libguestfs-1.2.9/daemon/names.c	2010-07-01 09:46:34.581800834 +0100
+diff -urN libguestfs-1.2.14/daemon/names.c libguestfs-1.2.14.aug-clear/daemon/names.c
+--- libguestfs-1.2.14/daemon/names.c	2010-09-16 17:15:33.000000000 +0100
++++ libguestfs-1.2.14.aug-clear/daemon/names.c	2010-10-23 14:51:24.083779149 +0100
 @@ -257,4 +257,5 @@
    [234] = "part_get_bootable",
    [235] = "part_get_mbr_id",
    [236] = "part_set_mbr_id",
 +  [239] = "aug_clear",
  };
-diff -ur libguestfs-1.2.9.orig/daemon/stubs.c libguestfs-1.2.9/daemon/stubs.c
---- libguestfs-1.2.9.orig/daemon/stubs.c	2010-04-12 19:13:30.000000000 +0100
-+++ libguestfs-1.2.9/daemon/stubs.c	2010-07-01 09:46:34.583800338 +0100
-@@ -6042,6 +6042,29 @@
+diff -urN libguestfs-1.2.14/daemon/stubs.c libguestfs-1.2.14.aug-clear/daemon/stubs.c
+--- libguestfs-1.2.14/daemon/stubs.c	2010-09-16 17:15:27.000000000 +0100
++++ libguestfs-1.2.14.aug-clear/daemon/stubs.c	2010-10-23 14:51:24.086779318 +0100
+@@ -6045,6 +6045,29 @@
    xdr_free ((xdrproc_t) xdr_guestfs_part_set_mbr_id_args, (char *) &args);
  }
  
@@ -89,7 +89,7 @@ diff -ur libguestfs-1.2.9.orig/daemon/stubs.c libguestfs-1.2.9/daemon/stubs.c
  void dispatch_incoming_message (XDR *xdr_in)
  {
    switch (proc_nr) {
-@@ -6738,6 +6761,9 @@
+@@ -6741,6 +6764,9 @@
      case GUESTFS_PROC_PART_SET_MBR_ID:
        part_set_mbr_id_stub (xdr_in);
        break;
@@ -99,9 +99,9 @@ diff -ur libguestfs-1.2.9.orig/daemon/stubs.c libguestfs-1.2.9/daemon/stubs.c
      default:
        reply_with_error ("dispatch_incoming_message: unknown procedure number %d, set LIBGUESTFS_PATH to point to the matching libguestfs appliance directory", proc_nr);
    }
-diff -ur libguestfs-1.2.9.orig/fish/cmds.c libguestfs-1.2.9/fish/cmds.c
---- libguestfs-1.2.9.orig/fish/cmds.c	2010-06-02 19:53:56.000000000 +0100
-+++ libguestfs-1.2.9/fish/cmds.c	2010-07-01 09:53:48.071675195 +0100
+diff -urN libguestfs-1.2.14/fish/cmds.c libguestfs-1.2.14.aug-clear/fish/cmds.c
+--- libguestfs-1.2.14/fish/cmds.c	2010-10-23 12:44:26.000000000 +0100
++++ libguestfs-1.2.14.aug-clear/fish/cmds.c	2010-10-23 14:52:16.053701745 +0100
 @@ -42,6 +42,7 @@
    printf ("%-20s %s\n", "add-drive-ro", _("add a drive in snapshot mode (read-only)"));
    printf ("%-20s %s\n", "add-drive-ro-with-if", _("add a drive read-only specifying the QEMU block emulation to use"));
@@ -135,7 +135,7 @@ diff -ur libguestfs-1.2.9.orig/fish/cmds.c libguestfs-1.2.9/fish/cmds.c
    return r;
  }
  
-+static int run_aug_clear (const char *cmd, int argc, char *argv[])
++static int run_aug_clear (const char *cmd, size_t argc, char *argv[])
 +{
 +  int r;
 +  const char *augpath;
@@ -149,7 +149,7 @@ diff -ur libguestfs-1.2.9.orig/fish/cmds.c libguestfs-1.2.9/fish/cmds.c
 +  return r;
 +}
 +
- int run_action (const char *cmd, int argc, char *argv[])
+ int run_action (const char *cmd, size_t argc, char *argv[])
  {
    if (STRCASEEQ (cmd, "launch") || STRCASEEQ (cmd, "run"))
 @@ -8372,6 +8392,9 @@
@@ -162,9 +162,9 @@ diff -ur libguestfs-1.2.9.orig/fish/cmds.c libguestfs-1.2.9/fish/cmds.c
      {
        fprintf (stderr, _("%s: unknown command\n"), cmd);
        if (command_num == 1)
-diff -ur libguestfs-1.2.9.orig/fish/completion.c libguestfs-1.2.9/fish/completion.c
---- libguestfs-1.2.9.orig/fish/completion.c	2010-04-12 19:13:30.000000000 +0100
-+++ libguestfs-1.2.9/fish/completion.c	2010-07-01 09:46:34.589582308 +0100
+diff -urN libguestfs-1.2.14/fish/completion.c libguestfs-1.2.14.aug-clear/fish/completion.c
+--- libguestfs-1.2.14/fish/completion.c	2010-09-16 17:17:37.000000000 +0100
++++ libguestfs-1.2.14.aug-clear/fish/completion.c	2010-10-23 14:51:24.093779709 +0100
 @@ -319,6 +319,7 @@
    "part-get-bootable",
    "part-get-mbr-id",
@@ -173,11 +173,11 @@ diff -ur libguestfs-1.2.9.orig/fish/completion.c libguestfs-1.2.9/fish/completio
    NULL
  };
  
-diff -ur libguestfs-1.2.9.orig/fish/guestfish-actions.pod libguestfs-1.2.9/fish/guestfish-actions.pod
---- libguestfs-1.2.9.orig/fish/guestfish-actions.pod	2010-06-02 19:53:56.000000000 +0100
-+++ libguestfs-1.2.9/fish/guestfish-actions.pod	2010-07-01 09:53:57.563550555 +0100
-@@ -98,6 +98,13 @@
- This is the same as C<add-drive> but it allows you
+diff -urN libguestfs-1.2.14/fish/guestfish-actions.pod libguestfs-1.2.14.aug-clear/fish/guestfish-actions.pod
+--- libguestfs-1.2.14/fish/guestfish-actions.pod	2010-10-23 12:44:26.000000000 +0100
++++ libguestfs-1.2.14.aug-clear/fish/guestfish-actions.pod	2010-10-23 14:51:24.094779765 +0100
+@@ -96,6 +96,13 @@
+ This is the same as L</add-drive> but it allows you
  to specify the QEMU interface emulation to use at run time.
  
 +=head2 aug-clear
@@ -190,7 +190,7 @@ diff -ur libguestfs-1.2.9.orig/fish/guestfish-actions.pod libguestfs-1.2.9/fish/
  =head2 aug-close
  
   aug-close
-@@ -257,6 +264,11 @@
+@@ -255,6 +262,11 @@
  
  Set the value associated with C<path> to C<value>.
  
@@ -202,9 +202,9 @@ diff -ur libguestfs-1.2.9.orig/fish/guestfish-actions.pod libguestfs-1.2.9/fish/
  =head2 available
  
   available 'groups ...'
-diff -ur libguestfs-1.2.9.orig/haskell/Guestfs.hs libguestfs-1.2.9/haskell/Guestfs.hs
---- libguestfs-1.2.9.orig/haskell/Guestfs.hs	2010-05-24 14:06:11.000000000 +0100
-+++ libguestfs-1.2.9/haskell/Guestfs.hs	2010-07-01 09:46:34.591800303 +0100
+diff -urN libguestfs-1.2.14/haskell/Guestfs.hs libguestfs-1.2.14.aug-clear/haskell/Guestfs.hs
+--- libguestfs-1.2.14/haskell/Guestfs.hs	2010-09-16 17:16:44.000000000 +0100
++++ libguestfs-1.2.14.aug-clear/haskell/Guestfs.hs	2010-10-23 14:51:24.095779823 +0100
 @@ -191,7 +191,8 @@
    copy_size,
    part_del,
@@ -231,10 +231,10 @@ diff -ur libguestfs-1.2.9.orig/haskell/Guestfs.hs libguestfs-1.2.9/haskell/Guest
 +      fail err
 +    else return ()
 +
-diff -ur libguestfs-1.2.9.orig/java/com/redhat/et/libguestfs/GuestFS.java libguestfs-1.2.9/java/com/redhat/et/libguestfs/GuestFS.java
---- libguestfs-1.2.9.orig/java/com/redhat/et/libguestfs/GuestFS.java	2010-06-02 19:53:56.000000000 +0100
-+++ libguestfs-1.2.9/java/com/redhat/et/libguestfs/GuestFS.java	2010-07-01 09:54:49.198925171 +0100
-@@ -1658,6 +1658,11 @@
+diff -urN libguestfs-1.2.14/java/com/redhat/et/libguestfs/GuestFS.java libguestfs-1.2.14.aug-clear/java/com/redhat/et/libguestfs/GuestFS.java
+--- libguestfs-1.2.14/java/com/redhat/et/libguestfs/GuestFS.java	2010-10-23 12:44:26.000000000 +0100
++++ libguestfs-1.2.14.aug-clear/java/com/redhat/et/libguestfs/GuestFS.java	2010-10-23 14:51:24.099780049 +0100
+@@ -1655,6 +1655,11 @@
     * <p>
     * Set the value associated with "path" to "value".
     * <p>
@@ -246,7 +246,7 @@ diff -ur libguestfs-1.2.9.orig/java/com/redhat/et/libguestfs/GuestFS.java libgue
     * @throws LibGuestFSException
     */
    public void aug_set (String augpath, String val)
-@@ -6610,4 +6615,22 @@
+@@ -6619,4 +6624,22 @@
    private native void _part_set_mbr_id (long g, String device, int partnum, int idbyte)
      throws LibGuestFSException;
  
@@ -269,9 +269,9 @@ diff -ur libguestfs-1.2.9.orig/java/com/redhat/et/libguestfs/GuestFS.java libgue
 +    throws LibGuestFSException;
 +
  }
-diff -ur libguestfs-1.2.9.orig/java/com_redhat_et_libguestfs_GuestFS.c libguestfs-1.2.9/java/com_redhat_et_libguestfs_GuestFS.c
---- libguestfs-1.2.9.orig/java/com_redhat_et_libguestfs_GuestFS.c	2010-05-24 14:06:11.000000000 +0100
-+++ libguestfs-1.2.9/java/com_redhat_et_libguestfs_GuestFS.c	2010-07-01 09:46:34.595613939 +0100
+diff -urN libguestfs-1.2.14/java/com_redhat_et_libguestfs_GuestFS.c libguestfs-1.2.14.aug-clear/java/com_redhat_et_libguestfs_GuestFS.c
+--- libguestfs-1.2.14/java/com_redhat_et_libguestfs_GuestFS.c	2010-09-16 17:17:36.000000000 +0100
++++ libguestfs-1.2.14.aug-clear/java/com_redhat_et_libguestfs_GuestFS.c	2010-10-23 14:51:24.103780275 +0100
 @@ -6784,3 +6784,20 @@
    }
  }
@@ -293,10 +293,10 @@ diff -ur libguestfs-1.2.9.orig/java/com_redhat_et_libguestfs_GuestFS.c libguestf
 +  }
 +}
 +
-diff -ur libguestfs-1.2.9.orig/ocaml/guestfs_c_actions.c libguestfs-1.2.9/ocaml/guestfs_c_actions.c
---- libguestfs-1.2.9.orig/ocaml/guestfs_c_actions.c	2010-05-24 14:06:11.000000000 +0100
-+++ libguestfs-1.2.9/ocaml/guestfs_c_actions.c	2010-07-01 09:46:34.597800688 +0100
-@@ -676,6 +676,36 @@
+diff -urN libguestfs-1.2.14/ocaml/guestfs_c_actions.c libguestfs-1.2.14.aug-clear/ocaml/guestfs_c_actions.c
+--- libguestfs-1.2.14/ocaml/guestfs_c_actions.c	2010-10-23 13:00:32.000000000 +0100
++++ libguestfs-1.2.14.aug-clear/ocaml/guestfs_c_actions.c	2010-10-23 14:51:24.106780441 +0100
+@@ -683,6 +683,36 @@
  }
  
  /* Automatically generated wrapper for function
@@ -333,9 +333,9 @@ diff -ur libguestfs-1.2.9.orig/ocaml/guestfs_c_actions.c libguestfs-1.2.9/ocaml/
   * val aug_close : t -> unit
   */
  
-diff -ur libguestfs-1.2.9.orig/ocaml/guestfs.ml libguestfs-1.2.9/ocaml/guestfs.ml
---- libguestfs-1.2.9.orig/ocaml/guestfs.ml	2010-05-24 14:06:11.000000000 +0100
-+++ libguestfs-1.2.9/ocaml/guestfs.ml	2010-07-01 09:46:34.599800230 +0100
+diff -urN libguestfs-1.2.14/ocaml/guestfs.ml libguestfs-1.2.14.aug-clear/ocaml/guestfs.ml
+--- libguestfs-1.2.14/ocaml/guestfs.ml	2010-09-16 17:16:43.000000000 +0100
++++ libguestfs-1.2.14.aug-clear/ocaml/guestfs.ml	2010-10-23 14:51:24.108780554 +0100
 @@ -163,6 +163,7 @@
  external add_drive_ro : t -> string -> unit = "ocaml_guestfs_add_drive_ro"
  external add_drive_ro_with_if : t -> string -> string -> unit = "ocaml_guestfs_add_drive_ro_with_if"
@@ -344,9 +344,9 @@ diff -ur libguestfs-1.2.9.orig/ocaml/guestfs.ml libguestfs-1.2.9/ocaml/guestfs.m
  external aug_close : t -> unit = "ocaml_guestfs_aug_close"
  external aug_defnode : t -> string -> string -> string -> int_bool = "ocaml_guestfs_aug_defnode"
  external aug_defvar : t -> string -> string option -> int = "ocaml_guestfs_aug_defvar"
-diff -ur libguestfs-1.2.9.orig/ocaml/guestfs.mli libguestfs-1.2.9/ocaml/guestfs.mli
---- libguestfs-1.2.9.orig/ocaml/guestfs.mli	2010-06-02 19:53:56.000000000 +0100
-+++ libguestfs-1.2.9/ocaml/guestfs.mli	2010-07-01 09:46:34.600800871 +0100
+diff -urN libguestfs-1.2.14/ocaml/guestfs.mli libguestfs-1.2.14.aug-clear/ocaml/guestfs.mli
+--- libguestfs-1.2.14/ocaml/guestfs.mli	2010-10-23 12:44:26.000000000 +0100
++++ libguestfs-1.2.14.aug-clear/ocaml/guestfs.mli	2010-10-23 14:51:24.109780612 +0100
 @@ -186,6 +186,9 @@
  val add_drive_with_if : t -> string -> string -> unit
  (** add a drive specifying the QEMU block emulation to use *)
@@ -357,9 +357,9 @@ diff -ur libguestfs-1.2.9.orig/ocaml/guestfs.mli libguestfs-1.2.9/ocaml/guestfs.
  val aug_close : t -> unit
  (** close the current Augeas handle *)
  
-diff -ur libguestfs-1.2.9.orig/perl/Guestfs.xs libguestfs-1.2.9/perl/Guestfs.xs
---- libguestfs-1.2.9.orig/perl/Guestfs.xs	2010-05-24 14:06:11.000000000 +0100
-+++ libguestfs-1.2.9/perl/Guestfs.xs	2010-07-01 09:46:34.601801899 +0100
+diff -urN libguestfs-1.2.14/perl/Guestfs.xs libguestfs-1.2.14.aug-clear/perl/Guestfs.xs
+--- libguestfs-1.2.14/perl/Guestfs.xs	2010-10-23 13:13:14.000000000 +0100
++++ libguestfs-1.2.14.aug-clear/perl/Guestfs.xs	2010-10-23 14:51:24.111780725 +0100
 @@ -4382,3 +4382,14 @@
        if (r == -1)
          croak ("%s", guestfs_last_error (g));
@@ -375,10 +375,10 @@ diff -ur libguestfs-1.2.9.orig/perl/Guestfs.xs libguestfs-1.2.9/perl/Guestfs.xs
 +      if (r == -1)
 +        croak ("%s", guestfs_last_error (g));
 +
-diff -ur libguestfs-1.2.9.orig/perl/lib/Sys/Guestfs.pm libguestfs-1.2.9/perl/lib/Sys/Guestfs.pm
---- libguestfs-1.2.9.orig/perl/lib/Sys/Guestfs.pm	2010-06-02 19:53:56.000000000 +0100
-+++ libguestfs-1.2.9/perl/lib/Sys/Guestfs.pm	2010-07-01 09:55:51.509675781 +0100
-@@ -186,6 +186,11 @@
+diff -urN libguestfs-1.2.14/perl/lib/Sys/Guestfs.pm libguestfs-1.2.14.aug-clear/perl/lib/Sys/Guestfs.pm
+--- libguestfs-1.2.14/perl/lib/Sys/Guestfs.pm	2010-10-23 12:44:26.000000000 +0100
++++ libguestfs-1.2.14.aug-clear/perl/lib/Sys/Guestfs.pm	2010-10-23 14:51:24.113780835 +0100
+@@ -184,6 +184,11 @@
  This is the same as C<$h-E<gt>add_drive> but it allows you
  to specify the QEMU interface emulation to use at run time.
  
@@ -390,7 +390,7 @@ diff -ur libguestfs-1.2.9.orig/perl/lib/Sys/Guestfs.pm libguestfs-1.2.9/perl/lib
  =item $h->aug_close ();
  
  Close the current Augeas handle and free up any resources
-@@ -319,6 +324,11 @@
+@@ -317,6 +322,11 @@
  
  Set the value associated with C<path> to C<value>.
  
@@ -402,10 +402,10 @@ diff -ur libguestfs-1.2.9.orig/perl/lib/Sys/Guestfs.pm libguestfs-1.2.9/perl/lib
  =item $h->available (\@groups);
  
  This command is used to check the availability of some
-diff -ur libguestfs-1.2.9.orig/python/guestfs.py libguestfs-1.2.9/python/guestfs.py
---- libguestfs-1.2.9.orig/python/guestfs.py	2010-06-02 19:53:56.000000000 +0100
-+++ libguestfs-1.2.9/python/guestfs.py	2010-07-01 09:56:06.709674864 +0100
-@@ -860,6 +860,11 @@
+diff -urN libguestfs-1.2.14/python/guestfs.py libguestfs-1.2.14.aug-clear/python/guestfs.py
+--- libguestfs-1.2.14/python/guestfs.py	2010-10-23 12:44:26.000000000 +0100
++++ libguestfs-1.2.14.aug-clear/python/guestfs.py	2010-10-23 14:51:24.114780892 +0100
+@@ -857,6 +857,11 @@
  
      def aug_set (self, augpath, val):
          u"""Set the value associated with "path" to "value".
@@ -417,7 +417,7 @@ diff -ur libguestfs-1.2.9.orig/python/guestfs.py libguestfs-1.2.9/python/guestfs
          """
          return libguestfsmod.aug_set (self._o, augpath, val)
  
-@@ -3377,3 +3382,9 @@
+@@ -3386,3 +3391,9 @@
          """
          return libguestfsmod.part_set_mbr_id (self._o, device, partnum, idbyte)
  
@@ -427,10 +427,10 @@ diff -ur libguestfs-1.2.9.orig/python/guestfs.py libguestfs-1.2.9/python/guestfs
 +        """
 +        return libguestfsmod.aug_clear (self._o, augpath)
 +
-diff -ur libguestfs-1.2.9.orig/python/guestfs-py.c libguestfs-1.2.9/python/guestfs-py.c
---- libguestfs-1.2.9.orig/python/guestfs-py.c	2010-05-24 14:06:11.000000000 +0100
-+++ libguestfs-1.2.9/python/guestfs-py.c	2010-07-01 09:46:34.607553793 +0100
-@@ -7870,6 +7870,31 @@
+diff -urN libguestfs-1.2.14/python/guestfs-py.c libguestfs-1.2.14.aug-clear/python/guestfs-py.c
+--- libguestfs-1.2.14/python/guestfs-py.c	2010-09-16 17:14:52.000000000 +0100
++++ libguestfs-1.2.14.aug-clear/python/guestfs-py.c	2010-10-23 14:51:24.117781063 +0100
+@@ -7881,6 +7881,31 @@
    return py_r;
  }
  
@@ -462,7 +462,7 @@ diff -ur libguestfs-1.2.9.orig/python/guestfs-py.c libguestfs-1.2.9/python/guest
  static PyMethodDef methods[] = {
    { (char *) "create", py_guestfs_create, METH_VARARGS, NULL },
    { (char *) "close", py_guestfs_close, METH_VARARGS, NULL },
-@@ -8161,6 +8186,7 @@
+@@ -8172,6 +8197,7 @@
    { (char *) "part_get_bootable", py_guestfs_part_get_bootable, METH_VARARGS, NULL },
    { (char *) "part_get_mbr_id", py_guestfs_part_get_mbr_id, METH_VARARGS, NULL },
    { (char *) "part_set_mbr_id", py_guestfs_part_set_mbr_id, METH_VARARGS, NULL },
@@ -470,9 +470,9 @@ diff -ur libguestfs-1.2.9.orig/python/guestfs-py.c libguestfs-1.2.9/python/guest
    { NULL, NULL, 0, NULL }
  };
  
-diff -ur libguestfs-1.2.9.orig/ruby/ext/guestfs/_guestfs.c libguestfs-1.2.9/ruby/ext/guestfs/_guestfs.c
---- libguestfs-1.2.9.orig/ruby/ext/guestfs/_guestfs.c	2010-05-24 14:06:11.000000000 +0100
-+++ libguestfs-1.2.9/ruby/ext/guestfs/_guestfs.c	2010-07-01 09:46:34.609800607 +0100
+diff -urN libguestfs-1.2.14/ruby/ext/guestfs/_guestfs.c libguestfs-1.2.14.aug-clear/ruby/ext/guestfs/_guestfs.c
+--- libguestfs-1.2.14/ruby/ext/guestfs/_guestfs.c	2010-09-16 17:17:36.000000000 +0100
++++ libguestfs-1.2.14.aug-clear/ruby/ext/guestfs/_guestfs.c	2010-10-23 14:51:24.123781399 +0100
 @@ -7393,6 +7393,28 @@
    return Qnil;
  }
@@ -509,10 +509,10 @@ diff -ur libguestfs-1.2.9.orig/ruby/ext/guestfs/_guestfs.c libguestfs-1.2.9/ruby
 +  rb_define_method (c_guestfs, "aug_clear",
 +        ruby_guestfs_aug_clear, 1);
  }
-diff -ur libguestfs-1.2.9.orig/src/generator.ml libguestfs-1.2.9/src/generator.ml
---- libguestfs-1.2.9.orig/src/generator.ml	2010-06-02 19:48:45.000000000 +0100
-+++ libguestfs-1.2.9/src/generator.ml	2010-07-01 09:53:51.489675473 +0100
-@@ -1250,7 +1250,12 @@
+diff -urN libguestfs-1.2.14/src/generator.ml libguestfs-1.2.14.aug-clear/src/generator.ml
+--- libguestfs-1.2.14/src/generator.ml	2010-10-23 13:13:10.000000000 +0100
++++ libguestfs-1.2.14.aug-clear/src/generator.ml	2010-10-23 14:51:24.131781848 +0100
+@@ -1251,7 +1251,12 @@
     [], (* XXX Augeas code needs tests. *)
     "set Augeas path to value",
     "\
@@ -526,7 +526,7 @@ diff -ur libguestfs-1.2.9.orig/src/generator.ml libguestfs-1.2.9/src/generator.m
  
    ("aug_insert", (RErr, [String "augpath"; String "label"; Bool "before"]), 21, [Optional "augeas"],
     [], (* XXX Augeas code needs tests. *)
-@@ -4497,6 +4502,13 @@
+@@ -4509,6 +4514,13 @@
  You will get undefined results for other partition table
  types (see C<guestfs_part_get_parttype>).");
  
@@ -540,9 +540,9 @@ diff -ur libguestfs-1.2.9.orig/src/generator.ml libguestfs-1.2.9/src/generator.m
  ]
  
  let all_functions = non_daemon_functions @ daemon_functions
-diff -ur libguestfs-1.2.9.orig/src/guestfs-actions.c libguestfs-1.2.9/src/guestfs-actions.c
---- libguestfs-1.2.9.orig/src/guestfs-actions.c	2010-05-24 14:06:10.000000000 +0100
-+++ libguestfs-1.2.9/src/guestfs-actions.c	2010-07-01 09:46:34.616800354 +0100
+diff -urN libguestfs-1.2.14/src/guestfs-actions.c libguestfs-1.2.14.aug-clear/src/guestfs-actions.c
+--- libguestfs-1.2.14/src/guestfs-actions.c	2010-09-16 17:16:36.000000000 +0100
++++ libguestfs-1.2.14.aug-clear/src/guestfs-actions.c	2010-10-23 14:51:24.137782186 +0100
 @@ -13696,6 +13696,58 @@
    return 0;
  }
@@ -602,18 +602,18 @@ diff -ur libguestfs-1.2.9.orig/src/guestfs-actions.c libguestfs-1.2.9/src/guestf
  /* Structure-freeing functions.  These rely on the fact that the
   * structure format is identical to the XDR format.  See note in
   * generator.ml.
-diff -ur libguestfs-1.2.9.orig/src/guestfs-actions.h libguestfs-1.2.9/src/guestfs-actions.h
---- libguestfs-1.2.9.orig/src/guestfs-actions.h	2010-04-20 08:48:32.000000000 +0100
-+++ libguestfs-1.2.9/src/guestfs-actions.h	2010-07-01 09:46:34.617800534 +0100
+diff -urN libguestfs-1.2.14/src/guestfs-actions.h libguestfs-1.2.14.aug-clear/src/guestfs-actions.h
+--- libguestfs-1.2.14/src/guestfs-actions.h	2010-09-16 17:16:36.000000000 +0100
++++ libguestfs-1.2.14.aug-clear/src/guestfs-actions.h	2010-10-23 14:51:24.139782299 +0100
 @@ -308,3 +308,4 @@
  extern int guestfs_part_get_bootable (guestfs_h *g, const char *device, int partnum);
  extern int guestfs_part_get_mbr_id (guestfs_h *g, const char *device, int partnum);
  extern int guestfs_part_set_mbr_id (guestfs_h *g, const char *device, int partnum, int idbyte);
 +extern int guestfs_aug_clear (guestfs_h *g, const char *augpath);
-diff -ur libguestfs-1.2.9.orig/src/guestfs-actions.pod libguestfs-1.2.9/src/guestfs-actions.pod
---- libguestfs-1.2.9.orig/src/guestfs-actions.pod	2010-06-02 19:53:56.000000000 +0100
-+++ libguestfs-1.2.9/src/guestfs-actions.pod	2010-07-01 09:56:39.077925599 +0100
-@@ -115,6 +115,16 @@
+diff -urN libguestfs-1.2.14/src/guestfs-actions.pod libguestfs-1.2.14.aug-clear/src/guestfs-actions.pod
+--- libguestfs-1.2.14/src/guestfs-actions.pod	2010-10-23 12:44:25.000000000 +0100
++++ libguestfs-1.2.14.aug-clear/src/guestfs-actions.pod	2010-10-23 14:51:24.141782410 +0100
+@@ -113,6 +113,16 @@
  
  This function returns 0 on success or -1 on error.
  
@@ -630,7 +630,7 @@ diff -ur libguestfs-1.2.9.orig/src/guestfs-actions.pod libguestfs-1.2.9/src/gues
  =head2 guestfs_aug_close
  
   int guestfs_aug_close (guestfs_h *g);
-@@ -323,6 +333,11 @@
+@@ -321,6 +331,11 @@
  
  Set the value associated with C<path> to C<value>.
  
@@ -642,9 +642,9 @@ diff -ur libguestfs-1.2.9.orig/src/guestfs-actions.pod libguestfs-1.2.9/src/gues
  This function returns 0 on success or -1 on error.
  
  =head2 guestfs_available
-diff -ur libguestfs-1.2.9.orig/src/guestfs-availability.pod libguestfs-1.2.9/src/guestfs-availability.pod
---- libguestfs-1.2.9.orig/src/guestfs-availability.pod	2010-03-16 19:47:56.000000000 +0000
-+++ libguestfs-1.2.9/src/guestfs-availability.pod	2010-07-01 09:46:34.619800320 +0100
+diff -urN libguestfs-1.2.14/src/guestfs-availability.pod libguestfs-1.2.14.aug-clear/src/guestfs-availability.pod
+--- libguestfs-1.2.14/src/guestfs-availability.pod	2010-09-16 17:16:36.000000000 +0100
++++ libguestfs-1.2.14.aug-clear/src/guestfs-availability.pod	2010-10-23 14:51:24.142782466 +0100
 @@ -3,6 +3,7 @@
  =item B<augeas>
  
@@ -653,9 +653,9 @@ diff -ur libguestfs-1.2.9.orig/src/guestfs-availability.pod libguestfs-1.2.9/src
  L</guestfs_aug_close>
  L</guestfs_aug_defnode>
  L</guestfs_aug_defvar>
-diff -ur libguestfs-1.2.9.orig/src/guestfs_protocol.x libguestfs-1.2.9/src/guestfs_protocol.x
---- libguestfs-1.2.9.orig/src/guestfs_protocol.x	2010-04-12 19:13:29.000000000 +0100
-+++ libguestfs-1.2.9/src/guestfs_protocol.x	2010-07-01 09:46:34.620800417 +0100
+diff -urN libguestfs-1.2.14/src/guestfs_protocol.x libguestfs-1.2.14.aug-clear/src/guestfs_protocol.x
+--- libguestfs-1.2.14/src/guestfs_protocol.x	2010-09-16 17:16:36.000000000 +0100
++++ libguestfs-1.2.14.aug-clear/src/guestfs_protocol.x	2010-10-23 14:51:24.143782524 +0100
 @@ -1567,6 +1567,10 @@
    int idbyte;
  };
@@ -675,9 +675,9 @@ diff -ur libguestfs-1.2.9.orig/src/guestfs_protocol.x libguestfs-1.2.9/src/guest
    GUESTFS_PROC_NR_PROCS
  };
  
-diff -ur libguestfs-1.2.9.orig/src/libguestfs.syms libguestfs-1.2.9/src/libguestfs.syms
---- libguestfs-1.2.9.orig/src/libguestfs.syms	2010-04-12 19:13:30.000000000 +0100
-+++ libguestfs-1.2.9/src/libguestfs.syms	2010-07-01 09:46:34.621654059 +0100
+diff -urN libguestfs-1.2.14/src/libguestfs.syms libguestfs-1.2.14.aug-clear/src/libguestfs.syms
+--- libguestfs-1.2.14/src/libguestfs.syms	2010-09-16 17:16:36.000000000 +0100
++++ libguestfs-1.2.14.aug-clear/src/libguestfs.syms	2010-10-23 14:51:24.144782581 +0100
 @@ -26,6 +26,7 @@
          guestfs_add_drive_ro;
          guestfs_add_drive_ro_with_if;
@@ -686,9 +686,9 @@ diff -ur libguestfs-1.2.9.orig/src/libguestfs.syms libguestfs-1.2.9/src/libguest
          guestfs_aug_close;
          guestfs_aug_defnode;
          guestfs_aug_defvar;
-diff -ur libguestfs-1.2.9.orig/src/MAX_PROC_NR libguestfs-1.2.9/src/MAX_PROC_NR
---- libguestfs-1.2.9.orig/src/MAX_PROC_NR	2010-04-12 19:06:21.000000000 +0100
-+++ libguestfs-1.2.9/src/MAX_PROC_NR	2010-07-01 09:46:34.621654059 +0100
+diff -urN libguestfs-1.2.14/src/MAX_PROC_NR libguestfs-1.2.14.aug-clear/src/MAX_PROC_NR
+--- libguestfs-1.2.14/src/MAX_PROC_NR	2010-09-16 17:16:37.000000000 +0100
++++ libguestfs-1.2.14.aug-clear/src/MAX_PROC_NR	2010-10-23 14:51:24.145782637 +0100
 @@ -1 +1 @@
 -236
 +239
