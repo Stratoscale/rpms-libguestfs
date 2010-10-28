@@ -42,7 +42,7 @@ Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
 Version:       1.4.3
-Release:       4%{?dist}
+Release:       5%{?dist}
 License:       LGPLv2+
 Group:         Development/Libraries
 URL:           http://libguestfs.org/
@@ -71,6 +71,7 @@ Patch19:       0019-Call-sync-after-guestfsd-exits.patch
 Patch20:       0020-Shut-down-the-appliance-cleanly.patch
 Patch21:       0021-Ignore-launch-error-in-virt-rescue.-RHBZ-618556.patch
 Patch22:       0022-build-Don-t-add-version-extra-string-to-the-version-.patch
+Patch23:       0023-Fix-networking-in-the-appliance.patch
 
 # Disable FUSE tests, not supported in Koji at the moment.
 Patch9998:     libguestfs-1.0.79-no-fuse-test.patch
@@ -448,6 +449,7 @@ chmod +x regressions/test-luks.sh
 %patch20 -p1
 %patch21 -p1
 %patch22 -p1
+%patch23 -p1
 
 %patch9998 -p1
 %patch9999 -p1
@@ -783,6 +785,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Thu Oct 28 2010 Marek Goldmann <mgoldman@redhat.com> - 1:1.4.3-5
+- Fix networking in the appliance.
+
 * Fri Aug 27 2010 Richard Jones <rjones@redhat.com> - 1:1.4.3-4
 - Change the mirror so local builds use Fedora 13 repo.
 

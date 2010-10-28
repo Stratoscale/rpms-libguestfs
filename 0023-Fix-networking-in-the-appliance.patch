@@ -1,0 +1,31 @@
+From: Matthew Booth <mbooth@redhat.com>
+Date: Wed, 27 Oct 2010 09:55:24 +0000 (+0100)
+Subject: Fix networking in the appliance.
+X-Git-Tag: 1.5.24~14
+X-Git-Url: http://git.annexia.org/?p=libguestfs.git;a=commitdiff_plain;h=61da709722ec244da1c3c7d4f1a8706f76687cb3
+
+Fix networking in the appliance.
+
+Commit 4963be85 re-introduced networking to the appliance,
+but didn't configure the custom network the appliance expects
+since we switched to link local addressing. This patch
+configures QEMU to use the custom network again.
+
+Note that you still need to use guestfs_set_network (g, 1)
+to enable user networking.
+---
+
+diff --git a/src/launch.c b/src/launch.c
+index 7f2f74c..047a1e1 100644
+--- a/src/launch.c
++++ b/src/launch.c
+@@ -491,7 +491,7 @@ guestfs__launch (guestfs_h *g)
+     /* Enable user networking. */
+     if (g->enable_network) {
+       add_cmdline (g, "-netdev");
+-      add_cmdline (g, "user,id=usernet");
++      add_cmdline (g, "user,id=usernet,net=169.254.0.0/16");
+       add_cmdline (g, "-device");
+       add_cmdline (g, NET_IF ",netdev=usernet");
+     }
+
