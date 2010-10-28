@@ -41,8 +41,8 @@
 Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
-Version:       1.5.24
-Release:       2%{?dist}
+Version:       1.5.25
+Release:       1%{?dist}
 License:       LGPLv2+
 Group:         Development/Libraries
 URL:           http://libguestfs.org/
@@ -55,7 +55,7 @@ Patch0:        libguestfs-1.0.79-no-fuse-test.patch
 # Basic build requirements:
 BuildRequires: /usr/bin/pod2man
 BuildRequires: /usr/bin/pod2text
-BuildRequires: febootstrap >= 2.9
+BuildRequires: febootstrap >= 2.10
 BuildRequires: hivex-devel >= 1.2.2
 BuildRequires: augeas-devel >= 0.5.0
 BuildRequires: readline-devel
@@ -132,7 +132,7 @@ BuildRequires: qemu-img
 
 # Runtime requires:
 Requires:      qemu-kvm >= 0.12
-Requires:      febootstrap >= 2.9
+Requires:      febootstrap >= 2.10
 
 # For libguestfs-test-tool.
 Requires:      genisoimage
@@ -233,6 +233,7 @@ Requires:      perl-String-ShellQuote
 Requires:      perl-XML-Writer
 Requires:      hivex >= 1.2.2
 Requires:      qemu-img
+Requires:      db4-utils
 
 # Obsolete and replace earlier packages.
 Provides:      virt-cat = %{epoch}:%{version}-%{release}
@@ -487,6 +488,7 @@ export LIBGUESTFS_DEBUG=1
 # 575734   all          F-14   microsecond resolution for blkid cache (FIXED)
 # 630583   all          all    kernel hangs setting scheduler to noop
 # 630777   all          F-15   task lvm blocked for more than 120 seconds
+#                                 (FIXED)
 
 # Workaround #563103
 cat > rhbz563103.c <<'EOF'
@@ -739,6 +741,12 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Thu Oct 28 2010 Richard Jones <rjones@redhat.com> - 1:1.5.25-1
+- New upstream development version 1.5.25.
+- Rewritten virt-inspector.
+- Requires febootstrap >= 2.10.
+- New virt-inspector requires db_dump program.
+
 * Wed Oct 27 2010 Richard Jones <rjones@redhat.com> - 1:1.5.24-2
 - Attempt to run tests.
 
