@@ -41,7 +41,7 @@
 Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
-Version:       1.5.23
+Version:       1.6.0
 Release:       1
 License:       LGPLv2+
 Group:         Development/Libraries
@@ -56,6 +56,7 @@ Patch0:        libguestfs-1.0.79-no-fuse-test.patch
 BuildRequires: /usr/bin/pod2man
 BuildRequires: /usr/bin/pod2text
 BuildRequires: febootstrap >= 2.9
+#BuildRequires: febootstrap >= 2.10 (when it goes stable)
 BuildRequires: hivex-devel >= 1.2.2
 BuildRequires: augeas-devel >= 0.5.0
 BuildRequires: readline-devel
@@ -133,6 +134,7 @@ BuildRequires: qemu-img
 # Runtime requires:
 Requires:      qemu-kvm >= 0.12
 Requires:      febootstrap >= 2.9
+#Requires:      febootstrap >= 2.10 (when it goes stable)
 
 # For libguestfs-test-tool.
 Requires:      genisoimage
@@ -233,6 +235,7 @@ Requires:      perl-String-ShellQuote
 Requires:      perl-XML-Writer
 Requires:      hivex >= 1.2.2
 Requires:      qemu-img
+Requires:      db4-utils
 
 # Obsolete and replace earlier packages.
 Provides:      virt-cat = %{epoch}:%{version}-%{release}
@@ -487,6 +490,7 @@ export LIBGUESTFS_DEBUG=1
 # 575734   all          F-14   microsecond resolution for blkid cache (FIXED)
 # 630583   all          all    kernel hangs setting scheduler to noop
 # 630777   all          F-15   task lvm blocked for more than 120 seconds
+#                                 (FIXED)
 
 # Workaround #563103
 cat > rhbz563103.c <<'EOF'
@@ -739,6 +743,12 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Tue Nov  2 2010 Richard Jones <rjones@redhat.com> - 1:1.6.0-1
+- New upstream stable branch 1.6, version 1.6.0.
+- virt-inspector now requires db_dump from db4-utils package.
+- Can use febootstrap 2.9 for now, but add a note that we should
+  depend on febootstrap 2.10 as soon as that is in F14 stable.
+
 * Sat Oct 23 2010 Richard Jones <rjones@redhat.com> - 1:1.5.23-1
 - Fix for libguestfs: missing disk format specifier when adding a disk
   (RHBZ#642934, CVE-2010-3851).
