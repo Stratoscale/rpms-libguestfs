@@ -46,7 +46,7 @@ Release:       1
 License:       LGPLv2+
 Group:         Development/Libraries
 URL:           http://libguestfs.org/
-Source0:       http://libguestfs.org/download/1.5-development/%{name}-%{version}.tar.gz
+Source0:       http://libguestfs.org/download/1.6-stable/%{name}-%{version}.tar.gz
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root
 
 # Disable FUSE tests, not supported in Koji at the moment.
