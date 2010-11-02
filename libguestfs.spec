@@ -42,7 +42,7 @@ Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
 Version:       1.6.0
-Release:       1%{?dist}
+Release:       1%{?dist}.1
 License:       LGPLv2+
 Group:         Development/Libraries
 URL:           http://libguestfs.org/
@@ -51,6 +51,9 @@ BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root
 
 # Disable FUSE tests, not supported in Koji at the moment.
 Patch0:        libguestfs-1.0.79-no-fuse-test.patch
+
+# Backport upstream patch to tolerate blockdev --rereadpt failure.
+Patch1:        0001-daemon-Tolerate-failure-of-blockdev-rereadpt-after-s.patch
 
 # Basic build requirements:
 BuildRequires: /usr/bin/pod2man
@@ -413,6 +416,7 @@ php-%{name} contains PHP bindings for %{name}.
 %setup -q
 
 %patch0 -p1
+%patch1 -p1
 
 mkdir -p daemon/m4
 
@@ -743,11 +747,12 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
-* Tue Nov  2 2010 Richard Jones <rjones@redhat.com> - 1:1.6.0-1
+* Tue Nov  2 2010 Richard Jones <rjones@redhat.com> - 1:1.6.0-1.fc14.1
 - New upstream stable branch 1.6, version 1.6.0.
 - virt-inspector now requires db_dump from db4-utils package.
 - Can use febootstrap 2.9 for now, but add a note that we should
   depend on febootstrap 2.10 as soon as that is in F14 stable.
+- Backport blockdev --rereadpt test fix.
 
 * Sat Oct 23 2010 Richard Jones <rjones@redhat.com> - 1:1.5.23-1
 - Fix for libguestfs: missing disk format specifier when adding a disk
