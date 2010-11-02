@@ -41,48 +41,22 @@
 Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
-Version:       1.4.3
-Release:       5%{?dist}
+Version:       1.6.0
+Release:       1
 License:       LGPLv2+
 Group:         Development/Libraries
 URL:           http://libguestfs.org/
-Source0:       http://libguestfs.org/download/1.4-stable/%{name}-%{version}.tar.gz
+Source0:       http://libguestfs.org/download/1.6-stable/%{name}-%{version}.tar.gz
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root
 
-Patch1:        0001-edit-Add-e-expr-option-to-non-interactively-apply-ex.patch
-Patch2:        0002-edit-Add-b-backup-option-and-make-uploading-more-rob.patch
-Patch3:        0003-New-APIs-lvm-set-filter-and-lvm-clear-filter.patch
-Patch4:        0004-df-Minimize-the-number-of-times-we-launch-the-libgue.patch
-Patch5:        0005-generator-Add-Key-parameter-type.patch
-Patch6:        0006-New-APIs-Support-for-opening-LUKS-encrypted-disks.patch
-Patch7:        0007-New-APIs-Support-for-creating-LUKS-and-managing-keys.patch
-Patch8:        0008-New-API-is-lv-check-if-a-block-device-is-a-logical-v.patch
-Patch9:        0009-New-API-file-architecture.patch
-Patch10:       0010-New-APIs-findfs-label-and-findfs-uuid.patch
-Patch11:       0011-New-APIs-for-guest-inspection.patch
-Patch12:       0012-fish-Add-c-connect-and-d-domain-options.patch
-Patch13:       0013-fish-Reimplement-i-option-using-new-C-based-inspecti.patch
-Patch14:       0014-Remove-old-ocaml-inspector-code.patch
-Patch15:       0015-Change-to-using-ext2-based-cached-supermin-appliance.patch
-Patch16:       0016-Use-virtio-serial-remove-other-vmchannel-methods.patch
-Patch17:       0017-New-APIs-set-network-and-get-network-to-enable-netwo.patch
-Patch18:       0018-Add-a-core_pattern-debug-command.patch
-Patch19:       0019-Call-sync-after-guestfsd-exits.patch
-Patch20:       0020-Shut-down-the-appliance-cleanly.patch
-Patch21:       0021-Ignore-launch-error-in-virt-rescue.-RHBZ-618556.patch
-Patch22:       0022-build-Don-t-add-version-extra-string-to-the-version-.patch
-Patch23:       0023-Fix-networking-in-the-appliance.patch
-
 # Disable FUSE tests, not supported in Koji at the moment.
-Patch9998:     libguestfs-1.0.79-no-fuse-test.patch
-
-# Summarise backports in the version extra field.
-Patch9999:     libguestfs-1.4.3-configure-extra.patch
+Patch0:        libguestfs-1.0.79-no-fuse-test.patch
 
 # Basic build requirements:
 BuildRequires: /usr/bin/pod2man
 BuildRequires: /usr/bin/pod2text
 BuildRequires: febootstrap >= 2.9
+#BuildRequires: febootstrap >= 2.10 (when it goes stable)
 BuildRequires: hivex-devel >= 1.2.2
 BuildRequires: augeas-devel >= 0.5.0
 BuildRequires: readline-devel
@@ -96,9 +70,7 @@ BuildRequires: fuse-devel
 BuildRequires: pcre-devel
 BuildRequires: file-devel
 BuildRequires: libvirt-devel
-
-# This is needed because we rerun autoreconf.
-BuildRequires: autoconf, automake, libtool, gettext-devel
+BuildRequires: po4a
 
 # This is only needed for RHEL 5 because readline-devel doesn't
 # properly depend on it, but doesn't do any harm on other platforms:
@@ -153,6 +125,7 @@ BuildRequires: rubygem-rake
 BuildRequires: java >= 1.5.0
 BuildRequires: jpackage-utils
 BuildRequires: java-devel
+BuildRequires: php-devel
 
 # For libguestfs-tools:
 BuildRequires: perl-Sys-Virt
@@ -161,6 +134,7 @@ BuildRequires: qemu-img
 # Runtime requires:
 Requires:      qemu-kvm >= 0.12
 Requires:      febootstrap >= 2.9
+#Requires:      febootstrap >= 2.10 (when it goes stable)
 
 # For libguestfs-test-tool.
 Requires:      genisoimage
@@ -207,6 +181,8 @@ For Ruby bindings, see 'ruby-libguestfs'.
 
 For Java bindings, see 'libguestfs-java-devel'.
 
+For PHP bindings, see 'php-libguestfs'.
+
 
 %package devel
 Summary:       Development tools and libraries for %{name}
@@ -226,7 +202,7 @@ Group:         Development/Tools
 License:       GPLv2+
 Requires:      %{name} = %{epoch}:%{version}-%{release}
 Requires:      /usr/bin/pod2text
-Requires:      virt-inspector
+Requires:      /usr/bin/hexedit
 
 
 %description -n guestfish
@@ -259,6 +235,7 @@ Requires:      perl-String-ShellQuote
 Requires:      perl-XML-Writer
 Requires:      hivex >= 1.2.2
 Requires:      qemu-img
+Requires:      db4-utils
 
 # Obsolete and replace earlier packages.
 Provides:      virt-cat = %{epoch}:%{version}-%{release}
@@ -422,40 +399,20 @@ Requires:      jpackage-utils
 %{name}-javadoc contains the Java documentation for %{name}.
 
 
+%package -n php-%{name}
+Summary:       PHP bindings for %{name}
+Group:         Development/Libraries
+Requires:      %{name} = %{epoch}:%{version}-%{release}
+Requires:      php
+
+%description -n php-%{name}
+php-%{name} contains PHP bindings for %{name}.
+
+
 %prep
 %setup -q
 
-%patch1 -p1
-%patch2 -p1
-%patch3 -p1
-chmod +x regressions/test-lvm-filtering.sh
-%patch4 -p1
-%patch5 -p1
-%patch6 -p1
-%patch7 -p1
-chmod +x regressions/test-luks.sh
-%patch8 -p1
-%patch9 -p1
-%patch10 -p1
-%patch11 -p1
-%patch12 -p1
-%patch13 -p1
-%patch14 -p1
-%patch15 -p1
-%patch16 -p1
-%patch17 -p1
-%patch18 -p1
-%patch19 -p1
-%patch20 -p1
-%patch21 -p1
-%patch22 -p1
-%patch23 -p1
-
-%patch9998 -p1
-%patch9999 -p1
-
-# Rerun autoreconf because patches don't contain these changes.
-autoreconf -i -f
+%patch0 -p1
 
 mkdir -p daemon/m4
 
@@ -479,23 +436,11 @@ createrepo repo
   --mandir=%{_mandir} \
   --sysconfdir=%{_sysconfdir} \
   --with-qemu="qemu-kvm qemu-system-%{_build_arch} qemu" \
-  --enable-debug-command \
   --enable-supermin \
 %if %{with_virtio}
   --with-drive-if=virtio \
 %endif
   %{extra}
-
-# The patches don't include generated files.  We need to run the
-# generator here before starting the build.  There are still some
-# missing dependencies in the build which mean that (eg.)
-# guestfs_protocol.h isn't updated before it can be used in another
-# make.  Therefore make sure other generated files are built too.
-make -C images test.iso
-mkdir -p csharp
-ocaml -warn-error A src/generator.ml
-make -C src guestfs_protocol.c guestfs_protocol.h
-make -C daemon guestfs_protocol.c guestfs_protocol.h
 
 # This ensures that /usr/sbin/chroot is on the path.  Not needed
 # except for RHEL 5, it shouldn't do any harm on other platforms.
@@ -546,6 +491,9 @@ export LIBGUESTFS_DEBUG=1
 #                                 (FIXED upstream but still broken in F-14)
 # 575734   all          F-14   microsecond resolution for blkid cache (FIXED)
 # 624854   all          F-15   kernel hangs during boot
+# 630583   all          all    kernel hangs setting scheduler to noop
+# 630777   all          F-15   task lvm blocked for more than 120 seconds
+#                                 (FIXED)
 
 # Workaround #563103
 cat > rhbz563103.c <<'EOF'
@@ -638,6 +586,11 @@ rm $RPM_BUILD_ROOT%{_libdir}/libguestfs_jni.la
 # Move installed documentation back to the source directory so
 # we can install it using a %%doc rule.
 mv $RPM_BUILD_ROOT%{_docdir}/libguestfs installed-docs
+
+# Remove Japanese manpages, since these are not translated fully at
+# the moment.  When these are translated properly we intend to add
+# them back.
+rm -rf $RPM_BUILD_ROOT%{_mandir}/ja/man{1,3}/
 
 # Find locale files.
 %find_lang %{name}
@@ -784,7 +737,22 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/javadoc/%{name}-java-%{version}
 
 
+%files -n php-%{name}
+%defattr(-,root,root,-)
+%doc php/README-PHP
+%dir %{_sysconfdir}/php.d
+%{_sysconfdir}/php.d/guestfs_php.ini
+%{_libdir}/php/modules/guestfs_php.so
+
+
 %changelog
+* Tue Nov  2 2010 Richard Jones <rjones@redhat.com> - 1:1.6.0-1
+- Move to the new upstream stable branch, version 1.6.0.  Despite the
+  apparent version number jump, this is similar to the heavily patched
+  version that we were shipping before, but with many bugs fixed.
+- Includes fix for libguestfs: missing disk format specifier when adding a disk
+  (RHBZ#642934, CVE-2010-3851).
+
 * Thu Oct 28 2010 Marek Goldmann <mgoldman@redhat.com> - 1:1.4.3-5
 - Fix networking in the appliance.
 
