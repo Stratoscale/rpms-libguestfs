@@ -41,7 +41,7 @@
 Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
-Version:       1.7.0
+Version:       1.7.1
 Release:       1%{?dist}
 License:       LGPLv2+
 Group:         Development/Libraries
@@ -70,6 +70,7 @@ BuildRequires: pcre-devel
 BuildRequires: file-devel
 BuildRequires: libvirt-devel
 BuildRequires: po4a
+BuildRequires: gperf
 
 # This is only needed for RHEL 5 because readline-devel doesn't
 # properly depend on it, but doesn't do any harm on other platforms:
@@ -741,6 +742,10 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Wed Nov  3 2010 Richard Jones <rjones@redhat.com> - 1:1.7.1-1
+- New upstream development version 1.7.1.
+- Add BR gperf.
+
 * Tue Nov  2 2010 Richard Jones <rjones@redhat.com> - 1:1.7.0-1
 - New upstream development branch and version 1.7.0.
 
