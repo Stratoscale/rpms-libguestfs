@@ -41,7 +41,7 @@
 Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
-Version:       1.7.1
+Version:       1.7.2
 Release:       1%{?dist}
 License:       LGPLv2+
 Group:         Development/Libraries
@@ -351,6 +351,7 @@ Summary:       Ruby bindings for %{name}
 Group:         Development/Libraries
 Requires:      %{name} = %{epoch}:%{version}-%{release}
 Requires:      ruby(abi) = 1.8
+Requires:      ruby
 Provides:      ruby(guestfs) = %{version}
 
 %{!?ruby_sitelib: %define ruby_sitelib %(ruby -rrbconfig -e "puts Config::CONFIG['sitelibdir']")}
@@ -742,6 +743,10 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Fri Nov  5 2010 Richard Jones <rjones@redhat.com> - 1:1.7.2-1
+- New upstream development version 1.7.2.
+- Add requires ruby to ruby-libguestfs package.
+
 * Wed Nov  3 2010 Richard Jones <rjones@redhat.com> - 1:1.7.1-1
 - New upstream development version 1.7.1.
 - Add BR gperf.
