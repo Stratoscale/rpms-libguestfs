@@ -41,7 +41,7 @@
 Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
-Version:       1.7.2
+Version:       1.7.3
 Release:       1%{?dist}
 License:       LGPLv2+
 Group:         Development/Libraries
@@ -614,7 +614,7 @@ rm -rf $RPM_BUILD_ROOT
 
 %files devel
 %defattr(-,root,root,-)
-%doc BUGS ChangeLog HACKING TODO README RELEASE-NOTES
+%doc AUTHORS BUGS ChangeLog HACKING TODO README RELEASE-NOTES
 %doc ex html/guestfs.3.html html/pod.css
 %doc installed-docs/*
 %{_libdir}/libguestfs.so
@@ -743,6 +743,10 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Mon Nov  8 2010 Richard Jones <rjones@redhat.com> - 1:1.7.3-1
+- New upstream development version 1.7.3.
+- Add AUTHORS file from tarball.
+
 * Fri Nov  5 2010 Richard Jones <rjones@redhat.com> - 1:1.7.2-1
 - New upstream development version 1.7.2.
 - Add requires ruby to ruby-libguestfs package.
