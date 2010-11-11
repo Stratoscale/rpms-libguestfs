@@ -41,7 +41,7 @@
 Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
-Version:       1.7.3
+Version:       1.7.4
 Release:       1%{?dist}
 License:       LGPLv2+
 Group:         Development/Libraries
@@ -110,7 +110,6 @@ Requires:      grub, ntfsprogs
 # different languages:
 BuildRequires: ocaml
 BuildRequires: ocaml-findlib-devel
-BuildRequires: ocaml-xml-light-devel
 BuildRequires: perl-devel
 BuildRequires: perl-Test-Simple
 BuildRequires: perl-Test-Pod
@@ -621,8 +620,6 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/guestfs.3*
 %{_mandir}/man3/libguestfs.3*
 %{_includedir}/guestfs.h
-%{_includedir}/guestfs-actions.h
-%{_includedir}/guestfs-structs.h
 %{_libdir}/pkgconfig/libguestfs.pc
 
 
@@ -743,6 +740,12 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Thu Nov 11 2010 Richard Jones <rjones@redhat.com> - 1:1.7.4-1
+- New upstream development version 1.7.4.
+- ocaml-xml-light is no longer required.
+- Remove guestfs-actions.h and guestfs-structs.h.  Libguestfs now
+  only exports a single <guestfs.h> header file.
+
 * Mon Nov  8 2010 Richard Jones <rjones@redhat.com> - 1:1.7.3-1
 - New upstream development version 1.7.3.
 - Add AUTHORS file from tarball.
