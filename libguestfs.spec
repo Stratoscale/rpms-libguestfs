@@ -42,7 +42,7 @@ Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
 Version:       1.7.4
-Release:       1%{?dist}
+Release:       2%{?dist}
 License:       LGPLv2+
 Group:         Development/Libraries
 URL:           http://libguestfs.org/
@@ -51,6 +51,9 @@ BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root
 
 # Disable FUSE tests, not supported in Koji at the moment.
 Patch0:        libguestfs-1.0.79-no-fuse-test.patch
+
+# Upstream patch to fix Perl tests, remove in 1.7.5.
+Patch1:        0001-perl-Ignore-debug-functions-in-Test-Pod-Coverage.patch
 
 # Basic build requirements:
 BuildRequires: /usr/bin/pod2man
@@ -412,6 +415,7 @@ php-%{name} contains PHP bindings for %{name}.
 %setup -q
 
 %patch0 -p1
+%patch1 -p1
 
 mkdir -p daemon/m4
 
@@ -484,27 +488,12 @@ export LIBGUESTFS_DEBUG=1
 # 548121   all          F-13   udevsettle command is broken (WORKAROUND)
 # 553689   all          F-13   missing SeaBIOS (FIXED)
 # 563103   all          F-13   glibc incorrect emulation of preadv/pwritev
-#                                 (WORKAROUND using LD_PRELOAD)
+#                                 (sort of FIXED)
 # 567567   32-bit       all    guestfish xstrtol test failure on 32-bit (FIXED)
 # 575734   all          F-14   microsecond resolution for blkid cache (FIXED)
 # 630583   all          all    kernel hangs setting scheduler to noop
 # 630777   all          F-15   task lvm blocked for more than 120 seconds
 #                                 (FIXED)
-
-# Workaround #563103
-cat > rhbz563103.c <<'EOF'
-#include <stdlib.h>
-#include <unistd.h>
-#include <errno.h>
-ssize_t preadv (int fd,...) { errno = ENOSYS; return -1; }
-ssize_t preadv64 (int fd,...) { errno = ENOSYS; return -1; }
-ssize_t pwritev (int fd,...) { errno = ENOSYS; return -1; }
-ssize_t pwritev64 (int fd,...) { errno = ENOSYS; return -1; }
-EOF
-gcc -fPIC -c rhbz563103.c
-gcc -shared -Wl,-soname,rhbz563103.so.1 rhbz563103.o -o rhbz563103.so
-LD_PRELOAD=$(pwd)/rhbz563103.so
-export LD_PRELOAD
 
 # This test fails because we build the ISO after encoding the checksum
 # of the ISO in the test itself.  Need to fix the test to work out the
@@ -740,11 +729,13 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
-* Thu Nov 11 2010 Richard Jones <rjones@redhat.com> - 1:1.7.4-1
+* Thu Nov 11 2010 Richard Jones <rjones@redhat.com> - 1:1.7.4-2
 - New upstream development version 1.7.4.
 - ocaml-xml-light is no longer required.
 - Remove guestfs-actions.h and guestfs-structs.h.  Libguestfs now
   only exports a single <guestfs.h> header file.
+- Add patch to fix broken Perl test.
+- Remove workaround for RHBZ#563103.
 
 * Mon Nov  8 2010 Richard Jones <rjones@redhat.com> - 1:1.7.3-1
 - New upstream development version 1.7.3.

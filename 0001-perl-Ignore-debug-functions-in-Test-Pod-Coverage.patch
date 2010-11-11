@@ -1,0 +1,25 @@
+From 3431f397d34740fcd3a2d6f94d03af6e5f8f1a36 Mon Sep 17 00:00:00 2001
+From: Richard W.M. Jones <rjones@redhat.com>
+Date: Thu, 11 Nov 2010 22:25:15 +0000
+Subject: [PATCH] perl: Ignore debug functions in Test::Pod::Coverage.
+
+---
+ perl/t/006-pod-coverage.t |    5 ++++-
+ 1 files changed, 4 insertions(+), 1 deletions(-)
+
+diff --git a/perl/t/006-pod-coverage.t b/perl/t/006-pod-coverage.t
+index c648b34..61e7b96 100644
+--- a/perl/t/006-pod-coverage.t
++++ b/perl/t/006-pod-coverage.t
+@@ -21,4 +21,7 @@ use warnings;
+ 
+ eval "use Test::Pod::Coverage 1.00";
+ plan skip_all => "Test::Pod::Coverage 1.00 required for testing POD" if $@;
+-all_pod_coverage_ok ({also_private => [ qr/^test0.*/ ]});
++all_pod_coverage_ok ({
++    also_private => [ qr/^test0.*/,
++                      qr/^debug.*/ ]
++});
+-- 
+1.7.3.2
+
