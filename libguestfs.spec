@@ -41,8 +41,8 @@
 Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
-Version:       1.7.4
-Release:       2%{?dist}
+Version:       1.7.5
+Release:       1%{?dist}
 License:       LGPLv2+
 Group:         Development/Libraries
 URL:           http://libguestfs.org/
@@ -558,12 +558,6 @@ if [ "$RPM_BUILD_ROOT%{python_sitearch}" != "$RPM_BUILD_ROOT%{python_sitelib}" ]
      $RPM_BUILD_ROOT%{python_sitelib}/
 fi
 
-# Install ruby bindings by hand.
-mkdir -p $RPM_BUILD_ROOT%{ruby_sitelib}
-mkdir -p $RPM_BUILD_ROOT%{ruby_sitearch}
-install -p -m0644 ruby/lib/guestfs.rb $RPM_BUILD_ROOT%{ruby_sitelib}
-install -p -m0755 ruby/ext/guestfs/_guestfs.so $RPM_BUILD_ROOT%{ruby_sitearch}
-
 # Remove static-linked Java bindings.
 rm $RPM_BUILD_ROOT%{_libdir}/libguestfs_jni.a
 rm $RPM_BUILD_ROOT%{_libdir}/libguestfs_jni.la
@@ -729,6 +723,10 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sat Nov 13 2010 Richard Jones <rjones@redhat.com> - 1:1.7.5-1
+- New upstream development version 1.7.5.
+- Remove hand-installation of Ruby bindings.
+
 * Thu Nov 11 2010 Richard Jones <rjones@redhat.com> - 1:1.7.4-2
 - New upstream development version 1.7.4.
 - ocaml-xml-light is no longer required.
