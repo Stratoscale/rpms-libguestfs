@@ -41,7 +41,7 @@
 Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
-Version:       1.7.7
+Version:       1.7.8
 Release:       1%{?dist}
 License:       LGPLv2+
 Group:         Development/Libraries
@@ -329,6 +329,7 @@ Requires:      perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $versio
 Requires:      perl-XML-XPath
 # RHBZ#652587 - for backwards compat with the old name
 Provides:      perl-%{name} = %{epoch}:%{version}-%{release}
+Obsoletes:     perl-%{name} < %{epoch}:%{version}-%{release}
 
 
 %description -n perl-Sys-Guestfs
@@ -721,6 +722,10 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Mon Nov 15 2010 Richard Jones <rjones@redhat.com> - 1:1.7.8-1
+- New upstream development version 1.7.8.
+- Add Obsoletes so perl-Sys-Guestfs overrides perl-libguestfs (RHBZ#652587).
+
 * Mon Nov 15 2010 Richard Jones <rjones@redhat.com> - 1:1.7.7-1
 - New upstream development version 1.7.7.
 - Rename perl-libguestfs as perl-Sys-Guestfs (RHBZ#652587).
