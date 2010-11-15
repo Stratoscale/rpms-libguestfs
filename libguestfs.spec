@@ -169,7 +169,7 @@ See also the 'guestfish' package for shell scripting and command line
 access, and '%{name}-mount' for mounting guest filesystems on the
 host using FUSE.
 
-For Perl bindings, see 'perl-libguestfs'.
+For Perl bindings, see 'perl-Sys-Guestfs'.
 
 For OCaml bindings, see 'ocaml-libguestfs-devel'.
 
@@ -320,17 +320,19 @@ ocaml-%{name}-devel contains development libraries
 required to use the OCaml bindings for %{name}.
 
 
-%package -n perl-%{name}
-Summary:       Perl bindings for %{name}
+%package -n perl-Sys-Guestfs
+Summary:       Perl bindings for %{name} (Sys::Guestfs)
 Group:         Development/Libraries
 Requires:      %{name} = %{epoch}:%{version}-%{release}
 Requires:      perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $version))
 # RHBZ#523547
 Requires:      perl-XML-XPath
+# RHBZ#652587 - for backwards compat with the old name
+Provides:      perl-%{name} = %{epoch}:%{version}-%{release}
 
 
-%description -n perl-%{name}
-perl-%{name} contains Perl bindings for %{name}.
+%description -n perl-Sys-Guestfs
+perl-Sys-Guestfs contains Perl bindings for %{name} (Sys::Guestfs).
 
 
 %package -n python-%{name}
@@ -667,7 +669,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/ocaml/guestfs/*.mli
 
 
-%files -n perl-%{name}
+%files -n perl-Sys-Guestfs
 %defattr(-,root,root,-)
 %doc perl/examples
 %{perl_vendorarch}/*
@@ -719,6 +721,10 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Mon Nov 15 2010 Richard Jones <rjones@redhat.com> - 1:1.7.7-1
+- New upstream development version 1.7.7.
+- Rename perl-libguestfs as perl-Sys-Guestfs (RHBZ#652587).
+
 * Sat Nov 13 2010 Richard Jones <rjones@redhat.com> - 1:1.7.6-1
 - New upstream development version 1.7.6.
 
