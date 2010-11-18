@@ -42,7 +42,7 @@ Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
 Version:       1.2.11
-Release:       1%{?dist}
+Release:       1%{?dist}.1
 License:       LGPLv2+
 Group:         Development/Libraries
 URL:           http://libguestfs.org/
@@ -55,6 +55,9 @@ Patch0:        libguestfs-1.0.79-no-fuse-test.patch
 # Patch appliance so it doesn't run 'hwclock'.  This appears to
 # cause this version of qemu to segfault abruptly.
 Patch1:        libguestfs-1.2.3-no-hwclock.patch
+
+# Remove FIPS .*.hmac files from the supermin appliance (RHBZ#654638).
+Patch2:        0001-Remove-FIPS-.-.hmac-files-from-the-supermin-applianc.patch
 
 # Basic build requirements:
 BuildRequires: /usr/bin/pod2man
@@ -388,6 +391,7 @@ Requires:      jpackage-utils
 
 %patch0 -p1
 %patch1 -p1
+%patch2 -p1
 
 mkdir -p daemon/m4
 
@@ -697,6 +701,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Thu Nov 18 2010 Richard Jones <rjones@redhat.com> - 1:1.2.11-1.fc12.1
+- Remove FIPS .*.hmac files from the supermin appliance (RHBZ#654638).
+
 * Tue Aug 17 2010 Richard W.M. Jones <rjones@redhat.com> - 1:1.2.11-1
 - New stable branch version 1.2.11.
 
