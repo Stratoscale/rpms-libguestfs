@@ -42,7 +42,7 @@ Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
 Version:       1.6.2
-Release:       1%{?dist}.3
+Release:       1%{?dist}.4
 License:       LGPLv2+
 Group:         Development/Libraries
 URL:           http://libguestfs.org/
@@ -742,7 +742,7 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
-* Thu Nov 18 2010 Richard Jones <rjones@redhat.com> - 1:1.6.2-1.fc13.3
+* Thu Nov 18 2010 Richard Jones <rjones@redhat.com> - 1:1.6.2-1.fc13.4
 - New upstream stable branch version 1.6.2.
 - This version includes a make install rule that works for Ruby, so
   we can remove those instructions in the install section.
