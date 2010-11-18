@@ -42,7 +42,7 @@ Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
 Version:       1.6.2
-Release:       1%{?dist}
+Release:       1%{?dist}.2
 License:       LGPLv2+
 Group:         Development/Libraries
 URL:           http://libguestfs.org/
@@ -55,8 +55,7 @@ Patch0:        libguestfs-1.0.79-no-fuse-test.patch
 # Basic build requirements:
 BuildRequires: /usr/bin/pod2man
 BuildRequires: /usr/bin/pod2text
-BuildRequires: febootstrap >= 2.9
-#BuildRequires: febootstrap >= 2.10 (when it goes stable)
+BuildRequires: febootstrap >= 2.10
 BuildRequires: hivex-devel >= 1.2.2
 BuildRequires: augeas-devel >= 0.5.0
 BuildRequires: readline-devel
@@ -71,6 +70,7 @@ BuildRequires: pcre-devel
 BuildRequires: file-devel
 BuildRequires: libvirt-devel
 BuildRequires: po4a
+BuildRequires: gperf
 
 # This is only needed for RHEL 5 because readline-devel doesn't
 # properly depend on it, but doesn't do any harm on other platforms:
@@ -110,7 +110,6 @@ Requires:      grub, ntfsprogs
 # different languages:
 BuildRequires: ocaml
 BuildRequires: ocaml-findlib-devel
-BuildRequires: ocaml-xml-light-devel
 BuildRequires: perl-devel
 BuildRequires: perl-Test-Simple
 BuildRequires: perl-Test-Pod
@@ -133,8 +132,7 @@ BuildRequires: qemu-img
 
 # Runtime requires:
 Requires:      qemu-kvm >= 0.12
-Requires:      febootstrap >= 2.9
-#Requires:      febootstrap >= 2.10 (when it goes stable)
+Requires:      febootstrap >= 2.10
 
 # For libguestfs-test-tool.
 Requires:      genisoimage
@@ -737,10 +735,13 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
-* Thu Nov 18 2010 Richard Jones <rjones@redhat.com> - 1:1.6.2-1
+* Thu Nov 18 2010 Richard Jones <rjones@redhat.com> - 1:1.6.2-1.fc14.2
 - New upstream stable branch version 1.6.2.
 - This version includes a make install rule that works for Ruby, so
   we can remove those instructions in the install section.
+- Add BR gperf.
+- Add BR febootstrap 2.10.
+- Remove BR ocaml-xml-light-devel.
 
 * Tue Nov  2 2010 Richard Jones <rjones@redhat.com> - 1:1.6.0-1.fc14.1
 - New upstream stable branch 1.6, version 1.6.0.
