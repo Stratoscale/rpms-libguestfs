@@ -42,7 +42,7 @@ Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
 Version:       1.6.2
-Release:       1%{?dist}.2
+Release:       1%{?dist}.4
 License:       LGPLv2+
 Group:         Development/Libraries
 URL:           http://libguestfs.org/
@@ -51,6 +51,9 @@ BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root
 
 # Disable FUSE tests, not supported in Koji at the moment.
 Patch0:        libguestfs-1.0.79-no-fuse-test.patch
+
+# Remove FIPS .*.hmac files from the supermin appliance (RHBZ#654638).
+Patch1:        0001-Remove-FIPS-.-.hmac-files-from-the-supermin-applianc.patch
 
 # Basic build requirements:
 BuildRequires: /usr/bin/pod2man
@@ -411,6 +414,7 @@ php-%{name} contains PHP bindings for %{name}.
 %setup -q
 
 %patch0 -p1
+%patch1 -p1
 
 mkdir -p daemon/m4
 
@@ -735,13 +739,14 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
-* Thu Nov 18 2010 Richard Jones <rjones@redhat.com> - 1:1.6.2-1.fc14.2
+* Thu Nov 18 2010 Richard Jones <rjones@redhat.com> - 1:1.6.2-1.fc14.4
 - New upstream stable branch version 1.6.2.
 - This version includes a make install rule that works for Ruby, so
   we can remove those instructions in the install section.
 - Add BR gperf.
 - Add BR febootstrap 2.10.
 - Remove BR ocaml-xml-light-devel.
+- Remove FIPS .*.hmac files from the supermin appliance (RHBZ#654638).
 
 * Tue Nov  2 2010 Richard Jones <rjones@redhat.com> - 1:1.6.0-1.fc14.1
 - New upstream stable branch 1.6, version 1.6.0.
