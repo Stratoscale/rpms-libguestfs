@@ -41,12 +41,12 @@
 Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
-Version:       1.7.10
+Version:       1.7.11
 Release:       1%{?dist}
 License:       LGPLv2+
 Group:         Development/Libraries
 URL:           http://libguestfs.org/
-Source0:       http://libguestfs.org/download/1.5-development/%{name}-%{version}.tar.gz
+Source0:       http://libguestfs.org/download/1.7-development/%{name}-%{version}.tar.gz
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root
 
 # Disable FUSE tests, not supported in Koji at the moment.
@@ -214,7 +214,6 @@ Summary:       Mount guest filesystems on the host using FUSE and libguestfs
 Group:         Development/Tools
 License:       GPLv2+
 Requires:      %{name} = %{epoch}:%{version}-%{release}
-Requires:      virt-inspector
 
 
 %description mount
@@ -722,6 +721,11 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Wed Nov 17 2010 Richard Jones <rjones@redhat.com> - 1:1.7.11-1
+- New upstream development version 1.7.11.
+- Fix Source0 URL which had pointed to the 1.5 directory.
+- virt-inspector is not a dependency of guestmount.
+
 * Wed Nov 17 2010 Richard Jones <rjones@redhat.com> - 1:1.7.10-1
 - New upstream development version 1.7.10.
 
