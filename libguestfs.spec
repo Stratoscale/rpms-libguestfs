@@ -41,7 +41,7 @@
 Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
-Version:       1.7.11
+Version:       1.7.12
 Release:       1%{?dist}
 License:       LGPLv2+
 Group:         Development/Libraries
@@ -268,16 +268,16 @@ works for Windows virtual machines.
 Virt-edit is a command line tool to edit the contents of a file in a
 virtual machine.
 
+Virt-filesystems is a command line tool to display the filesystems,
+partitions, block devices, LVs, VGs and PVs found in a disk image
+or virtual machine.  It replaces the deprecated programs
+virt-list-filesystems and virt-list-partitions with a much more
+capable tool.
+
 Virt-inspector examines a virtual machine and tries to determine the
 version of the OS, the kernel version, what drivers are installed,
 whether the virtual machine is fully virtualized (FV) or
 para-virtualized (PV), what applications are installed and more.
-
-Virt-list-filesystems can be used to list out the filesystems in a
-virtual machine image (for shell scripts etc).
-
-Virt-list-partitions can be used to list out the partitions in a
-virtual machine image.
 
 Virt-ls is a command line tool to list out files in a virtual machine.
 
@@ -628,6 +628,8 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man1/virt-df.1*
 %{_bindir}/virt-edit
 %{_mandir}/man1/virt-edit.1*
+%{_bindir}/virt-filesystems
+%{_mandir}/man1/virt-filesystems.1*
 %{_bindir}/virt-inspector
 %{_mandir}/man1/virt-inspector.1*
 %{_bindir}/virt-list-filesystems
@@ -721,6 +723,11 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Tue Nov 23 2010 Richard Jones <rjones@redhat.com> - 1:1.7.12-1
+- New upstream development version 1.7.12.
+- New tool: virt-filesystems.  virt-list-filesystems and virt-list-partitions
+  are deprecated, but still included in the package.
+
 * Wed Nov 17 2010 Richard Jones <rjones@redhat.com> - 1:1.7.11-1
 - New upstream development version 1.7.11.
 - Fix Source0 URL which had pointed to the 1.5 directory.
