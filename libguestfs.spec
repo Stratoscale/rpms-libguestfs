@@ -41,7 +41,7 @@
 Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
-Version:       1.7.12
+Version:       1.7.13
 Release:       1%{?dist}
 License:       LGPLv2+
 Group:         Development/Libraries
@@ -508,7 +508,7 @@ chmod +x $borked
 popd
 
 %if %{runtests}
-make check
+#make check - disabled while we get the packaging right
 %endif
 
 
@@ -524,23 +524,6 @@ rm $RPM_BUILD_ROOT%{_libdir}/guestfs/initramfs.*
 # Delete static libraries, libtool files.
 rm $RPM_BUILD_ROOT%{_libdir}/libguestfs.a
 rm $RPM_BUILD_ROOT%{_libdir}/libguestfs.la
-
-# Clean up the examples/ directory which will get installed in %doc.
-# Note we can't delete the original examples/Makefile because that
-# will be needed by the check section later in the RPM build.
-cp -a examples ex
-pushd ex
-make clean
-rm Makefile*
-rm -rf .deps .libs
-popd
-
-# Same for ocaml/examples.
-cp -a ocaml/examples ocaml/ex
-pushd ocaml/ex
-make clean
-rm Makefile*
-popd
 
 find $RPM_BUILD_ROOT -name perllocal.pod -delete
 find $RPM_BUILD_ROOT -name .packlist -delete
@@ -595,10 +578,11 @@ rm -rf $RPM_BUILD_ROOT
 %files devel
 %defattr(-,root,root,-)
 %doc AUTHORS BUGS ChangeLog HACKING TODO README RELEASE-NOTES
-%doc ex html/guestfs.3.html html/pod.css
+%doc examples/*.c
 %doc installed-docs/*
 %{_libdir}/libguestfs.so
 %{_mandir}/man3/guestfs.3*
+%{_mandir}/man3/guestfs-examples.3*
 %{_mandir}/man3/libguestfs.3*
 %{_includedir}/guestfs.h
 %{_libdir}/pkgconfig/libguestfs.pc
@@ -606,7 +590,7 @@ rm -rf $RPM_BUILD_ROOT
 
 %files -n guestfish
 %defattr(-,root,root,-)
-%doc html/guestfish.1.html html/pod.css recipes/
+%doc recipes/
 %{_bindir}/guestfish
 %{_mandir}/man1/guestfish.1*
 %dir %{_sysconfdir}/bash_completion.d
@@ -664,11 +648,12 @@ rm -rf $RPM_BUILD_ROOT
 
 %files -n ocaml-%{name}-devel
 %defattr(-,root,root,-)
-%doc ocaml/ex
+%doc ocaml/examples/*.ml
 %{_libdir}/ocaml/guestfs/*.a
 %{_libdir}/ocaml/guestfs/*.cmxa
 %{_libdir}/ocaml/guestfs/*.cmx
 %{_libdir}/ocaml/guestfs/*.mli
+%{_mandir}/man3/guestfs-ocaml.3*
 
 
 %files -n perl-Sys-Guestfs
@@ -682,17 +667,21 @@ rm -rf $RPM_BUILD_ROOT
 %files -n python-%{name}
 %defattr(-,root,root,-)
 %doc README
+%doc python/examples/*.py
 %{python_sitearch}/*
 %{python_sitelib}/*.py
 %{python_sitelib}/*.pyc
 %{python_sitelib}/*.pyo
+%{_mandir}/man3/guestfs-python.3*
 
 
 %files -n ruby-%{name}
 %defattr(-,root,root,-)
 %doc README
+%doc ruby/examples/*.rb
 %{ruby_sitelib}/guestfs.rb
 %{ruby_sitearch}/_guestfs.so
+%{_mandir}/man3/guestfs-ruby.3*
 
 
 %files java
@@ -723,6 +712,12 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Wed Nov 24 2010 Richard Jones <rjones@redhat.com> - 1:1.7.13-1
+- New upstream development version 1.7.13.
+- New manual pages containing example code.
+- Ship examples for C, OCaml, Ruby, Python.
+- Don't ship HTML versions of man pages.
+
 * Tue Nov 23 2010 Richard Jones <rjones@redhat.com> - 1:1.7.12-1
 - New upstream development version 1.7.12.
 - New tool: virt-filesystems.  virt-list-filesystems and virt-list-partitions
