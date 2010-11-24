@@ -42,7 +42,7 @@ Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
 Version:       1.7.13
-Release:       1%{?dist}
+Release:       2%{?dist}
 License:       LGPLv2+
 Group:         Development/Libraries
 URL:           http://libguestfs.org/
@@ -50,7 +50,7 @@ Source0:       http://libguestfs.org/download/1.7-development/%{name}-%{version}
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root
 
 # Disable FUSE tests, not supported in Koji at the moment.
-Patch0:        libguestfs-1.0.79-no-fuse-test.patch
+Patch0:        libguestfs-1.7.13-no-fuse-test.patch
 
 # Basic build requirements:
 BuildRequires: /usr/bin/pod2man
@@ -712,11 +712,12 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
-* Wed Nov 24 2010 Richard Jones <rjones@redhat.com> - 1:1.7.13-1
+* Wed Nov 24 2010 Richard Jones <rjones@redhat.com> - 1:1.7.13-2
 - New upstream development version 1.7.13.
 - New manual pages containing example code.
 - Ship examples for C, OCaml, Ruby, Python.
 - Don't ship HTML versions of man pages.
+- Rebase no-fuse-test patch to latest version.
 
 * Tue Nov 23 2010 Richard Jones <rjones@redhat.com> - 1:1.7.12-1
 - New upstream development version 1.7.12.
