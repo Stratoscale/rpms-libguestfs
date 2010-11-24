@@ -42,7 +42,7 @@ Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
 Version:       1.7.13
-Release:       2%{?dist}
+Release:       3%{?dist}
 License:       LGPLv2+
 Group:         Development/Libraries
 URL:           http://libguestfs.org/
@@ -508,7 +508,7 @@ chmod +x $borked
 popd
 
 %if %{runtests}
-#make check - disabled while we get the packaging right
+make check
 %endif
 
 
@@ -712,7 +712,7 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
-* Wed Nov 24 2010 Richard Jones <rjones@redhat.com> - 1:1.7.13-2
+* Wed Nov 24 2010 Richard Jones <rjones@redhat.com> - 1:1.7.13-3
 - New upstream development version 1.7.13.
 - New manual pages containing example code.
 - Ship examples for C, OCaml, Ruby, Python.
