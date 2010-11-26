@@ -41,7 +41,7 @@
 Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
-Version:       1.7.14
+Version:       1.7.15
 Release:       1%{?dist}
 License:       LGPLv2+
 Group:         Development/Libraries
@@ -71,6 +71,7 @@ BuildRequires: file-devel
 BuildRequires: libvirt-devel
 BuildRequires: po4a
 BuildRequires: gperf
+BuildRequires: db4-utils
 
 # This is only needed for RHEL 5 because readline-devel doesn't
 # properly depend on it, but doesn't do any harm on other platforms:
@@ -137,6 +138,9 @@ Requires:      febootstrap >= 2.10
 # For libguestfs-test-tool.
 Requires:      genisoimage
 
+# For core inspection API.
+Requires:      db4-utils
+
 # Provide our own custom requires for the supermin appliance.
 Source1:       libguestfs-find-requires.sh
 %global _use_internal_dependency_generator 0
@@ -199,8 +203,12 @@ Summary:       Shell for accessing and modifying virtual machine disk images
 Group:         Development/Tools
 License:       GPLv2+
 Requires:      %{name} = %{epoch}:%{version}-%{release}
-Requires:      /usr/bin/pod2text
+#Requires:      /usr/bin/emacs #theoretically, but too large
 Requires:      /usr/bin/hexedit
+Requires:      /usr/bin/less
+Requires:      /usr/bin/man
+Requires:      /usr/bin/pod2text
+Requires:      /bin/vi
 
 
 %description -n guestfish
@@ -221,18 +229,11 @@ The guestmount command lets you mount guest filesystems on the
 host using FUSE and %{name}.
 
 
-%package tools
+%package tools-c
 Summary:       System administration tools for virtual machines
 Group:         Development/Tools
 License:       GPLv2+
 Requires:      %{name} = %{epoch}:%{version}-%{release}
-Requires:      guestfish
-Requires:      perl-Sys-Virt
-Requires:      perl-String-ShellQuote
-Requires:      perl-XML-Writer
-Requires:      hivex >= 1.2.2
-Requires:      qemu-img
-Requires:      db4-utils
 
 # Obsolete and replace earlier packages.
 Provides:      virt-cat = %{epoch}:%{version}-%{release}
@@ -246,9 +247,28 @@ Obsoletes:     virt-inspector < %{epoch}:%{version}-%{release}
 Provides:      virt-df2 = %{epoch}:%{version}-%{release}
 Obsoletes:     virt-df2 < %{epoch}:%{version}-%{release}
 
-# These were never packages:
-Provides:      virt-edit = %{epoch}:%{version}-%{release}
-Provides:      virt-rescue = %{epoch}:%{version}-%{release}
+
+%description tools-c
+This package contains miscellaneous system administrator command line
+tools for virtual machines.
+
+Note that you should install %{name}-tools (which pulls in
+this package).  This package is only used directly when you want
+to avoid dependencies on Perl.
+
+
+%package tools
+Summary:       System administration tools for virtual machines
+Group:         Development/Tools
+License:       GPLv2+
+Requires:      %{name} = %{epoch}:%{version}-%{release}
+Requires:      %{name}-tools-c = %{epoch}:%{version}-%{release}
+# NB: Only list deps here which are not picked up automatically.
+Requires:      perl(Sys::Virt)
+Requires:      perl(String::ShellQuote)
+Requires:      perl(XML::Writer)
+Requires:      perl(Win::Hivex)
+Requires:      qemu-img
 
 
 %description tools
@@ -325,7 +345,7 @@ Group:         Development/Libraries
 Requires:      %{name} = %{epoch}:%{version}-%{release}
 Requires:      perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $version))
 # RHBZ#523547
-Requires:      perl-XML-XPath
+Requires:      perl(XML::XPath)
 # RHBZ#652587 - for backwards compat with the old name
 Provides:      perl-%{name} = %{epoch}:%{version}-%{release}
 Obsoletes:     perl-%{name} < %{epoch}:%{version}-%{release}
@@ -604,28 +624,32 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man1/guestmount.1*
 
 
-%files tools
+%files tools-c
 %defattr(-,root,root,-)
 %{_bindir}/virt-cat
 %{_mandir}/man1/virt-cat.1*
 %{_bindir}/virt-df
 %{_mandir}/man1/virt-df.1*
-%{_bindir}/virt-edit
-%{_mandir}/man1/virt-edit.1*
 %{_bindir}/virt-filesystems
 %{_mandir}/man1/virt-filesystems.1*
 %{_bindir}/virt-inspector
 %{_mandir}/man1/virt-inspector.1*
+%{_bindir}/virt-ls
+%{_mandir}/man1/virt-ls.1*
+%{_bindir}/virt-rescue
+%{_mandir}/man1/virt-rescue.1*
+
+
+%files tools
+%defattr(-,root,root,-)
+%{_bindir}/virt-edit
+%{_mandir}/man1/virt-edit.1*
 %{_bindir}/virt-list-filesystems
 %{_mandir}/man1/virt-list-filesystems.1*
 %{_bindir}/virt-list-partitions
 %{_mandir}/man1/virt-list-partitions.1*
-%{_bindir}/virt-ls
-%{_mandir}/man1/virt-ls.1*
 %{_bindir}/virt-make-fs
 %{_mandir}/man1/virt-make-fs.1*
-%{_bindir}/virt-rescue
-%{_mandir}/man1/virt-rescue.1*
 %{_bindir}/virt-resize
 %{_mandir}/man1/virt-resize.1*
 %{_bindir}/virt-tar
@@ -712,6 +736,22 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Fri Nov 26 2010 Richard Jones <rjones@redhat.com> - 1:1.7.15-1
+- New upstream development version 1.7.15.
+- Split out new libguestfs-tools-c package from libguestfs-tools.
+  . This is so that the -tools-c package can be pulled in by people
+    wanting to avoid a dependency on Perl, while -tools pulls in everything
+    as before.
+  . The C tools currently are: cat, df, filesystems, fish, inspector, ls,
+    mount, rescue.
+  . guestfish still requires pod2text which requires perl.  This will be
+    rectified in the next release.
+  . libguestfs-tools no longer pulls in guestfish.
+- guestfish also depends on: less, man, vi
+- Add BR db4-utils (although since RPM needs it, it not really necessary).
+- Runtime requires on db4-utils should be on core lib, not tools package.
+- Change all "Requires: perl-Foo" to "Requires: perl(Foo)".
+
 * Thu Nov 25 2010 Richard Jones <rjones@redhat.com> - 1:1.7.14-1
 - New upstream development version 1.7.14.
 
