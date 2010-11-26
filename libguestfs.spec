@@ -42,7 +42,7 @@ Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
 Version:       1.7.15
-Release:       1%{?dist}
+Release:       2%{?dist}
 License:       LGPLv2+
 Group:         Development/Libraries
 URL:           http://libguestfs.org/
@@ -51,6 +51,9 @@ BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root
 
 # Disable FUSE tests, not supported in Koji at the moment.
 Patch0:        libguestfs-1.7.13-no-fuse-test.patch
+
+# Upstream patch to fix libtool wrapper script.
+Patch1:        0001-libtool-fix-Don-t-do-fix-if-there-was-no-o-option-to.patch
 
 # Basic build requirements:
 BuildRequires: /usr/bin/pod2man
@@ -434,6 +437,7 @@ php-%{name} contains PHP bindings for %{name}.
 %setup -q
 
 %patch0 -p1
+%patch1 -p1
 
 mkdir -p daemon/m4
 
@@ -736,7 +740,7 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
-* Fri Nov 26 2010 Richard Jones <rjones@redhat.com> - 1:1.7.15-1
+* Fri Nov 26 2010 Richard Jones <rjones@redhat.com> - 1:1.7.15-2
 - New upstream development version 1.7.15.
 - Split out new libguestfs-tools-c package from libguestfs-tools.
   . This is so that the -tools-c package can be pulled in by people
