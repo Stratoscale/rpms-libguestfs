@@ -18,18 +18,6 @@
 %global with_virtio 1
 %endif 
 
-# Mirror and updates repositories to use if building with network repo
-%if %{defined libguestfs_mirror}
-%global mirror %{libguestfs_mirror}
-%else
-%global mirror http://download.fedora.redhat.com/pub/fedora/linux/development/%{_arch}/os/
-%endif
-%if %{defined libguestfs_updates}
-%global updates %{libguestfs_updates}
-%else
-%global updates none
-%endif
-
 # Enable to run tests during check
 # Default is enabled
 %if %{defined libguestfs_runtests}
@@ -41,7 +29,7 @@
 Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
-Version:       1.7.18
+Version:       1.7.19
 Release:       1%{?dist}
 License:       LGPLv2+
 Group:         Development/Libraries
@@ -55,14 +43,13 @@ Patch0:        libguestfs-1.7.13-no-fuse-test.patch
 # Basic build requirements:
 BuildRequires: /usr/bin/pod2man
 BuildRequires: /usr/bin/pod2text
-BuildRequires: febootstrap >= 2.11
+BuildRequires: febootstrap >= 3.0
 BuildRequires: hivex-devel >= 1.2.2
 BuildRequires: augeas-devel >= 0.5.0
 BuildRequires: readline-devel
 BuildRequires: genisoimage
 BuildRequires: libxml2-devel
 BuildRequires: qemu-kvm >= 0.10-7
-BuildRequires: createrepo
 BuildRequires: glibc-static
 BuildRequires: libselinux-devel
 BuildRequires: fuse-devel
@@ -72,6 +59,7 @@ BuildRequires: libvirt-devel
 BuildRequires: po4a
 BuildRequires: gperf
 BuildRequires: db4-utils
+BuildRequires: cpio
 
 # This is only needed for RHEL 5 because readline-devel doesn't
 # properly depend on it, but doesn't do any harm on other platforms:
@@ -133,7 +121,7 @@ BuildRequires: qemu-img
 
 # Runtime requires:
 Requires:      qemu-kvm >= 0.12
-Requires:      febootstrap >= 2.11
+Requires:      febootstrap >= 3.0
 
 # For libguestfs-test-tool.
 Requires:      genisoimage
@@ -439,16 +427,11 @@ mkdir -p daemon/m4
 
 %build
 %if %{buildnet}
-%define extra --with-mirror=%{mirror} --with-updates=%{updates}
+%define extra %{nil}
 %else
-# Build a local repository containing the packages used to
-# install the current buildroot (assuming we are being built
-# with mock or Koji).  Then tell febootstrap to reference this
-# local repository when building the appliance.
 mkdir repo
 find /var/cache/yum -type f -name '*.rpm' -print0 | xargs -0 cp -t repo
-createrepo repo
-%define extra --with-mirror=file://$(pwd)/repo --with-repo=fedora-14 --with-updates=none
+%define extra --with-local-package-directory=$(pwd)/repo
 %endif
 
 ./configure \
@@ -456,7 +439,6 @@ createrepo repo
   --mandir=%{_mandir} \
   --sysconfdir=%{_sysconfdir} \
   --with-qemu="qemu-kvm qemu-system-%{_build_arch} qemu" \
-  --enable-supermin \
 %if %{with_virtio}
   --with-drive-if=virtio \
 %endif
@@ -471,12 +453,16 @@ export PATH=/usr/sbin:$PATH
 make INSTALLDIRS=vendor %{?_smp_mflags}
 
 # Useful for debugging appliance problems.
-echo "==== files in initramfs ===="
-find initramfs -type f
+for f in appliance/supermin.d/*.img; do
+    b=`basename $f`
+    echo "==== $b ===="
+    ls -l $f
+    cpio -itv < $f
+done
 echo "==== hostfiles ===="
 ls -l appliance/supermin.d/hostfiles
 cat appliance/supermin.d/hostfiles
-echo "============"
+echo "======================================================================"
 
 
 %check
@@ -535,10 +521,6 @@ make check
 rm -rf $RPM_BUILD_ROOT
 
 make DESTDIR=$RPM_BUILD_ROOT install
-
-# Delete the ordinary appliance, leaving just the supermin appliance.
-rm $RPM_BUILD_ROOT%{_libdir}/guestfs/vmlinuz.*
-rm $RPM_BUILD_ROOT%{_libdir}/guestfs/initramfs.*
 
 # Delete static libraries, libtool files.
 rm $RPM_BUILD_ROOT%{_libdir}/libguestfs.a
@@ -735,6 +717,13 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sun Dec  5 2010 Richard Jones <rjones@redhat.com> - 1:1.7.19-1
+- New upstream development version 1.7.19.
+- Appliance building in this version has been substantially rewritten
+  and this requires febootstrap >= 3.0 to build.
+- createrepo no longer required.
+- Supermin appliance is the default.
+
 * Wed Dec  1 2010 Richard Jones <rjones@redhat.com> - 1:1.7.18-1
 - New upstream development version 1.7.18.
 
