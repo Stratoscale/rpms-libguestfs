@@ -30,7 +30,7 @@ Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
 Version:       1.7.19
-Release:       11%{?dist}
+Release:       12%{?dist}
 License:       LGPLv2+
 Group:         Development/Libraries
 URL:           http://libguestfs.org/
@@ -57,6 +57,8 @@ BuildRequires: genisoimage
 BuildRequires: libxml2-devel
 BuildRequires: qemu-kvm >= 0.10-7
 BuildRequires: createrepo
+# This should be in febootstrap: remove in febootstrap 3.2:
+BuildRequires: yum-utils
 BuildRequires: glibc-static
 BuildRequires: libselinux-devel
 BuildRequires: fuse-devel
@@ -752,7 +754,7 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
-* Mon Dec  6 2010 Richard Jones <rjones@redhat.com> - 1:1.7.19-11
+* Mon Dec  6 2010 Richard Jones <rjones@redhat.com> - 1:1.7.19-12
 - Rebuild appliance properly using febootstrap 3.1 and alternate yum repo.
 
 * Sun Dec  5 2010 Richard Jones <rjones@redhat.com> - 1:1.7.19-1
