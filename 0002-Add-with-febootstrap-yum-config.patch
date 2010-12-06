@@ -1,4 +1,4 @@
-From 23b321b960d1e224fd293662d4c31e5ccfbc8ae9 Mon Sep 17 00:00:00 2001
+From 461dc7038433c5183a428f88495c792a0aa4906c Mon Sep 17 00:00:00 2001
 From: Richard W.M. Jones <rjones@redhat.com>
 Date: Mon, 6 Dec 2010 17:44:06 +0000
 Subject: [PATCH 2/2] Add --with-febootstrap-yum-config.
@@ -13,7 +13,7 @@ The hope is that this will enable building in Koji.
  2 files changed, 14 insertions(+), 17 deletions(-)
 
 diff --git a/appliance/make.sh.in b/appliance/make.sh.in
-index bab0529..55b6530 100755
+index bab0529..9e54b4a 100755
 --- a/appliance/make.sh.in
 +++ b/appliance/make.sh.in
 @@ -24,12 +24,13 @@ set -e
@@ -25,7 +25,7 @@ index bab0529..55b6530 100755
 -else
 -    @FEBOOTSTRAP@ -v -o supermin.d $excludes @PACKAGE_DIRECTORY@/*
 +if [ "x@FEBOOTSTRAP_YUM_CONFIG@" != "xno" ]; then
-+    extra="--yum-config '@FEBOOTSTRAP_YUM_CONFIG@'"
++    extra="--yum-config @FEBOOTSTRAP_YUM_CONFIG@"
  fi
  
 +echo @FEBOOTSTRAP@ -v -o supermin.d --names $(< packagelist ) $excludes $extra
