@@ -30,7 +30,7 @@ Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
 Version:       1.7.19
-Release:       6%{?dist}
+Release:       7%{?dist}
 License:       LGPLv2+
 Group:         Development/Libraries
 URL:           http://libguestfs.org/
@@ -453,7 +453,9 @@ failovermethod=priority
 enabled=1
 gpgcheck=0
 EOF
-%define extra --with-febootstrap-yum-config=file://$(pwd)/yum.conf
+# Note that yum.conf has to be a relative path because of a bug
+# in this version of the yum API.
+%define extra --with-febootstrap-yum-config=../yum.conf
 %endif
 
 ./configure \
@@ -739,7 +741,7 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
-* Mon Dec  6 2010 Richard Jones <rjones@redhat.com> - 1:1.7.19-6
+* Mon Dec  6 2010 Richard Jones <rjones@redhat.com> - 1:1.7.19-7
 - Rebuild appliance properly using febootstrap 3.1 and alternate yum repo.
 
 * Sun Dec  5 2010 Richard Jones <rjones@redhat.com> - 1:1.7.19-1
