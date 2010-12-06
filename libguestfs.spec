@@ -30,7 +30,7 @@ Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
 Version:       1.7.19
-Release:       8%{?dist}
+Release:       9%{?dist}
 License:       LGPLv2+
 Group:         Development/Libraries
 URL:           http://libguestfs.org/
@@ -446,6 +446,18 @@ find /var/cache/yum -type f -name '*.rpm' -print0 | xargs -0 cp -t repo
 createrepo repo
 cp /etc/yum.conf yum.conf
 cat >> yum.conf <<EOF
+[main]
+cachedir=/var/cache/yum/\$basearch/\$releasever
+keepcache=0
+debuglevel=2
+logfile=/var/log/yum.log
+exactarch=1
+obsoletes=1
+gpgcheck=1
+plugins=1
+installonly_limit=3
+color=never
+
 [local]
 name=local
 baseurl=file://$(pwd)/repo
@@ -739,7 +751,7 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
-* Mon Dec  6 2010 Richard Jones <rjones@redhat.com> - 1:1.7.19-8
+* Mon Dec  6 2010 Richard Jones <rjones@redhat.com> - 1:1.7.19-9
 - Rebuild appliance properly using febootstrap 3.1 and alternate yum repo.
 
 * Sun Dec  5 2010 Richard Jones <rjones@redhat.com> - 1:1.7.19-1
