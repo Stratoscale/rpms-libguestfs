@@ -1,0 +1,66 @@
+From 7eaecf8303c229268f1f55dcb5e37ff9f0bf420d Mon Sep 17 00:00:00 2001
+From: Richard W.M. Jones <rjones@redhat.com>
+Date: Mon, 6 Dec 2010 16:46:00 +0000
+Subject: [PATCH 1/2] regressions: Disable test for 576879.
+
+This test has worked only intermittently for a while.  Disable
+it.  The upstream bug has been reopened.
+---
+ regressions/Makefile.am   |    2 +-
+ regressions/rhbz576879.sh |   14 +++++++++-----
+ 2 files changed, 10 insertions(+), 6 deletions(-)
+
+diff --git a/regressions/Makefile.am b/regressions/Makefile.am
+index 10c5c48..15f6d7b 100644
+--- a/regressions/Makefile.am
++++ b/regressions/Makefile.am
+@@ -29,7 +29,6 @@ TESTS = \
+ 	rhbz503169c10.sh \
+ 	rhbz503169c13.sh \
+ 	rhbz557655.sh \
+-	rhbz576879.sh \
+ 	rhbz578407.sh \
+ 	rhbz580246.sh \
+ 	test-add-domain.sh \
+@@ -56,6 +55,7 @@ SKIPPED_TESTS = \
+ 	test-bootbootboot.sh
+ 
+ FAILING_TESTS = \
++	rhbz576879.sh \
+ 	test-qemudie-launchfail.sh
+ 
+ random_val := $(shell awk 'BEGIN{srand(); print 1+int(255*rand())}' < /dev/null)
+diff --git a/regressions/rhbz576879.sh b/regressions/rhbz576879.sh
+index 0f44cbb..c9d7445 100755
+--- a/regressions/rhbz576879.sh
++++ b/regressions/rhbz576879.sh
+@@ -24,17 +24,21 @@ set -e
+ 
+ rm -f test1.img
+ 
++# Somewhere after 1.7, the first test started to hang.
++#
++# Somewhere between ~ 1.5.23 and ~ 1.5.24 the second test started
++# to hang.
++#
++# We don't understand why.  I have disabled this test and reopened
++# the upstream bug.
++# -- RWMJ 2010-12-06
++
+ ../fish/guestfish -N disk <<EOF
+ -upload $srcdir/rhbz576879.sh /test.sh
+ # Shouldn't lose synchronization, so next command should work:
+ ping-daemon
+ EOF
+ 
+-# Somewhere between ~ 1.5.23 and ~ 1.5.24 the test below started to
+-# hang although we don't understand why.  I have disabled this test.
+-# -- RWMJ 2010-10-27
+-exit 0
+-
+ # Second patch tests the problem found in comment 5 where both ends
+ # send cancel messages simultaneously.
+ 
+-- 
+1.7.3.2
+

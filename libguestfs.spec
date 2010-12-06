@@ -30,7 +30,7 @@ Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
 Version:       1.7.19
-Release:       1%{?dist}
+Release:       2%{?dist}
 License:       LGPLv2+
 Group:         Development/Libraries
 URL:           http://libguestfs.org/
@@ -40,16 +40,23 @@ BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root
 # Disable FUSE tests, not supported in Koji at the moment.
 Patch0:        libguestfs-1.7.13-no-fuse-test.patch
 
+# Disable test for RHBZ#576879 which wasn't working (or bug reappeared).
+Patch1:        0001-regressions-Disable-test-for-576879.patch
+# Add --with-febootstrap-yum-config option.
+Patch2:        0002-Add-with-febootstrap-yum-config.patch
+BuildRequires: autoconf, automake, libtool, gettext-devel
+
 # Basic build requirements:
 BuildRequires: /usr/bin/pod2man
 BuildRequires: /usr/bin/pod2text
-BuildRequires: febootstrap >= 3.0
+BuildRequires: febootstrap >= 3.1
 BuildRequires: hivex-devel >= 1.2.2
 BuildRequires: augeas-devel >= 0.5.0
 BuildRequires: readline-devel
 BuildRequires: genisoimage
 BuildRequires: libxml2-devel
 BuildRequires: qemu-kvm >= 0.10-7
+BuildRequires: createrepo
 BuildRequires: glibc-static
 BuildRequires: libselinux-devel
 BuildRequires: fuse-devel
@@ -121,7 +128,7 @@ BuildRequires: qemu-img
 
 # Runtime requires:
 Requires:      qemu-kvm >= 0.12
-Requires:      febootstrap >= 3.0
+Requires:      febootstrap >= 3.1
 
 # For libguestfs-test-tool.
 Requires:      genisoimage
@@ -421,6 +428,10 @@ php-%{name} contains PHP bindings for %{name}.
 %setup -q
 
 %patch0 -p1
+%patch1 -p1
+%patch2 -p1
+autoreconf -i
+rm appliance/make.sh
 
 mkdir -p daemon/m4
 
@@ -431,7 +442,17 @@ mkdir -p daemon/m4
 %else
 mkdir repo
 find /var/cache/yum -type f -name '*.rpm' -print0 | xargs -0 cp -t repo
-%define extra --with-local-package-directory=$(pwd)/repo
+createrepo repo
+cp /etc/yum.conf yum.conf
+cat >> yum.conf <<EOF
+[local]
+name=local
+baseurl=file://$(pwd)/repo
+failovermethod=priority
+enabled=1
+gpgcheck=0
+EOF
+%define extra --with-febootstrap-yum-config=$(pwd)/yum.conf
 %endif
 
 ./configure \
@@ -717,6 +738,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Mon Dec  6 2010 Richard Jones <rjones@redhat.com> - 1:1.7.19-2
+- Rebuild appliance properly using febootstrap 3.1 and alternate yum repo.
+
 * Sun Dec  5 2010 Richard Jones <rjones@redhat.com> - 1:1.7.19-1
 - New upstream development version 1.7.19.
 - Appliance building in this version has been substantially rewritten
