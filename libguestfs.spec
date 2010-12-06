@@ -30,7 +30,7 @@ Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
 Version:       1.7.19
-Release:       12%{?dist}
+Release:       13%{?dist}
 License:       LGPLv2+
 Group:         Development/Libraries
 URL:           http://libguestfs.org/
@@ -44,6 +44,8 @@ Patch0:        libguestfs-1.7.13-no-fuse-test.patch
 Patch1:        0001-regressions-Disable-test-for-576879.patch
 # Add --with-febootstrap-yum-config option.
 Patch2:        0002-Add-with-febootstrap-yum-config.patch
+# Fix a bug in quoting.
+Patch3:        0003-appliance-Don-t-quote-the-exclude-parameters.patch
 BuildRequires: autoconf, automake, libtool, gettext-devel
 
 # Basic build requirements:
@@ -432,6 +434,7 @@ php-%{name} contains PHP bindings for %{name}.
 %patch0 -p1
 %patch1 -p1
 %patch2 -p1
+%patch3 -p1
 aclocal -I m4
 autoreconf -i -f
 rm -f appliance/make.sh
@@ -754,7 +757,7 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
-* Mon Dec  6 2010 Richard Jones <rjones@redhat.com> - 1:1.7.19-12
+* Mon Dec  6 2010 Richard Jones <rjones@redhat.com> - 1:1.7.19-13
 - Rebuild appliance properly using febootstrap 3.1 and alternate yum repo.
 
 * Sun Dec  5 2010 Richard Jones <rjones@redhat.com> - 1:1.7.19-1

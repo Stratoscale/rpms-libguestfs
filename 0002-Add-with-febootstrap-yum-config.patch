@@ -1,7 +1,7 @@
-From 461dc7038433c5183a428f88495c792a0aa4906c Mon Sep 17 00:00:00 2001
+From 968a17e0b92ed1d80ea7a694bde0fc196e7403f4 Mon Sep 17 00:00:00 2001
 From: Richard W.M. Jones <rjones@redhat.com>
 Date: Mon, 6 Dec 2010 17:44:06 +0000
-Subject: [PATCH 2/2] Add --with-febootstrap-yum-config.
+Subject: [PATCH 2/3] Add --with-febootstrap-yum-config.
 
 This allows the febootstrap --yum-config option to be passed through,
 allowing a separate yum configuration to be used.
@@ -35,7 +35,7 @@ index bab0529..9e54b4a 100755
  # copied from the old febootstrap-minimize.  However minimization is
  # not so important now that we are caching the appliance.
 diff --git a/configure.ac b/configure.ac
-index 682fa11..a20de9b 100644
+index 682fa11..f48afa7 100644
 --- a/configure.ac
 +++ b/configure.ac
 @@ -200,19 +200,15 @@ if test "x$enable_appliance" = "xyes"; then
@@ -56,7 +56,7 @@ index 682fa11..a20de9b 100644
 -        PACKAGE_DIRECTORY="$local_package_directory"
 -    AC_SUBST([PACKAGE_DIRECTORY])
 +    dnl Pass a febootstrap --yum-config option.
-+    AC_MSG_CHECKING([febootstrap --yum-config option])
++    AC_MSG_CHECKING([if user requested febootstrap --yum-config option])
 +    AC_ARG_WITH([febootstrap-yum-config],
 +        [AS_HELP_STRING([--with-febootstrap-yum-config=FILE],
 +          [pass febootstrap --yum-config option @<:@default=no@:>@])],

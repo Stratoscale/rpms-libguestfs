@@ -1,0 +1,30 @@
+From 17957d047df8d690145b69d1508c8f957113f6b1 Mon Sep 17 00:00:00 2001
+From: Richard W.M. Jones <rjones@redhat.com>
+Date: Mon, 6 Dec 2010 21:24:59 +0000
+Subject: [PATCH 3/3] appliance: Don't quote the --exclude parameters.
+
+The quotes appear literally on the command line:
+
+$ s="--foo 'bar'"
+$ echo $s
+--foo 'bar'
+---
+ appliance/make.sh.in |    2 +-
+ 1 files changed, 1 insertions(+), 1 deletions(-)
+
+diff --git a/appliance/make.sh.in b/appliance/make.sh.in
+index 9e54b4a..3b51fcf 100755
+--- a/appliance/make.sh.in
++++ b/appliance/make.sh.in
+@@ -21,7 +21,7 @@ unset CDPATH
+ set -e
+ 
+ # XXX Distro-dependent in future.
+-excludes="--exclude '^perl' --exclude '^python' --exclude '^fedora-logos' --exclude '^redhat-logos' --exclude '^dracut' --exclude '^upstart' --exclude '^plymouth' --exclude '^systemd' --exclude '^linux-firmware' --exclude '^kbd-misc'"
++excludes="--exclude ^perl --exclude ^python --exclude ^fedora-logos --exclude ^redhat-logos --exclude ^dracut --exclude ^upstart --exclude ^plymouth --exclude ^systemd --exclude ^linux-firmware --exclude ^kbd-misc"
+ 
+ # Run febootstrap on the package list.
+ if [ "x@FEBOOTSTRAP_YUM_CONFIG@" != "xno" ]; then
+-- 
+1.7.3.2
+
