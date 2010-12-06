@@ -30,7 +30,7 @@ Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
 Version:       1.7.19
-Release:       3%{?dist}
+Release:       4%{?dist}
 License:       LGPLv2+
 Group:         Development/Libraries
 URL:           http://libguestfs.org/
@@ -431,7 +431,7 @@ php-%{name} contains PHP bindings for %{name}.
 %patch1 -p1
 %patch2 -p1
 aclocal -I m4
-autoreconf -i
+autoreconf -i -f
 rm appliance/make.sh
 
 mkdir -p daemon/m4
@@ -739,7 +739,7 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
-* Mon Dec  6 2010 Richard Jones <rjones@redhat.com> - 1:1.7.19-3
+* Mon Dec  6 2010 Richard Jones <rjones@redhat.com> - 1:1.7.19-4
 - Rebuild appliance properly using febootstrap 3.1 and alternate yum repo.
 
 * Sun Dec  5 2010 Richard Jones <rjones@redhat.com> - 1:1.7.19-1
