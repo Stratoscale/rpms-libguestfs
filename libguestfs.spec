@@ -29,8 +29,8 @@
 Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
-Version:       1.7.19
-Release:       15%{?dist}
+Version:       1.7.20
+Release:       1%{?dist}
 License:       LGPLv2+
 Group:         Development/Libraries
 URL:           http://libguestfs.org/
@@ -39,14 +39,6 @@ BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root
 
 # Disable FUSE tests, not supported in Koji at the moment.
 Patch0:        libguestfs-1.7.13-no-fuse-test.patch
-
-# Disable test for RHBZ#576879 which wasn't working (or bug reappeared).
-Patch1:        0001-regressions-Disable-test-for-576879.patch
-# Add --with-febootstrap-yum-config option.
-Patch2:        0002-Add-with-febootstrap-yum-config.patch
-# Fix a bug in quoting.
-Patch3:        0003-appliance-Don-t-quote-the-exclude-parameters.patch
-BuildRequires: autoconf, automake, libtool, gettext-devel
 
 # Basic build requirements:
 BuildRequires: /usr/bin/pod2man
@@ -430,12 +422,6 @@ php-%{name} contains PHP bindings for %{name}.
 %setup -q
 
 %patch0 -p1
-%patch1 -p1
-%patch2 -p1
-%patch3 -p1
-aclocal -I m4
-autoreconf -i -f
-rm -f appliance/make.sh
 
 mkdir -p daemon/m4
 
@@ -755,6 +741,10 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Tue Dec  7 2010 Richard Jones <rjones@redhat.com> - 1:1.7.20-1
+- New upstream version 1.7.20.
+- Remove patches which are upstream.
+
 * Tue Dec  7 2010 Richard Jones <rjones@redhat.com> - 1:1.7.19-15
 - Rebuild appliance with febootstrap 3.1-5 because we accidentally
   reopened RHBZ#654638.
