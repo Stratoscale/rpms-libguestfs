@@ -30,7 +30,7 @@ Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
 Version:       1.7.19
-Release:       14%{?dist}
+Release:       15%{?dist}
 License:       LGPLv2+
 Group:         Development/Libraries
 URL:           http://libguestfs.org/
@@ -51,7 +51,7 @@ BuildRequires: autoconf, automake, libtool, gettext-devel
 # Basic build requirements:
 BuildRequires: /usr/bin/pod2man
 BuildRequires: /usr/bin/pod2text
-BuildRequires: febootstrap >= 3.1-4
+BuildRequires: febootstrap >= 3.1-5
 BuildRequires: hivex-devel >= 1.2.2
 BuildRequires: augeas-devel >= 0.5.0
 BuildRequires: readline-devel
@@ -130,7 +130,7 @@ BuildRequires: qemu-img
 
 # Runtime requires:
 Requires:      qemu-kvm >= 0.12
-Requires:      febootstrap >= 3.1-4
+Requires:      febootstrap >= 3.1-5
 
 # For libguestfs-test-tool.
 Requires:      genisoimage
@@ -755,6 +755,10 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Tue Dec  7 2010 Richard Jones <rjones@redhat.com> - 1:1.7.19-15
+- Rebuild appliance with febootstrap 3.1-5 because we accidentally
+  reopened RHBZ#654638.
+
 * Mon Dec  6 2010 Richard Jones <rjones@redhat.com> - 1:1.7.19-14
 - Rebuild appliance properly using febootstrap 3.1 and alternate yum repo.
 
