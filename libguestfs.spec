@@ -29,7 +29,7 @@
 Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
-Version:       1.7.20
+Version:       1.7.21
 Release:       1%{?dist}
 License:       LGPLv2+
 Group:         Development/Libraries
@@ -741,6 +741,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Fri Dec 10 2010 Richard Jones <rjones@redhat.com> - 1:1.7.21-1
+- New upstream version 1.7.21.
+
 * Tue Dec  7 2010 Richard Jones <rjones@redhat.com> - 1:1.7.20-1
 - New upstream version 1.7.20.
 - Remove patches which are upstream.
