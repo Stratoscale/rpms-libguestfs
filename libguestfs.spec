@@ -29,7 +29,7 @@
 Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
-Version:       1.7.22
+Version:       1.7.23
 Release:       1%{?dist}
 License:       LGPLv2+
 Group:         Development/Libraries
@@ -741,6 +741,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sun Dec 11 2010 Richard Jones <rjones@redhat.com> - 1:1.7.23-1
+- New upstream version 1.7.23.
+
 * Sat Dec 11 2010 Richard Jones <rjones@redhat.com> - 1:1.7.22-1
 - New upstream version 1.7.22.
 - Depend on febootstrap 3.3 which fixes the checksum stability problem.
