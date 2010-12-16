@@ -29,7 +29,7 @@
 Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
-Version:       1.7.23
+Version:       1.7.24
 Release:       1%{?dist}
 License:       LGPLv2+
 Group:         Development/Libraries
@@ -741,6 +741,10 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Thu Dec 16 2010 Richard Jones <rjones@redhat.com> - 1:1.7.24-1
+- New upstream version 1.7.24.
+- Adds getxattr/lgetxattr APIs to support guestfs-browser.
+
 * Sun Dec 11 2010 Richard Jones <rjones@redhat.com> - 1:1.7.23-1
 - New upstream version 1.7.23.
 
