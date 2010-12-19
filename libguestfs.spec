@@ -18,18 +18,6 @@
 %global with_virtio 1
 %endif 
 
-# Mirror and updates repositories to use if building with network repo
-%if %{defined libguestfs_mirror}
-%global mirror %{libguestfs_mirror}
-%else
-%global mirror http://download.fedora.redhat.com/pub/fedora/linux/development/%{_arch}/os/
-%endif
-%if %{defined libguestfs_updates}
-%global updates %{libguestfs_updates}
-%else
-%global updates none
-%endif
-
 # Enable to run tests during check
 # Default is enabled
 %if %{defined libguestfs_runtests}
@@ -41,24 +29,21 @@
 Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
-Version:       1.6.2
-Release:       1%{?dist}.4
+Version:       1.8.0
+Release:       1%{?dist}
 License:       LGPLv2+
 Group:         Development/Libraries
 URL:           http://libguestfs.org/
-Source0:       http://libguestfs.org/download/1.6-stable/%{name}-%{version}.tar.gz
+Source0:       http://libguestfs.org/download/1.8-stable/%{name}-%{version}.tar.gz
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root
 
 # Disable FUSE tests, not supported in Koji at the moment.
-Patch0:        libguestfs-1.0.79-no-fuse-test.patch
-
-# Remove FIPS .*.hmac files from the supermin appliance (RHBZ#654638).
-Patch1:        0001-Remove-FIPS-.-.hmac-files-from-the-supermin-applianc.patch
+Patch0:        libguestfs-1.7.13-no-fuse-test.patch
 
 # Basic build requirements:
 BuildRequires: /usr/bin/pod2man
 BuildRequires: /usr/bin/pod2text
-BuildRequires: febootstrap >= 2.10
+BuildRequires: febootstrap >= 3.3
 BuildRequires: hivex-devel >= 1.2.2
 BuildRequires: augeas-devel >= 0.5.0
 BuildRequires: readline-devel
@@ -74,6 +59,8 @@ BuildRequires: file-devel
 BuildRequires: libvirt-devel
 BuildRequires: po4a
 BuildRequires: gperf
+BuildRequires: db4-utils
+BuildRequires: cpio
 
 # This is only needed for RHEL 5 because readline-devel doesn't
 # properly depend on it, but doesn't do any harm on other platforms:
@@ -135,10 +122,13 @@ BuildRequires: qemu-img
 
 # Runtime requires:
 Requires:      qemu-kvm >= 0.12
-Requires:      febootstrap >= 2.10
+Requires:      febootstrap >= 3.3
 
 # For libguestfs-test-tool.
 Requires:      genisoimage
+
+# For core inspection API.
+Requires:      db4-utils
 
 # Provide our own custom requires for the supermin appliance.
 Source1:       libguestfs-find-requires.sh
@@ -172,7 +162,7 @@ See also the 'guestfish' package for shell scripting and command line
 access, and '%{name}-mount' for mounting guest filesystems on the
 host using FUSE.
 
-For Perl bindings, see 'perl-libguestfs'.
+For Perl bindings, see 'perl-Sys-Guestfs'.
 
 For OCaml bindings, see 'ocaml-libguestfs-devel'.
 
@@ -202,8 +192,11 @@ Summary:       Shell for accessing and modifying virtual machine disk images
 Group:         Development/Tools
 License:       GPLv2+
 Requires:      %{name} = %{epoch}:%{version}-%{release}
-Requires:      /usr/bin/pod2text
+#Requires:      /usr/bin/emacs #theoretically, but too large
 Requires:      /usr/bin/hexedit
+Requires:      /usr/bin/less
+Requires:      /usr/bin/man
+Requires:      /bin/vi
 
 
 %description -n guestfish
@@ -217,7 +210,6 @@ Summary:       Mount guest filesystems on the host using FUSE and libguestfs
 Group:         Development/Tools
 License:       GPLv2+
 Requires:      %{name} = %{epoch}:%{version}-%{release}
-Requires:      virt-inspector
 
 
 %description mount
@@ -225,18 +217,11 @@ The guestmount command lets you mount guest filesystems on the
 host using FUSE and %{name}.
 
 
-%package tools
+%package tools-c
 Summary:       System administration tools for virtual machines
 Group:         Development/Tools
 License:       GPLv2+
 Requires:      %{name} = %{epoch}:%{version}-%{release}
-Requires:      guestfish
-Requires:      perl-Sys-Virt
-Requires:      perl-String-ShellQuote
-Requires:      perl-XML-Writer
-Requires:      hivex >= 1.2.2
-Requires:      qemu-img
-Requires:      db4-utils
 
 # Obsolete and replace earlier packages.
 Provides:      virt-cat = %{epoch}:%{version}-%{release}
@@ -250,9 +235,28 @@ Obsoletes:     virt-inspector < %{epoch}:%{version}-%{release}
 Provides:      virt-df2 = %{epoch}:%{version}-%{release}
 Obsoletes:     virt-df2 < %{epoch}:%{version}-%{release}
 
-# These were never packages:
-Provides:      virt-edit = %{epoch}:%{version}-%{release}
-Provides:      virt-rescue = %{epoch}:%{version}-%{release}
+
+%description tools-c
+This package contains miscellaneous system administrator command line
+tools for virtual machines.
+
+Note that you should install %{name}-tools (which pulls in
+this package).  This package is only used directly when you want
+to avoid dependencies on Perl.
+
+
+%package tools
+Summary:       System administration tools for virtual machines
+Group:         Development/Tools
+License:       GPLv2+
+Requires:      %{name} = %{epoch}:%{version}-%{release}
+Requires:      %{name}-tools-c = %{epoch}:%{version}-%{release}
+# NB: Only list deps here which are not picked up automatically.
+Requires:      perl(Sys::Virt)
+Requires:      perl(String::ShellQuote)
+Requires:      perl(XML::Writer)
+Requires:      perl(Win::Hivex)
+Requires:      qemu-img
 
 
 %description tools
@@ -272,16 +276,16 @@ works for Windows virtual machines.
 Virt-edit is a command line tool to edit the contents of a file in a
 virtual machine.
 
+Virt-filesystems is a command line tool to display the filesystems,
+partitions, block devices, LVs, VGs and PVs found in a disk image
+or virtual machine.  It replaces the deprecated programs
+virt-list-filesystems and virt-list-partitions with a much more
+capable tool.
+
 Virt-inspector examines a virtual machine and tries to determine the
 version of the OS, the kernel version, what drivers are installed,
 whether the virtual machine is fully virtualized (FV) or
 para-virtualized (PV), what applications are installed and more.
-
-Virt-list-filesystems can be used to list out the filesystems in a
-virtual machine image (for shell scripts etc).
-
-Virt-list-partitions can be used to list out the partitions in a
-virtual machine image.
 
 Virt-ls is a command line tool to list out files in a virtual machine.
 
@@ -323,17 +327,20 @@ ocaml-%{name}-devel contains development libraries
 required to use the OCaml bindings for %{name}.
 
 
-%package -n perl-%{name}
-Summary:       Perl bindings for %{name}
+%package -n perl-Sys-Guestfs
+Summary:       Perl bindings for %{name} (Sys::Guestfs)
 Group:         Development/Libraries
 Requires:      %{name} = %{epoch}:%{version}-%{release}
 Requires:      perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $version))
 # RHBZ#523547
-Requires:      perl-XML-XPath
+Requires:      perl(XML::XPath)
+# RHBZ#652587 - for backwards compat with the old name
+Provides:      perl-%{name} = %{epoch}:%{version}-%{release}
+Obsoletes:     perl-%{name} < %{epoch}:%{version}-%{release}
 
 
-%description -n perl-%{name}
-perl-%{name} contains Perl bindings for %{name}.
+%description -n perl-Sys-Guestfs
+perl-Sys-Guestfs contains Perl bindings for %{name} (Sys::Guestfs).
 
 
 %package -n python-%{name}
@@ -353,6 +360,7 @@ Summary:       Ruby bindings for %{name}
 Group:         Development/Libraries
 Requires:      %{name} = %{epoch}:%{version}-%{release}
 Requires:      ruby(abi) = 1.8
+Requires:      ruby
 Provides:      ruby(guestfs) = %{version}
 
 %{!?ruby_sitelib: %define ruby_sitelib %(ruby -rrbconfig -e "puts Config::CONFIG['sitelibdir']")}
@@ -414,23 +422,40 @@ php-%{name} contains PHP bindings for %{name}.
 %setup -q
 
 %patch0 -p1
-%patch1 -p1
 
 mkdir -p daemon/m4
 
 
 %build
 %if %{buildnet}
-%define extra --with-mirror=%{mirror} --with-updates=%{updates}
+%define extra %{nil}
 %else
-# Build a local repository containing the packages used to
-# install the current buildroot (assuming we are being built
-# with mock or Koji).  Then tell febootstrap to reference this
-# local repository when building the appliance.
 mkdir repo
 find /var/cache/yum -type f -name '*.rpm' -print0 | xargs -0 cp -t repo
 createrepo repo
-%define extra --with-mirror=file://$(pwd)/repo --with-repo=fedora-14 --with-updates=none
+cat > yum.conf <<EOF
+[main]
+cachedir=/var/cache/yum
+debuglevel=1
+logfile=/var/log/yum.log
+retries=20
+obsoletes=1
+gpgcheck=0
+assumeyes=1
+reposdir=/dev/null
+
+[local]
+name=local
+baseurl=file://$(pwd)/repo
+failovermethod=priority
+enabled=1
+gpgcheck=0
+EOF
+%define extra --with-febootstrap-yum-config=$(pwd)/yum.conf
+echo "==== /etc/yum.conf ===="
+cat /etc/yum.conf
+echo "==== our yum.conf ===="
+cat yum.conf
 %endif
 
 ./configure \
@@ -438,7 +463,6 @@ createrepo repo
   --mandir=%{_mandir} \
   --sysconfdir=%{_sysconfdir} \
   --with-qemu="qemu-kvm qemu-system-%{_build_arch} qemu" \
-  --enable-supermin \
 %if %{with_virtio}
   --with-drive-if=virtio \
 %endif
@@ -453,12 +477,16 @@ export PATH=/usr/sbin:$PATH
 make INSTALLDIRS=vendor %{?_smp_mflags}
 
 # Useful for debugging appliance problems.
-echo "==== files in initramfs ===="
-find initramfs -type f
+for f in appliance/supermin.d/*.img; do
+    b=`basename $f`
+    echo "==== $b ===="
+    ls -l $f
+    cpio -itv < $f
+done
 echo "==== hostfiles ===="
 ls -l appliance/supermin.d/hostfiles
 cat appliance/supermin.d/hostfiles
-echo "============"
+echo "======================================================================"
 
 
 %check
@@ -533,30 +561,9 @@ rm -rf $RPM_BUILD_ROOT
 
 make DESTDIR=$RPM_BUILD_ROOT install
 
-# Delete the ordinary appliance, leaving just the supermin appliance.
-rm $RPM_BUILD_ROOT%{_libdir}/guestfs/vmlinuz.*
-rm $RPM_BUILD_ROOT%{_libdir}/guestfs/initramfs.*
-
 # Delete static libraries, libtool files.
 rm $RPM_BUILD_ROOT%{_libdir}/libguestfs.a
 rm $RPM_BUILD_ROOT%{_libdir}/libguestfs.la
-
-# Clean up the examples/ directory which will get installed in %doc.
-# Note we can't delete the original examples/Makefile because that
-# will be needed by the check section later in the RPM build.
-cp -a examples ex
-pushd ex
-make clean
-rm Makefile*
-rm -rf .deps .libs
-popd
-
-# Same for ocaml/examples.
-cp -a ocaml/examples ocaml/ex
-pushd ocaml/ex
-make clean
-rm Makefile*
-popd
 
 find $RPM_BUILD_ROOT -name perllocal.pod -delete
 find $RPM_BUILD_ROOT -name .packlist -delete
@@ -610,21 +617,20 @@ rm -rf $RPM_BUILD_ROOT
 
 %files devel
 %defattr(-,root,root,-)
-%doc BUGS ChangeLog HACKING TODO README RELEASE-NOTES
-%doc ex html/guestfs.3.html html/pod.css
+%doc AUTHORS BUGS ChangeLog HACKING TODO README RELEASE-NOTES ROADMAP
+%doc examples/*.c
 %doc installed-docs/*
 %{_libdir}/libguestfs.so
 %{_mandir}/man3/guestfs.3*
+%{_mandir}/man3/guestfs-examples.3*
 %{_mandir}/man3/libguestfs.3*
 %{_includedir}/guestfs.h
-%{_includedir}/guestfs-actions.h
-%{_includedir}/guestfs-structs.h
 %{_libdir}/pkgconfig/libguestfs.pc
 
 
 %files -n guestfish
 %defattr(-,root,root,-)
-%doc html/guestfish.1.html html/pod.css recipes/
+%doc recipes/
 %{_bindir}/guestfish
 %{_mandir}/man1/guestfish.1*
 %dir %{_sysconfdir}/bash_completion.d
@@ -638,26 +644,32 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man1/guestmount.1*
 
 
-%files tools
+%files tools-c
 %defattr(-,root,root,-)
 %{_bindir}/virt-cat
 %{_mandir}/man1/virt-cat.1*
 %{_bindir}/virt-df
 %{_mandir}/man1/virt-df.1*
-%{_bindir}/virt-edit
-%{_mandir}/man1/virt-edit.1*
+%{_bindir}/virt-filesystems
+%{_mandir}/man1/virt-filesystems.1*
 %{_bindir}/virt-inspector
 %{_mandir}/man1/virt-inspector.1*
+%{_bindir}/virt-ls
+%{_mandir}/man1/virt-ls.1*
+%{_bindir}/virt-rescue
+%{_mandir}/man1/virt-rescue.1*
+
+
+%files tools
+%defattr(-,root,root,-)
+%{_bindir}/virt-edit
+%{_mandir}/man1/virt-edit.1*
 %{_bindir}/virt-list-filesystems
 %{_mandir}/man1/virt-list-filesystems.1*
 %{_bindir}/virt-list-partitions
 %{_mandir}/man1/virt-list-partitions.1*
-%{_bindir}/virt-ls
-%{_mandir}/man1/virt-ls.1*
 %{_bindir}/virt-make-fs
 %{_mandir}/man1/virt-make-fs.1*
-%{_bindir}/virt-rescue
-%{_mandir}/man1/virt-rescue.1*
 %{_bindir}/virt-resize
 %{_mandir}/man1/virt-resize.1*
 %{_bindir}/virt-tar
@@ -680,14 +692,15 @@ rm -rf $RPM_BUILD_ROOT
 
 %files -n ocaml-%{name}-devel
 %defattr(-,root,root,-)
-%doc ocaml/ex
+%doc ocaml/examples/*.ml
 %{_libdir}/ocaml/guestfs/*.a
 %{_libdir}/ocaml/guestfs/*.cmxa
 %{_libdir}/ocaml/guestfs/*.cmx
 %{_libdir}/ocaml/guestfs/*.mli
+%{_mandir}/man3/guestfs-ocaml.3*
 
 
-%files -n perl-%{name}
+%files -n perl-Sys-Guestfs
 %defattr(-,root,root,-)
 %doc perl/examples
 %{perl_vendorarch}/*
@@ -698,17 +711,21 @@ rm -rf $RPM_BUILD_ROOT
 %files -n python-%{name}
 %defattr(-,root,root,-)
 %doc README
+%doc python/examples/*.py
 %{python_sitearch}/*
 %{python_sitelib}/*.py
 %{python_sitelib}/*.pyc
 %{python_sitelib}/*.pyo
+%{_mandir}/man3/guestfs-python.3*
 
 
 %files -n ruby-%{name}
 %defattr(-,root,root,-)
 %doc README
+%doc ruby/examples/*.rb
 %{ruby_sitelib}/guestfs.rb
 %{ruby_sitearch}/_guestfs.so
+%{_mandir}/man3/guestfs-ruby.3*
 
 
 %files java
@@ -739,6 +756,29 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sun Dec 19 2010 Richard Jones <rjones@redhat.com> - 1:1.8.0-1.fc14
+- New upstream stable branch version 1.8.0.
+- This version requires febootstrap 3.x.
+- Remove upstream patch.
+- Rebase FUSE test patch.
+- BR db4-utils, cpio.
+- Requires db4-utils for core inspection API.
+- Rename Perl bindings to perl-Sys-Guestfs for consistency with other
+  Perl modules (RHBZ#652587).
+- guestfish no longer requires pod2text.
+- guestfish depends on less, man, vi.
+- guestmount no longer requires virt-inspector.
+- Split libguestfs-tools into libguestfs-tools-c, libguestfs-tools.  The
+  former contains tools which only require C.
+- Use perl(Module) instead of perl-Module in requires.
+- Ruby package now depends on ruby.
+- Remove updates, mirrors configuration from spec file, no longer used.
+- Don't configure with --enable-supermin, now the default.
+- Include new language examples.
+- Include AUTHORS and ROADMAP files in libguestfs-devel subpackage.
+- <guestfs.h> is no longer split into 3 files.
+- Don't include HTML version of documentation.
+
 * Thu Nov 18 2010 Richard Jones <rjones@redhat.com> - 1:1.6.2-1.fc14.4
 - New upstream stable branch version 1.6.2.
 - This version includes a make install rule that works for Ruby, so
