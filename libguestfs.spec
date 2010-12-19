@@ -29,12 +29,12 @@
 Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
-Version:       1.7.24
+Version:       1.9.0
 Release:       1%{?dist}
 License:       LGPLv2+
 Group:         Development/Libraries
 URL:           http://libguestfs.org/
-Source0:       http://libguestfs.org/download/1.7-development/%{name}-%{version}.tar.gz
+Source0:       http://libguestfs.org/download/1.9-development/%{name}-%{version}.tar.gz
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root
 
 # Disable FUSE tests, not supported in Koji at the moment.
@@ -602,7 +602,7 @@ rm -rf $RPM_BUILD_ROOT
 
 %files devel
 %defattr(-,root,root,-)
-%doc AUTHORS BUGS ChangeLog HACKING TODO README RELEASE-NOTES
+%doc AUTHORS BUGS ChangeLog HACKING TODO README RELEASE-NOTES ROADMAP
 %doc examples/*.c
 %doc installed-docs/*
 %{_libdir}/libguestfs.so
@@ -741,6 +741,10 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sun Dec 19 2010 Richard W.M. Jones <rjones@redhat.com> - 1:1.9.0-1
+- New upstream development branch 1.9.0.
+- Include ROADMAP in devel package.
+
 * Thu Dec 16 2010 Richard Jones <rjones@redhat.com> - 1:1.7.24-1
 - New upstream version 1.7.24.
 - Adds getxattr/lgetxattr APIs to support guestfs-browser.
