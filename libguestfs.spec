@@ -29,7 +29,7 @@
 Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
-Version:       1.9.1
+Version:       1.9.2
 Release:       1%{?dist}
 License:       LGPLv2+
 Group:         Development/Libraries
@@ -204,6 +204,12 @@ Guestfish is the Filesystem Interactive SHell, for accessing and
 modifying virtual machine disk images from the command line and shell
 scripts.
 
+Virt-copy-in and virt-copy-out are command line tools for uploading
+and downloading files and directories to and from virtual machines.
+
+Virt-tar-in and virt-tar-out are archive, backup and upload tools
+for virtual machines.  These replace the deprecated program virt-tar.
+
 
 %package mount
 Summary:       Mount guest filesystems on the host using FUSE and libguestfs
@@ -296,8 +302,6 @@ Virt-rescue provides a rescue shell for making interactive,
 unstructured fixes to virtual machines.
 
 Virt-resize can resize existing virtual machine disk images.
-
-Virt-tar is an archive, backup and upload tool for virtual machines.
 
 Virt-win-reg lets you look inside the Windows Registry for
 Windows virtual machines.
@@ -618,6 +622,14 @@ rm -rf $RPM_BUILD_ROOT
 %doc recipes/
 %{_bindir}/guestfish
 %{_mandir}/man1/guestfish.1*
+%{_bindir}/virt-copy-in
+%{_mandir}/man1/virt-copy-in.1*
+%{_bindir}/virt-copy-out
+%{_mandir}/man1/virt-copy-out.1*
+%{_bindir}/virt-tar-in
+%{_mandir}/man1/virt-tar-in.1*
+%{_bindir}/virt-tar-out
+%{_mandir}/man1/virt-tar-out.1*
 %dir %{_sysconfdir}/bash_completion.d
 %{_sysconfdir}/bash_completion.d/guestfish-bash-completion.sh
 
@@ -741,6 +753,12 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Mon Jan  3 2011 Richard W.M. Jones <rjones@redhat.com> - 1:1.9.2-1
+- New upstream version 1.9.2.
+- New tools: virt-copy-in, virt-copy-out, virt-tar-in, virt-tar-out.
+  These are just shell script wrappers around guestfish so they are
+  included in the guestfish package.
+
 * Fri Dec 31 2010 Richard W.M. Jones <rjones@redhat.com> - 1:1.9.1-1
 - New upstream version 1.9.1.
 
