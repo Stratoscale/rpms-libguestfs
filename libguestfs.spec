@@ -30,7 +30,7 @@ Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
 Version:       1.9.3
-Release:       1%{?dist}
+Release:       2%{?dist}
 License:       LGPLv2+
 Group:         Development/Libraries
 URL:           http://libguestfs.org/
@@ -122,7 +122,7 @@ BuildRequires: qemu-img
 
 # Runtime requires:
 Requires:      qemu-kvm >= 0.12
-Requires:      febootstrap >= 3.3
+Requires:      febootstrap-supermin-helper >= 3.3
 
 # For libguestfs-test-tool.
 Requires:      genisoimage
@@ -753,6 +753,10 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Fri Jan 14 2011 Richard W.M. Jones <rjones@redhat.com> - 1:1.9.3-2
+- Only runtime require febootstrap-supermin-helper (not whole of
+  febootstrap).
+
 * Tue Jan 11 2011 Richard W.M. Jones <rjones@redhat.com> - 1:1.9.3-1
 - New upstream version 1.9.3.
 
