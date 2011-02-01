@@ -30,7 +30,7 @@ Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
 Version:       1.9.7
-Release:       3%{?dist}
+Release:       4%{?dist}
 License:       LGPLv2+
 Group:         Development/Libraries
 URL:           http://libguestfs.org/
@@ -40,7 +40,9 @@ BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root
 # Disable FUSE tests, not supported in Koji at the moment.
 Patch0:        libguestfs-1.7.13-no-fuse-test.patch
 
-Patch1:        0001-hack-Allow-time-for-etc-mtab-to-be-updated-print-con.patch
+# Temporary non-upstream patch to fix /etc/mtab.
+# See: https://www.redhat.com/archives/libguestfs/2011-February/msg00006.html
+Patch1:        0001-appliance-Force-etc-mtab-to-be-a-symlink-to-proc-mou.patch
 
 # Basic build requirements:
 BuildRequires: /usr/bin/pod2man
@@ -760,9 +762,12 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Wed Feb  2 2011 Richard W.M. Jones <rjones@redhat.com> - 1:1.9.7-4
+- Add temporary non-upstream patch to fix /etc/mtab.
+  See: https://www.redhat.com/archives/libguestfs/2011-February/msg00006.html
+
 * Tue Feb  1 2011 Richard W.M. Jones <rjones@redhat.com> - 1:1.9.7-3
 - Enable trace in 'make check' section.
-- Add hack to track down problem in is_root_mounted (only affects Koji).
 
 * Sun Jan 30 2011 Richard W.M. Jones <rjones@redhat.com> - 1:1.9.7-1
 - New upstream version 1.9.7.

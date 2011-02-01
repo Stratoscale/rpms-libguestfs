@@ -1,0 +1,35 @@
+From 522da71ebdbca3b69978292a818b9317905a7d3c Mon Sep 17 00:00:00 2001
+From: Richard W.M. Jones <rjones@redhat.com>
+Date: Wed, 2 Feb 2011 18:33:25 +0000
+Subject: [PATCH] appliance: Force /etc/mtab to be a symlink to /proc/mounts
+
+Since Fedora util-linux 2.19, the %post script has done:
+
+  rm -f /etc/mtab
+  ln -s /proc/mounts /etc/mtab
+
+We now parse /etc/mtab, and it seems to be a good idea in
+general to make it work like this.
+---
+ appliance/init |    5 +++++
+ 1 files changed, 5 insertions(+), 0 deletions(-)
+
+diff --git a/appliance/init b/appliance/init
+index 4a9476d..207aa79 100755
+--- a/appliance/init
++++ b/appliance/init
+@@ -16,6 +16,11 @@ rm -f /proc; mkdir /proc
+ mount -t proc /proc /proc
+ mount -t sysfs /sys /sys
+ 
++# util-linux >= 2.19 %post script does this.  It seems to
++# be a good idea in general.
++rm -f /etc/mtab
++ln -s /proc/mounts /etc/mtab
++
+ if [ ! -L /etc/init.d/udev -a -x /etc/init.d/udev ]; then
+   if type service >/dev/null 2>&1; then
+      service udev start
+-- 
+1.7.3.5
+
