@@ -1,0 +1,25 @@
+From 529d2f57621a3a525759ca9c09f605f2f2f1ae66 Mon Sep 17 00:00:00 2001
+From: Richard W.M. Jones <rjones@redhat.com>
+Date: Tue, 1 Feb 2011 13:34:20 +0000
+Subject: [PATCH] hack: Allow time for /etc/mtab to be updated, print contents.
+
+---
+ images/guest-aux/make-windows-img.sh |    2 ++
+ 1 files changed, 2 insertions(+), 0 deletions(-)
+
+diff --git a/images/guest-aux/make-windows-img.sh b/images/guest-aux/make-windows-img.sh
+index 5a0cd6d..ee464ac 100755
+--- a/images/guest-aux/make-windows-img.sh
++++ b/images/guest-aux/make-windows-img.sh
+@@ -39,6 +39,8 @@ mkfs ntfs /dev/sda2
+ 
+ # Enough to fool inspection API.
+ mount-options "" /dev/sda2 /
++sleep 5
++debug sh "cat /etc/mtab"
+ mkdir-p /Windows/System32/Config
+ 
+ upload guest-aux/windows-software /Windows/System32/Config/SOFTWARE
+-- 
+1.7.3.5
+
