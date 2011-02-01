@@ -1,0 +1,34 @@
+From 4d6323cb948768dfd42d48f960baa8cb41c00a36 Mon Sep 17 00:00:00 2001
+From: Richard W.M. Jones <rjones@redhat.com>
+Date: Tue, 1 Feb 2011 12:28:51 +0000
+Subject: [PATCH] hack: print /etc/mtab in is_root_mounted test.
+
+---
+ daemon/mount.c |    4 ++++
+ 1 files changed, 4 insertions(+), 0 deletions(-)
+
+diff --git a/daemon/mount.c b/daemon/mount.c
+index c584f81..2b5433b 100644
+--- a/daemon/mount.c
++++ b/daemon/mount.c
+@@ -26,6 +26,7 @@
+ #include <sys/types.h>
+ #include <mntent.h>
+ 
++#include "ignore-value.h"
+ #include "daemon.h"
+ #include "actions.h"
+ 
+@@ -40,6 +41,9 @@ is_root_mounted (void)
+   FILE *fp;
+   struct mntent *m;
+ 
++  if (verbose)
++    ignore_value (system ("cat /etc/mtab >&2"));
++
+   fp = setmntent ("/etc/mtab", "r");
+   if (fp == NULL) {
+     perror ("/etc/mtab");
+-- 
+1.7.3.5
+
