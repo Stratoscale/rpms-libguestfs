@@ -30,7 +30,7 @@ Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
 Version:       1.9.7
-Release:       5%{?dist}
+Release:       6%{?dist}
 License:       LGPLv2+
 Group:         Development/Libraries
 URL:           http://libguestfs.org/
@@ -716,6 +716,7 @@ rm -rf $RPM_BUILD_ROOT
 %{perl_vendorarch}/*
 %{_mandir}/man3/Sys::Guestfs.3pm*
 %{_mandir}/man3/Sys::Guestfs::Lib.3pm*
+%{_mandir}/man3/guestfs-perl.3*
 
 
 %files -n python-%{name}
@@ -766,10 +767,11 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
-* Wed Feb  2 2011 Richard W.M. Jones <rjones@redhat.com> - 1:1.9.7-5
+* Wed Feb  2 2011 Richard W.M. Jones <rjones@redhat.com> - 1:1.9.7-6
 - Add temporary non-upstream patch to fix /etc/mtab.
   See: https://www.redhat.com/archives/libguestfs/2011-February/msg00006.html
 - Add fix for regressions/rhbz557655.sh so it works when tracing is enabled.
+- Add guestfs-perl(3) man page.
 
 * Tue Feb  1 2011 Richard W.M. Jones <rjones@redhat.com> - 1:1.9.7-3
 - Enable trace in 'make check' section.
