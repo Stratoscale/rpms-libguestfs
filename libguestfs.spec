@@ -29,8 +29,8 @@
 Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
-Version:       1.9.7
-Release:       7%{?dist}
+Version:       1.9.8
+Release:       1%{?dist}
 License:       LGPLv2+
 Group:         Development/Libraries
 URL:           http://libguestfs.org/
@@ -39,13 +39,6 @@ BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root
 
 # Disable FUSE tests, not supported in Koji at the moment.
 Patch0:        libguestfs-1.7.13-no-fuse-test.patch
-
-# Temporary non-upstream patch to fix /etc/mtab.
-# See: https://www.redhat.com/archives/libguestfs/2011-February/msg00006.html
-Patch1:        0001-appliance-Force-etc-mtab-to-be-a-symlink-to-proc-mou.patch
-
-# Fix for regressions/rhbz557655.sh so it works when tracing is enabled.
-Patch2:        0002-regressions-Fix-rhbz557655.sh-so-it-works-with-traci.patch
 
 # Basic build requirements:
 BuildRequires: /usr/bin/pod2man
@@ -433,8 +426,6 @@ php-%{name} contains PHP bindings for %{name}.
 %setup -q
 
 %patch0 -p1
-%patch1 -p1
-%patch2 -p1
 
 mkdir -p daemon/m4
 
@@ -767,6 +758,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sun Feb  6 2011 Richard W.M. Jones <rjones@redhat.com> - 1:1.9.8-1
+- New upstream version 1.9.8.
+
 * Sun Feb  6 2011 Richard W.M. Jones <rjones@redhat.com> - 1:1.9.7-7
 - Rebuild against rpm-4.9.0-0.beta1.6.fc15 to fix OCaml deps.  See discussion:
   http://lists.fedoraproject.org/pipermail/devel/2011-February/148398.html
