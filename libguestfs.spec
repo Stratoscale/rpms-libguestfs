@@ -30,7 +30,7 @@ Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
 Version:       1.9.7
-Release:       6%{?dist}
+Release:       7%{?dist}
 License:       LGPLv2+
 Group:         Development/Libraries
 URL:           http://libguestfs.org/
@@ -767,6 +767,10 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sun Feb  6 2011 Richard W.M. Jones <rjones@redhat.com> - 1:1.9.7-7
+- Rebuild against rpm-4.9.0-0.beta1.6.fc15 to fix OCaml deps.  See discussion:
+  http://lists.fedoraproject.org/pipermail/devel/2011-February/148398.html
+
 * Wed Feb  2 2011 Richard W.M. Jones <rjones@redhat.com> - 1:1.9.7-6
 - Add temporary non-upstream patch to fix /etc/mtab.
   See: https://www.redhat.com/archives/libguestfs/2011-February/msg00006.html
