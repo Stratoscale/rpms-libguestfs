@@ -40,6 +40,11 @@ BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root
 # Disable FUSE tests, not supported in Koji at the moment.
 Patch0:        libguestfs-1.7.13-no-fuse-test.patch
 
+# Upstream patches to fix virt-make-fs with qemu-img 0.14.
+# These are included after 0.9.9.
+Patch1:        0001-virt-make-fs-In-debug-mode-print-qemu-img-command-li.patch
+Patch2:        0002-virt-make-fs-Round-disk-size-to-integer-fix-for-qemu.patch
+
 # Basic build requirements:
 BuildRequires: /usr/bin/pod2man
 BuildRequires: /usr/bin/pod2text
@@ -426,6 +431,8 @@ php-%{name} contains PHP bindings for %{name}.
 %setup -q
 
 %patch0 -p1
+%patch1 -p1
+%patch2 -p1
 
 mkdir -p daemon/m4
 
@@ -758,6 +765,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Fri Mar  4 2011 Richard W.M. Jones <rjones@redhat.com> - 1:1.9.9-2
+- Include upstream patches to fix virt-make-fs with qemu-img 0.14.
+
 * Fri Mar  4 2011 Richard W.M. Jones <rjones@redhat.com> - 1:1.9.9-1
 - New upstream version 1.9.9.
 
