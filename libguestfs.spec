@@ -29,7 +29,7 @@
 Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
-Version:       1.8.1
+Version:       1.8.2
 Release:       1%{?dist}
 License:       LGPLv2+
 Group:         Development/Libraries
@@ -756,6 +756,13 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Tue Mar  8 2011 Richard Jones <rjones@redhat.com> - 1:1.8.2-1.fc14
+- New upstream stable branch version 1.8.2.
+- Fixes: 682979, 668574.
+- Java bindings are usable in this release.
+- Fixes compatibility with qemu-img >= 0.14.
+- Fixes memory use-after-free when adding libvirt domains by name.
+
 * Mon Jan 10 2011 Richard Jones <rjones@redhat.com> - 1:1.8.1-1.fc14
 - New upstream stable branch version 1.8.1.
 - Fixes: 668112, 617440, 666577, 666578, 666579.
