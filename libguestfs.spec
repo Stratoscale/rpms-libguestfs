@@ -29,7 +29,7 @@
 Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
-Version:       1.9.10
+Version:       1.9.11
 Release:       1%{?dist}
 License:       LGPLv2+
 Group:         Development/Libraries
@@ -725,6 +725,7 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(-,root,root,-)
 %doc README
 %doc ruby/examples/*.rb
+%doc ruby/doc/site/*
 %{ruby_sitelib}/guestfs.rb
 %{ruby_sitearch}/_guestfs.so
 %{_mandir}/man3/guestfs-ruby.3*
@@ -758,6 +759,10 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Tue Mar 15 2011 Richard W.M. Jones <rjones@redhat.com> - 1:1.9.11-1
+- New upstream version 1.9.11.
+- Add generated Ruby documentation (rdoc).
+
 * Tue Mar  8 2011 Richard W.M. Jones <rjones@redhat.com> - 1:1.9.10-1
 - New upstream version 1.9.10.
 - Remove patches (now upstream).
