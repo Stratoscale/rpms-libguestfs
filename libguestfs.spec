@@ -29,7 +29,7 @@
 Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
-Version:       1.9.11
+Version:       1.9.12
 Release:       1%{?dist}
 License:       LGPLv2+
 Group:         Development/Libraries
@@ -129,6 +129,12 @@ Requires:      genisoimage
 
 # For core inspection API.
 Requires:      db4-utils
+
+# Because many previously unreadable binaries have been made readable
+# (because of RHBZ#646469) they will be included in the hostfiles
+# list, which means that this libguestfs won't work with versions of
+# glibc built before the change.
+Requires:      glibc >= 2.13.90-4
 
 # Provide our own custom requires for the supermin appliance.
 Source1:       libguestfs-find-requires.sh
@@ -759,6 +765,12 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Thu Mar 18 2011 Richard W.M. Jones <rjones@redhat.com> - 1:1.9.12-1
+- New upstream version 1.9.12.
+
+* Wed Mar 16 2011 Richard W.M. Jones <rjones@redhat.com> - 1:1.9.11-2
+- Add runtime requires on minimum glibc because of newly readable binaries.
+
 * Tue Mar 15 2011 Richard W.M. Jones <rjones@redhat.com> - 1:1.9.11-1
 - New upstream version 1.9.11.
 - Add generated Ruby documentation (rdoc).
