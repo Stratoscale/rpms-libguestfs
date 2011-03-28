@@ -30,7 +30,7 @@ Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
 Version:       1.9.13
-Release:       1%{?dist}
+Release:       2%{?dist}
 License:       LGPLv2+
 Group:         Development/Libraries
 URL:           http://libguestfs.org/
@@ -68,7 +68,7 @@ BuildRequires: ncurses-devel
 
 # Build requirements for the appliance (see 'make.sh.in' in the source):
 BuildRequires: kernel, bash, coreutils, lvm2, ntfs-3g, util-linux-ng
-BuildRequires: MAKEDEV, net-tools, augeas-libs, file
+BuildRequires: MAKEDEV, net-tools, augeas-libs, file, attr
 BuildRequires: module-init-tools, procps, strace, iputils
 BuildRequires: dosfstools, zerofree, lsof, scrub, libselinux
 BuildRequires: parted, e2fsprogs, btrfs-progs, gfs2-utils
@@ -83,7 +83,7 @@ BuildRequires: grub, ntfsprogs
 
 # Must match the above set of BuildRequires exactly!
 Requires:      kernel, bash, coreutils, lvm2, ntfs-3g, util-linux-ng
-Requires:      MAKEDEV, net-tools, augeas-libs, file
+Requires:      MAKEDEV, net-tools, augeas-libs, file, attr
 Requires:      module-init-tools, procps, strace, iputils
 Requires:      dosfstools, zerofree, lsof, scrub, libselinux
 Requires:      parted, e2fsprogs, btrfs-progs, gfs2-utils
@@ -765,6 +765,10 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Mon Mar 28 2011 Richard W.M. Jones <rjones@redhat.com> - 1:1.9.13-2
+- Include 'attr' as BR (required for getfattr, setfattr programs in
+  virt-rescue).
+
 * Thu Mar 24 2011 Richard W.M. Jones <rjones@redhat.com> - 1:1.9.13-1
 - New upstream version 1.9.13.
 
