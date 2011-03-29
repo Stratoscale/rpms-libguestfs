@@ -29,8 +29,8 @@
 Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
-Version:       1.8.3
-Release:       2%{?dist}
+Version:       1.8.4
+Release:       1%{?dist}
 License:       LGPLv2+
 Group:         Development/Libraries
 URL:           http://libguestfs.org/
@@ -68,7 +68,7 @@ BuildRequires: ncurses-devel
 
 # Build requirements for the appliance (see 'make.sh.in' in the source):
 BuildRequires: kernel, bash, coreutils, lvm2, ntfs-3g, util-linux-ng
-BuildRequires: MAKEDEV, net-tools, augeas-libs, file, attr
+BuildRequires: MAKEDEV, net-tools, augeas-libs, file, attr, acl
 BuildRequires: module-init-tools, procps, strace, iputils
 BuildRequires: dosfstools, zerofree, lsof, scrub, libselinux
 BuildRequires: parted, e2fsprogs, btrfs-progs, gfs2-utils
@@ -83,7 +83,7 @@ BuildRequires: grub, ntfsprogs
 
 # Must match the above set of BuildRequires exactly!
 Requires:      kernel, bash, coreutils, lvm2, ntfs-3g, util-linux-ng
-Requires:      MAKEDEV, net-tools, augeas-libs, file, attr
+Requires:      MAKEDEV, net-tools, augeas-libs, file, attr, acl
 Requires:      module-init-tools, procps, strace, iputils
 Requires:      dosfstools, zerofree, lsof, scrub, libselinux
 Requires:      parted, e2fsprogs, btrfs-progs, gfs2-utils
@@ -756,6 +756,11 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Tue Mar 29 2011 Richard Jones <rjones@redhat.com> - 1:1.8.4-1
+- New upstream stable branch version 1.8.4.
+- Include 'acl' as BR (required for getfacl, setfacl programs in
+  virt-rescue).
+
 * Mon Mar 28 2011 Richard Jones <rjones@redhat.com> - 1:1.8.3-2.fc14
 - Include 'attr' as BR (required for getfattr, setfattr programs in
   virt-rescue).
