@@ -61,6 +61,7 @@ BuildRequires: po4a
 BuildRequires: gperf
 BuildRequires: db4-utils
 BuildRequires: cpio
+BuildRequires: libconfig-devel
 
 # This is only needed for RHEL 5 because readline-devel doesn't
 # properly depend on it, but doesn't do any harm on other platforms:
@@ -665,6 +666,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man1/virt-ls.1*
 %{_bindir}/virt-rescue
 %{_mandir}/man1/virt-rescue.1*
+%config(noreplace) %{_sysconfdir}/libguestfs-tools.conf
 
 
 %files tools
@@ -765,6 +767,12 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Fri Apr  1 2011 Richard W.M. Jones <rjones@redhat.com> - 1:1.9.15-1
+- New upstream version 1.9.15.
+- Add BR libconfig-devel.
+- Add /etc/libguestfs-tools.conf (config file for guestfish, guestmount,
+  virt-rescue; in future for other tools as well).
+
 * Mon Mar 28 2011 Richard W.M. Jones <rjones@redhat.com> - 1:1.9.14-1
 - New upstream version 1.9.14.
 - Include 'acl' as BR so virt-rescue gets getfacl and setfacl programs.
