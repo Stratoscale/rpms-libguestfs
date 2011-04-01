@@ -29,7 +29,7 @@
 Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
-Version:       1.9.14
+Version:       1.9.15
 Release:       1%{?dist}
 License:       LGPLv2+
 Group:         Development/Libraries
