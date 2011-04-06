@@ -30,7 +30,7 @@ Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
 Version:       1.9.17
-Release:       1%{?dist}
+Release:       2%{?dist}
 License:       LGPLv2+
 Group:         Development/Libraries
 URL:           http://libguestfs.org/
@@ -592,6 +592,11 @@ mv $RPM_BUILD_ROOT%{_docdir}/libguestfs installed-docs
 # them back.
 rm -rf $RPM_BUILD_ROOT%{_mandir}/ja/man{1,3}/
 
+# Remove Ukrainian manpages, since these are not translated fully at
+# the moment.  When these are translated properly we intend to add
+# them back.
+rm -rf $RPM_BUILD_ROOT%{_mandir}/uk/man{1,3}/
+
 # Find locale files.
 %find_lang %{name}
 
@@ -767,6 +772,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Wed Apr  6 2011 Richard W.M. Jones <rjones@redhat.com> - 1:1.9.17-2
+- Remove partially translated Ukrainian manpages.
+
 * Tue Apr  5 2011 Richard W.M. Jones <rjones@redhat.com> - 1:1.9.17-1
 - New upstream version 1.9.17.
 
