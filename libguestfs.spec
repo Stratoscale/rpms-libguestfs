@@ -29,8 +29,8 @@
 Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
-Version:       1.9.17
-Release:       2%{?dist}
+Version:       1.9.18
+Release:       1%{?dist}
 License:       LGPLv2+
 Group:         Development/Libraries
 URL:           http://libguestfs.org/
@@ -62,6 +62,9 @@ BuildRequires: gperf
 BuildRequires: db4-utils
 BuildRequires: cpio
 BuildRequires: libconfig-devel
+BuildRequires: ocaml
+BuildRequires: ocaml-findlib-devel
+BuildRequires: ocaml-pcre-devel
 
 # This is only needed for RHEL 5 because readline-devel doesn't
 # properly depend on it, but doesn't do any harm on other platforms:
@@ -99,8 +102,6 @@ Requires:      grub, ntfsprogs
 
 # These are only required if you want to build the bindings for
 # different languages:
-BuildRequires: ocaml
-BuildRequires: ocaml-findlib-devel
 BuildRequires: perl-devel
 BuildRequires: perl-Test-Simple
 BuildRequires: perl-Test-Pod
@@ -616,7 +617,6 @@ rm -rf $RPM_BUILD_ROOT
 %{_bindir}/libguestfs-test-tool
 %{_libdir}/guestfs/
 %{_libdir}/libguestfs.so.*
-%{_libexecdir}/libguestfs-test-tool-helper
 %{_mandir}/man1/libguestfs-test-tool.1*
 
 
@@ -772,6 +772,11 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Wed Apr  9 2011 Richard W.M. Jones <rjones@redhat.com> - 1:1.9.18-1
+- New upstream version 1.9.18.
+- Requires ocaml-pcre for new virt-resize.
+- Remove libguestfs-test-tool-helper program which is no longer used.
+
 * Wed Apr  6 2011 Richard W.M. Jones <rjones@redhat.com> - 1:1.9.17-2
 - Remove partially translated Ukrainian manpages.
 
