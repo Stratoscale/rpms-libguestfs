@@ -1,0 +1,31 @@
+From 047173d18683a66cbe8949bc114833984898fed6 Mon Sep 17 00:00:00 2001
+From: Richard W.M. Jones <rjones@redhat.com>
+Date: Sat, 9 Apr 2011 22:50:15 +0100
+Subject: [PATCH] resize: Link with local copy of guestfs.
+
+---
+ resize/Makefile.am |    4 ++--
+ 1 files changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/resize/Makefile.am b/resize/Makefile.am
+index 1d341d8..3740a4a 100644
+--- a/resize/Makefile.am
++++ b/resize/Makefile.am
+@@ -42,12 +42,12 @@ OBJECTS = \
+ 
+ bin_SCRIPTS = virt-resize
+ 
+-OCAMLPACKAGES = -package guestfs,pcre
++OCAMLPACKAGES = -package pcre -I ../ocaml
+ OCAMLCFLAGS = -g -warn-error CDEFLMPSUVYZX $(OCAMLPACKAGES)
+ OCAMLOPTFLAGS = $(OCAMLCFLAGS)
+ 
+ virt-resize: $(OBJECTS)
+-	$(OCAMLFIND) ocamlopt $(OCAMLOPTFLAGS) -linkpkg $^ -o $@
++	$(OCAMLFIND) ocamlopt $(OCAMLOPTFLAGS) mlguestfs.cmxa -linkpkg $^ -o $@
+ 
+ .mli.cmi:
+ 	$(OCAMLFIND) ocamlc $(OCAMLCFLAGS) -c $< -o $@
+-- 
+1.7.4.1
+
