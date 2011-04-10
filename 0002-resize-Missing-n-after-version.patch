@@ -1,7 +1,7 @@
 From 61a42ff551073daf345bd03941797e6af1e97128 Mon Sep 17 00:00:00 2001
 From: Richard W.M. Jones <rjones@redhat.com>
 Date: Sun, 10 Apr 2011 11:06:58 +0100
-Subject: [PATCH 2/3] resize: Missing \n after version.
+Subject: [PATCH 2/4] resize: Missing \n after version.
 
 ---
  resize/resize.ml |    2 +-
