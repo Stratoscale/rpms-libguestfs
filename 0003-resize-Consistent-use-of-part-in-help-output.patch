@@ -1,0 +1,41 @@
+From a6cb8fee205b1615d380456964bebe40bd840fb1 Mon Sep 17 00:00:00 2001
+From: Richard W.M. Jones <rjones@redhat.com>
+Date: Sun, 10 Apr 2011 11:12:03 +0100
+Subject: [PATCH 3/3] resize: Consistent use of 'part' in help output.
+
+---
+ resize/resize.ml |    8 ++++----
+ 1 files changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/resize/resize.ml b/resize/resize.ml
+index dc5540f..82fd765 100644
+--- a/resize/resize.ml
++++ b/resize/resize.ml
+@@ -72,12 +72,12 @@ let infile, outfile, copy_boot_loader, debug, deletes, dryrun,
+     "--no-copy-boot-loader", Arg.Clear copy_boot_loader, " Don't copy boot loader";
+     "-d",        Arg.Set debug,             " Enable debugging messages";
+     "--debug",   Arg.Set debug,             " -\"-";
+-    "--delete",  Arg.String (add deletes),  "dev Delete partition";
+-    "--expand",  Arg.String set_expand,     "dev Expand partition";
++    "--delete",  Arg.String (add deletes),  "part Delete partition";
++    "--expand",  Arg.String set_expand,     "part Expand partition";
+     "--no-expand-content", Arg.Clear expand_content, " Don't expand content";
+     "--no-extra-partition", Arg.Clear extra_partition, " Don't create extra partition";
+     "--format",  Arg.Set_string format,     "format Format of input disk";
+-    "--ignore",  Arg.String (add ignores),  "dev Ignore partition";
++    "--ignore",  Arg.String (add ignores),  "part Ignore partition";
+     "--lv-expand", Arg.String (add lv_expands), "lv Expand logical volume";
+     "--LV-expand", Arg.String (add lv_expands), "lv -\"-";
+     "--lvexpand", Arg.String (add lv_expands), "lv -\"-";
+@@ -90,7 +90,7 @@ let infile, outfile, copy_boot_loader, debug, deletes, dryrun,
+     "--quiet",   Arg.Set quiet,             " -\"-";
+     "--resize",  Arg.String (add resizes),  "part=size Resize partition";
+     "--resize-force", Arg.String (add resizes_force), "part=size Forcefully resize partition";
+-    "--shrink",  Arg.String set_shrink,     "dev Shrink partition";
++    "--shrink",  Arg.String set_shrink,     "part Shrink partition";
+     "-V",        Arg.Unit display_version,  " Display version and exit";
+     "--version", Arg.Unit display_version,  " -\"-";
+   ] in
+-- 
+1.7.4.1
+

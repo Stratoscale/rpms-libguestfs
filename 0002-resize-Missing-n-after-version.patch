@@ -1,0 +1,25 @@
+From 61a42ff551073daf345bd03941797e6af1e97128 Mon Sep 17 00:00:00 2001
+From: Richard W.M. Jones <rjones@redhat.com>
+Date: Sun, 10 Apr 2011 11:06:58 +0100
+Subject: [PATCH 2/3] resize: Missing \n after version.
+
+---
+ resize/resize.ml |    2 +-
+ 1 files changed, 1 insertions(+), 1 deletions(-)
+
+diff --git a/resize/resize.ml b/resize/resize.ml
+index 9a4c86b..dc5540f 100644
+--- a/resize/resize.ml
++++ b/resize/resize.ml
+@@ -35,7 +35,7 @@ let infile, outfile, copy_boot_loader, debug, deletes, dryrun,
+   let display_version () =
+     let g = new G.guestfs () in
+     let version = g#version () in
+-    printf "virt-resize %Ld.%Ld.%Ld%s"
++    printf "virt-resize %Ld.%Ld.%Ld%s\n"
+       version.G.major version.G.minor version.G.release version.G.extra;
+     exit 0
+   in
+-- 
+1.7.4.1
+
