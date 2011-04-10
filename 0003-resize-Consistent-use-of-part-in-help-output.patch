@@ -1,7 +1,7 @@
 From a6cb8fee205b1615d380456964bebe40bd840fb1 Mon Sep 17 00:00:00 2001
 From: Richard W.M. Jones <rjones@redhat.com>
 Date: Sun, 10 Apr 2011 11:12:03 +0100
-Subject: [PATCH 3/3] resize: Consistent use of 'part' in help output.
+Subject: [PATCH 3/4] resize: Consistent use of 'part' in help output.
 
 ---
  resize/resize.ml |    8 ++++----

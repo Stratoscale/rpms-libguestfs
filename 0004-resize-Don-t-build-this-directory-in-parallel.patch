@@ -1,0 +1,24 @@
+From d600d53868237e0f2828a912d9672dbd480e315f Mon Sep 17 00:00:00 2001
+From: Richard W.M. Jones <rjones@redhat.com>
+Date: Sun, 10 Apr 2011 20:42:42 +0100
+Subject: [PATCH 4/4] resize: Don't build this directory in parallel.
+
+---
+ resize/Makefile.am |    4 ++++
+ 1 files changed, 4 insertions(+), 0 deletions(-)
+
+diff --git a/resize/Makefile.am b/resize/Makefile.am
+index 3740a4a..93c193e 100644
+--- a/resize/Makefile.am
++++ b/resize/Makefile.am
+@@ -98,3 +98,7 @@ include .depend
+ 
+ endif
+ endif
++
++# Parallel builds don't obey dependencies for some reason we
++# don't understand.
++.NOTPARALLEL:
+-- 
+1.7.4.1
+
