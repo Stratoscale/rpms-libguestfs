@@ -29,7 +29,7 @@
 Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
-Version:       1.8.4
+Version:       1.8.5
 Release:       1%{?dist}
 License:       LGPLv2+
 Group:         Development/Libraries
@@ -756,6 +756,10 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Mon Apr 11 2011 Richard Jones <rjones@redhat.com> - 1:1.8.5-1
+- New upstream stable branch version 1.8.5.
+- Fixes: Convert any iterable argument to a list (RHBZ#693324).
+
 * Tue Mar 29 2011 Richard Jones <rjones@redhat.com> - 1:1.8.4-1
 - New upstream stable branch version 1.8.4.
 - Include 'acl' as BR (required for getfacl, setfacl programs in
