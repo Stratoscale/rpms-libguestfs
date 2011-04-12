@@ -29,22 +29,16 @@
 Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
-Version:       1.9.18
-Release:       4%{?dist}
+Version:       1.11.0
+Release:       1%{?dist}
 License:       LGPLv2+
 Group:         Development/Libraries
 URL:           http://libguestfs.org/
-Source0:       http://libguestfs.org/download/1.9-development/%{name}-%{version}.tar.gz
+Source0:       http://libguestfs.org/download/1.11-development/%{name}-%{version}.tar.gz
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root
 
 # Disable FUSE tests, not supported in Koji at the moment.
 Patch0:        libguestfs-1.7.13-no-fuse-test.patch
-
-# Patch upstream in > 1.9.18.
-Patch1:        0001-resize-Link-with-local-copy-of-guestfs.patch
-Patch2:        0002-resize-Missing-n-after-version.patch
-Patch3:        0003-resize-Consistent-use-of-part-in-help-output.patch
-Patch4:        0004-resize-Don-t-build-this-directory-in-parallel.patch
 
 # Basic build requirements:
 BuildRequires: /usr/bin/pod2man
@@ -440,10 +434,6 @@ php-%{name} contains PHP bindings for %{name}.
 %setup -q
 
 %patch0 -p1
-%patch1 -p1
-%patch2 -p1
-%patch3 -p1
-%patch4 -p1
 
 mkdir -p daemon/m4
 
@@ -530,7 +520,7 @@ export LIBGUESTFS_TRACE=1
 # 504273   ppc, ppc64          "no opcode defined"
 # 505109   ppc, ppc64          "Boot failure! No secondary bootloader specified"
 # 502058   i386, x86-64 F-11   need to boot with noapic (WORKAROUND ENABLED)
-# 502074   i386         all    commands segfault randomly
+# 502074   i386         all    commands segfault randomly (fixed itself)
 # 503236   i386         F-12   cryptomgr_test at doublefault_fn
 # 507066   all          F-12   sequence of chroot calls (FIXED)
 # 513249   all          F-12   guestfwd broken in qemu (FIXED)
@@ -782,6 +772,11 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Tue Apr 12 2011 Richard W.M. Jones <rjones@redhat.com> - 1:1.11.0-1
+- New upstream development branch 1.11.0.
+- New Source URL.
+- Remove patches which are now upstream.
+
 * Sun Apr 10 2011 Richard W.M. Jones <rjones@redhat.com> - 1:1.9.18-4
 - Include further fixes to virt-resize from upstream.
 
