@@ -2,7 +2,7 @@
 
 set -e
 
-rpmdev-bumpspec -c "- Bump and rebuild." libguestfs.spec
+rpmdev-bumpspec -r -c "- Bump and rebuild." libguestfs.spec
 git diff ||:
 echo "Press ENTER to commit, push and rebuild."
 read line
