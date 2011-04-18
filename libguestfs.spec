@@ -42,7 +42,7 @@ Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
 Version:       1.6.2
-Release:       1%{?dist}.6
+Release:       1%{?dist}.7
 License:       LGPLv2+
 Group:         Development/Libraries
 URL:           http://libguestfs.org/
@@ -54,6 +54,11 @@ Patch0:        libguestfs-1.0.79-no-fuse-test.patch
 
 # Remove FIPS .*.hmac files from the supermin appliance (RHBZ#654638).
 Patch1:        0001-Remove-FIPS-.-.hmac-files-from-the-supermin-applianc.patch
+
+# Location of ntfsresize binary moved with ntfs-3g 2011.4.12 package
+# and the old code in 1.6 branch wasn't very smart about how it looked
+# for binaries when testing availability of features.
+Patch2:        libguestfs-1.6.2-ntfsresize-moved.patch
 
 # Basic build requirements:
 BuildRequires: /usr/bin/pod2man
@@ -415,6 +420,7 @@ php-%{name} contains PHP bindings for %{name}.
 
 %patch0 -p1
 %patch1 -p1
+%patch2 -p1
 
 mkdir -p daemon/m4
 
@@ -742,6 +748,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Mon Apr 18 2011 Richard W.M. Jones <rjones@redhat.com> - 1:1.6.2-1.7
+- Add a patch to change the way we test for ntfsprogs feature.
+
 * Mon Apr 18 2011 Richard W.M. Jones <rjones@redhat.com> - 1:1.6.2-1.6
 - Bump and rebuild.
 

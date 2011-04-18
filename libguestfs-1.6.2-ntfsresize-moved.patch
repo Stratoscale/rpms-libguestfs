@@ -1,0 +1,12 @@
+diff -ur libguestfs-1.6.2.old/daemon/ntfs.c libguestfs-1.6.2/daemon/ntfs.c
+--- libguestfs-1.6.2.old/daemon/ntfs.c	2010-09-16 17:12:31.000000000 +0100
++++ libguestfs-1.6.2/daemon/ntfs.c	2011-04-18 22:45:16.584291304 +0100
+@@ -38,7 +38,7 @@
+ int
+ optgroup_ntfsprogs_available (void)
+ {
+-  int r = access ("/usr/sbin/ntfsresize", X_OK);
++  int r = access ("/sbin/ntfsresize", X_OK);
+   return r == 0;
+ }
+ 
