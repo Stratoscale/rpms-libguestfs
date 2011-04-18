@@ -29,8 +29,8 @@
 Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
-Version:       1.11.1
-Release:       2%{?dist}
+Version:       1.11.2
+Release:       1%{?dist}
 License:       LGPLv2+
 Group:         Development/Libraries
 URL:           http://libguestfs.org/
@@ -39,9 +39,6 @@ BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root
 
 # Disable FUSE tests, not supported in Koji at the moment.
 Patch0:        libguestfs-1.7.13-no-fuse-test.patch
-
-# Upstream patch to fix run depending on libtool.
-Patch1:        0001-run-script-Don-t-depend-on-libtool-being-installed.patch
 
 # Basic build requirements:
 BuildRequires: /usr/bin/pod2man
@@ -437,7 +434,6 @@ php-%{name} contains PHP bindings for %{name}.
 %setup -q
 
 %patch0 -p1
-%patch1 -p1
 
 mkdir -p daemon/m4
 
@@ -776,6 +772,11 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Mon Apr 18 2011 Richard W.M. Jones <rjones@redhat.com> - 1:1.11.2-1
+- New upstream version 1.11.2.
+- Fixes Python bindings when used in Python threads.
+- Remove upstream patch.
+
 * Sat Apr 16 2011 Richard W.M. Jones <rjones@redhat.com> - 1:1.11.1-2
 - New upstream version 1.11.1.
 - Add upstream patch so we don't depend on libtool.
