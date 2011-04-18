@@ -29,8 +29,8 @@
 Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
-Version:       1.8.5
-Release:       1%{?dist}.2
+Version:       1.8.6
+Release:       1%{?dist}
 License:       LGPLv2+
 Group:         Development/Libraries
 URL:           http://libguestfs.org/
@@ -67,7 +67,9 @@ BuildRequires: cpio
 BuildRequires: ncurses-devel
 
 # Build requirements for the appliance (see 'make.sh.in' in the source):
-BuildRequires: kernel, bash, coreutils, lvm2, ntfs-3g, util-linux-ng
+# XXX NTFS BR version is temporary and can be removed later.
+BuildRequires: kernel, bash, coreutils, lvm2, ntfs-3g >= 2:2011.4.12
+BuildRequires: util-linux-ng
 BuildRequires: MAKEDEV, net-tools, augeas-libs, file, attr, acl
 BuildRequires: module-init-tools, procps, strace, iputils
 BuildRequires: dosfstools, zerofree, lsof, scrub, libselinux
@@ -756,6 +758,10 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Mon Apr 18 2011 Richard W.M. Jones <rjones@redhat.com> - 1:1.8.6-1
+- New upstream stable branch version 1.8.6.
+- Fixes Python bindings when used in Python threads.
+
 * Mon Apr 18 2011 Richard W.M. Jones <rjones@redhat.com> - 1:1.8.5-1.2
 - Bump and rebuild.
 
