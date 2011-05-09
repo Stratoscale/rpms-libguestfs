@@ -30,7 +30,7 @@ Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
 Version:       1.11.5
-Release:       1%{?dist}
+Release:       2%{?dist}
 License:       LGPLv2+
 Group:         Development/Libraries
 URL:           http://libguestfs.org/
@@ -39,6 +39,10 @@ BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root
 
 # Disable FUSE tests, not supported in Koji at the moment.
 Patch0:        libguestfs-1.7.13-no-fuse-test.patch
+
+# configure: Use Python platform-dependent site-packages.
+Patch1:        0001-configure-Use-Python-platform-dependent-site-package.patch
+BuildRequires: autoconf, automake, libtool, gettext
 
 # Basic build requirements:
 BuildRequires: /usr/bin/pod2man
@@ -434,6 +438,8 @@ php-%{name} contains PHP bindings for %{name}.
 %setup -q
 
 %patch0 -p1
+%patch1 -p1
+autoconf
 
 mkdir -p daemon/m4
 
@@ -772,6 +778,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Mon May  9 2011 Richard W.M. Jones <rjones@redhat.com> - 1:1.11.5-2
+- configure: Use Python platform-dependent site-packages.
+
 * Mon May  9 2011 Richard W.M. Jones <rjones@redhat.com> - 1:1.11.5-1
 - New upstream version 1.11.5.
 - virt-edit has been rewritten in C, therefore this tool has been moved
