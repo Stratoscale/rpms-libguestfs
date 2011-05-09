@@ -29,7 +29,7 @@
 Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
-Version:       1.11.4
+Version:       1.11.5
 Release:       1%{?dist}
 License:       LGPLv2+
 Group:         Development/Libraries
@@ -663,6 +663,8 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man1/virt-cat.1*
 %{_bindir}/virt-df
 %{_mandir}/man1/virt-df.1*
+%{_bindir}/virt-edit
+%{_mandir}/man1/virt-edit.1*
 %{_bindir}/virt-filesystems
 %{_mandir}/man1/virt-filesystems.1*
 %{_bindir}/virt-inspector
@@ -676,8 +678,6 @@ rm -rf $RPM_BUILD_ROOT
 
 %files tools
 %defattr(-,root,root,-)
-%{_bindir}/virt-edit
-%{_mandir}/man1/virt-edit.1*
 %{_bindir}/virt-list-filesystems
 %{_mandir}/man1/virt-list-filesystems.1*
 %{_bindir}/virt-list-partitions
@@ -772,6 +772,11 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Mon May  9 2011 Richard W.M. Jones <rjones@redhat.com> - 1:1.11.5-1
+- New upstream version 1.11.5.
+- virt-edit has been rewritten in C, therefore this tool has been moved
+  into the libguestfs-tools-c package.
+
 * Sun May  8 2011 Richard W.M. Jones <rjones@redhat.com> - 1:1.11.4-1
 - New upstream version 1.11.4.
 
