@@ -42,7 +42,7 @@ Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
 Version:       1.2.14
-Release:       3%{?dist}
+Release:       4%{?dist}
 License:       LGPLv2+
 Group:         Development/Libraries
 URL:           http://libguestfs.org/
@@ -84,6 +84,9 @@ BuildRequires: qemu-system-ppc >= 0.10.5
 BuildRequires: createrepo
 BuildRequires: libselinux-devel
 BuildRequires: fuse-devel
+
+# Force ntfs-3g latest package in EPEL 5.  See RHBZ#702671.
+BuildRequires: ntfs-3g >= ntfs-3g-2011.4.12-3
 
 # This is only needed for RHEL 5 because readline-devel doesn't
 # properly depend on it, but doesn't do any harm on other platforms:
@@ -703,6 +706,10 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Thu May 12 2011 Richard W.M. Jones <rjones@redhat.com> - 1:1.2.14-4
+- Requested build override for BR ntfs-3g-2011.4.12-3.
+  https://fedorahosted.org/rel-eng/ticket/4738
+
 * Thu May 12 2011 Richard W.M. Jones <rjones@redhat.com> - 1:1.2.14-3
 - Skip some tests which fail against this old kernel/sfdisk.
 
