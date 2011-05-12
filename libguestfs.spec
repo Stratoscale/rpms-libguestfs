@@ -42,7 +42,7 @@ Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
 Version:       1.2.14
-Release:       2%{?dist}
+Release:       3%{?dist}
 License:       LGPLv2+
 Group:         Development/Libraries
 URL:           http://libguestfs.org/
@@ -485,6 +485,11 @@ export LIBGUESTFS_DEBUG=1
 #                                 (FIXED upstream but still broken in F-14)
 # 567567   32-bit       all    guestfish xstrtol test failure on 32-bit
 
+# Skip some tests which fail with old kernel/sfdisk.
+export SKIP_LIST_TEST_PARTITIONS_1=1
+export SKIP_TEST_MKE2JOURNAL_L_0=1
+export SKIP_TEST_VGS_1=1
+
 %if %{runtests}
 %ifarch x86_64
 
@@ -698,6 +703,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Thu May 12 2011 Richard W.M. Jones <rjones@redhat.com> - 1:1.2.14-3
+- Skip some tests which fail against this old kernel/sfdisk.
+
 * Wed May 11 2011 Richard W.M. Jones <rjones@redhat.com> - 1:1.2.14-2
 - Bump and rebuild.
 
