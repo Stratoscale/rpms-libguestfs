@@ -30,7 +30,7 @@ Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
 Version:       1.11.7
-Release:       2%{?dist}
+Release:       3%{?dist}
 License:       LGPLv2+
 Group:         Development/Libraries
 URL:           http://libguestfs.org/
@@ -269,7 +269,7 @@ Requires:      %{name}-tools-c = %{epoch}:%{version}-%{release}
 Requires:      perl(Sys::Virt)
 Requires:      perl(String::ShellQuote)
 Requires:      perl(XML::Writer)
-Requires:      perl(Win::Hivex)
+Requires:      perl(Win::Hivex) >= 1.2.7
 Requires:      qemu-img
 
 
@@ -776,7 +776,7 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
-* Tue May 17 2011 Richard W.M. Jones <rjones@redhat.com> - 1:1.11.7-2
+* Tue May 17 2011 Richard W.M. Jones <rjones@redhat.com> - 1:1.11.7-3
 - New upstream version 1.11.7.
 - Depends on hivex >= 1.2.7.
 - Remove upstream patch.
