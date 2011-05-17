@@ -29,8 +29,8 @@
 Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
-Version:       1.11.5
-Release:       2%{?dist}
+Version:       1.11.7
+Release:       1%{?dist}
 License:       LGPLv2+
 Group:         Development/Libraries
 URL:           http://libguestfs.org/
@@ -40,15 +40,11 @@ BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root
 # Disable FUSE tests, not supported in Koji at the moment.
 Patch0:        libguestfs-1.7.13-no-fuse-test.patch
 
-# configure: Use Python platform-dependent site-packages.
-Patch1:        0001-configure-Use-Python-platform-dependent-site-package.patch
-BuildRequires: autoconf, automake, libtool, gettext
-
 # Basic build requirements:
 BuildRequires: /usr/bin/pod2man
 BuildRequires: /usr/bin/pod2text
 BuildRequires: febootstrap >= 3.3
-BuildRequires: hivex-devel >= 1.2.2
+BuildRequires: hivex-devel >= 1.2.7
 BuildRequires: augeas-devel >= 0.5.0
 BuildRequires: readline-devel
 BuildRequires: genisoimage
@@ -438,8 +434,6 @@ php-%{name} contains PHP bindings for %{name}.
 %setup -q
 
 %patch0 -p1
-%patch1 -p1
-autoconf
 
 mkdir -p daemon/m4
 
@@ -778,6 +772,11 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Tue May 17 2011 Richard W.M. Jones <rjones@redhat.com> - 1:1.11.7-1
+- New upstream version 1.11.7.
+- Depends on hivex >= 1.2.7.
+- Remove upstream patch.
+
 * Mon May  9 2011 Richard W.M. Jones <rjones@redhat.com> - 1:1.11.5-2
 - configure: Use Python platform-dependent site-packages.
 
