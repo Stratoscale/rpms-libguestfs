@@ -29,8 +29,8 @@
 Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
-Version:       1.11.7
-Release:       3%{?dist}
+Version:       1.11.8
+Release:       1%{?dist}
 License:       LGPLv2+
 Group:         Development/Libraries
 URL:           http://libguestfs.org/
@@ -544,9 +544,6 @@ export LIBGUESTFS_TRACE=1
 # checksum at runtime.
 export SKIP_TEST_CHECKSUM_DEVICE=1
 
-# RHBZ#705499
-export SKIP_TEST_ZERO=1
-
 # Work around 'test-getlogin_r.c:55: assertion failed' in Gnulib tests.
 pushd daemon/tests
 borked=test-getlogin_r
@@ -776,6 +773,10 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Wed May 18 2011 Richard W.M. Jones <rjones@redhat.com> - 1:1.11.8-1
+- New upstream version 1.11.8.
+- "zero" command test is fixed now, so we don't need to skip it.
+
 * Tue May 17 2011 Richard W.M. Jones <rjones@redhat.com> - 1:1.11.7-3
 - New upstream version 1.11.7.
 - Depends on hivex >= 1.2.7.
