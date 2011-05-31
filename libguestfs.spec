@@ -42,7 +42,7 @@ Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
 Version:       1.2.14
-Release:       4%{?dist}
+Release:       5%{?dist}
 License:       LGPLv2+
 Group:         Development/Libraries
 URL:           http://libguestfs.org/
@@ -706,6 +706,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Tue May 31 2011 Richard W.M. Jones <rjones@redhat.com> - 1:1.2.14-5
+- Bump and rebuild.
+
 * Thu May 12 2011 Richard W.M. Jones <rjones@redhat.com> - 1:1.2.14-4
 - Requested build override for BR ntfs-3g-2011.4.12-3.
   https://fedorahosted.org/rel-eng/ticket/4738
