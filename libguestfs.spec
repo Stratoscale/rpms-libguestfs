@@ -30,7 +30,7 @@ Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
 Version:       1.11.9
-Release:       3%{?dist}
+Release:       4%{?dist}
 License:       LGPLv2+
 Group:         Development/Libraries
 URL:           http://libguestfs.org/
@@ -642,7 +642,6 @@ rm -rf $RPM_BUILD_ROOT
 
 %files -n guestfish
 %defattr(-,root,root,-)
-%doc recipes/
 %{_bindir}/guestfish
 %{_mandir}/man1/guestfish.1*
 %{_bindir}/virt-copy-in
@@ -779,9 +778,11 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
-* Sun Jun  5 2011 Richard W.M. Jones <rjones@redhat.com> - 1:1.11.9-3
+* Sun Jun  5 2011 Richard W.M. Jones <rjones@redhat.com> - 1:1.11.9-4
 - Build against new parted.
 - Disable tests on i686 because of RHBZ#710921.
+- Remove recipes/ doc directory.  This is no longer present because it
+  was replaced by a guestfs-recipes(1) man page.
 
 * Sat Jun  4 2011 Richard W.M. Jones <rjones@redhat.com> - 1:1.11.9-1
 - New upstream version 1.11.9.
