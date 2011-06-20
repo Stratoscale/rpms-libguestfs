@@ -30,7 +30,7 @@ Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
 Version:       1.11.10
-Release:       2%{?dist}
+Release:       3%{?dist}
 License:       LGPLv2+
 Group:         Development/Libraries
 URL:           http://libguestfs.org/
@@ -39,6 +39,10 @@ BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root
 
 # Disable FUSE tests, not supported in Koji at the moment.
 Patch0:        libguestfs-1.7.13-no-fuse-test.patch
+
+# Temporarily stop setting CCFLAGS in perl subdirectory.
+# See: http://bugs.debian.org/cgi-bin/bugreport.cgi?bug=628522
+Patch1:        0001-perl-Don-t-set-CCFLAGS.patch
 
 # Basic build requirements:
 BuildRequires: /usr/bin/pod2man
@@ -437,6 +441,7 @@ php-%{name} contains PHP bindings for %{name}.
 %setup -q
 
 %patch0 -p1
+%patch1 -p1
 
 mkdir -p daemon/m4
 
@@ -777,6 +782,10 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Mon Jun 20 2011 Richard W.M. Jones <rjones@redhat.com> - 1:1.11.10-3
+- Temporarily stop setting CCFLAGS in perl subdirectory.
+  See: http://bugs.debian.org/cgi-bin/bugreport.cgi?bug=628522
+
 * Fri Jun 17 2011 Marcela Mašláňová <mmaslano@redhat.com> - 1:1.11.10-2
 - Perl mass rebuild
 
