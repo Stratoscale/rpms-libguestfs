@@ -29,8 +29,8 @@
 Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
-Version:       1.11.10
-Release:       3%{?dist}
+Version:       1.11.11
+Release:       1%{?dist}
 License:       LGPLv2+
 Group:         Development/Libraries
 URL:           http://libguestfs.org/
@@ -782,6 +782,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Tue Jun 21 2011 Richard W.M. Jones <rjones@redhat.com> - 1:1.11.11-1
+- New upstream version 1.11.11.
+
 * Mon Jun 20 2011 Richard W.M. Jones <rjones@redhat.com> - 1:1.11.10-3
 - Temporarily stop setting CCFLAGS in perl subdirectory.
   See: http://bugs.debian.org/cgi-bin/bugreport.cgi?bug=628522
