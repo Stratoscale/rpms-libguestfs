@@ -30,7 +30,7 @@ Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
 Version:       1.11.12
-Release:       2%{?dist}
+Release:       3%{?dist}
 License:       LGPLv2+
 Group:         Development/Libraries
 URL:           http://libguestfs.org/
@@ -127,7 +127,7 @@ BuildRequires: perl-Sys-Virt
 BuildRequires: qemu-img
 
 # Force new parted for Linux 3.0 (RHBZ#710882).
-BuildRequires: parted >= 2.4-2
+BuildRequires: parted >= 3.0-2
 
 # Runtime requires:
 Requires:      qemu-kvm >= 0.12
@@ -782,8 +782,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
-* Wed Jun 29 2011 Richard W.M. Jones <rjones@redhat.com> - 1:1.11.12-2
-- Bump and rebuild for parted 3.0
+* Wed Jun 29 2011 Richard W.M. Jones <rjones@redhat.com> - 1:1.11.12-3
+- Bump and rebuild for parted 3.0.
+- Depend on fixed parted >= 3.0-2.
 
 * Tue Jun 28 2011 Richard W.M. Jones <rjones@redhat.com> - 1:1.11.12-1
 - New upstream version 1.11.12.
