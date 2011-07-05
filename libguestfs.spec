@@ -30,7 +30,7 @@ Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
 Version:       1.11.13
-Release:       1%{?dist}
+Release:       2%{?dist}
 License:       LGPLv2+
 Group:         Development/Libraries
 URL:           http://libguestfs.org/
@@ -69,6 +69,7 @@ BuildRequires: libconfig-devel
 BuildRequires: ocaml
 BuildRequires: ocaml-findlib-devel
 BuildRequires: ocaml-pcre-devel
+BuildRequires: systemd-units
 
 # This is only needed for RHEL 5 because readline-devel doesn't
 # properly depend on it, but doesn't do any harm on other platforms:
@@ -150,6 +151,9 @@ Source1:       libguestfs-find-requires.sh
 %global _use_internal_dependency_generator 0
 %global __find_provides %{_rpmconfigdir}/find-provides
 %global __find_requires %{SOURCE1} %{_rpmconfigdir}/find-requires
+
+# libguestfs live service
+Source2:       guestfsd.service
 
 
 %description
@@ -320,6 +324,44 @@ Virt-resize can resize existing virtual machine disk images.
 
 Virt-win-reg lets you look inside the Windows Registry for
 Windows virtual machines.
+
+
+%package live-service
+Summary:       %{name} live service
+Group:         Development/Libraries
+Requires(post): systemd-units
+Requires(preun): systemd-units
+Requires(postun): systemd-units
+
+%description live-service
+You can install just this package in virtual machines in order to
+enable libguestfs live service (eg. guestfish --live), which lets you
+safely edit files in running guests.
+
+This daemon is *not* required by %{name}.
+
+
+%post live-service
+if [ $1 -eq 1 ] ; then
+    # Initial installation.
+    # NOTE: Although it's enabled by default, it won't be started
+    # unless the host admin sets up the virtio-serial port.
+    /bin/systemctl enable guestfsd.service >/dev/null 2>&1 || :
+fi
+
+%preun live-service
+if [ $1 -eq 0 ] ; then
+    # Package removal, not upgrade.
+    /bin/systemctl --no-reload disable guestfsd.service > /dev/null 2>&1 || :
+    /bin/systemctl stop guestfsd.service > /dev/null 2>&1 || :
+fi
+
+%postun live-service
+/bin/systemctl daemon-reload >/dev/null 2>&1 || :
+if [ $1 -ge 1 ] ; then
+    # Package upgrade, not uninstall.
+    /bin/systemctl try-restart guestfsd.service >/dev/null 2>&1 || :
+fi
 
 
 %package -n ocaml-%{name}
@@ -608,6 +650,12 @@ rm -rf $RPM_BUILD_ROOT%{_mandir}/ja/man{1,3}/
 # them back.
 rm -rf $RPM_BUILD_ROOT%{_mandir}/uk/man{1,3}/
 
+# For the libguestfs-live-service subpackage, manually copy guestfsd
+# into %{_sbindir}, and install the systemd service.
+mkdir -p $RPM_BUILD_ROOT%{_sbindir} $RPM_BUILD_ROOT%{_unitdir}
+install -m 0755 daemon/guestfsd $RPM_BUILD_ROOT%{_sbindir}
+install -m 0644 %{SOURCE2} $RPM_BUILD_ROOT%{_unitdir}
+
 # Find locale files.
 %find_lang %{name}
 
@@ -702,6 +750,12 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man1/virt-win-reg.1*
 
 
+%files live-service
+%defattr(-,root,root,-)
+%{_sbindir}/guestfsd
+%{_unitdir}/guestfsd.service
+
+
 %files -n ocaml-%{name}
 %defattr(-,root,root,-)
 %doc README
@@ -782,6 +836,11 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Tue Jul  5 2011 Richard W.M. Jones <rjones@redhat.com> - 1:1.11.13-2
+- Add libguestfs-live-service subpackage.  This can be installed in
+  virtual machines in order to enable safe editing of files in running
+  guests (eg. guestfish --live).
+
 * Thu Jun 30 2011 Richard W.M. Jones <rjones@redhat.com> - 1:1.11.13-1
 - New upstream version 1.11.13.
 
