@@ -30,7 +30,7 @@ Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
 Version:       1.11.13
-Release:       2%{?dist}
+Release:       3%{?dist}
 License:       LGPLv2+
 Group:         Development/Libraries
 URL:           http://libguestfs.org/
@@ -154,6 +154,7 @@ Source1:       libguestfs-find-requires.sh
 
 # libguestfs live service
 Source2:       guestfsd.service
+Source3:       99-guestfsd.rules
 
 
 %description
@@ -333,6 +334,7 @@ Requires(post): systemd-units
 Requires(preun): systemd-units
 Requires(postun): systemd-units
 
+
 %description live-service
 You can install just this package in virtual machines in order to
 enable libguestfs live service (eg. guestfish --live), which lets you
@@ -344,15 +346,12 @@ This daemon is *not* required by %{name}.
 %post live-service
 if [ $1 -eq 1 ] ; then
     # Initial installation.
-    # NOTE: Although it's enabled by default, it won't be started
-    # unless the host admin sets up the virtio-serial port.
-    /bin/systemctl enable guestfsd.service >/dev/null 2>&1 || :
+    /bin/systemctl daemon-reload >/dev/null 2>&1 || :
 fi
 
 %preun live-service
 if [ $1 -eq 0 ] ; then
     # Package removal, not upgrade.
-    /bin/systemctl --no-reload disable guestfsd.service > /dev/null 2>&1 || :
     /bin/systemctl stop guestfsd.service > /dev/null 2>&1 || :
 fi
 
@@ -651,10 +650,13 @@ rm -rf $RPM_BUILD_ROOT%{_mandir}/ja/man{1,3}/
 rm -rf $RPM_BUILD_ROOT%{_mandir}/uk/man{1,3}/
 
 # For the libguestfs-live-service subpackage, manually copy guestfsd
-# into %{_sbindir}, and install the systemd service.
-mkdir -p $RPM_BUILD_ROOT%{_sbindir} $RPM_BUILD_ROOT%{_unitdir}
+# into %{_sbindir}, and install the systemd service and udev rules.
+mkdir -p $RPM_BUILD_ROOT%{_sbindir}
+mkdir -p $RPM_BUILD_ROOT%{_unitdir}
+mkdir -p $RPM_BUILD_ROOT%{_sysconfdir}/udev/rules.d
 install -m 0755 daemon/guestfsd $RPM_BUILD_ROOT%{_sbindir}
 install -m 0644 %{SOURCE2} $RPM_BUILD_ROOT%{_unitdir}
+install -m 0644 %{SOURCE3} $RPM_BUILD_ROOT%{_sysconfdir}/udev/rules.d
 
 # Find locale files.
 %find_lang %{name}
@@ -754,6 +756,7 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(-,root,root,-)
 %{_sbindir}/guestfsd
 %{_unitdir}/guestfsd.service
+%{_sysconfdir}/udev/rules.d/99-guestfsd.rules
 
 
 %files -n ocaml-%{name}
@@ -836,6 +839,10 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Wed Jul  6 2011 Richard W.M. Jones <rjones@redhat.com> - 1:1.11.13-3
+- Further updates to libguestfs-live-service after feedback from
+  Dan Berrange and Lennart Poettering.
+
 * Tue Jul  5 2011 Richard W.M. Jones <rjones@redhat.com> - 1:1.11.13-2
 - Add libguestfs-live-service subpackage.  This can be installed in
   virtual machines in order to enable safe editing of files in running
