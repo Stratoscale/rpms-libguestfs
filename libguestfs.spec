@@ -29,8 +29,8 @@
 Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
-Version:       1.11.13
-Release:       3%{?dist}
+Version:       1.11.14
+Release:       1%{?dist}
 License:       LGPLv2+
 Group:         Development/Libraries
 URL:           http://libguestfs.org/
@@ -839,6 +839,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Wed Jul  6 2011 Richard W.M. Jones <rjones@redhat.com> - 1:1.11.14-1
+- New upstream version 1.11.14.
+
 * Wed Jul  6 2011 Richard W.M. Jones <rjones@redhat.com> - 1:1.11.13-3
 - Further updates to libguestfs-live-service after feedback from
   Dan Berrange and Lennart Poettering.
