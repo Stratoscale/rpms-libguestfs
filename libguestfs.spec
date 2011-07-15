@@ -30,7 +30,7 @@ Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
 Version:       1.11.18
-Release:       1%{?dist}
+Release:       2%{?dist}
 License:       LGPLv2+
 Group:         Development/Libraries
 URL:           http://libguestfs.org/
@@ -43,6 +43,9 @@ Patch0:        libguestfs-1.7.13-no-fuse-test.patch
 # Temporarily stop setting CCFLAGS in perl subdirectory.
 # See: http://bugs.debian.org/cgi-bin/bugreport.cgi?bug=628522
 Patch1:        0001-perl-Don-t-set-CCFLAGS.patch
+
+# Upstream patch to fix regression test.
+Patch2:        0001-Fix-test-guestfish-escapes-regression-test-to-work-w.patch
 
 # Basic build requirements:
 BuildRequires: /usr/bin/pod2man
@@ -483,6 +486,7 @@ php-%{name} contains PHP bindings for %{name}.
 
 %patch0 -p1
 %patch1 -p1
+%patch2 -p1
 
 mkdir -p daemon/m4
 
@@ -838,6 +842,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Fri Jul 15 2011 Richard W.M. Jones <rjones@redhat.com> - 1:1.11.18-2
+- Add upstream patch to fix regression test.
+
 * Fri Jul 15 2011 Richard W.M. Jones <rjones@redhat.com> - 1:1.11.18-1
 - New upstream version 1.11.18.
 - Force febootstrap >= 3.7 which contains a fix for latest Rawhide.
