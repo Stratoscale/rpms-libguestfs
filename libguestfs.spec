@@ -29,7 +29,7 @@
 Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
-Version:       1.11.17
+Version:       1.11.18
 Release:       1%{?dist}
 License:       LGPLv2+
 Group:         Development/Libraries
@@ -47,7 +47,7 @@ Patch1:        0001-perl-Don-t-set-CCFLAGS.patch
 # Basic build requirements:
 BuildRequires: /usr/bin/pod2man
 BuildRequires: /usr/bin/pod2text
-BuildRequires: febootstrap >= 3.3
+BuildRequires: febootstrap >= 3.7
 BuildRequires: hivex-devel >= 1.2.7
 BuildRequires: augeas-devel >= 0.5.0
 BuildRequires: readline-devel
@@ -524,6 +524,7 @@ cat yum.conf
   --mandir=%{_mandir} \
   --sysconfdir=%{_sysconfdir} \
   --with-qemu="qemu-kvm qemu-system-%{_build_arch} qemu" \
+  --enable-install-daemon \
 %if %{with_virtio}
   --with-drive-if=virtio \
 %endif
@@ -649,12 +650,10 @@ rm -rf $RPM_BUILD_ROOT%{_mandir}/ja/man{1,3}/
 # them back.
 rm -rf $RPM_BUILD_ROOT%{_mandir}/uk/man{1,3}/
 
-# For the libguestfs-live-service subpackage, manually copy guestfsd
-# into %{_sbindir}, and install the systemd service and udev rules.
-mkdir -p $RPM_BUILD_ROOT%{_sbindir}
+# For the libguestfs-live-service subpackage install the systemd
+# service and udev rules.
 mkdir -p $RPM_BUILD_ROOT%{_unitdir}
 mkdir -p $RPM_BUILD_ROOT%{_sysconfdir}/udev/rules.d
-install -m 0755 daemon/guestfsd $RPM_BUILD_ROOT%{_sbindir}
 install -m 0644 %{SOURCE2} $RPM_BUILD_ROOT%{_unitdir}
 install -m 0644 %{SOURCE3} $RPM_BUILD_ROOT%{_sysconfdir}/udev/rules.d
 
@@ -839,6 +838,11 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Fri Jul 15 2011 Richard W.M. Jones <rjones@redhat.com> - 1:1.11.18-1
+- New upstream version 1.11.18.
+- Force febootstrap >= 3.7 which contains a fix for latest Rawhide.
+- Use --enable-install-daemon to install guestfsd.
+
 * Thu Jul 14 2011 Richard W.M. Jones <rjones@redhat.com> - 1:1.11.17-1
 - New upstream version 1.11.17.
 
