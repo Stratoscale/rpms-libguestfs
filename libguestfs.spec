@@ -29,8 +29,8 @@
 Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
-Version:       1.11.18
-Release:       2%{?dist}
+Version:       1.11.19
+Release:       1%{?dist}
 License:       LGPLv2+
 Group:         Development/Libraries
 URL:           http://libguestfs.org/
@@ -43,9 +43,6 @@ Patch0:        libguestfs-1.7.13-no-fuse-test.patch
 # Temporarily stop setting CCFLAGS in perl subdirectory.
 # See: http://bugs.debian.org/cgi-bin/bugreport.cgi?bug=628522
 Patch1:        0001-perl-Don-t-set-CCFLAGS.patch
-
-# Upstream patch to fix regression test.
-Patch2:        0001-Fix-test-guestfish-escapes-regression-test-to-work-w.patch
 
 # Basic build requirements:
 BuildRequires: /usr/bin/pod2man
@@ -481,12 +478,21 @@ Requires:      php
 php-%{name} contains PHP bindings for %{name}.
 
 
+%package man-pages-uk
+Summary:       Ukrainian (uk) man pages for %{name}
+Group:         Development/Libraries
+Requires:      %{name} = %{epoch}:%{version}-%{release}
+
+%description man-pages-uk
+%{name}-man-pages-uk contains Ukrainian (uk) man pages
+for %{name}.
+
+
 %prep
 %setup -q
 
 %patch0 -p1
 %patch1 -p1
-%patch2 -p1
 
 mkdir -p daemon/m4
 
@@ -648,11 +654,6 @@ mv $RPM_BUILD_ROOT%{_docdir}/libguestfs installed-docs
 # the moment.  When these are translated properly we intend to add
 # them back.
 rm -rf $RPM_BUILD_ROOT%{_mandir}/ja/man{1,3}/
-
-# Remove Ukrainian manpages, since these are not translated fully at
-# the moment.  When these are translated properly we intend to add
-# them back.
-rm -rf $RPM_BUILD_ROOT%{_mandir}/uk/man{1,3}/
 
 # For the libguestfs-live-service subpackage install the systemd
 # service and udev rules.
@@ -841,7 +842,18 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/php/modules/guestfs_php.so
 
 
+%files man-pages-uk
+%defattr(-,root,root,-)
+%lang(uk) %{_mandir}/uk/man1/*.1*
+%lang(uk) %{_mandir}/uk/man3/*.3*
+
+
 %changelog
+* Mon Jul 18 2011 Richard W.M. Jones <rjones@redhat.com> - 1:1.11.19-1
+- New upstream version 1.11.19.
+- Remove upstream patch.
+- Add Ukrainian (uk) man pages subpackage.
+
 * Fri Jul 15 2011 Richard W.M. Jones <rjones@redhat.com> - 1:1.11.18-2
 - Add upstream patch to fix regression test.
 
