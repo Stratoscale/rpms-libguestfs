@@ -29,7 +29,7 @@
 Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
-Version:       1.11.19
+Version:       1.11.20
 Release:       1%{?dist}
 License:       LGPLv2+
 Group:         Development/Libraries
@@ -155,6 +155,9 @@ Source1:       libguestfs-find-requires.sh
 # libguestfs live service
 Source2:       guestfsd.service
 Source3:       99-guestfsd.rules
+
+# Replacement README file for Fedora users.
+Source4:       README-replacement.in
 
 
 %description
@@ -496,6 +499,11 @@ for %{name}.
 
 mkdir -p daemon/m4
 
+# Replace developer-specific README that ships with libguestfs, with
+# our replacement file.
+mv README README.orig
+sed 's/@VERSION@/%{version}/g' < %{SOURCE4} > README
+
 
 %build
 %if %{buildnet}
@@ -677,7 +685,7 @@ rm -rf $RPM_BUILD_ROOT
 
 %files -f %{name}.lang
 %defattr(-,root,root,-)
-%doc COPYING
+%doc COPYING README
 %{_bindir}/libguestfs-test-tool
 %{_libdir}/guestfs/
 %{_libdir}/libguestfs.so.*
@@ -700,6 +708,7 @@ rm -rf $RPM_BUILD_ROOT
 
 %files -n guestfish
 %defattr(-,root,root,-)
+%doc README
 %{_bindir}/guestfish
 %{_mandir}/man1/guestfish.1*
 %{_bindir}/virt-copy-in
@@ -716,13 +725,14 @@ rm -rf $RPM_BUILD_ROOT
 
 %files mount
 %defattr(-,root,root,-)
-%doc COPYING
+%doc COPYING README
 %{_bindir}/guestmount
 %{_mandir}/man1/guestmount.1*
 
 
 %files tools-c
 %defattr(-,root,root,-)
+%doc README
 %{_bindir}/virt-cat
 %{_mandir}/man1/virt-cat.1*
 %{_bindir}/virt-df
@@ -742,6 +752,7 @@ rm -rf $RPM_BUILD_ROOT
 
 %files tools
 %defattr(-,root,root,-)
+%doc README
 %{_bindir}/virt-list-filesystems
 %{_mandir}/man1/virt-list-filesystems.1*
 %{_bindir}/virt-list-partitions
@@ -758,6 +769,7 @@ rm -rf $RPM_BUILD_ROOT
 
 %files live-service
 %defattr(-,root,root,-)
+%doc COPYING README
 %{_sbindir}/guestfsd
 %{_unitdir}/guestfsd.service
 %{_sysconfdir}/udev/rules.d/99-guestfsd.rules
@@ -765,7 +777,6 @@ rm -rf $RPM_BUILD_ROOT
 
 %files -n ocaml-%{name}
 %defattr(-,root,root,-)
-%doc README
 %{_libdir}/ocaml/guestfs
 %exclude %{_libdir}/ocaml/guestfs/*.a
 %exclude %{_libdir}/ocaml/guestfs/*.cmxa
@@ -796,7 +807,6 @@ rm -rf $RPM_BUILD_ROOT
 
 %files -n python-%{name}
 %defattr(-,root,root,-)
-%doc README
 %doc python/examples/*.py
 %{python_sitearch}/*
 %{python_sitelib}/*.py
@@ -807,7 +817,6 @@ rm -rf $RPM_BUILD_ROOT
 
 %files -n ruby-%{name}
 %defattr(-,root,root,-)
-%doc README
 %doc ruby/examples/*.rb
 %doc ruby/doc/site/*
 %{ruby_sitelib}/guestfs.rb
@@ -817,20 +826,18 @@ rm -rf $RPM_BUILD_ROOT
 
 %files java
 %defattr(-,root,root,-)
-%doc README
 %{_libdir}/libguestfs_jni*.so.*
 %{_datadir}/java/*.jar
 
 
 %files java-devel
 %defattr(-,root,root,-)
-%doc README
 %{_libdir}/libguestfs_jni*.so
+%{_mandir}/man3/guestfs-java.3*
 
 
 %files javadoc
 %defattr(-,root,root,-)
-%doc README
 %{_datadir}/javadoc/%{name}-java-%{version}
 
 
@@ -849,6 +856,11 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Tue Jul 19 2011 Richard W.M. Jones <rjones@redhat.com> - 1:1.11.20-1
+- New upstream version 1.11.20.
+- Replace standard README file with one suited for Fedora.
+- Add guestfs-java(3) manpage to libguestfs-java-devel package.
+
 * Mon Jul 18 2011 Richard W.M. Jones <rjones@redhat.com> - 1:1.11.19-1
 - New upstream version 1.11.19.
 - Remove upstream patch.
