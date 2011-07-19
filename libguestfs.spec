@@ -30,7 +30,7 @@ Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
 Version:       1.11.20
-Release:       1%{?dist}
+Release:       2%{?dist}
 License:       LGPLv2+
 Group:         Development/Libraries
 URL:           http://libguestfs.org/
@@ -43,6 +43,9 @@ Patch0:        libguestfs-1.7.13-no-fuse-test.patch
 # Temporarily stop setting CCFLAGS in perl subdirectory.
 # See: http://bugs.debian.org/cgi-bin/bugreport.cgi?bug=628522
 Patch1:        0001-perl-Don-t-set-CCFLAGS.patch
+
+# Upstream patch to fix virtio-serial test for qemu 0.15.
+Patch2:        libguestfs-1.11.20-qemu-virtio-serial-test.patch
 
 # Basic build requirements:
 BuildRequires: /usr/bin/pod2man
@@ -496,6 +499,7 @@ for %{name}.
 
 %patch0 -p1
 %patch1 -p1
+%patch2 -p0
 
 mkdir -p daemon/m4
 
@@ -856,6 +860,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Tue Jul 19 2011 Richard W.M. Jones <rjones@redhat.com> - 1:1.11.20-2
+- Add upstream patch to fix virtio-serial test for qemu 0.15.
+
 * Tue Jul 19 2011 Richard W.M. Jones <rjones@redhat.com> - 1:1.11.20-1
 - New upstream version 1.11.20.
 - Replace standard README file with one suited for Fedora.

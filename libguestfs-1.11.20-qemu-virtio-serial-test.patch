@@ -1,0 +1,44 @@
+--- configure.orig	2011-07-19 19:43:38.952436219 +0100
++++ configure	2011-07-19 19:48:04.504543100 +0100
+@@ -36827,9 +36827,40 @@
+ 
+ 
+ if test "x$vmchannel_test" != "xno"; then
++    { $as_echo "$as_me:${as_lineno-$LINENO}: checking that $QEMU -help works" >&5
++$as_echo_n "checking that $QEMU -help works... " >&6; }
++    if $QEMU -help > /dev/null 2>&1; then
++        { $as_echo "$as_me:${as_lineno-$LINENO}: result: yes" >&5
++$as_echo "yes" >&6; }
++    else
++        { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
++$as_echo "no" >&6; }
++        { { $as_echo "$as_me:${as_lineno-$LINENO}: error: in \`$ac_pwd':" >&5
++$as_echo "$as_me: error: in \`$ac_pwd':" >&2;}
++as_fn_error $? "$QEMU -help: command failed.
++
++This could be a very old version of qemu, or qemu might not be
++working.
++
++See \`config.log' for more details" "$LINENO" 5; }
++    fi
++
++    # qemu since 0.15 requires the -machine accel=tcg option, otherwise
++    # it won't start up.  QEMU DEVELOPERS, PLEASE ADD CAPABILITIES TESTING.
++    { $as_echo "$as_me:${as_lineno-$LINENO}: checking if this qemu has the -machine accel=tcg option" >&5
++$as_echo_n "checking if this qemu has the -machine accel=tcg option... " >&6; }
++    if $QEMU -help 2>&1 | grep -sq -- '-machine.*accel.*tcg'; then
++        qemu_machine_accel_tcg="-machine accel=tcg"
++        { $as_echo "$as_me:${as_lineno-$LINENO}: result: $qemu_machine_accel_tcg" >&5
++$as_echo "$qemu_machine_accel_tcg" >&6; }
++    else
++        { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
++$as_echo "no" >&6; }
++    fi
++
+     { $as_echo "$as_me:${as_lineno-$LINENO}: checking for virtio-serial support in $QEMU" >&5
+ $as_echo_n "checking for virtio-serial support in $QEMU... " >&6; }
+-    if $QEMU -nographic -device \? 2>&1 | grep -sq virtio-serial; then
++    if $QEMU $qemu_machine_accel_tcg -nographic -device \? 2>&1 | grep -sq virtio-serial; then
+         { $as_echo "$as_me:${as_lineno-$LINENO}: result: yes" >&5
+ $as_echo "yes" >&6; }
+     else
