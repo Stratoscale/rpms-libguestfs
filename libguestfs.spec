@@ -30,7 +30,7 @@ Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
 Version:       1.12.0
-Release:       1%{?dist}
+Release:       2%{?dist}
 License:       LGPLv2+
 Group:         Development/Libraries
 URL:           http://libguestfs.org/
@@ -43,6 +43,9 @@ Patch0:        libguestfs-1.7.13-no-fuse-test.patch
 # Temporarily stop setting CCFLAGS in perl subdirectory.
 # See: http://bugs.debian.org/cgi-bin/bugreport.cgi?bug=628522
 Patch1:        0001-perl-Don-t-set-CCFLAGS.patch
+
+# Force qemu-kvm test to run with -machine accel=tcg flag.
+Patch2:        libguestfs-1.12.0-configure-force-machine-accel-tcg.patch
 
 # Basic build requirements:
 BuildRequires: /usr/bin/pod2man
@@ -496,6 +499,7 @@ for %{name}.
 
 %patch0 -p1
 %patch1 -p1
+%patch2 -p1
 
 mkdir -p daemon/m4
 
@@ -860,6 +864,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Wed Jul 20 2011 Richard W.M. Jones <rjones@redhat.com> - 1:1.12.0-2
+- Readd patch to fix virtio-serial test for qemu 0.15.
+
 * Wed Jul 20 2011 Richard W.M. Jones <rjones@redhat.com> - 1:1.12.0-1
 - New stable version 1.12.0 for Fedora 16.
 - Remove upstream patch.
