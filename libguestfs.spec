@@ -29,12 +29,12 @@
 Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
-Version:       1.11.20
-Release:       3%{?dist}
+Version:       1.12.0
+Release:       1%{?dist}
 License:       LGPLv2+
 Group:         Development/Libraries
 URL:           http://libguestfs.org/
-Source0:       http://libguestfs.org/download/1.11-development/%{name}-%{version}.tar.gz
+Source0:       http://libguestfs.org/download/1.12-stable/%{name}-%{version}.tar.gz
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root
 
 # Disable FUSE tests, not supported in Koji at the moment.
@@ -43,9 +43,6 @@ Patch0:        libguestfs-1.7.13-no-fuse-test.patch
 # Temporarily stop setting CCFLAGS in perl subdirectory.
 # See: http://bugs.debian.org/cgi-bin/bugreport.cgi?bug=628522
 Patch1:        0001-perl-Don-t-set-CCFLAGS.patch
-
-# Upstream patch to fix virtio-serial test for qemu 0.15.
-Patch2:        libguestfs-1.11.20-qemu-virtio-serial-test.patch
 
 # Basic build requirements:
 BuildRequires: /usr/bin/pod2man
@@ -499,7 +496,6 @@ for %{name}.
 
 %patch0 -p1
 %patch1 -p1
-%patch2 -p0
 
 mkdir -p daemon/m4
 
@@ -611,6 +607,7 @@ export LIBGUESTFS_TRACE=1
 #                                 (FIXED)
 # 705499   all          F-16   file command strange output on file of all zero
 # 710921   all          F-16   ftrace problems (FIXED)
+# 723555   i386         F-16   GPF when VM shuts down
 
 # This test fails because we build the ISO after encoding the checksum
 # of the ISO in the test itself.  Need to fix the test to work out the
@@ -626,8 +623,11 @@ touch $borked
 chmod +x $borked
 popd
 
+# Because of RHBZ#723555.
+%ifarch x86_64
 %if %{runtests}
 make check
+%endif
 %endif
 
 
@@ -860,6 +860,11 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Wed Jul 20 2011 Richard W.M. Jones <rjones@redhat.com> - 1:1.12.0-1
+- New stable version 1.12.0 for Fedora 16.
+- Remove upstream patch.
+- Disable tests on i686 (because of RHBZ#723555).
+
 * Wed Jul 20 2011 Petr Sabata <contyk@redhat.com> - 1:1.11.20-3
 - Perl mass rebuild
 
