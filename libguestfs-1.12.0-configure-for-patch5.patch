@@ -1,0 +1,11 @@
+--- configure.orig	2011-07-21 16:53:04.508348683 +0100
++++ configure	2011-07-21 17:00:19.706803882 +0100
+@@ -41164,7 +41164,7 @@
+         for pm in Pod::Usage Getopt::Long Sys::Virt Data::Dumper Locale::TextDomain Win::Hivex Win::Hivex::Regedit String::ShellQuote; do
+             { $as_echo "$as_me:${as_lineno-$LINENO}: checking for $pm" >&5
+ $as_echo_n "checking for $pm... " >&6; }
+-            if ! $PERL -M$pm -e1 >/dev/null 2>&1; then
++            if ! $PERL -M$pm -e1 >&5 2>&1; then
+                 { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
+ $as_echo "no" >&6; }
+                 missing_perl_modules=yes
