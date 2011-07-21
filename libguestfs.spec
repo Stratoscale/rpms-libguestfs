@@ -30,7 +30,7 @@ Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
 Version:       1.12.0
-Release:       7%{?dist}
+Release:       8%{?dist}
 License:       LGPLv2+
 Group:         Development/Libraries
 URL:           http://libguestfs.org/
@@ -877,6 +877,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Thu Jul 21 2011 Petr Sabata <contyk@redhat.com> - 1:1.12.0-8
+- Perl mass rebuild
+
 * Thu Jul 21 2011 Richard W.M. Jones <rjones@redhat.com> - 1:1.12.0-7
 - Attempt rebuild in dist-f16-perl.
 
