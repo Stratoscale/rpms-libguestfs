@@ -30,7 +30,7 @@ Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
 Version:       1.12.0
-Release:       8%{?dist}
+Release:       9%{?dist}
 License:       LGPLv2+
 Group:         Development/Libraries
 URL:           http://libguestfs.org/
@@ -59,7 +59,7 @@ Patch6:        libguestfs-1.12.0-configure-for-patch5.patch
 BuildRequires: /usr/bin/pod2man
 BuildRequires: /usr/bin/pod2text
 BuildRequires: febootstrap >= 3.7
-BuildRequires: hivex-devel >= 1.2.7
+BuildRequires: hivex-devel >= 1.2.7-6
 BuildRequires: augeas-devel >= 0.5.0
 BuildRequires: readline-devel
 BuildRequires: genisoimage
@@ -877,11 +877,11 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Thu Jul 21 2011 Richard W.M. Jones <rjones@redhat.com> - 1:1.12.0-9
+- Attempt rebuild in dist-f16-perl.
+
 * Thu Jul 21 2011 Petr Sabata <contyk@redhat.com> - 1:1.12.0-8
 - Perl mass rebuild
-
-* Thu Jul 21 2011 Richard W.M. Jones <rjones@redhat.com> - 1:1.12.0-7
-- Attempt rebuild in dist-f16-perl.
 
 * Thu Jul 21 2011 Richard W.M. Jones <rjones@redhat.com> - 1:1.12.0-4
 - Disable tests, use quickcheck, because of RHBZ#723555, RHBZ#723822.
