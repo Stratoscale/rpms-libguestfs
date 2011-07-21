@@ -30,7 +30,7 @@ Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
 Version:       1.12.0
-Release:       5%{?dist}
+Release:       6%{?dist}
 License:       LGPLv2+
 Group:         Development/Libraries
 URL:           http://libguestfs.org/
@@ -558,6 +558,8 @@ cat yum.conf
 %endif
   %{extra}
 
+cat config.log
+
 # This ensures that /usr/sbin/chroot is on the path.  Not needed
 # except for RHEL 5, it shouldn't do any harm on other platforms.
 export PATH=/usr/sbin:$PATH
@@ -869,7 +871,7 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
-* Thu Jul 21 2011 Richard W.M. Jones <rjones@redhat.com> - 1:1.12.0-5
+* Thu Jul 21 2011 Richard W.M. Jones <rjones@redhat.com> - 1:1.12.0-6
 - Attempt rebuild in dist-f16-perl.
 
 * Thu Jul 21 2011 Richard W.M. Jones <rjones@redhat.com> - 1:1.12.0-4
