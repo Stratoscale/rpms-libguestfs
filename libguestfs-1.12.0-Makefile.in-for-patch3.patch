@@ -1,0 +1,11 @@
+--- libguestfs-1.12.0/Makefile.in.orig	2011-07-21 10:53:28.852989803 +0100
++++ libguestfs-1.12.0/Makefile.in	2011-07-21 10:53:38.227163685 +0100
+@@ -1873,7 +1873,7 @@
+ # is NOT a substitute for proper testing!
+ 
+ quickcheck:
+-	./run test-tool/libguestfs-test-tool
++	./run test-tool/libguestfs-test-tool $(QUICKCHECK_TEST_TOOL_ARGS)
+ bindist:
+ 	rm -rf $(BINTMPDIR)
+ 	mkdir $(BINTMPDIR)

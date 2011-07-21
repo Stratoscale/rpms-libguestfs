@@ -30,7 +30,7 @@ Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
 Version:       1.12.0
-Release:       3%{?dist}
+Release:       4%{?dist}
 License:       LGPLv2+
 Group:         Development/Libraries
 URL:           http://libguestfs.org/
@@ -46,6 +46,10 @@ Patch1:        0001-perl-Don-t-set-CCFLAGS.patch
 
 # Force qemu-kvm test to run with -machine accel=tcg flag.
 Patch2:        libguestfs-1.12.0-configure-force-machine-accel-tcg.patch
+
+# Upstream patch to allow 'make quickcheck' args to be overridden.
+Patch3:        0001-build-Allow-make-quickcheck-test-tool-args-to-be-ove.patch
+Patch4:        libguestfs-1.12.0-Makefile.in-for-patch3.patch
 
 # Basic build requirements:
 BuildRequires: /usr/bin/pod2man
@@ -500,6 +504,8 @@ for %{name}.
 %patch0 -p1
 %patch1 -p1
 %patch2 -p1
+%patch3 -p1
+%patch4 -p1
 
 mkdir -p daemon/m4
 
@@ -630,7 +636,7 @@ popd
 
 %if %{runtests}
 # Because of RHBZ#723555, RHBZ#723822
-make quickcheck
+make quickcheck QUICKCHECK_TEST_TOOL_ARGS="-t 300"
 %endif
 
 
@@ -863,7 +869,7 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
-* Thu Jul 21 2011 Richard W.M. Jones <rjones@redhat.com> - 1:1.12.0-3
+* Thu Jul 21 2011 Richard W.M. Jones <rjones@redhat.com> - 1:1.12.0-4
 - Disable tests, use quickcheck, because of RHBZ#723555, RHBZ#723822.
 
 * Wed Jul 20 2011 Richard W.M. Jones <rjones@redhat.com> - 1:1.12.0-2
