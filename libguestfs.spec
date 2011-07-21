@@ -30,7 +30,7 @@ Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
 Version:       1.12.0
-Release:       2%{?dist}
+Release:       3%{?dist}
 License:       LGPLv2+
 Group:         Development/Libraries
 URL:           http://libguestfs.org/
@@ -612,6 +612,7 @@ export LIBGUESTFS_TRACE=1
 # 705499   all          F-16   file command strange output on file of all zero
 # 710921   all          F-16   ftrace problems (FIXED)
 # 723555   i386         F-16   GPF when VM shuts down
+# 723822   x86-64       F-16   boot hangs
 
 # This test fails because we build the ISO after encoding the checksum
 # of the ISO in the test itself.  Need to fix the test to work out the
@@ -627,11 +628,9 @@ touch $borked
 chmod +x $borked
 popd
 
-# Because of RHBZ#723555.
-%ifarch x86_64
 %if %{runtests}
-make check
-%endif
+# Because of RHBZ#723555, RHBZ#723822
+make quickcheck
 %endif
 
 
@@ -864,6 +863,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Thu Jul 21 2011 Richard W.M. Jones <rjones@redhat.com> - 1:1.12.0-3
+- Disable tests, use quickcheck, because of RHBZ#723555, RHBZ#723822.
+
 * Wed Jul 20 2011 Richard W.M. Jones <rjones@redhat.com> - 1:1.12.0-2
 - Readd patch to fix virtio-serial test for qemu 0.15.
 
