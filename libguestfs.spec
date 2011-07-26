@@ -30,7 +30,7 @@ Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
 Version:       1.10.5
-Release:       1%{?dist}
+Release:       2%{?dist}
 License:       LGPLv2+
 Group:         Development/Libraries
 URL:           http://libguestfs.org/
@@ -39,6 +39,9 @@ BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root
 
 # Disable FUSE tests, not supported in Koji at the moment.
 Patch0:        libguestfs-1.7.13-no-fuse-test.patch
+
+# Upstream patch to fix segfault in OCaml bindings.
+Patch1:        0001-ocaml-Fix-locking-in-event-callbacks.patch
 
 # Basic build requirements:
 BuildRequires: /usr/bin/pod2man
@@ -436,6 +439,7 @@ php-%{name} contains PHP bindings for %{name}.
 %setup -q
 
 %patch0 -p1
+%patch1 -p1
 
 mkdir -p daemon/m4
 
@@ -774,6 +778,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Thu Jul 26 2011 Richard W.M. Jones <rjones@redhat.com> - 1:1.10.5-2
+- Add upstream patch to fix segfault in OCaml bindings (RHBZ#725824).
+
 * Wed Jul 13 2011 Richard W.M. Jones <rjones@redhat.com> - 1:1.10.5-1
 - New upstream stable branch 1.10.5.
 - Fixes: RHBZ#661280 RHBZ#602997 RHBZ#685009.
