@@ -30,7 +30,7 @@ Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
 Version:       1.12.1
-Release:       1%{?dist}
+Release:       2%{?dist}
 License:       LGPLv2+
 Group:         Development/Libraries
 URL:           http://libguestfs.org/
@@ -39,10 +39,6 @@ BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root
 
 # Disable FUSE tests, not supported in Koji at the moment.
 Patch0:        libguestfs-1.7.13-no-fuse-test.patch
-
-# Temporarily stop setting CCFLAGS in perl subdirectory.
-# See: http://bugs.debian.org/cgi-bin/bugreport.cgi?bug=628522
-Patch1:        0001-perl-Don-t-set-CCFLAGS.patch
 
 # Force qemu-kvm test to run with -machine accel=tcg flag.
 Patch2:        libguestfs-1.12.0-configure-force-machine-accel-tcg.patch
@@ -498,7 +494,6 @@ for %{name}.
 %setup -q
 
 %patch0 -p1
-%patch1 -p1
 %patch2 -p1
 
 mkdir -p daemon/m4
@@ -865,9 +860,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
-* Tue Jul 26 2011 Richard W.M. Jones <rjones@redhat.com> - 1:1.12.1-1
+* Tue Jul 26 2011 Richard W.M. Jones <rjones@redhat.com> - 1:1.12.1-2
 - New upstream stable branch version 1.12.1.
-- Remove 4 x upstream patches.
+- Remove 5 x upstream patches.
 
 * Tue Jul 26 2011 Richard W.M. Jones <rjones@redhat.com> - 1:1.12.0-11
 - Bump and rebuild.
