@@ -30,7 +30,7 @@ Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
 Version:       1.12.1
-Release:       2%{?dist}
+Release:       3%{?dist}
 License:       LGPLv2+
 Group:         Development/Libraries
 URL:           http://libguestfs.org/
@@ -42,6 +42,11 @@ Patch0:        libguestfs-1.7.13-no-fuse-test.patch
 
 # Force qemu-kvm test to run with -machine accel=tcg flag.
 Patch2:        libguestfs-1.12.0-configure-force-machine-accel-tcg.patch
+
+# Non-upstream patch to fix -machine option.  This is not upstream
+# because qemu look like they might revert (ie. fix) the -machine
+# option so that this patch would not be needed.
+Patch3:        0001-Fix-qemu-machine-option-for-latest-qemu-thanks-Marku.patch
 
 # Basic build requirements:
 BuildRequires: /usr/bin/pod2man
@@ -495,6 +500,7 @@ for %{name}.
 
 %patch0 -p1
 %patch2 -p1
+%patch3 -p1
 
 mkdir -p daemon/m4
 
@@ -860,9 +866,10 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
-* Tue Jul 26 2011 Richard W.M. Jones <rjones@redhat.com> - 1:1.12.1-2
+* Tue Jul 26 2011 Richard W.M. Jones <rjones@redhat.com> - 1:1.12.1-3
 - New upstream stable branch version 1.12.1.
 - Remove 5 x upstream patches.
+- Add non-upstream patch to deal with broken qemu -machine option.
 
 * Tue Jul 26 2011 Richard W.M. Jones <rjones@redhat.com> - 1:1.12.0-11
 - Bump and rebuild.
