@@ -30,7 +30,7 @@ Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
 Version:       1.12.1
-Release:       3%{?dist}
+Release:       4%{?dist}
 License:       LGPLv2+
 Group:         Development/Libraries
 URL:           http://libguestfs.org/
@@ -47,6 +47,9 @@ Patch2:        libguestfs-1.12.0-configure-force-machine-accel-tcg.patch
 # because qemu look like they might revert (ie. fix) the -machine
 # option so that this patch would not be needed.
 Patch3:        0001-Fix-qemu-machine-option-for-latest-qemu-thanks-Marku.patch
+
+# Upstream patch to fix segfault in OCaml bindings.
+Patch4:        0001-ocaml-Fix-locking-in-event-callbacks.patch
 
 # Basic build requirements:
 BuildRequires: /usr/bin/pod2man
@@ -501,6 +504,7 @@ for %{name}.
 %patch0 -p1
 %patch2 -p1
 %patch3 -p1
+%patch4 -p1
 
 mkdir -p daemon/m4
 
@@ -866,10 +870,11 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
-* Tue Jul 26 2011 Richard W.M. Jones <rjones@redhat.com> - 1:1.12.1-3
+* Tue Jul 26 2011 Richard W.M. Jones <rjones@redhat.com> - 1:1.12.1-4
 - New upstream stable branch version 1.12.1.
 - Remove 5 x upstream patches.
 - Add non-upstream patch to deal with broken qemu -machine option.
+- Add upstream patch to fix segfault in OCaml bindings.
 
 * Tue Jul 26 2011 Richard W.M. Jones <rjones@redhat.com> - 1:1.12.0-11
 - Bump and rebuild.

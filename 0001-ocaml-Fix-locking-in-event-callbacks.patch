@@ -1,0 +1,79 @@
+From 2b8b3f9794ceb43eabd3083e225c669896d8b186 Mon Sep 17 00:00:00 2001
+From: "Richard W.M. Jones" <rjones@redhat.com>
+Date: Tue, 26 Jul 2011 18:57:19 +0100
+Subject: [PATCH] ocaml: Fix locking in event callbacks.
+
+We weren't acquiring the GC lock around some allocations, resulting in
+segfaults when an event callback ran at the same time as a main thread
+allocation or garbage collection.
+
+In particular this fixes a noticable crash in guestfs-browser.
+---
+ ocaml/guestfs_c.c |   36 +++++++++++++++++++++++++++---------
+ 1 files changed, 27 insertions(+), 9 deletions(-)
+
+diff --git a/ocaml/guestfs_c.c b/ocaml/guestfs_c.c
+index 3f862ea..96e8a35 100644
+--- a/ocaml/guestfs_c.c
++++ b/ocaml/guestfs_c.c
+@@ -327,13 +327,13 @@ event_bitmask_to_event (uint64_t event)
+ }
+ 
+ static void
+-event_callback_wrapper (guestfs_h *g,
+-                        void *data,
+-                        uint64_t event,
+-                        int event_handle,
+-                        int flags,
+-                        const char *buf, size_t buf_len,
+-                        const uint64_t *array, size_t array_len)
++event_callback_wrapper_locked (guestfs_h *g,
++                               void *data,
++                               uint64_t event,
++                               int event_handle,
++                               int flags,
++                               const char *buf, size_t buf_len,
++                               const uint64_t *array, size_t array_len)
+ {
+   CAMLparam0 ();
+   CAMLlocal5 (gv, evv, ehv, bufv, arrayv);
+@@ -360,9 +360,7 @@ event_callback_wrapper (guestfs_h *g,
+ 
+   value args[5] = { gv, evv, ehv, bufv, arrayv };
+ 
+-  caml_leave_blocking_section ();
+   rv = caml_callbackN_exn (*(value*)data, 5, args);
+-  caml_enter_blocking_section ();
+ 
+   /* Callbacks shouldn't throw exceptions.  There's not much we can do
+    * except to print it.
+@@ -375,6 +373,26 @@ event_callback_wrapper (guestfs_h *g,
+   CAMLreturn0;
+ }
+ 
++static void
++event_callback_wrapper (guestfs_h *g,
++                        void *data,
++                        uint64_t event,
++                        int event_handle,
++                        int flags,
++                        const char *buf, size_t buf_len,
++                        const uint64_t *array, size_t array_len)
++{
++  /* Ensure we are holding the GC lock before any GC operations are
++   * possible. (RHBZ#725824)
++   */
++  caml_leave_blocking_section ();
++
++  event_callback_wrapper_locked (g, data, event, event_handle, flags,
++                                 buf, buf_len, array, array_len);
++
++  caml_enter_blocking_section ();
++}
++
+ value
+ ocaml_guestfs_last_errno (value gv)
+ {
+-- 
+1.7.5.2
+
