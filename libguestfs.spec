@@ -30,7 +30,7 @@ Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
 Version:       1.13.2
-Release:       2%{?dist}
+Release:       3%{?dist}
 License:       LGPLv2+
 Group:         Development/Libraries
 URL:           http://libguestfs.org/
@@ -871,7 +871,7 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
-* Tue Aug  2 2011 Richard W.M. Jones <rjones@redhat.com> - 1:1.13.2-2
+* Tue Aug  2 2011 Richard W.M. Jones <rjones@redhat.com> - 1:1.13.2-3
 - Switch Rawhide to use the new development branch (1.13).
 - New upstream version 1.13.2.
 - Remove upstream patch.

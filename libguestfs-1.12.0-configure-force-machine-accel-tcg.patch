@@ -7,7 +7,7 @@ diff -ur libguestfs-1.12.0.old/configure libguestfs-1.12.0/configure
      { $as_echo "$as_me:${as_lineno-$LINENO}: checking for virtio-serial support in $QEMU" >&5
  $as_echo_n "checking for virtio-serial support in $QEMU... " >&6; }
 -    if $QEMU -nographic -device \? 2>&1 | grep -sq virtio-serial; then
-+    if $QEMU -machine accel=tcg -nographic -device \? 2>&1 | grep -sq virtio-serial; then
++    if $QEMU -machine pc,accel=tcg -nographic -device \? 2>&1 | grep -sq virtio-serial; then
          { $as_echo "$as_me:${as_lineno-$LINENO}: result: yes" >&5
  $as_echo "yes" >&6; }
      else
@@ -19,7 +19,7 @@ diff -ur libguestfs-1.12.0.old/configure.ac libguestfs-1.12.0/configure.ac
  
      AC_MSG_CHECKING([for virtio-serial support in $QEMU])
 -    if $QEMU -nographic -device \? 2>&1 | grep -sq virtio-serial; then
-+    if $QEMU -machine accel=tcg -nographic -device \? 2>&1 | grep -sq virtio-serial; then
++    if $QEMU -machine pc,accel=tcg -nographic -device \? 2>&1 | grep -sq virtio-serial; then
          AC_MSG_RESULT([yes])
      else
          AC_MSG_RESULT([no])
