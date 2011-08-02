@@ -30,7 +30,7 @@ Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
 Version:       1.13.2
-Release:       1%{?dist}
+Release:       2%{?dist}
 License:       LGPLv2+
 Group:         Development/Libraries
 URL:           http://libguestfs.org/
@@ -552,8 +552,13 @@ cat yum.conf
 %if %{with_virtio}
   --with-drive-if=virtio \
 %endif
-  %{extra}
+  %{extra} || {
+    echo "==== config.log ===="
+    cat config.log
+    exit 1
+}
 
+echo "==== config.log ===="
 cat config.log
 
 # This ensures that /usr/sbin/chroot is on the path.  Not needed
@@ -866,10 +871,11 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
-* Tue Aug  2 2011 Richard W.M. Jones <rjones@redhat.com> - 1:1.13.2-1
+* Tue Aug  2 2011 Richard W.M. Jones <rjones@redhat.com> - 1:1.13.2-2
 - Switch Rawhide to use the new development branch (1.13).
 - New upstream version 1.13.2.
 - Remove upstream patch.
+- Ensure config.log is printed, even in the error case.
 
 * Tue Jul 26 2011 Richard W.M. Jones <rjones@redhat.com> - 1:1.12.1-4
 - New upstream stable branch version 1.12.1.
