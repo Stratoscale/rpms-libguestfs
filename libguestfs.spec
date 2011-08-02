@@ -633,8 +633,7 @@ chmod +x $borked
 popd
 
 %if %{runtests}
-# Because of RHBZ#723555, RHBZ#723822
-make quickcheck QUICKCHECK_TEST_TOOL_ARGS="-t 300"
+make check
 %endif
 
 
