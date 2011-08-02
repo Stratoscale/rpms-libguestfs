@@ -29,12 +29,12 @@
 Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
-Version:       1.12.1
-Release:       4%{?dist}
+Version:       1.13.2
+Release:       1%{?dist}
 License:       LGPLv2+
 Group:         Development/Libraries
 URL:           http://libguestfs.org/
-Source0:       http://libguestfs.org/download/1.12-stable/%{name}-%{version}.tar.gz
+Source0:       http://libguestfs.org/download/1.13-development/%{name}-%{version}.tar.gz
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root
 
 # Disable FUSE tests, not supported in Koji at the moment.
@@ -44,12 +44,10 @@ Patch0:        libguestfs-1.7.13-no-fuse-test.patch
 Patch2:        libguestfs-1.12.0-configure-force-machine-accel-tcg.patch
 
 # Non-upstream patch to fix -machine option.  This is not upstream
-# because qemu look like they might revert (ie. fix) the -machine
-# option so that this patch would not be needed.
+# because qemu have reverted the behaviour.  However the reverted
+# version is not yet in Rawhide so we have to keep this patch for a
+# while.
 Patch3:        0001-Fix-qemu-machine-option-for-latest-qemu-thanks-Marku.patch
-
-# Upstream patch to fix segfault in OCaml bindings.
-Patch4:        0001-ocaml-Fix-locking-in-event-callbacks.patch
 
 # Basic build requirements:
 BuildRequires: /usr/bin/pod2man
@@ -504,7 +502,6 @@ for %{name}.
 %patch0 -p1
 %patch2 -p1
 %patch3 -p1
-%patch4 -p1
 
 mkdir -p daemon/m4
 
@@ -870,6 +867,11 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Tue Aug  2 2011 Richard W.M. Jones <rjones@redhat.com> - 1:1.13.2-1
+- Switch Rawhide to use the new development branch (1.13).
+- New upstream version 1.13.2.
+- Remove upstream patch.
+
 * Tue Jul 26 2011 Richard W.M. Jones <rjones@redhat.com> - 1:1.12.1-4
 - New upstream stable branch version 1.12.1.
 - Remove 5 x upstream patches.
