@@ -30,7 +30,7 @@ Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
 Version:       1.13.3
-Release:       2%{?dist}
+Release:       3%{?dist}
 License:       LGPLv2+
 Group:         Development/Libraries
 URL:           http://libguestfs.org/
@@ -622,6 +622,7 @@ export LIBGUESTFS_TRACE=1
 # 710921   all          F-16   ftrace problems (FIXED)
 # 723555   i386         F-16   GPF when VM shuts down
 # 723822   x86-64       F-16   boot hangs
+# 728911   i386         F-17   TCG fatal error
 
 # This test fails because we build the ISO after encoding the checksum
 # of the ISO in the test itself.  Need to fix the test to work out the
@@ -629,7 +630,10 @@ export LIBGUESTFS_TRACE=1
 export SKIP_TEST_CHECKSUM_DEVICE=1
 
 %if %{runtests}
+# because of 728911
+%ifarch x86_64
 make check
+%endif
 %endif
 
 
@@ -862,9 +866,10 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
-* Mon Aug  8 2011 Richard W.M. Jones <rjones@redhat.com> - 1:1.13.3-2
+* Mon Aug  8 2011 Richard W.M. Jones <rjones@redhat.com> - 1:1.13.3-3
 - New upstream version 1.13.3.
 - Remove hack for daemon/tests.  Directory no longer exists.
+- Only run testsuite on x86_64 because of qemu bug.
 
 * Tue Aug  2 2011 Richard W.M. Jones <rjones@redhat.com> - 1:1.13.2-3
 - Switch Rawhide to use the new development branch (1.13).
