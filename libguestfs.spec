@@ -29,8 +29,8 @@
 Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
-Version:       1.13.3
-Release:       4%{?dist}
+Version:       1.13.4
+Release:       1%{?dist}
 License:       LGPLv2+
 Group:         Development/Libraries
 URL:           http://libguestfs.org/
@@ -875,6 +875,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Thu Aug 11 2011 Richard W.M. Jones <rjones@redhat.com> - 1:1.13.4-1
+- New upstream version 1.13.4.
+
 * Mon Aug  8 2011 Richard W.M. Jones <rjones@redhat.com> - 1:1.13.3-4
 - New upstream version 1.13.3.
 - 'test-getlogin_r.c:55: assertion failed' test must now be fixed in
