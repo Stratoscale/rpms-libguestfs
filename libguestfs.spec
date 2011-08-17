@@ -29,8 +29,8 @@
 Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
-Version:       1.12.3
-Release:       2%{?dist}
+Version:       1.12.4
+Release:       1%{?dist}
 License:       LGPLv2+
 Group:         Development/Libraries
 URL:           http://libguestfs.org/
@@ -866,6 +866,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Wed Aug 17 2011 Richard W.M. Jones <rjones@redhat.com> - 1:1.12.4-1
+- New upstream stable branch version 1.12.4.
+
 * Mon Aug  8 2011 Richard W.M. Jones <rjones@redhat.com> - 1:1.12.3-2
 - New upstream stable branch version 1.12.3.
 - Remove upstream patch to fix OCaml locking in event callbacks.
