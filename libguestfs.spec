@@ -30,7 +30,7 @@ Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
 Version:       1.12.4
-Release:       2%{?dist}
+Release:       3%{?dist}
 License:       LGPLv2+
 Group:         Development/Libraries
 URL:           http://libguestfs.org/
@@ -615,7 +615,7 @@ export LIBGUESTFS_TRACE=1
 # 705499   all          F-16   file command strange output on file of all zero
 # 710921   all          F-16   ftrace problems (FIXED)
 # 723555   i386         F-16   GPF when VM shuts down
-# 723822   x86-64       F-16   boot hangs
+# 723822   all          F-16   boot hangs
 
 # This test fails because we build the ISO after encoding the checksum
 # of the ISO in the test itself.  Need to fix the test to work out the
@@ -632,7 +632,8 @@ chmod +x $borked
 popd
 
 %if %{runtests}
-make check
+# Because of RHBZ#723555, RHBZ#723822
+make quickcheck QUICKCHECK_TEST_TOOL_ARGS="-t 300"
 %endif
 
 
@@ -865,9 +866,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
-* Wed Aug 17 2011 Richard W.M. Jones <rjones@redhat.com> - 1:1.12.4-2
+* Wed Aug 17 2011 Richard W.M. Jones <rjones@redhat.com> - 1:1.12.4-3
 - New upstream stable branch version 1.12.4.
-- Try enabling tests again.
+- Bug 723822 (boot hang during tests) is still observed.
 
 * Mon Aug  8 2011 Richard W.M. Jones <rjones@redhat.com> - 1:1.12.3-2
 - New upstream stable branch version 1.12.3.
