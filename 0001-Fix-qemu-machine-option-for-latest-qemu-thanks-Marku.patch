@@ -1,19 +1,7 @@
-From 2ae7aa73308d911fa9916d6ec03e2a52a16f7737 Mon Sep 17 00:00:00 2001
-From: "Richard W.M. Jones" <rjones@redhat.com>
-Date: Mon, 25 Jul 2011 10:45:13 +0100
-Subject: [PATCH] Fix qemu -machine option for latest qemu (thanks Markus
- Armbruster).
-
----
- src/launch.c |   25 +++++++++++++++----------
- 1 files changed, 15 insertions(+), 10 deletions(-)
-
-diff --git a/src/launch.c b/src/launch.c
-index 56aa288..933e3fd 100644
---- a/src/launch.c
-+++ b/src/launch.c
-@@ -75,10 +75,10 @@ static int launch_appliance (guestfs_h *g);
- static int64_t timeval_diff (const struct timeval *x, const struct timeval *y);
+--- libguestfs-1.13.6.old/src/launch.c	2011-08-18 18:02:56.000000000 +0100
++++ libguestfs-1.13.6/src/launch.c	2011-08-19 12:56:00.131758605 +0100
+@@ -76,10 +76,10 @@
+ static void print_qemu_command_line (guestfs_h *g, char **argv);
  static int connect_unix_socket (guestfs_h *g, const char *sock);
  static int qemu_supports (guestfs_h *g, const char *option);
 -
@@ -25,7 +13,7 @@ index 56aa288..933e3fd 100644
  static void compile_regexps (void) __attribute__((constructor));
  static void free_regexps (void) __attribute__((destructor));
  
-@@ -96,13 +96,15 @@ compile_regexps (void)
+@@ -97,13 +97,15 @@
        abort ();                                                         \
      }                                                                   \
    } while (0)
@@ -42,7 +30,7 @@ index 56aa288..933e3fd 100644
  
  /* Add a string to the current command line. */
  static void
-@@ -516,14 +518,19 @@ launch_appliance (guestfs_h *g)
+@@ -517,14 +519,19 @@
      if (qemu_supports (g, "-nodefconfig"))
        add_cmdline (g, "-nodefconfig");
  
@@ -67,7 +55,7 @@ index 56aa288..933e3fd 100644
        /* qemu sometimes needs this option to enable hardware
         * virtualization, but some versions of 'qemu-kvm' will use KVM
         * regardless (even where this option appears in the help text).
-@@ -1159,7 +1166,6 @@ qemu_supports (guestfs_h *g, const char *option)
+@@ -1153,7 +1160,6 @@
    return strstr (g->qemu_help, option) != NULL;
  }
  
@@ -75,7 +63,7 @@ index 56aa288..933e3fd 100644
  /* As above but using a regex instead of a fixed string. */
  static int
  qemu_supports_re (guestfs_h *g, const pcre *option_regex)
-@@ -1171,7 +1177,6 @@ qemu_supports_re (guestfs_h *g, const pcre *option_regex)
+@@ -1165,7 +1171,6 @@
  
    return match (g, g->qemu_help, option_regex);
  }
@@ -83,6 +71,3 @@ index 56aa288..933e3fd 100644
  
  /* Check if a file can be opened. */
  static int
--- 
-1.7.5.2
-
