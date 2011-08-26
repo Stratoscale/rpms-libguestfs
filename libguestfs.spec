@@ -29,7 +29,7 @@
 Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
-Version:       1.13.7
+Version:       1.13.8
 Release:       1%{?dist}
 License:       LGPLv2+
 Group:         Development/Libraries
@@ -657,7 +657,6 @@ find $RPM_BUILD_ROOT -name .packlist -delete
 find $RPM_BUILD_ROOT -name '*.bs' -delete
 find $RPM_BUILD_ROOT -name 'bindtests.pl' -delete
 
-rm $RPM_BUILD_ROOT%{python_sitearch}/libguestfsmod.a
 rm $RPM_BUILD_ROOT%{python_sitearch}/libguestfsmod.la
 
 if [ "$RPM_BUILD_ROOT%{python_sitearch}" != "$RPM_BUILD_ROOT%{python_sitelib}" ]; then
@@ -872,6 +871,10 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Fri Aug 26 2011 Richard W.M. Jones <rjones@redhat.com> - 1:1.13.8-1
+- New upstream version 1.13.8.
+- Static python library is no longer built, so don't rm it.
+
 * Tue Aug 23 2011 Richard W.M. Jones <rjones@redhat.com> - 1:1.13.7-1
 - New upstream version 1.13.7.
 - configure --with-extra version string contains Fedora release.
