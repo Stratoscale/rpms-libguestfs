@@ -29,7 +29,7 @@
 Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
-Version:       1.13.8
+Version:       1.13.9
 Release:       1%{?dist}
 License:       LGPLv2+
 Group:         Development/Libraries
@@ -871,6 +871,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Fri Aug 26 2011 Richard W.M. Jones <rjones@redhat.com> - 1:1.13.9-1
+- New upstream version 1.13.9.
+
 * Fri Aug 26 2011 Richard W.M. Jones <rjones@redhat.com> - 1:1.13.8-1
 - New upstream version 1.13.8.
 - Static python library is no longer built, so don't rm it.
