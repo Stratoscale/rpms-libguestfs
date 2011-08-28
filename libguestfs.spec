@@ -30,7 +30,7 @@ Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
 Version:       1.12.5
-Release:       1%{?dist}
+Release:       2%{?dist}
 License:       LGPLv2+
 Group:         Development/Libraries
 URL:           http://libguestfs.org/
@@ -863,11 +863,12 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
-* Sun Aug 28 2011 Richard W.M. Jones <rjones@redhat.com> - 1:1.12.5-1
+* Sun Aug 28 2011 Richard W.M. Jones <rjones@redhat.com> - 1:1.12.5-2
 - New upstream stable branch version 1.12.5.
 - configure --with-extra version string contains Fedora release.
 - Build with make V=1 to display full compile commands.
 - Remove /usr/sbin PATH setting, not used for a very long time.
+- Rebase patch.
 
 * Wed Aug 17 2011 Richard W.M. Jones <rjones@redhat.com> - 1:1.12.4-3
 - New upstream stable branch version 1.12.4.
