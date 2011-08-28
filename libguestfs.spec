@@ -29,8 +29,8 @@
 Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
-Version:       1.12.4
-Release:       3%{?dist}
+Version:       1.12.5
+Release:       1%{?dist}
 License:       LGPLv2+
 Group:         Development/Libraries
 URL:           http://libguestfs.org/
@@ -546,6 +546,7 @@ cat yum.conf
   --prefix=%{_prefix} --libdir=%{_libdir} \
   --mandir=%{_mandir} \
   --sysconfdir=%{_sysconfdir} \
+  --with-extra="-%{release}" \
   --with-qemu="qemu-kvm qemu-system-%{_build_arch} qemu" \
   --enable-install-daemon \
 %if %{with_virtio}
@@ -555,13 +556,9 @@ cat yum.conf
 
 cat config.log
 
-# This ensures that /usr/sbin/chroot is on the path.  Not needed
-# except for RHEL 5, it shouldn't do any harm on other platforms.
-export PATH=/usr/sbin:$PATH
-
 # 'INSTALLDIRS' ensures that perl libs are installed in the vendor dir
 # not the site dir.
-make INSTALLDIRS=vendor %{?_smp_mflags}
+make V=1 INSTALLDIRS=vendor %{?_smp_mflags}
 
 # Useful for debugging appliance problems.
 for f in appliance/supermin.d/*.img; do
@@ -866,6 +863,12 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sun Aug 28 2011 Richard W.M. Jones <rjones@redhat.com> - 1:1.12.5-1
+- New upstream stable branch version 1.12.5.
+- configure --with-extra version string contains Fedora release.
+- Build with make V=1 to display full compile commands.
+- Remove /usr/sbin PATH setting, not used for a very long time.
+
 * Wed Aug 17 2011 Richard W.M. Jones <rjones@redhat.com> - 1:1.12.4-3
 - New upstream stable branch version 1.12.4.
 - Bug 723822 (boot hang during tests) is still observed.
