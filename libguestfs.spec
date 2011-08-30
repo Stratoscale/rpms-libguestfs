@@ -30,7 +30,7 @@ Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
 Version:       1.13.10
-Release:       1%{?dist}
+Release:       2%{?dist}
 License:       LGPLv2+
 Group:         Development/Libraries
 URL:           http://libguestfs.org/
@@ -82,7 +82,7 @@ BuildRequires: ncurses-devel
 
 # Build requirements for the appliance (see 'make.sh.in' in the source):
 BuildRequires: kernel, bash, coreutils, lvm2, ntfs-3g, util-linux-ng
-BuildRequires: MAKEDEV, net-tools, augeas-libs, file, attr, acl
+BuildRequires: net-tools, augeas-libs, file, attr, acl
 BuildRequires: module-init-tools, procps, strace, iputils
 BuildRequires: dosfstools, zerofree, lsof, scrub, libselinux
 BuildRequires: parted, e2fsprogs, btrfs-progs, gfs2-utils
@@ -97,7 +97,7 @@ BuildRequires: grub, ntfsprogs
 
 # Must match the above set of BuildRequires exactly!
 Requires:      kernel, bash, coreutils, lvm2, ntfs-3g, util-linux-ng
-Requires:      MAKEDEV, net-tools, augeas-libs, file, attr, acl
+Requires:      net-tools, augeas-libs, file, attr, acl
 Requires:      module-init-tools, procps, strace, iputils
 Requires:      dosfstools, zerofree, lsof, scrub, libselinux
 Requires:      parted, e2fsprogs, btrfs-progs, gfs2-utils
@@ -871,6 +871,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Tue Aug 30 2011 Richard W.M. Jones <rjones@redhat.com> - 1:1.13.10-2
+- Remove MAKEDEV dependency (RHBZ#727247).
+
 * Sun Aug 28 2011 Richard W.M. Jones <rjones@redhat.com> - 1:1.13.10-1
 - New upstream version 1.13.10.
 
