@@ -29,8 +29,8 @@
 Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
-Version:       1.13.10
-Release:       2%{?dist}
+Version:       1.13.11
+Release:       1%{?dist}
 License:       LGPLv2+
 Group:         Development/Libraries
 URL:           http://libguestfs.org/
@@ -871,6 +871,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Thu Sep  1 2011 Richard W.M. Jones <rjones@redhat.com> - 1:1.13.11-1
+- New upstream version 1.13.11.
+
 * Tue Aug 30 2011 Richard W.M. Jones <rjones@redhat.com> - 1:1.13.10-2
 - Remove MAKEDEV dependency (RHBZ#727247).
 
