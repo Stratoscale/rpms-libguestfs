@@ -547,7 +547,7 @@ cat yum.conf
   --prefix=%{_prefix} --libdir=%{_libdir} \
   --mandir=%{_mandir} \
   --sysconfdir=%{_sysconfdir} \
-  --with-extra="-%{release}" \
+  --with-extra="fedora=%{fedora},release=%{release}" \
   --with-qemu="qemu-kvm qemu-system-%{_build_arch} qemu" \
   --enable-install-daemon \
 %if %{with_virtio}
