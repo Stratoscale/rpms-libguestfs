@@ -30,7 +30,7 @@ Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
 Version:       1.12.6
-Release:       1%{?dist}
+Release:       2%{?dist}
 License:       LGPLv2+
 Group:         Development/Libraries
 URL:           http://libguestfs.org/
@@ -91,7 +91,8 @@ BuildRequires: vim-minimal
 BuildRequires: binutils
 BuildRequires: cryptsetup-luks
 %ifarch %{ix86} x86_64
-BuildRequires: grub, ntfsprogs
+#BuildRequires: grub
+BuildRequires: ntfsprogs
 %endif
 
 # Must match the above set of BuildRequires exactly!
@@ -106,7 +107,8 @@ Requires:      vim-minimal
 Requires:      binutils
 Requires:      cryptsetup-luks
 %ifarch %{ix86} x86_64
-Requires:      grub, ntfsprogs
+#Requires:      grub
+Requires:      ntfsprogs
 %endif
 
 # These are only required if you want to build the bindings for
@@ -863,6 +865,10 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Thu Sep 15 2011 Richard W.M. Jones <rjones@redhat.com> - 1:1.12.6-2
+- Don't require grub.  See RHBZ#737261.
+- Note this (hopefully temporarily) breaks guestfs_grub_install API.
+
 * Thu Sep  1 2011 Richard W.M. Jones <rjones@redhat.com> - 1:1.12.6-1
 - New upstream stable branch version 1.12.6.
 
