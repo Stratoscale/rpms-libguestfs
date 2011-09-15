@@ -30,7 +30,7 @@ Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
 Version:       1.13.12
-Release:       2%{?dist}
+Release:       3%{?dist}
 License:       LGPLv2+
 Group:         Development/Libraries
 URL:           http://libguestfs.org/
@@ -48,6 +48,9 @@ Patch2:        libguestfs-1.12.0-configure-force-machine-accel-tcg.patch
 # version is not yet in Rawhide so we have to keep this patch for a
 # while.
 Patch3:        0001-Fix-qemu-machine-option-for-latest-qemu-thanks-Marku.patch
+
+# Upstream patch to add guestfs_grub_install to an optional group.
+Patch4:        0001-Add-an-optional-group-grub-for-the-guestfs_grub_inst.patch
 
 # Basic build requirements:
 BuildRequires: /usr/bin/pod2man
@@ -873,9 +876,10 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
-* Thu Sep 15 2011 Richard W.M. Jones <rjones@redhat.com> - 1:1.13.12-2
+* Thu Sep 15 2011 Richard W.M. Jones <rjones@redhat.com> - 1:1.13.12-3
 - Don't require grub.  See RHBZ#737261.
 - Note this (hopefully temporarily) breaks guestfs_grub_install API.
+- Include upstream patch to add guestfs_grub_install into an optional group.
 
 * Wed Sep 14 2011 Richard W.M. Jones <rjones@redhat.com> - 1:1.13.12-1
 - New upstream version 1.13.12.
