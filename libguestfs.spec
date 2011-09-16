@@ -30,7 +30,7 @@ Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
 Version:       1.13.12
-Release:       3%{?dist}
+Release:       4%{?dist}
 License:       LGPLv2+
 Group:         Development/Libraries
 URL:           http://libguestfs.org/
@@ -507,6 +507,7 @@ for %{name}.
 %patch0 -p1
 %patch2 -p1
 %patch3 -p1
+%patch4 -p1
 
 mkdir -p daemon/m4
 
@@ -876,7 +877,7 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
-* Thu Sep 15 2011 Richard W.M. Jones <rjones@redhat.com> - 1:1.13.12-3
+* Fri Sep 16 2011 Richard W.M. Jones <rjones@redhat.com> - 1:1.13.12-4
 - Don't require grub.  See RHBZ#737261.
 - Note this (hopefully temporarily) breaks guestfs_grub_install API.
 - Include upstream patch to add guestfs_grub_install into an optional group.
