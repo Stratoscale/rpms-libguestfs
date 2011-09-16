@@ -29,8 +29,8 @@
 Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
-Version:       1.12.6
-Release:       2%{?dist}
+Version:       1.12.7
+Release:       1%{?dist}
 License:       LGPLv2+
 Group:         Development/Libraries
 URL:           http://libguestfs.org/
@@ -865,6 +865,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Fri Sep 16 2011 Richard W.M. Jones <rjones@redhat.com> - 1:1.12.7-1
+- New upstream stable branch version 1.12.7.
+
 * Thu Sep 15 2011 Richard W.M. Jones <rjones@redhat.com> - 1:1.12.6-2
 - Don't require grub.  See RHBZ#737261.
 - Note this (hopefully temporarily) breaks guestfs_grub_install API.
