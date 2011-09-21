@@ -29,8 +29,8 @@
 Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
-Version:       1.13.12
-Release:       4%{?dist}
+Version:       1.13.13
+Release:       1%{?dist}
 License:       LGPLv2+
 Group:         Development/Libraries
 URL:           http://libguestfs.org/
@@ -48,9 +48,6 @@ Patch2:        libguestfs-1.12.0-configure-force-machine-accel-tcg.patch
 # version is not yet in Rawhide so we have to keep this patch for a
 # while.
 Patch3:        0001-Fix-qemu-machine-option-for-latest-qemu-thanks-Marku.patch
-
-# Upstream patch to add guestfs_grub_install to an optional group.
-Patch4:        0001-Add-an-optional-group-grub-for-the-guestfs_grub_inst.patch
 
 # Basic build requirements:
 BuildRequires: /usr/bin/pod2man
@@ -132,6 +129,8 @@ BuildRequires: java >= 1.5.0
 BuildRequires: jpackage-utils
 BuildRequires: java-devel
 BuildRequires: php-devel
+BuildRequires: erlang-erts
+BuildRequires: erlang-erl_interface
 
 # For libguestfs-tools:
 BuildRequires: perl-Sys-Virt
@@ -206,6 +205,8 @@ For Ruby bindings, see 'ruby-libguestfs'.
 For Java bindings, see 'libguestfs-java-devel'.
 
 For PHP bindings, see 'php-libguestfs'.
+
+For Erlang bindings, see 'erlang-libguestfs'.
 
 
 %package devel
@@ -491,6 +492,16 @@ Requires:      php
 php-%{name} contains PHP bindings for %{name}.
 
 
+%package -n erlang-%{name}
+Summary:       Erlang bindings for %{name}
+Group:         Development/Libraries
+Requires:      %{name} = %{epoch}:%{version}-%{release}
+Requires:      erlang-erts
+
+%description -n erlang-%{name}
+erlang-%{name} contains Erlang bindings for %{name}.
+
+
 %package man-pages-uk
 Summary:       Ukrainian (uk) man pages for %{name}
 Group:         Development/Libraries
@@ -507,7 +518,6 @@ for %{name}.
 %patch0 -p1
 %patch2 -p1
 %patch3 -p1
-%patch4 -p1
 
 mkdir -p daemon/m4
 
@@ -870,6 +880,16 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/php/modules/guestfs_php.so
 
 
+%files -n erlang-%{name}
+%defattr(-,root,root,-)
+%doc erlang/README
+%doc erlang/examples/*.erl
+%doc erlang/examples/LICENSE
+%{_bindir}/erl-guestfs
+%{_libdir}/erlang/lib/%{name}-%{version}
+%{_mandir}/man3/guestfs-erlang.3*
+
+
 %files man-pages-uk
 %defattr(-,root,root,-)
 %lang(uk) %{_mandir}/uk/man1/*.1*
@@ -877,6 +897,10 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Tue Sep 21 2011 Richard W.M. Jones <rjones@redhat.com> - 1:1.13.13-1
+- Add Erlang bindings in erlang-libguestfs subpackage.
+- Remove upstream patch.
+
 * Fri Sep 16 2011 Richard W.M. Jones <rjones@redhat.com> - 1:1.13.12-4
 - Don't require grub.  See RHBZ#737261.
 - Note this (hopefully temporarily) breaks guestfs_grub_install API.
