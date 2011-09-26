@@ -30,7 +30,7 @@ Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
 Version:       1.12.7
-Release:       1%{?dist}
+Release:       2%{?dist}
 License:       LGPLv2+
 Group:         Development/Libraries
 URL:           http://libguestfs.org/
@@ -40,6 +40,7 @@ BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root
 # Disable FUSE tests, not supported in Koji at the moment.
 Patch0:        libguestfs-1.7.13-no-fuse-test.patch
 
+%if 0%{?fedora} >= 16
 # Force qemu-kvm test to run with -machine accel=tcg flag.
 Patch2:        libguestfs-1.12.0-configure-force-machine-accel-tcg.patch
 
@@ -47,6 +48,7 @@ Patch2:        libguestfs-1.12.0-configure-force-machine-accel-tcg.patch
 # because qemu look like they might revert (ie. fix) the -machine
 # option so that this patch would not be needed.
 Patch3:        0001-Fix-qemu-machine-option-for-latest-qemu-thanks-Marku.patch
+%endif
 
 # Basic build requirements:
 BuildRequires: /usr/bin/pod2man
@@ -133,8 +135,10 @@ BuildRequires: php-devel
 BuildRequires: perl-Sys-Virt
 BuildRequires: qemu-img
 
+%if 0%{?fedora} >= 16
 # Force new parted for Linux 3.0 (RHBZ#710882).
 BuildRequires: parted >= 3.0-2
+%endif
 
 # Runtime requires:
 Requires:      qemu-kvm >= 0.12
@@ -501,8 +505,10 @@ for %{name}.
 %setup -q
 
 %patch0 -p1
+%if 0%{?fedora} >= 16
 %patch2 -p1
 %patch3 -p1
+%endif
 
 mkdir -p daemon/m4
 
@@ -865,6 +871,10 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Mon Sep 26 2011 Richard W.M. Jones <rjones@redhat.com> - 1:1.12.7-2
+- Conditionalize parts of the spec so we can build this on f15 for
+  virt-preview.
+
 * Fri Sep 16 2011 Richard W.M. Jones <rjones@redhat.com> - 1:1.12.7-1
 - New upstream stable branch version 1.12.7.
 
