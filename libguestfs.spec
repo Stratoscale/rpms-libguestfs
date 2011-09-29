@@ -30,7 +30,7 @@ Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
 Version:       1.13.15
-Release:       1%{?dist}
+Release:       2%{?dist}
 License:       LGPLv2+
 Group:         Development/Libraries
 URL:           http://libguestfs.org/
@@ -192,23 +192,26 @@ in the context of the guest.
 Libguestfs is a library that can be linked with C and C++ management
 programs.
 
-See also the 'guestfish' package for shell scripting and command line
-access, and '%{name}-mount' for mounting guest filesystems on the
-host using FUSE.
+For high level virt tools, install '%{name}-tools'.
 
-For Perl bindings, see 'perl-Sys-Guestfs'.
+For shell scripting and command line access, install 'guestfish'.
 
-For OCaml bindings, see 'ocaml-libguestfs-devel'.
+To mount guest filesystems on the host using FUSE, install
+'%{name}-mount'.
 
-For Python bindings, see 'python-libguestfs'.
+For Erlang bindings, install 'erlang-libguestfs'.
 
-For Ruby bindings, see 'ruby-libguestfs'.
+For Java bindings, install 'libguestfs-java-devel'.
 
-For Java bindings, see 'libguestfs-java-devel'.
+For OCaml bindings, install 'ocaml-libguestfs-devel'.
 
-For PHP bindings, see 'php-libguestfs'.
+For Perl bindings, install 'perl-Sys-Guestfs'.
 
-For Erlang bindings, see 'erlang-libguestfs'.
+For PHP bindings, install 'php-libguestfs'.
+
+For Python bindings, install 'python-libguestfs'.
+
+For Ruby bindings, install 'ruby-libguestfs'.
 
 
 %package devel
@@ -780,6 +783,8 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man1/virt-ls.1*
 %{_bindir}/virt-rescue
 %{_mandir}/man1/virt-rescue.1*
+%{_bindir}/virt-resize
+%{_mandir}/man1/virt-resize.1*
 %config(noreplace) %{_sysconfdir}/libguestfs-tools.conf
 
 
@@ -792,8 +797,6 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man1/virt-list-partitions.1*
 %{_bindir}/virt-make-fs
 %{_mandir}/man1/virt-make-fs.1*
-%{_bindir}/virt-resize
-%{_mandir}/man1/virt-resize.1*
 %{_bindir}/virt-tar
 %{_mandir}/man1/virt-tar.1*
 %{_bindir}/virt-win-reg
@@ -899,6 +902,11 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Thu Sep 29 2011 Richard W.M. Jones <rjones@redhat.com> - 1:1.13.15-2
+- Rearrange description to make it clearer.
+- virt-resize was written in OCaml.  Move it to libguestfs-tools-c
+  subpackage since it doesn't require Perl.
+
 * Wed Sep 28 2011 Richard W.M. Jones <rjones@redhat.com> - 1:1.13.15-1
 - New upstream version 1.13.15.
 - Add lzop program to the appliance (for compress-out API).
