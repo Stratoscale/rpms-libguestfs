@@ -30,7 +30,7 @@ Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
 Version:       1.12.7
-Release:       2%{?dist}
+Release:       2%{?dist}.1
 License:       LGPLv2+
 Group:         Development/Libraries
 URL:           http://libguestfs.org/
@@ -871,6 +871,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Mon Oct 03 2011 Rex Dieter <rdieter@fedoraproject.org> - 1:1.12.7-2.1
+- rebuild (java), rel-eng#4932
+
 * Mon Sep 26 2011 Richard W.M. Jones <rjones@redhat.com> - 1:1.12.7-2
 - Conditionalize parts of the spec so we can build this on f15 for
   virt-preview.
