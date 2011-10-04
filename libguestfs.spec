@@ -29,7 +29,7 @@
 Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
-Version:       1.13.16
+Version:       1.13.17
 Release:       1%{?dist}
 License:       LGPLv2+
 Group:         Development/Libraries
@@ -267,6 +267,8 @@ Summary:       System administration tools for virtual machines
 Group:         Development/Tools
 License:       GPLv2+
 Requires:      %{name} = %{epoch}:%{version}-%{release}
+# for virt-sparsify:
+Requires:      qemu-img
 
 # Obsolete and replace earlier packages.
 Provides:      virt-cat = %{epoch}:%{version}-%{release}
@@ -341,6 +343,8 @@ Virt-rescue provides a rescue shell for making interactive,
 unstructured fixes to virtual machines.
 
 Virt-resize can resize existing virtual machine disk images.
+
+Virt-sparsify makes virtual machine disk images sparse (thin-provisioned).
 
 Virt-win-reg lets you look inside the Windows Registry for
 Windows virtual machines.
@@ -785,6 +789,8 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man1/virt-rescue.1*
 %{_bindir}/virt-resize
 %{_mandir}/man1/virt-resize.1*
+%{_bindir}/virt-sparsify
+%{_mandir}/man1/virt-sparsify.1*
 %config(noreplace) %{_sysconfdir}/libguestfs-tools.conf
 
 
@@ -902,6 +908,10 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Tue Oct  4 2011 Richard W.M. Jones <rjones@redhat.com> - 1:1.13.17-1
+- New upstream version 1.13.17.
+- New tool: virt-sparsify.
+
 * Sat Oct  1 2011 Richard W.M. Jones <rjones@redhat.com> - 1:1.13.16-1
 - New upstream version 1.13.16.
 
