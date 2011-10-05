@@ -29,7 +29,7 @@
 Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
-Version:       1.13.17
+Version:       1.13.18
 Release:       1%{?dist}
 License:       LGPLv2+
 Group:         Development/Libraries
@@ -309,6 +309,9 @@ Requires:      qemu-img
 %description tools
 This package contains miscellaneous system administrator command line
 tools for virtual machines.
+
+Virt-alignment-scan scans virtual machines looking for partition
+alignment problems.
 
 Virt-cat is a command line tool to display the contents of a file in a
 virtual machine.
@@ -773,6 +776,8 @@ rm -rf $RPM_BUILD_ROOT
 %files tools-c
 %defattr(-,root,root,-)
 %doc README
+%{_bindir}/virt-alignment-scan
+%{_mandir}/man1/virt-alignment-scan.1*
 %{_bindir}/virt-cat
 %{_mandir}/man1/virt-cat.1*
 %{_bindir}/virt-df
@@ -908,6 +913,10 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Wed Oct  5 2011 Richard W.M. Jones <rjones@redhat.com> - 1:1.13.18-1
+- New upstream version 1.13.18.
+- New tool: virt-alignment-scan.
+
 * Tue Oct  4 2011 Richard W.M. Jones <rjones@redhat.com> - 1:1.13.17-1
 - New upstream version 1.13.17.
 - New tool: virt-sparsify.
