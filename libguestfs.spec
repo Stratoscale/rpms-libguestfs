@@ -30,7 +30,7 @@ Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
 Version:       1.10.9
-Release:       1%{?dist}
+Release:       2%{?dist}
 License:       LGPLv2+
 Group:         Development/Libraries
 URL:           http://libguestfs.org/
@@ -134,11 +134,13 @@ Requires:      genisoimage
 # For core inspection API.
 Requires:      db4-utils
 
+%if 0%{?fedora} >= 15
 # Because many previously unreadable binaries have been made readable
 # (because of RHBZ#646469) they will be included in the hostfiles
 # list, which means that this libguestfs won't work with versions of
 # glibc built before the change.
 Requires:      glibc >= 2.13.90-4
+%endif
 
 # Provide our own custom requires for the supermin appliance.
 Source1:       libguestfs-find-requires.sh
@@ -774,6 +776,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Fri Oct  7 2011 Richard W.M. Jones <rjones@redhat.com> - 1:1.10.9-2
+- Make glibc BR conditional on Fedora 15 (for virt-preview).
+
 * Fri Sep 16 2011 Richard W.M. Jones <rjones@redhat.com> - 1:1.10.9-1
 - New upstream stable branch 1.10.9.
 
