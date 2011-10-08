@@ -29,7 +29,7 @@
 Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
-Version:       1.13.18
+Version:       1.13.19
 Release:       1%{?dist}
 License:       LGPLv2+
 Group:         Development/Libraries
@@ -192,7 +192,9 @@ in the context of the guest.
 Libguestfs is a library that can be linked with C and C++ management
 programs.
 
-For high level virt tools, install '%{name}-tools'.
+For high level virt tools, guestfish (shell scripting and command line
+access), and guestmount (mount guest filesystems using FUSE), install
+'%{name}-tools'.
 
 For shell scripting and command line access, install 'guestfish'.
 
@@ -226,61 +228,27 @@ Requires:      pkgconfig
 for %{name}.
 
 
-%package -n guestfish
-Summary:       Shell for accessing and modifying virtual machine disk images
+%package tools-c
+Summary:       System administration tools for virtual machines
 Group:         Development/Tools
 License:       GPLv2+
 Requires:      %{name} = %{epoch}:%{version}-%{release}
+
+# for guestfish:
 #Requires:      /usr/bin/emacs #theoretically, but too large
 Requires:      /usr/bin/hexedit
 Requires:      /usr/bin/less
 Requires:      /usr/bin/man
 Requires:      /bin/vi
 
-
-%description -n guestfish
-Guestfish is the Filesystem Interactive SHell, for accessing and
-modifying virtual machine disk images from the command line and shell
-scripts.
-
-Virt-copy-in and virt-copy-out are command line tools for uploading
-and downloading files and directories to and from virtual machines.
-
-Virt-tar-in and virt-tar-out are archive, backup and upload tools
-for virtual machines.  These replace the deprecated program virt-tar.
-
-
-%package mount
-Summary:       Mount guest filesystems on the host using FUSE and libguestfs
-Group:         Development/Tools
-License:       GPLv2+
-Requires:      %{name} = %{epoch}:%{version}-%{release}
-
-
-%description mount
-The guestmount command lets you mount guest filesystems on the
-host using FUSE and %{name}.
-
-
-%package tools-c
-Summary:       System administration tools for virtual machines
-Group:         Development/Tools
-License:       GPLv2+
-Requires:      %{name} = %{epoch}:%{version}-%{release}
 # for virt-sparsify:
 Requires:      qemu-img
 
 # Obsolete and replace earlier packages.
-Provides:      virt-cat = %{epoch}:%{version}-%{release}
-Obsoletes:     virt-cat < %{epoch}:%{version}-%{release}
-Provides:      virt-df = %{epoch}:%{version}-%{release}
-Obsoletes:     virt-df < %{epoch}:%{version}-%{release}
-Provides:      virt-inspector = %{epoch}:%{version}-%{release}
-Obsoletes:     virt-inspector < %{epoch}:%{version}-%{release}
-
-# RHBZ#514309
-Provides:      virt-df2 = %{epoch}:%{version}-%{release}
-Obsoletes:     virt-df2 < %{epoch}:%{version}-%{release}
+Provides:      guestfish = %{epoch}:%{version}-%{release}
+Obsoletes:     guestfish < %{epoch}:%{version}-%{release}
+Provides:      libguestfs-mount = %{epoch}:%{version}-%{release}
+Obsoletes:     libguestfs-mount < %{epoch}:%{version}-%{release}
 
 
 %description tools-c
@@ -298,11 +266,14 @@ Group:         Development/Tools
 License:       GPLv2+
 Requires:      %{name} = %{epoch}:%{version}-%{release}
 Requires:      %{name}-tools-c = %{epoch}:%{version}-%{release}
+
 # NB: Only list deps here which are not picked up automatically.
 Requires:      perl(Sys::Virt)
 Requires:      perl(String::ShellQuote)
 Requires:      perl(XML::Writer)
 Requires:      perl(Win::Hivex) >= 1.2.7
+
+# for virt-make-fs:
 Requires:      qemu-img
 
 
@@ -310,11 +281,21 @@ Requires:      qemu-img
 This package contains miscellaneous system administrator command line
 tools for virtual machines.
 
+Guestfish is the Filesystem Interactive SHell, for accessing and
+modifying virtual machine disk images from the command line and shell
+scripts.
+
+The guestmount command lets you mount guest filesystems on the host
+using FUSE and %{name}.
+
 Virt-alignment-scan scans virtual machines looking for partition
 alignment problems.
 
 Virt-cat is a command line tool to display the contents of a file in a
 virtual machine.
+
+Virt-copy-in and virt-copy-out are command line tools for uploading
+and downloading files and directories to and from virtual machines.
 
 Virt-df is a command line tool to display free space on virtual
 machine filesystems.  Unlike other tools, it doesn’t just display the
@@ -349,7 +330,13 @@ Virt-resize can resize existing virtual machine disk images.
 
 Virt-sparsify makes virtual machine disk images sparse (thin-provisioned).
 
-Virt-win-reg lets you look inside the Windows Registry for
+Virt-sysprep lets you reset or unconfigure virtual machines in
+preparation for cloning them.
+
+Virt-tar-in and virt-tar-out are archive, backup and upload tools
+for virtual machines.  These replace the deprecated program virt-tar.
+
+Virt-win-reg lets you look at and modify the Windows Registry of
 Windows virtual machines.
 
 
@@ -749,37 +736,24 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/pkgconfig/libguestfs.pc
 
 
-%files -n guestfish
-%defattr(-,root,root,-)
-%doc README
-%{_bindir}/guestfish
-%{_mandir}/man1/guestfish.1*
-%{_bindir}/virt-copy-in
-%{_mandir}/man1/virt-copy-in.1*
-%{_bindir}/virt-copy-out
-%{_mandir}/man1/virt-copy-out.1*
-%{_bindir}/virt-tar-in
-%{_mandir}/man1/virt-tar-in.1*
-%{_bindir}/virt-tar-out
-%{_mandir}/man1/virt-tar-out.1*
-%dir %{_sysconfdir}/bash_completion.d
-%{_sysconfdir}/bash_completion.d/guestfish-bash-completion.sh
-
-
-%files mount
-%defattr(-,root,root,-)
-%doc COPYING README
-%{_bindir}/guestmount
-%{_mandir}/man1/guestmount.1*
-
-
 %files tools-c
 %defattr(-,root,root,-)
 %doc README
+%config(noreplace) %{_sysconfdir}/libguestfs-tools.conf
+%dir %{_sysconfdir}/bash_completion.d
+%{_sysconfdir}/bash_completion.d/guestfish-bash-completion.sh
+%{_bindir}/guestfish
+%{_mandir}/man1/guestfish.1*
+%{_bindir}/guestmount
+%{_mandir}/man1/guestmount.1*
 %{_bindir}/virt-alignment-scan
 %{_mandir}/man1/virt-alignment-scan.1*
 %{_bindir}/virt-cat
 %{_mandir}/man1/virt-cat.1*
+%{_bindir}/virt-copy-in
+%{_mandir}/man1/virt-copy-in.1*
+%{_bindir}/virt-copy-out
+%{_mandir}/man1/virt-copy-out.1*
 %{_bindir}/virt-df
 %{_mandir}/man1/virt-df.1*
 %{_bindir}/virt-edit
@@ -796,7 +770,12 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man1/virt-resize.1*
 %{_bindir}/virt-sparsify
 %{_mandir}/man1/virt-sparsify.1*
-%config(noreplace) %{_sysconfdir}/libguestfs-tools.conf
+%{_bindir}/virt-sysprep
+%{_mandir}/man1/virt-sysprep.1*
+%{_bindir}/virt-tar-in
+%{_mandir}/man1/virt-tar-in.1*
+%{_bindir}/virt-tar-out
+%{_mandir}/man1/virt-tar-out.1*
 
 
 %files tools
@@ -913,6 +892,16 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sat Oct  8 2011 Richard W.M. Jones <rjones@redhat.com> - 1:1.13.19-1
+- New upstream version 1.13.19.
+- New tool: virt-sysprep.
+- Remove the old guestfish and libguestfs-mount packages, and put these
+  tools into libguestfs-tools.  This change is long overdue, but is also
+  necessitated by the new virt-sysprep tool.  This new tool would pull
+  in guestfish anyway, so having separate packages makes no sense.
+- Remove old obsoletes for virt-cat, virt-df, virt-df2 and virt-inspector,
+  since those packages existed only in much older Fedora.
+
 * Wed Oct  5 2011 Richard W.M. Jones <rjones@redhat.com> - 1:1.13.18-1
 - New upstream version 1.13.18.
 - New tool: virt-alignment-scan.
