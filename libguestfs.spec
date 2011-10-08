@@ -635,6 +635,7 @@ export LIBGUESTFS_TRACE=1
 # 723555   i386         F-16   GPF when VM shuts down
 # 723822   x86-64       F-16   boot hangs
 # 728911   i386         F-17   TCG fatal error
+# 744426   all          F-17   problem with unstable TSC in 3.1-rc9
 
 # This test fails because we build the ISO after encoding the checksum
 # of the ISO in the test itself.  Need to fix the test to work out the
