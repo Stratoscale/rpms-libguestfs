@@ -29,8 +29,8 @@
 Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
-Version:       1.13.20
-Release:       1%{?dist}.1
+Version:       1.13.21
+Release:       1%{?dist}
 License:       LGPLv2+
 Group:         Development/Libraries
 URL:           http://libguestfs.org/
@@ -90,7 +90,7 @@ BuildRequires: hfsplus-tools, nilfs-utils, reiserfs-utils
 BuildRequires: jfsutils, xfsprogs
 BuildRequires: vim-minimal
 BuildRequires: binutils
-BuildRequires: cryptsetup-luks
+BuildRequires: cryptsetup
 BuildRequires: lzop
 %ifarch %{ix86} x86_64
 #BuildRequires: grub
@@ -107,7 +107,7 @@ Requires:      hfsplus-tools, nilfs-utils, reiserfs-utils
 Requires:      jfsutils, xfsprogs
 Requires:      vim-minimal
 Requires:      binutils
-Requires:      cryptsetup-luks
+Requires:      cryptsetup
 Requires:      lzop
 %ifarch %{ix86} x86_64
 #Requires:      grub
@@ -275,6 +275,13 @@ Requires:      perl(Win::Hivex) >= 1.2.7
 
 # for virt-make-fs:
 Requires:      qemu-img
+
+# for virt-sysprep:
+Requires:      /usr/bin/fusermount
+Requires:      /usr/bin/getopt
+Requires:      /usr/bin/guestmount
+Requires:      /usr/bin/virt-inspector
+Requires:      xmlstarlet
 
 
 %description tools
@@ -771,8 +778,6 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man1/virt-resize.1*
 %{_bindir}/virt-sparsify
 %{_mandir}/man1/virt-sparsify.1*
-%{_bindir}/virt-sysprep
-%{_mandir}/man1/virt-sysprep.1*
 %{_bindir}/virt-tar-in
 %{_mandir}/man1/virt-tar-in.1*
 %{_bindir}/virt-tar-out
@@ -788,6 +793,8 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man1/virt-list-partitions.1*
 %{_bindir}/virt-make-fs
 %{_mandir}/man1/virt-make-fs.1*
+%{_bindir}/virt-sysprep
+%{_mandir}/man1/virt-sysprep.1*
 %{_bindir}/virt-tar
 %{_mandir}/man1/virt-tar.1*
 %{_bindir}/virt-win-reg
@@ -893,6 +900,13 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Fri Oct 14 2011 Richard W.M. Jones <rjones@redhat.com> - 1:1.13.21-1
+- New upstream version 1.13.21.
+- Move virt-sysprep to libguestfs-tools, to avoid pulling in extra
+  dependencies for RHEV-H.  This tool is not likely to be useful
+  for RHEV-H in its current form anyway.
+- Change BR cryptsetup-luks -> cryptsetup since that package changed.
+
 * Wed Oct 12 2011 Peter Schiffer <pschiffe@redhat.com> - 1:1.13.20-1.1
 - rebuild with new gmp
 
