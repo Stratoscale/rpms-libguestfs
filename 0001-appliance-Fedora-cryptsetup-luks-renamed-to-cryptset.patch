@@ -1,0 +1,27 @@
+From af0c123be8cc62acf9e1368b1d00acccdd6d91e9 Mon Sep 17 00:00:00 2001
+From: "Richard W.M. Jones" <rjones@redhat.com>
+Date: Fri, 14 Oct 2011 22:08:20 +0100
+Subject: [PATCH] appliance: Fedora cryptsetup-luks renamed to cryptsetup.
+
+Therefore we need both names to be listed in the file.
+---
+ appliance/packagelist.in |    3 ++-
+ 1 files changed, 2 insertions(+), 1 deletions(-)
+
+diff --git a/appliance/packagelist.in b/appliance/packagelist.in
+index 731ee7d..f8f2642 100644
+--- a/appliance/packagelist.in
++++ b/appliance/packagelist.in
+@@ -21,7 +21,8 @@
+ #ifdef REDHAT
+   augeas-libs
+   btrfs-progs
+-  cryptsetup-luks
++  cryptsetup
++  cryptsetup-luks /* old name used before Fedora 17 */
+   diffutils
+   e2fsprogs
+   /* e4fsprogs only exists on RHEL 5, will be ignored everywhere else. */
+-- 
+1.7.6
+
