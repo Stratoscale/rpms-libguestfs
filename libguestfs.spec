@@ -30,7 +30,7 @@ Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
 Version:       1.13.21
-Release:       2%{?dist}
+Release:       3%{?dist}
 License:       LGPLv2+
 Group:         Development/Libraries
 URL:           http://libguestfs.org/
@@ -51,6 +51,9 @@ Patch3:        0001-Fix-qemu-machine-option-for-latest-qemu-thanks-Marku.patch
 
 # Upstream patch to rename cryptsetup-luks to cryptsetup.
 Patch4:        0001-appliance-Fedora-cryptsetup-luks-renamed-to-cryptset.patch
+
+# Upstream patch to fix virt-sysprep test.
+Patch5:        0001-virt-sysprep-Fix-test-to-use-guestmount-and-virt-ins.patch
 
 # Basic build requirements:
 BuildRequires: /usr/bin/pod2man
@@ -78,6 +81,7 @@ BuildRequires: ocaml
 BuildRequires: ocaml-findlib-devel
 BuildRequires: ocaml-pcre-devel
 BuildRequires: systemd-units
+BuildRequires: xmlstarlet
 
 # This is only needed for RHEL 5 because readline-devel doesn't
 # properly depend on it, but doesn't do any harm on other platforms:
@@ -528,6 +532,7 @@ for %{name}.
 %patch2 -p1
 %patch3 -p1
 %patch4 -p1
+%patch5 -p1
 
 mkdir -p daemon/m4
 
@@ -904,6 +909,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sat Oct 15 2011 Richard W.M. Jones <rjones@redhat.com> - 1:1.13.21-3
+- Add upstream patch to fix virt-sysprep test.
+
 * Fri Oct 14 2011 Richard W.M. Jones <rjones@redhat.com> - 1:1.13.21-2
 - New upstream version 1.13.21.
 - Move virt-sysprep to libguestfs-tools, to avoid pulling in extra

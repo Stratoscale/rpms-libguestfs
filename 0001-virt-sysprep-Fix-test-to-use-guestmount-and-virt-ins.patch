@@ -1,0 +1,58 @@
+From 8cf06ddcddf1fda3a189667dbaaa4560ba49df3c Mon Sep 17 00:00:00 2001
+From: "Richard W.M. Jones" <rjones@redhat.com>
+Date: Sat, 15 Oct 2011 17:51:16 +0100
+Subject: [PATCH] virt-sysprep: Fix test to use guestmount and virt-inspector
+ binaries that have been built.
+
+---
+ Makefile.am                |    2 +-
+ clone/test-virt-sysprep.sh |   17 +++++++++++++----
+ 2 files changed, 14 insertions(+), 5 deletions(-)
+
+diff --git a/Makefile.am b/Makefile.am
+index 5170ec8..388cdeb 100644
+--- a/Makefile.am
++++ b/Makefile.am
+@@ -85,7 +85,7 @@ if HAVE_FUSE
+ SUBDIRS += fuse
+ endif
+ 
+-# virt-tools in shell.  This uses guestmount.
++# virt-tools in shell.  This uses guestmount and virt-inspector.
+ if HAVE_FUSE
+ SUBDIRS += clone
+ endif
+diff --git a/clone/test-virt-sysprep.sh b/clone/test-virt-sysprep.sh
+index 897afb7..632d366 100755
+--- a/clone/test-virt-sysprep.sh
++++ b/clone/test-virt-sysprep.sh
+@@ -23,13 +23,22 @@ rm -f test.img guestfish
+ 
+ qemu-img create -f qcow2 -o backing_file=../images/fedora.img test.img
+ 
+-cat <<'EOF' > guestfish
++# Provide alternate 'virt-inspector' and 'guestmount' binaries
++# that run the just-built programs.
++
++cat <<'EOF' > virt-inspector
++#!/bin/sh -
++../run ../inspector/virt-inspector "$@"
++EOF
++chmod +x virt-inspector
++cat <<'EOF' > guestmount
+ #!/bin/sh -
+-../run ../fish/guestfish "$@"
++../run ../fuse/guestmount "$@"
+ EOF
+-chmod +x guestfish
++chmod +x guestmount
++
+ PATH=.:$PATH
+ 
+ ./virt-sysprep -a test.img
+ 
+-rm -f test.img guestfish
++rm -f test.img virt-inspector guestmount
+-- 
+1.7.6
+
