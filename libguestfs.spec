@@ -30,15 +30,12 @@ Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
 Version:       1.13.21
-Release:       3%{?dist}
+Release:       4%{?dist}
 License:       LGPLv2+
 Group:         Development/Libraries
 URL:           http://libguestfs.org/
 Source0:       http://libguestfs.org/download/1.13-development/%{name}-%{version}.tar.gz
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root
-
-# Disable FUSE tests, not supported in Koji at the moment.
-Patch0:        libguestfs-1.7.13-no-fuse-test.patch
 
 # Force qemu-kvm test to run with -machine accel=tcg flag.
 Patch2:        libguestfs-1.12.0-configure-force-machine-accel-tcg.patch
@@ -54,6 +51,9 @@ Patch4:        0001-appliance-Fedora-cryptsetup-luks-renamed-to-cryptset.patch
 
 # Upstream patch to fix virt-sysprep test.
 Patch5:        0001-virt-sysprep-Fix-test-to-use-guestmount-and-virt-ins.patch
+
+# Upstream patch to skip FUSE tests if no /dev/fuse.
+Patch6:        0001-Skip-guestmount-and-virt-sysprep-tests-if-no-dev-fus.patch
 
 # Basic build requirements:
 BuildRequires: /usr/bin/pod2man
@@ -528,11 +528,11 @@ for %{name}.
 %prep
 %setup -q
 
-%patch0 -p1
 %patch2 -p1
 %patch3 -p1
 %patch4 -p1
 %patch5 -p1
+%patch6 -p1
 
 mkdir -p daemon/m4
 
@@ -909,6 +909,11 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Mon Oct 17 2011 Richard W.M. Jones <rjones@redhat.com> - 1:1.13.21-4
+- Add upstream patch to skip FUSE tests if there is no /dev/fuse.
+  This allows us also to remove the Fedora-specific patch which
+  disabled these tests before.
+
 * Sat Oct 15 2011 Richard W.M. Jones <rjones@redhat.com> - 1:1.13.21-3
 - Add upstream patch to fix virt-sysprep test.
 

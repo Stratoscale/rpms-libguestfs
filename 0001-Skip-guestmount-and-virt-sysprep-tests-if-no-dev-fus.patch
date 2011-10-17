@@ -1,0 +1,45 @@
+From cf4cc1143393d607a7fb4cdbee1434544237d5d4 Mon Sep 17 00:00:00 2001
+From: "Richard W.M. Jones" <rjones@redhat.com>
+Date: Mon, 17 Oct 2011 09:59:43 +0100
+Subject: [PATCH] Skip guestmount and virt-sysprep tests if no /dev/fuse.
+
+---
+ clone/test-virt-sysprep.sh |    5 +++++
+ fuse/test-fuse.sh          |    5 +++++
+ 2 files changed, 10 insertions(+), 0 deletions(-)
+
+diff --git a/clone/test-virt-sysprep.sh b/clone/test-virt-sysprep.sh
+index 632d366..097f416 100755
+--- a/clone/test-virt-sysprep.sh
++++ b/clone/test-virt-sysprep.sh
+@@ -19,6 +19,11 @@
+ export LANG=C
+ set -e
+ 
++if [ ! -w /dev/fuse ]; then
++    echo "SKIPPING virt-sysprep test, because there is no /dev/fuse."
++    exit 0
++fi
++
+ rm -f test.img guestfish
+ 
+ qemu-img create -f qcow2 -o backing_file=../images/fedora.img test.img
+diff --git a/fuse/test-fuse.sh b/fuse/test-fuse.sh
+index cfa277a..7de5211 100755
+--- a/fuse/test-fuse.sh
++++ b/fuse/test-fuse.sh
+@@ -20,6 +20,11 @@ unset CDPATH
+ set -e
+ #set -v
+ 
++if [ ! -w /dev/fuse ]; then
++    echo "SKIPPING guestmount test, because there is no /dev/fuse."
++    exit 0
++fi
++
+ if [ -z "$top_builddir" ]; then
+     echo "$0: error: environment variable \$top_builddir must be set"
+     exit 1
+-- 
+1.7.6
+
