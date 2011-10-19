@@ -30,7 +30,7 @@ Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
 Version:       1.13.22
-Release:       1%{?dist}
+Release:       2%{?dist}
 License:       LGPLv2+
 Group:         Development/Libraries
 URL:           http://libguestfs.org/
@@ -897,10 +897,11 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
-* Wed Oct 19 2011 Richard W.M. Jones <rjones@redhat.com> - 1:1.13.22-1
+* Wed Oct 19 2011 Richard W.M. Jones <rjones@redhat.com> - 1:1.13.22-2
 - New upstream version 1.13.22.
 - Remove 3x upstream patches.
 - Renumber the two remaining non-upstream patches as patch0, patch1.
+- Rebase patch1.
 
 * Mon Oct 17 2011 Richard W.M. Jones <rjones@redhat.com> - 1:1.13.21-4
 - Add upstream patch to skip FUSE tests if there is no /dev/fuse.

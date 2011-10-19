@@ -1,5 +1,6 @@
---- libguestfs-1.13.6.old/src/launch.c	2011-08-18 18:02:56.000000000 +0100
-+++ libguestfs-1.13.6/src/launch.c	2011-08-19 12:56:00.131758605 +0100
+diff -ur libguestfs-1.13.22.old/src/launch.c libguestfs-1.13.22/src/launch.c
+--- libguestfs-1.13.22.old/src/launch.c	2011-10-19 16:27:38.000000000 +0100
++++ libguestfs-1.13.22/src/launch.c	2011-10-19 18:19:32.160093691 +0100
 @@ -76,10 +76,10 @@
  static void print_qemu_command_line (guestfs_h *g, char **argv);
  static int connect_unix_socket (guestfs_h *g, const char *sock);
@@ -28,9 +29,9 @@
  }
 -#endif
  
- /* Add a string to the current command line. */
+ /* Functions to add a string to the current command line. */
  static void
-@@ -517,14 +519,19 @@
+@@ -596,14 +598,19 @@
      if (qemu_supports (g, "-nodefconfig"))
        add_cmdline (g, "-nodefconfig");
  
@@ -55,7 +56,7 @@
        /* qemu sometimes needs this option to enable hardware
         * virtualization, but some versions of 'qemu-kvm' will use KVM
         * regardless (even where this option appears in the help text).
-@@ -1153,7 +1160,6 @@
+@@ -1254,7 +1261,6 @@
    return strstr (g->qemu_help, option) != NULL;
  }
  
@@ -63,7 +64,7 @@
  /* As above but using a regex instead of a fixed string. */
  static int
  qemu_supports_re (guestfs_h *g, const pcre *option_regex)
-@@ -1165,7 +1171,6 @@
+@@ -1266,7 +1272,6 @@
  
    return match (g, g->qemu_help, option_regex);
  }
