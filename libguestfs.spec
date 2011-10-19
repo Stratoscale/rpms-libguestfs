@@ -29,25 +29,22 @@
 Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
-Version:       1.12.7
-Release:       2%{?dist}.1
+Version:       1.12.8
+Release:       1%{?dist}
 License:       LGPLv2+
 Group:         Development/Libraries
 URL:           http://libguestfs.org/
 Source0:       http://libguestfs.org/download/1.12-stable/%{name}-%{version}.tar.gz
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root
 
-# Disable FUSE tests, not supported in Koji at the moment.
-Patch0:        libguestfs-1.7.13-no-fuse-test.patch
-
 %if 0%{?fedora} >= 16
 # Force qemu-kvm test to run with -machine accel=tcg flag.
-Patch2:        libguestfs-1.12.0-configure-force-machine-accel-tcg.patch
+Patch0:        libguestfs-1.12.0-configure-force-machine-accel-tcg.patch
 
 # Non-upstream patch to fix -machine option.  This is not upstream
 # because qemu look like they might revert (ie. fix) the -machine
 # option so that this patch would not be needed.
-Patch3:        0001-Fix-qemu-machine-option-for-latest-qemu-thanks-Marku.patch
+Patch1:        0001-Fix-qemu-machine-option-for-latest-qemu-thanks-Marku.patch
 %endif
 
 # Basic build requirements:
@@ -504,10 +501,9 @@ for %{name}.
 %prep
 %setup -q
 
-%patch0 -p1
 %if 0%{?fedora} >= 16
-%patch2 -p1
-%patch3 -p1
+%patch0 -p1
+%patch1 -p1
 %endif
 
 mkdir -p daemon/m4
@@ -871,6 +867,13 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Wed Oct 19 2011 Richard W.M. Jones <rjones@redhat.com> - 1:1.12.8-1
+- New upstream stable branch version 1.12.8.
+- Remove patch for skipping FUSE tests.  1.12.8 includes a backport
+  that does this automatically.
+- Renumber the two remaining non-upstream patches as patch0, patch1.
+- Rebase patch1.
+
 * Mon Oct 03 2011 Rex Dieter <rdieter@fedoraproject.org> - 1:1.12.7-2.1
 - rebuild (java), rel-eng#4932
 
