@@ -29,8 +29,8 @@
 Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
-Version:       1.13.21
-Release:       4%{?dist}
+Version:       1.13.22
+Release:       1%{?dist}
 License:       LGPLv2+
 Group:         Development/Libraries
 URL:           http://libguestfs.org/
@@ -38,22 +38,13 @@ Source0:       http://libguestfs.org/download/1.13-development/%{name}-%{version
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root
 
 # Force qemu-kvm test to run with -machine accel=tcg flag.
-Patch2:        libguestfs-1.12.0-configure-force-machine-accel-tcg.patch
+Patch0:        libguestfs-1.12.0-configure-force-machine-accel-tcg.patch
 
 # Non-upstream patch to fix -machine option.  This is not upstream
 # because qemu have reverted the behaviour.  However the reverted
 # version is not yet in Rawhide so we have to keep this patch for a
 # while.
-Patch3:        0001-Fix-qemu-machine-option-for-latest-qemu-thanks-Marku.patch
-
-# Upstream patch to rename cryptsetup-luks to cryptsetup.
-Patch4:        0001-appliance-Fedora-cryptsetup-luks-renamed-to-cryptset.patch
-
-# Upstream patch to fix virt-sysprep test.
-Patch5:        0001-virt-sysprep-Fix-test-to-use-guestmount-and-virt-ins.patch
-
-# Upstream patch to skip FUSE tests if no /dev/fuse.
-Patch6:        0001-Skip-guestmount-and-virt-sysprep-tests-if-no-dev-fus.patch
+Patch1:        0001-Fix-qemu-machine-option-for-latest-qemu-thanks-Marku.patch
 
 # Basic build requirements:
 BuildRequires: /usr/bin/pod2man
@@ -528,11 +519,8 @@ for %{name}.
 %prep
 %setup -q
 
-%patch2 -p1
-%patch3 -p1
-%patch4 -p1
-%patch5 -p1
-%patch6 -p1
+%patch0 -p1
+%patch1 -p1
 
 mkdir -p daemon/m4
 
@@ -909,6 +897,11 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Wed Oct 19 2011 Richard W.M. Jones <rjones@redhat.com> - 1:1.13.22-1
+- New upstream version 1.13.22.
+- Remove 3x upstream patches.
+- Renumber the two remaining non-upstream patches as patch0, patch1.
+
 * Mon Oct 17 2011 Richard W.M. Jones <rjones@redhat.com> - 1:1.13.21-4
 - Add upstream patch to skip FUSE tests if there is no /dev/fuse.
   This allows us also to remove the Fedora-specific patch which
