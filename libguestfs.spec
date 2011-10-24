@@ -29,22 +29,13 @@
 Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
-Version:       1.13.23
-Release:       1%{?dist}.1
+Version:       1.13.24
+Release:       1%{?dist}
 License:       LGPLv2+
 Group:         Development/Libraries
 URL:           http://libguestfs.org/
 Source0:       http://libguestfs.org/download/1.13-development/%{name}-%{version}.tar.gz
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root
-
-# Force qemu-kvm test to run with -machine accel=tcg flag.
-Patch0:        libguestfs-1.12.0-configure-force-machine-accel-tcg.patch
-
-# Non-upstream patch to fix -machine option.  This is not upstream
-# because qemu have reverted the behaviour.  However the reverted
-# version is not yet in Rawhide so we have to keep this patch for a
-# while.
-Patch1:        0001-Fix-qemu-machine-option-for-latest-qemu-thanks-Marku.patch
 
 # Basic build requirements:
 BuildRequires: /usr/bin/pod2man
@@ -519,9 +510,6 @@ for %{name}.
 %prep
 %setup -q
 
-%patch0 -p1
-%patch1 -p1
-
 mkdir -p daemon/m4
 
 # Replace developer-specific README that ships with libguestfs, with
@@ -897,6 +885,11 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Mon Oct 24 2011 Richard W.M. Jones <rjones@redhat.com> - 1:1.13.24-1
+- New upstream version 1.13.24.
+- This version includes upstream workarounds for broken qemu, so both
+  non-upstream patches have now been removed from Fedora.
+
 * Fri Oct 21 2011 Marcela Mašláňová <mmaslano@redhat.com> - 1:1.13.23-1.1
 - rebuild with new gmp without compat lib
 
