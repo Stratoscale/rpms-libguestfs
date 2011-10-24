@@ -30,19 +30,11 @@
 %global updates none
 %endif
 
-# Enable to run tests during check
-# Default is enabled
-%if %{defined libguestfs_runtests}
-%global runtests %{libguestfs_runtests}
-%else
-%global runtests 1
-%endif
-
 Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
 Version:       1.2.14
-Release:       6%{?dist}
+Release:       7%{?dist}
 License:       LGPLv2+
 Group:         Development/Libraries
 URL:           http://libguestfs.org/
@@ -462,44 +454,7 @@ echo "============"
 # it produces masses of output in the build.log.
 export LIBGUESTFS_DEBUG=1
 
-# Uncomment one of these, depending on whether you want to
-# do a very long and thorough test ('make check') or just
-# a quick test to see if things generally work.
-
-# Tracking test issues:
-# BZ       archs        branch reason
-# 494075   ppc, ppc64          openbios bug causes "invalid/unsupported opcode"
-# 504273   ppc, ppc64          "no opcode defined"
-# 505109   ppc, ppc64          "Boot failure! No secondary bootloader specified"
-# 502058   i386, x86-64 F-11   need to boot with noapic (WORKAROUND ENABLED)
-# 502074   i386         all   commands segfault randomly
-# 503236   i386         F-12   cryptomgr_test at doublefault_fn
-# 507066   all          F-12   sequence of chroot calls (FIXED)
-# 513249   all          F-12   guestfwd broken in qemu (FIXED)
-# 516022   all          F-12   virtio-net gives "Network is unreachable" errors
-#                                 (FIXED)
-# 516096   ?            F-11   race condition in swapoff/blockdev --rereadpt
-# 516543   ?            F-12   qemu-kvm segfaults when run inside a VM (FIXED)
-# 548121   all          F-13   udevsettle command is broken (WORKAROUND)
-# 553689   all          F-13   missing SeaBIOS (FIXED)
-# 563103   all          F-13   glibc incorrect emulation of preadv/pwritev
-# 567567   32-bit       all    guestfish xstrtol test failure on 32-bit (FIXED)
-# 575734   all          F-14   microsecond resolution for blkid cache
-#                                 (FIXED upstream but still broken in F-14)
-# 567567   32-bit       all    guestfish xstrtol test failure on 32-bit
-
-# Skip some tests which fail with old kernel/sfdisk.
-export SKIP_LIST_TEST_PARTITIONS_1=1
-export SKIP_TEST_MKE2JOURNAL_L_0=1
-export SKIP_TEST_VGS_1=1
-
-%if %{runtests}
-%ifarch x86_64
-
-make check
-
-%endif
-%endif
+make quickcheck
 
 
 %install
@@ -706,9 +661,12 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
-* Mon Oct 24 2011 Richard W.M. Jones <rjones@redhat.com> - 1:1.2.14-6
+* Mon Oct 24 2011 Richard W.M. Jones <rjones@redhat.com> - 1:1.2.14-7
 - Bump and rebuild - zlib moved the libraries around in RHEL 5.7.
   resolves: rhbz#748370.
+- Make tests unconditional, but only run 'make quickcheck'.  EPEL 5 is
+  unsupported so we want to put minimum effort into testing and fixing
+  this obsolete version of libguestfs.
 
 * Tue May 31 2011 Richard W.M. Jones <rjones@redhat.com> - 1:1.2.14-5
 - Bump and rebuild.
