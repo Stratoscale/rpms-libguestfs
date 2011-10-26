@@ -29,7 +29,7 @@
 Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
-Version:       1.13.24
+Version:       1.13.25
 Release:       1%{?dist}
 License:       LGPLv2+
 Group:         Development/Libraries
@@ -885,6 +885,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Wed Oct 26 2011 Richard W.M. Jones <rjones@redhat.com> - 1:1.13.25-1
+- New upstream version 1.13.25.
+
 * Mon Oct 24 2011 Richard W.M. Jones <rjones@redhat.com> - 1:1.13.24-1
 - New upstream version 1.13.24.
 - This version includes upstream workarounds for broken qemu, so both
