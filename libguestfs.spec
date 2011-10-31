@@ -29,8 +29,8 @@
 Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
-Version:       1.10.9
-Release:       2%{?dist}
+Version:       1.10.10
+Release:       1%{?dist}
 License:       LGPLv2+
 Group:         Development/Libraries
 URL:           http://libguestfs.org/
@@ -776,6 +776,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Mon Oct 31 2011 Richard W.M. Jones <rjones@redhat.com> - 1:1.10.10-1
+- New upstream stable branch 1.10.10.
+
 * Fri Oct  7 2011 Richard W.M. Jones <rjones@redhat.com> - 1:1.10.9-2
 - Make glibc BR conditional on Fedora 15 (for virt-preview).
 
