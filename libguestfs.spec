@@ -29,23 +29,13 @@
 Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
-Version:       1.12.8
+Version:       1.12.9
 Release:       1%{?dist}
 License:       LGPLv2+
 Group:         Development/Libraries
 URL:           http://libguestfs.org/
 Source0:       http://libguestfs.org/download/1.12-stable/%{name}-%{version}.tar.gz
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root
-
-%if 0%{?fedora} >= 16
-# Force qemu-kvm test to run with -machine accel=tcg flag.
-Patch0:        libguestfs-1.12.0-configure-force-machine-accel-tcg.patch
-
-# Non-upstream patch to fix -machine option.  This is not upstream
-# because qemu look like they might revert (ie. fix) the -machine
-# option so that this patch would not be needed.
-Patch1:        0001-Fix-qemu-machine-option-for-latest-qemu-thanks-Marku.patch
-%endif
 
 # Basic build requirements:
 BuildRequires: /usr/bin/pod2man
@@ -501,11 +491,6 @@ for %{name}.
 %prep
 %setup -q
 
-%if 0%{?fedora} >= 16
-%patch0 -p1
-%patch1 -p1
-%endif
-
 mkdir -p daemon/m4
 
 # Replace developer-specific README that ships with libguestfs, with
@@ -867,6 +852,11 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Mon Oct 31 2011 Richard W.M. Jones <rjones@redhat.com> - 1:1.12.9-1
+- New upstream stable branch version 1.12.9.
+- Remove remaining two non-upstream patches.  Upstream contains a full
+  workaround for qemu -machine bugs.
+
 * Wed Oct 19 2011 Richard W.M. Jones <rjones@redhat.com> - 1:1.12.8-1
 - New upstream stable branch version 1.12.8.
 - Remove patch for skipping FUSE tests.  1.12.8 includes a backport
