@@ -29,7 +29,7 @@
 Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
-Version:       1.15.1
+Version:       1.15.2
 Release:       1%{?dist}
 License:       LGPLv2+
 Group:         Development/Libraries
@@ -61,9 +61,7 @@ BuildRequires: cpio
 BuildRequires: libconfig-devel
 BuildRequires: ocaml
 BuildRequires: ocaml-findlib-devel
-BuildRequires: ocaml-pcre-devel
 BuildRequires: systemd-units
-BuildRequires: xmlstarlet
 
 # This is only needed for RHEL 5 because readline-devel doesn't
 # properly depend on it, but doesn't do any harm on other platforms:
@@ -270,7 +268,6 @@ Requires:      /usr/bin/fusermount
 Requires:      /usr/bin/getopt
 Requires:      /usr/bin/guestmount
 Requires:      /usr/bin/virt-inspector
-Requires:      xmlstarlet
 
 
 %description tools
@@ -885,6 +882,11 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Thu Nov  3 2011 Richard W.M. Jones <rjones@redhat.com> - 1:1.15.2-1
+- New upstream version 1.15.2.
+- ocaml-pcre is no longer required for virt-resize.
+- xmlstarlet is no longer required for virt-sysprep.
+
 * Tue Nov  1 2011 Richard W.M. Jones <rjones@redhat.com> - 1:1.15.1-1
 - New upstream version 1.15.1.
 
