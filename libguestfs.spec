@@ -29,7 +29,7 @@
 Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
-Version:       1.15.2
+Version:       1.15.3
 Release:       1%{?dist}
 License:       LGPLv2+
 Group:         Development/Libraries
@@ -67,39 +67,114 @@ BuildRequires: systemd-units
 # properly depend on it, but doesn't do any harm on other platforms:
 BuildRequires: ncurses-devel
 
-# Build requirements for the appliance (see 'make.sh.in' in the source):
-BuildRequires: kernel, bash, coreutils, lvm2, ntfs-3g, util-linux-ng
-BuildRequires: net-tools, augeas-libs, file, attr, acl
-BuildRequires: module-init-tools, procps, strace, iputils
-BuildRequires: dosfstools, zerofree, lsof, scrub, libselinux
-BuildRequires: parted, e2fsprogs, btrfs-progs, gfs2-utils
-BuildRequires: hfsplus-tools, nilfs-utils, reiserfs-utils
-BuildRequires: jfsutils, xfsprogs
-BuildRequires: vim-minimal
+# Build requirements for the appliance.
+# sed 's/^ *//' < appliance/packagelist | sort
+BuildRequires: acl
+BuildRequires: attr
+BuildRequires: augeas-libs
+BuildRequires: bash
 BuildRequires: binutils
+BuildRequires: btrfs-progs
+BuildRequires: coreutils
+BuildRequires: cpio
 BuildRequires: cryptsetup
-BuildRequires: lzop
-%ifarch %{ix86} x86_64
+BuildRequires: diffutils
+BuildRequires: dosfstools
+BuildRequires: e2fsprogs
+BuildRequires: file
+BuildRequires: findutils
+BuildRequires: gawk
+BuildRequires: gfs2-utils
+#BuildRequires: gfs-utils
+BuildRequires: grep
+#%ifarch %{ix86} x86_64
 #BuildRequires: grub
+#%endif
+BuildRequires: gzip
+BuildRequires: hfsplus-tools
+BuildRequires: iputils
+BuildRequires: jfsutils
+BuildRequires: kernel
+BuildRequires: libselinux
+BuildRequires: lsof
+BuildRequires: lvm2
+BuildRequires: lzop
+BuildRequires: mdadm
+BuildRequires: module-init-tools
+BuildRequires: net-tools
+BuildRequires: nilfs-utils
+BuildRequires: ntfs-3g
+%ifarch %{ix86} x86_64
 BuildRequires: ntfsprogs
 %endif
+BuildRequires: parted
+BuildRequires: procps
+BuildRequires: reiserfs-utils
+BuildRequires: scrub
+BuildRequires: strace
+BuildRequires: systemd
+BuildRequires: tar
+BuildRequires: udev
+BuildRequires: util-linux-ng
+BuildRequires: vim-minimal
+BuildRequires: xfsprogs
+BuildRequires: xz
+BuildRequires: zerofree
+BuildRequires: zfs-fuse
 
 # Must match the above set of BuildRequires exactly!
-Requires:      kernel, bash, coreutils, lvm2, ntfs-3g, util-linux-ng
-Requires:      net-tools, augeas-libs, file, attr, acl
-Requires:      module-init-tools, procps, strace, iputils
-Requires:      dosfstools, zerofree, lsof, scrub, libselinux
-Requires:      parted, e2fsprogs, btrfs-progs, gfs2-utils
-Requires:      hfsplus-tools, nilfs-utils, reiserfs-utils
-Requires:      jfsutils, xfsprogs
-Requires:      vim-minimal
+Requires:      acl
+Requires:      attr
+Requires:      augeas-libs
+Requires:      bash
 Requires:      binutils
+Requires:      btrfs-progs
+Requires:      coreutils
+Requires:      cpio
 Requires:      cryptsetup
-Requires:      lzop
-%ifarch %{ix86} x86_64
+Requires:      diffutils
+Requires:      dosfstools
+Requires:      e2fsprogs
+Requires:      file
+Requires:      findutils
+Requires:      gawk
+Requires:      gfs2-utils
+#Requires:      gfs-utils
+Requires:      grep
+#%ifarch %{ix86} x86_64
 #Requires:      grub
+#%endif
+Requires:      gzip
+Requires:      hfsplus-tools
+Requires:      iputils
+Requires:      jfsutils
+Requires:      kernel
+Requires:      libselinux
+Requires:      lsof
+Requires:      lvm2
+Requires:      lzop
+Requires:      mdadm
+Requires:      module-init-tools
+Requires:      net-tools
+Requires:      nilfs-utils
+Requires:      ntfs-3g
+%ifarch %{ix86} x86_64
 Requires:      ntfsprogs
 %endif
+Requires:      parted
+Requires:      procps
+Requires:      reiserfs-utils
+Requires:      scrub
+Requires:      strace
+Requires:      systemd
+Requires:      tar
+Requires:      udev
+Requires:      util-linux-ng
+Requires:      vim-minimal
+Requires:      xfsprogs
+Requires:      xz
+Requires:      zerofree
+Requires:      zfs-fuse
 
 # These are only required if you want to build the bindings for
 # different languages:
@@ -882,6 +957,10 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Thu Nov 10 2011 Richard W.M. Jones <rjones@redhat.com> - 1:1.15.3-1
+- New upstream version 1.15.3.
+- Fix list of BuildRequires so they precisely match the appliance.
+
 * Thu Nov  3 2011 Richard W.M. Jones <rjones@redhat.com> - 1:1.15.2-1
 - New upstream version 1.15.2.
 - ocaml-pcre is no longer required for virt-resize.
