@@ -29,7 +29,7 @@
 Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
-Version:       1.10.10
+Version:       1.10.11
 Release:       1%{?dist}
 License:       LGPLv2+
 Group:         Development/Libraries
@@ -776,6 +776,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Thu Nov 10 2011 Richard W.M. Jones <rjones@redhat.com> - 1:1.10.11-1
+- New upstream stable branch 1.10.11.
+
 * Mon Oct 31 2011 Richard W.M. Jones <rjones@redhat.com> - 1:1.10.10-1
 - New upstream stable branch 1.10.10.
 
