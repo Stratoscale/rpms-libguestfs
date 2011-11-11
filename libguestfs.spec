@@ -30,7 +30,7 @@ Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
 Version:       1.15.3
-Release:       2%{?dist}
+Release:       3%{?dist}
 License:       LGPLv2+
 Group:         Development/Libraries
 URL:           http://libguestfs.org/
@@ -232,8 +232,8 @@ Source3:       99-guestfsd.rules
 # Replacement README file for Fedora users.
 Source4:       README-replacement.in
 
-# Upstream patch to print output of virt-df when test fails.
-Patch0:        0001-df-Print-output-of-test-virt-df.sh-on-failure-path.patch
+# Upstream patch to disable part of virt-df test.
+Patch0:        0001-df-Disable-part-of-virt-df-test.patch
 
 
 %description
@@ -962,8 +962,8 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
-* Fri Nov 11 2011 Richard W.M. Jones <rjones@redhat.com> - 1:1.15.3-2
-- Add upstream patch to print output of virt-df when test fails.
+* Fri Nov 11 2011 Richard W.M. Jones <rjones@redhat.com> - 1:1.15.3-3
+- Add upstream patch to disable part of virt-df test.
 
 * Thu Nov 10 2011 Richard W.M. Jones <rjones@redhat.com> - 1:1.15.3-1
 - New upstream version 1.15.3.
