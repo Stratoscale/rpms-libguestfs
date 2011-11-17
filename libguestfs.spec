@@ -30,7 +30,7 @@ Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
 Version:       1.15.4
-Release:       1%{?dist}
+Release:       2%{?dist}
 License:       LGPLv2+
 Group:         Development/Libraries
 URL:           http://libguestfs.org/
@@ -746,7 +746,6 @@ if [ "$RPM_BUILD_ROOT%{python_sitearch}" != "$RPM_BUILD_ROOT%{python_sitelib}" ]
 fi
 
 # Remove static-linked Java bindings.
-rm $RPM_BUILD_ROOT%{_libdir}/libguestfs_jni.a
 rm $RPM_BUILD_ROOT%{_libdir}/libguestfs_jni.la
 
 # Move installed documentation back to the source directory so
@@ -957,9 +956,10 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
-* Thu Nov 17 2011 Richard W.M. Jones <rjones@redhat.com> - 1:1.15.4-1
+* Thu Nov 17 2011 Richard W.M. Jones <rjones@redhat.com> - 1:1.15.4-2
 - New upstream version 1.15.4.
 - Remove patch which is now upstream.
+- libguestfs_jni.a is no longer built (we don't know why).
 
 * Fri Nov 11 2011 Richard W.M. Jones <rjones@redhat.com> - 1:1.15.3-3
 - Add upstream patch to disable part of virt-df test.
