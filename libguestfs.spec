@@ -29,12 +29,12 @@
 Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
-Version:       1.12.10
+Version:       1.14.2
 Release:       1%{?dist}
 License:       LGPLv2+
 Group:         Development/Libraries
 URL:           http://libguestfs.org/
-Source0:       http://libguestfs.org/download/1.12-stable/%{name}-%{version}.tar.gz
+Source0:       http://libguestfs.org/download/1.14-development/%{name}-%{version}.tar.gz
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root
 
 # Basic build requirements:
@@ -61,44 +61,120 @@ BuildRequires: cpio
 BuildRequires: libconfig-devel
 BuildRequires: ocaml
 BuildRequires: ocaml-findlib-devel
-BuildRequires: ocaml-pcre-devel
 BuildRequires: systemd-units
 
 # This is only needed for RHEL 5 because readline-devel doesn't
 # properly depend on it, but doesn't do any harm on other platforms:
 BuildRequires: ncurses-devel
 
-# Build requirements for the appliance (see 'make.sh.in' in the source):
-BuildRequires: kernel, bash, coreutils, lvm2, ntfs-3g, util-linux-ng
-BuildRequires: net-tools, augeas-libs, file, attr, acl
-BuildRequires: module-init-tools, procps, strace, iputils
-BuildRequires: dosfstools, zerofree, lsof, scrub, libselinux
-BuildRequires: parted, e2fsprogs, btrfs-progs, gfs2-utils
-BuildRequires: hfsplus-tools, nilfs-utils, reiserfs-utils
-BuildRequires: jfsutils, xfsprogs
-BuildRequires: vim-minimal
+# Build requirements for the appliance.
+# sed 's/^ *//' < appliance/packagelist | sort
+BuildRequires: acl
+BuildRequires: attr
+BuildRequires: augeas-libs
+BuildRequires: bash
 BuildRequires: binutils
-BuildRequires: cryptsetup-luks
-%ifarch %{ix86} x86_64
+BuildRequires: btrfs-progs
+BuildRequires: coreutils
+BuildRequires: cpio
+BuildRequires: cryptsetup
+BuildRequires: diffutils
+BuildRequires: dosfstools
+BuildRequires: e2fsprogs
+BuildRequires: file
+BuildRequires: findutils
+BuildRequires: gawk
+BuildRequires: gfs2-utils
+#BuildRequires: gfs-utils
+BuildRequires: grep
+#%ifarch %{ix86} x86_64
 #BuildRequires: grub
+#%endif
+BuildRequires: gzip
+BuildRequires: hfsplus-tools
+BuildRequires: iputils
+BuildRequires: jfsutils
+BuildRequires: kernel
+BuildRequires: libselinux
+BuildRequires: lsof
+BuildRequires: lvm2
+BuildRequires: lzop
+BuildRequires: mdadm
+BuildRequires: module-init-tools
+BuildRequires: net-tools
+BuildRequires: nilfs-utils
+BuildRequires: ntfs-3g
+%ifarch %{ix86} x86_64
 BuildRequires: ntfsprogs
 %endif
+BuildRequires: parted
+BuildRequires: procps
+BuildRequires: reiserfs-utils
+BuildRequires: scrub
+BuildRequires: strace
+BuildRequires: systemd
+BuildRequires: tar
+BuildRequires: udev
+BuildRequires: util-linux-ng
+BuildRequires: vim-minimal
+BuildRequires: xfsprogs
+BuildRequires: xz
+BuildRequires: zerofree
+BuildRequires: zfs-fuse
 
 # Must match the above set of BuildRequires exactly!
-Requires:      kernel, bash, coreutils, lvm2, ntfs-3g, util-linux-ng
-Requires:      net-tools, augeas-libs, file, attr, acl
-Requires:      module-init-tools, procps, strace, iputils
-Requires:      dosfstools, zerofree, lsof, scrub, libselinux
-Requires:      parted, e2fsprogs, btrfs-progs, gfs2-utils
-Requires:      hfsplus-tools, nilfs-utils, reiserfs-utils
-Requires:      jfsutils, xfsprogs
-Requires:      vim-minimal
+Requires:      acl
+Requires:      attr
+Requires:      augeas-libs
+Requires:      bash
 Requires:      binutils
-Requires:      cryptsetup-luks
-%ifarch %{ix86} x86_64
+Requires:      btrfs-progs
+Requires:      coreutils
+Requires:      cpio
+Requires:      cryptsetup
+Requires:      diffutils
+Requires:      dosfstools
+Requires:      e2fsprogs
+Requires:      file
+Requires:      findutils
+Requires:      gawk
+Requires:      gfs2-utils
+#Requires:      gfs-utils
+Requires:      grep
+#%ifarch %{ix86} x86_64
 #Requires:      grub
+#%endif
+Requires:      gzip
+Requires:      hfsplus-tools
+Requires:      iputils
+Requires:      jfsutils
+Requires:      kernel
+Requires:      libselinux
+Requires:      lsof
+Requires:      lvm2
+Requires:      lzop
+Requires:      mdadm
+Requires:      module-init-tools
+Requires:      net-tools
+Requires:      nilfs-utils
+Requires:      ntfs-3g
+%ifarch %{ix86} x86_64
 Requires:      ntfsprogs
 %endif
+Requires:      parted
+Requires:      procps
+Requires:      reiserfs-utils
+Requires:      scrub
+Requires:      strace
+Requires:      systemd
+Requires:      tar
+Requires:      udev
+Requires:      util-linux-ng
+Requires:      vim-minimal
+Requires:      xfsprogs
+Requires:      xz
+Requires:      zerofree
+Requires:      zfs-fuse
 
 # These are only required if you want to build the bindings for
 # different languages:
@@ -117,6 +193,8 @@ BuildRequires: java >= 1.5.0
 BuildRequires: jpackage-utils
 BuildRequires: java-devel
 BuildRequires: php-devel
+BuildRequires: erlang-erts
+BuildRequires: erlang-erl_interface
 
 # For libguestfs-tools:
 BuildRequires: perl-Sys-Virt
@@ -178,21 +256,28 @@ in the context of the guest.
 Libguestfs is a library that can be linked with C and C++ management
 programs.
 
-See also the 'guestfish' package for shell scripting and command line
-access, and '%{name}-mount' for mounting guest filesystems on the
-host using FUSE.
+For high level virt tools, guestfish (shell scripting and command line
+access), and guestmount (mount guest filesystems using FUSE), install
+'%{name}-tools'.
 
-For Perl bindings, see 'perl-Sys-Guestfs'.
+For shell scripting and command line access, install 'guestfish'.
 
-For OCaml bindings, see 'ocaml-libguestfs-devel'.
+To mount guest filesystems on the host using FUSE, install
+'%{name}-mount'.
 
-For Python bindings, see 'python-libguestfs'.
+For Erlang bindings, install 'erlang-libguestfs'.
 
-For Ruby bindings, see 'ruby-libguestfs'.
+For Java bindings, install 'libguestfs-java-devel'.
 
-For Java bindings, see 'libguestfs-java-devel'.
+For OCaml bindings, install 'ocaml-libguestfs-devel'.
 
-For PHP bindings, see 'php-libguestfs'.
+For Perl bindings, install 'perl-Sys-Guestfs'.
+
+For PHP bindings, install 'php-libguestfs'.
+
+For Python bindings, install 'python-libguestfs'.
+
+For Ruby bindings, install 'ruby-libguestfs'.
 
 
 %package devel
@@ -207,59 +292,27 @@ Requires:      pkgconfig
 for %{name}.
 
 
-%package -n guestfish
-Summary:       Shell for accessing and modifying virtual machine disk images
-Group:         Development/Tools
-License:       GPLv2+
-Requires:      %{name} = %{epoch}:%{version}-%{release}
-#Requires:      /usr/bin/emacs #theoretically, but too large
-Requires:      /usr/bin/hexedit
-Requires:      /usr/bin/less
-Requires:      /usr/bin/man
-Requires:      /bin/vi
-
-
-%description -n guestfish
-Guestfish is the Filesystem Interactive SHell, for accessing and
-modifying virtual machine disk images from the command line and shell
-scripts.
-
-Virt-copy-in and virt-copy-out are command line tools for uploading
-and downloading files and directories to and from virtual machines.
-
-Virt-tar-in and virt-tar-out are archive, backup and upload tools
-for virtual machines.  These replace the deprecated program virt-tar.
-
-
-%package mount
-Summary:       Mount guest filesystems on the host using FUSE and libguestfs
-Group:         Development/Tools
-License:       GPLv2+
-Requires:      %{name} = %{epoch}:%{version}-%{release}
-
-
-%description mount
-The guestmount command lets you mount guest filesystems on the
-host using FUSE and %{name}.
-
-
 %package tools-c
 Summary:       System administration tools for virtual machines
 Group:         Development/Tools
 License:       GPLv2+
 Requires:      %{name} = %{epoch}:%{version}-%{release}
 
-# Obsolete and replace earlier packages.
-Provides:      virt-cat = %{epoch}:%{version}-%{release}
-Obsoletes:     virt-cat < %{epoch}:%{version}-%{release}
-Provides:      virt-df = %{epoch}:%{version}-%{release}
-Obsoletes:     virt-df < %{epoch}:%{version}-%{release}
-Provides:      virt-inspector = %{epoch}:%{version}-%{release}
-Obsoletes:     virt-inspector < %{epoch}:%{version}-%{release}
+# for guestfish:
+#Requires:      /usr/bin/emacs #theoretically, but too large
+Requires:      /usr/bin/hexedit
+Requires:      /usr/bin/less
+Requires:      /usr/bin/man
+Requires:      /bin/vi
 
-# RHBZ#514309
-Provides:      virt-df2 = %{epoch}:%{version}-%{release}
-Obsoletes:     virt-df2 < %{epoch}:%{version}-%{release}
+# for virt-sparsify:
+Requires:      qemu-img
+
+# Obsolete and replace earlier packages.
+Provides:      guestfish = %{epoch}:%{version}-%{release}
+Obsoletes:     guestfish < %{epoch}:%{version}-%{release}
+Provides:      libguestfs-mount = %{epoch}:%{version}-%{release}
+Obsoletes:     libguestfs-mount < %{epoch}:%{version}-%{release}
 
 
 %description tools-c
@@ -277,20 +330,42 @@ Group:         Development/Tools
 License:       GPLv2+
 Requires:      %{name} = %{epoch}:%{version}-%{release}
 Requires:      %{name}-tools-c = %{epoch}:%{version}-%{release}
+
 # NB: Only list deps here which are not picked up automatically.
 Requires:      perl(Sys::Virt)
 Requires:      perl(String::ShellQuote)
 Requires:      perl(XML::Writer)
 Requires:      perl(Win::Hivex) >= 1.2.7
+
+# for virt-make-fs:
 Requires:      qemu-img
+
+# for virt-sysprep:
+Requires:      /usr/bin/fusermount
+Requires:      /usr/bin/getopt
+Requires:      /usr/bin/guestmount
+Requires:      /usr/bin/virt-inspector
 
 
 %description tools
 This package contains miscellaneous system administrator command line
 tools for virtual machines.
 
+Guestfish is the Filesystem Interactive SHell, for accessing and
+modifying virtual machine disk images from the command line and shell
+scripts.
+
+The guestmount command lets you mount guest filesystems on the host
+using FUSE and %{name}.
+
+Virt-alignment-scan scans virtual machines looking for partition
+alignment problems.
+
 Virt-cat is a command line tool to display the contents of a file in a
 virtual machine.
+
+Virt-copy-in and virt-copy-out are command line tools for uploading
+and downloading files and directories to and from virtual machines.
 
 Virt-df is a command line tool to display free space on virtual
 machine filesystems.  Unlike other tools, it doesn’t just display the
@@ -323,7 +398,15 @@ unstructured fixes to virtual machines.
 
 Virt-resize can resize existing virtual machine disk images.
 
-Virt-win-reg lets you look inside the Windows Registry for
+Virt-sparsify makes virtual machine disk images sparse (thin-provisioned).
+
+Virt-sysprep lets you reset or unconfigure virtual machines in
+preparation for cloning them.
+
+Virt-tar-in and virt-tar-out are archive, backup and upload tools
+for virtual machines.  These replace the deprecated program virt-tar.
+
+Virt-win-reg lets you look at and modify the Windows Registry of
 Windows virtual machines.
 
 
@@ -423,8 +506,8 @@ Requires:      ruby(abi) = 1.8
 Requires:      ruby
 Provides:      ruby(guestfs) = %{version}
 
-%{!?ruby_sitelib: %define ruby_sitelib %(ruby -rrbconfig -e "puts Config::CONFIG['sitelibdir']")}
-%{!?ruby_sitearch: %define ruby_sitearch %(ruby -rrbconfig -e "puts Config::CONFIG['sitearchdir']")}
+%{!?ruby_sitelib: %global ruby_sitelib %(ruby -rrbconfig -e "puts Config::CONFIG['sitelibdir']")}
+%{!?ruby_sitearch: %global ruby_sitearch %(ruby -rrbconfig -e "puts Config::CONFIG['sitearchdir']")}
 
 %description -n ruby-%{name}
 ruby-%{name} contains Ruby bindings for %{name}.
@@ -476,6 +559,16 @@ Requires:      php
 
 %description -n php-%{name}
 php-%{name} contains PHP bindings for %{name}.
+
+
+%package -n erlang-%{name}
+Summary:       Erlang bindings for %{name}
+Group:         Development/Libraries
+Requires:      %{name} = %{epoch}:%{version}-%{release}
+Requires:      erlang-erts
+
+%description -n erlang-%{name}
+erlang-%{name} contains Erlang bindings for %{name}.
 
 
 %package man-pages-uk
@@ -541,8 +634,13 @@ cat yum.conf
 %if %{with_virtio}
   --with-drive-if=virtio \
 %endif
-  %{extra}
+  %{extra} || {
+    echo "==== config.log ===="
+    cat config.log
+    exit 1
+}
 
+echo "==== config.log ===="
 cat config.log
 
 # 'INSTALLDIRS' ensures that perl libs are installed in the vendor dir
@@ -602,6 +700,8 @@ export LIBGUESTFS_TRACE=1
 # 710921   all          F-16   ftrace problems (FIXED)
 # 723555   i386         F-16   GPF when VM shuts down
 # 723822   all          F-16   boot hangs
+# 728911   i386         F-17   TCG fatal error
+# 744426   all          F-17   problem with unstable TSC in 3.1-rc9
 
 # This test fails because we build the ISO after encoding the checksum
 # of the ISO in the test itself.  Need to fix the test to work out the
@@ -609,7 +709,7 @@ export LIBGUESTFS_TRACE=1
 export SKIP_TEST_CHECKSUM_DEVICE=1
 
 # Work around 'test-getlogin_r.c:55: assertion failed' in Gnulib tests.
-pushd daemon/tests
+pushd gnulib/tests
 borked=test-getlogin_r
 make $borked
 rm $borked
@@ -618,8 +718,10 @@ chmod +x $borked
 popd
 
 %if %{runtests}
-# Because of RHBZ#723555, RHBZ#723822
-make quickcheck QUICKCHECK_TEST_TOOL_ARGS="-t 300"
+# because of 728911
+%ifarch x86_64
+make check
+%endif
 %endif
 
 
@@ -637,7 +739,6 @@ find $RPM_BUILD_ROOT -name .packlist -delete
 find $RPM_BUILD_ROOT -name '*.bs' -delete
 find $RPM_BUILD_ROOT -name 'bindtests.pl' -delete
 
-rm $RPM_BUILD_ROOT%{python_sitearch}/libguestfsmod.a
 rm $RPM_BUILD_ROOT%{python_sitearch}/libguestfsmod.la
 
 if [ "$RPM_BUILD_ROOT%{python_sitearch}" != "$RPM_BUILD_ROOT%{python_sitelib}" ]; then
@@ -702,35 +803,24 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/pkgconfig/libguestfs.pc
 
 
-%files -n guestfish
+%files tools-c
 %defattr(-,root,root,-)
 %doc README
+%config(noreplace) %{_sysconfdir}/libguestfs-tools.conf
+%dir %{_sysconfdir}/bash_completion.d
+%{_sysconfdir}/bash_completion.d/guestfish-bash-completion.sh
 %{_bindir}/guestfish
 %{_mandir}/man1/guestfish.1*
+%{_bindir}/guestmount
+%{_mandir}/man1/guestmount.1*
+%{_bindir}/virt-alignment-scan
+%{_mandir}/man1/virt-alignment-scan.1*
+%{_bindir}/virt-cat
+%{_mandir}/man1/virt-cat.1*
 %{_bindir}/virt-copy-in
 %{_mandir}/man1/virt-copy-in.1*
 %{_bindir}/virt-copy-out
 %{_mandir}/man1/virt-copy-out.1*
-%{_bindir}/virt-tar-in
-%{_mandir}/man1/virt-tar-in.1*
-%{_bindir}/virt-tar-out
-%{_mandir}/man1/virt-tar-out.1*
-%dir %{_sysconfdir}/bash_completion.d
-%{_sysconfdir}/bash_completion.d/guestfish-bash-completion.sh
-
-
-%files mount
-%defattr(-,root,root,-)
-%doc COPYING README
-%{_bindir}/guestmount
-%{_mandir}/man1/guestmount.1*
-
-
-%files tools-c
-%defattr(-,root,root,-)
-%doc README
-%{_bindir}/virt-cat
-%{_mandir}/man1/virt-cat.1*
 %{_bindir}/virt-df
 %{_mandir}/man1/virt-df.1*
 %{_bindir}/virt-edit
@@ -743,7 +833,14 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man1/virt-ls.1*
 %{_bindir}/virt-rescue
 %{_mandir}/man1/virt-rescue.1*
-%config(noreplace) %{_sysconfdir}/libguestfs-tools.conf
+%{_bindir}/virt-resize
+%{_mandir}/man1/virt-resize.1*
+%{_bindir}/virt-sparsify
+%{_mandir}/man1/virt-sparsify.1*
+%{_bindir}/virt-tar-in
+%{_mandir}/man1/virt-tar-in.1*
+%{_bindir}/virt-tar-out
+%{_mandir}/man1/virt-tar-out.1*
 
 
 %files tools
@@ -755,8 +852,8 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man1/virt-list-partitions.1*
 %{_bindir}/virt-make-fs
 %{_mandir}/man1/virt-make-fs.1*
-%{_bindir}/virt-resize
-%{_mandir}/man1/virt-resize.1*
+%{_bindir}/virt-sysprep
+%{_mandir}/man1/virt-sysprep.1*
 %{_bindir}/virt-tar
 %{_mandir}/man1/virt-tar.1*
 %{_bindir}/virt-win-reg
@@ -845,6 +942,16 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/php/modules/guestfs_php.so
 
 
+%files -n erlang-%{name}
+%defattr(-,root,root,-)
+%doc erlang/README
+%doc erlang/examples/*.erl
+%doc erlang/examples/LICENSE
+%{_bindir}/erl-guestfs
+%{_libdir}/erlang/lib/%{name}-%{version}
+%{_mandir}/man3/guestfs-erlang.3*
+
+
 %files man-pages-uk
 %defattr(-,root,root,-)
 %lang(uk) %{_mandir}/uk/man1/*.1*
@@ -852,55 +959,175 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
-* Thu Nov 10 2011 Richard W.M. Jones <rjones@redhat.com> - 1:1.12.10-1
-- New upstream stable branch version 1.12.10.
+* Fri Nov 18 2011 Richard W.M. Jones <rjones@redhat.com> - 1:1.14.2-1
+- Rebase Fedora 16 to new stable libguestfs version 1.14.2.
+  This was discussed upstream and announced on Fedora devel list.
+  https://www.redhat.com/archives/libguestfs/2011-October/msg00004.html
+  https://lists.fedoraproject.org/pipermail/devel/2011-November/159316.html
+  This spec file is based on current Rawhide (which on development
+  version 1.15.4).
 
-* Mon Oct 31 2011 Richard W.M. Jones <rjones@redhat.com> - 1:1.12.9-1
-- New upstream stable branch version 1.12.9.
-- Remove remaining two non-upstream patches.  Upstream contains a full
-  workaround for qemu -machine bugs.
+* Thu Nov 17 2011 Richard W.M. Jones <rjones@redhat.com> - 1:1.15.4-2
+- New upstream version 1.15.4.
+- Remove patch which is now upstream.
+- libguestfs_jni.a is no longer built (we don't know why).
 
-* Wed Oct 19 2011 Richard W.M. Jones <rjones@redhat.com> - 1:1.12.8-1
-- New upstream stable branch version 1.12.8.
-- Remove patch for skipping FUSE tests.  1.12.8 includes a backport
-  that does this automatically.
+* Fri Nov 11 2011 Richard W.M. Jones <rjones@redhat.com> - 1:1.15.3-3
+- Add upstream patch to disable part of virt-df test.
+
+* Thu Nov 10 2011 Richard W.M. Jones <rjones@redhat.com> - 1:1.15.3-1
+- New upstream version 1.15.3.
+- Fix list of BuildRequires so they precisely match the appliance.
+
+* Thu Nov  3 2011 Richard W.M. Jones <rjones@redhat.com> - 1:1.15.2-1
+- New upstream version 1.15.2.
+- ocaml-pcre is no longer required for virt-resize.
+- xmlstarlet is no longer required for virt-sysprep.
+
+* Tue Nov  1 2011 Richard W.M. Jones <rjones@redhat.com> - 1:1.15.1-1
+- New upstream version 1.15.1.
+
+* Thu Oct 26 2011 Richard W.M. Jones <rjones@redhat.com> - 1:1.15.0-1
+- Stable branch 1.14.0 was released.  This is the new development
+  branch version 1.15.0.
+
+* Wed Oct 26 2011 Richard W.M. Jones <rjones@redhat.com> - 1:1.13.26-1
+- New upstream version 1.13.26.
+
+* Wed Oct 26 2011 Richard W.M. Jones <rjones@redhat.com> - 1:1.13.25-1
+- New upstream version 1.13.25.
+
+* Mon Oct 24 2011 Richard W.M. Jones <rjones@redhat.com> - 1:1.13.24-1
+- New upstream version 1.13.24.
+- This version includes upstream workarounds for broken qemu, so both
+  non-upstream patches have now been removed from Fedora.
+
+* Fri Oct 21 2011 Marcela Mašláňová <mmaslano@redhat.com> - 1:1.13.23-1.1
+- rebuild with new gmp without compat lib
+
+* Thu Oct 20 2011 Richard W.M. Jones <rjones@redhat.com> - 1:1.13.23-1
+- New upstream version 1.13.23.
+
+* Wed Oct 19 2011 Richard W.M. Jones <rjones@redhat.com> - 1:1.13.22-2
+- New upstream version 1.13.22.
+- Remove 3x upstream patches.
 - Renumber the two remaining non-upstream patches as patch0, patch1.
 - Rebase patch1.
 
-* Mon Oct 03 2011 Rex Dieter <rdieter@fedoraproject.org> - 1:1.12.7-2.1
-- rebuild (java), rel-eng#4932
+* Mon Oct 17 2011 Richard W.M. Jones <rjones@redhat.com> - 1:1.13.21-4
+- Add upstream patch to skip FUSE tests if there is no /dev/fuse.
+  This allows us also to remove the Fedora-specific patch which
+  disabled these tests before.
 
-* Mon Sep 26 2011 Richard W.M. Jones <rjones@redhat.com> - 1:1.12.7-2
-- Conditionalize parts of the spec so we can build this on f15 for
-  virt-preview.
+* Sat Oct 15 2011 Richard W.M. Jones <rjones@redhat.com> - 1:1.13.21-3
+- Add upstream patch to fix virt-sysprep test.
 
-* Fri Sep 16 2011 Richard W.M. Jones <rjones@redhat.com> - 1:1.12.7-1
-- New upstream stable branch version 1.12.7.
+* Fri Oct 14 2011 Richard W.M. Jones <rjones@redhat.com> - 1:1.13.21-2
+- New upstream version 1.13.21.
+- Move virt-sysprep to libguestfs-tools, to avoid pulling in extra
+  dependencies for RHEV-H.  This tool is not likely to be useful
+  for RHEV-H in its current form anyway.
+- Change BR cryptsetup-luks -> cryptsetup since that package changed.
 
-* Thu Sep 15 2011 Richard W.M. Jones <rjones@redhat.com> - 1:1.12.6-2
+* Wed Oct 12 2011 Peter Schiffer <pschiffe@redhat.com> - 1:1.13.20-1.1
+- rebuild with new gmp
+
+* Tue Oct 11 2011 Richard W.M. Jones <rjones@redhat.com> - 1:1.13.20-1
+- New upstream version 1.13.20.
+
+* Sat Oct  8 2011 Richard W.M. Jones <rjones@redhat.com> - 1:1.13.19-1
+- New upstream version 1.13.19.
+- New tool: virt-sysprep.
+- Remove the old guestfish and libguestfs-mount packages, and put these
+  tools into libguestfs-tools.  This change is long overdue, but is also
+  necessitated by the new virt-sysprep tool.  This new tool would pull
+  in guestfish anyway, so having separate packages makes no sense.
+- Remove old obsoletes for virt-cat, virt-df, virt-df2 and virt-inspector,
+  since those packages existed only in much older Fedora.
+
+* Wed Oct  5 2011 Richard W.M. Jones <rjones@redhat.com> - 1:1.13.18-1
+- New upstream version 1.13.18.
+- New tool: virt-alignment-scan.
+
+* Tue Oct  4 2011 Richard W.M. Jones <rjones@redhat.com> - 1:1.13.17-1
+- New upstream version 1.13.17.
+- New tool: virt-sparsify.
+
+* Sat Oct  1 2011 Richard W.M. Jones <rjones@redhat.com> - 1:1.13.16-1
+- New upstream version 1.13.16.
+
+* Thu Sep 29 2011 Richard W.M. Jones <rjones@redhat.com> - 1:1.13.15-2
+- Rearrange description to make it clearer.
+- virt-resize was written in OCaml.  Move it to libguestfs-tools-c
+  subpackage since it doesn't require Perl.
+
+* Wed Sep 28 2011 Richard W.M. Jones <rjones@redhat.com> - 1:1.13.15-1
+- New upstream version 1.13.15.
+- Add lzop program to the appliance (for compress-out API).
+- Remove upstream patch.
+
+* Mon Sep 26 2011 Richard W.M. Jones <rjones@redhat.com> - 1:1.13.14-2
+- Upstream patch to fix timer check failures during boot (RHBZ#502058).
+
+* Sat Sep 24 2011 Richard W.M. Jones <rjones@redhat.com> - 1:1.13.14-1
+- New upstream version 1.13.14.
+
+* Wed Sep 21 2011 Richard W.M. Jones <rjones@redhat.com> - 1:1.13.13-1
+- Add Erlang bindings in erlang-libguestfs subpackage.
+- Remove upstream patch.
+
+* Fri Sep 16 2011 Richard W.M. Jones <rjones@redhat.com> - 1:1.13.12-4
 - Don't require grub.  See RHBZ#737261.
 - Note this (hopefully temporarily) breaks guestfs_grub_install API.
+- Include upstream patch to add guestfs_grub_install into an optional group.
 
-* Thu Sep  1 2011 Richard W.M. Jones <rjones@redhat.com> - 1:1.12.6-1
-- New upstream stable branch version 1.12.6.
+* Wed Sep 14 2011 Richard W.M. Jones <rjones@redhat.com> - 1:1.13.12-1
+- New upstream version 1.13.12.
 
-* Tue Aug 30 2011 Richard W.M. Jones <rjones@redhat.com> - 1:1.12.5-3
+* Thu Sep  1 2011 Richard W.M. Jones <rjones@redhat.com> - 1:1.13.11-1
+- New upstream version 1.13.11.
+
+* Tue Aug 30 2011 Richard W.M. Jones <rjones@redhat.com> - 1:1.13.10-2
 - Remove MAKEDEV dependency (RHBZ#727247).
 
-* Sun Aug 28 2011 Richard W.M. Jones <rjones@redhat.com> - 1:1.12.5-2
-- New upstream stable branch version 1.12.5.
+* Sun Aug 28 2011 Richard W.M. Jones <rjones@redhat.com> - 1:1.13.10-1
+- New upstream version 1.13.10.
+
+* Fri Aug 26 2011 Richard W.M. Jones <rjones@redhat.com> - 1:1.13.9-1
+- New upstream version 1.13.9.
+
+* Fri Aug 26 2011 Richard W.M. Jones <rjones@redhat.com> - 1:1.13.8-1
+- New upstream version 1.13.8.
+- Static python library is no longer built, so don't rm it.
+
+* Tue Aug 23 2011 Richard W.M. Jones <rjones@redhat.com> - 1:1.13.7-1
+- New upstream version 1.13.7.
 - configure --with-extra version string contains Fedora release.
 - Build with make V=1 to display full compile commands.
 - Remove /usr/sbin PATH setting, not used for a very long time.
-- Rebase patch.
 
-* Wed Aug 17 2011 Richard W.M. Jones <rjones@redhat.com> - 1:1.12.4-3
-- New upstream stable branch version 1.12.4.
-- Bug 723822 (boot hang during tests) is still observed.
+* Fri Aug 19 2011 Richard W.M. Jones <rjones@redhat.com> - 1:1.13.6-2
+- New upstream version 1.13.6.
+- Rebase non-upstream patch to fix qemu -machine option.
 
-* Mon Aug  8 2011 Richard W.M. Jones <rjones@redhat.com> - 1:1.12.3-2
-- New upstream stable branch version 1.12.3.
-- Remove upstream patch to fix OCaml locking in event callbacks.
+* Wed Aug 17 2011 Richard W.M. Jones <rjones@redhat.com> - 1:1.13.5-1
+- New upstream version 1.13.5.
+
+* Thu Aug 11 2011 Richard W.M. Jones <rjones@redhat.com> - 1:1.13.4-1
+- New upstream version 1.13.4.
+
+* Mon Aug  8 2011 Richard W.M. Jones <rjones@redhat.com> - 1:1.13.3-4
+- New upstream version 1.13.3.
+- 'test-getlogin_r.c:55: assertion failed' test must now be fixed in
+  gnulib/tests directory instead of daemon/tests (the latter directory
+  no longer exists).
+- Only run testsuite on x86_64 because of qemu bug.
+
+* Tue Aug  2 2011 Richard W.M. Jones <rjones@redhat.com> - 1:1.13.2-3
+- Switch Rawhide to use the new development branch (1.13).
+- New upstream version 1.13.2.
+- Remove upstream patch.
+- Ensure config.log is printed, even in the error case.
 
 * Tue Jul 26 2011 Richard W.M. Jones <rjones@redhat.com> - 1:1.12.1-4
 - New upstream stable branch version 1.12.1.
