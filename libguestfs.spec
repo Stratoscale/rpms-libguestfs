@@ -29,8 +29,8 @@
 Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
-Version:       1.15.4
-Release:       2%{?dist}
+Version:       1.15.5
+Release:       1%{?dist}
 License:       LGPLv2+
 Group:         Development/Libraries
 URL:           http://libguestfs.org/
@@ -783,6 +783,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_bindir}/libguestfs-test-tool
 %{_libdir}/guestfs/
 %{_libdir}/libguestfs.so.*
+%{_mandir}/man1/guestfs-testing.1*
 %{_mandir}/man1/libguestfs-test-tool.1*
 
 
@@ -956,6 +957,10 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Mon Nov 21 2011 Richard W.M. Jones <rjones@redhat.com> - 1:1.15.5-1
+- New upstream version 1.15.5.
+- Add guestfs-testing(1) man page.
+
 * Thu Nov 17 2011 Richard W.M. Jones <rjones@redhat.com> - 1:1.15.4-2
 - New upstream version 1.15.4.
 - Remove patch which is now upstream.
