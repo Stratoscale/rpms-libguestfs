@@ -29,7 +29,7 @@
 Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
-Version:       1.14.2
+Version:       1.14.3
 Release:       1%{?dist}
 License:       LGPLv2+
 Group:         Development/Libraries
@@ -748,7 +748,6 @@ if [ "$RPM_BUILD_ROOT%{python_sitearch}" != "$RPM_BUILD_ROOT%{python_sitelib}" ]
 fi
 
 # Remove static-linked Java bindings.
-rm $RPM_BUILD_ROOT%{_libdir}/libguestfs_jni.a
 rm $RPM_BUILD_ROOT%{_libdir}/libguestfs_jni.la
 
 # Move installed documentation back to the source directory so
@@ -786,6 +785,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_bindir}/libguestfs-test-tool
 %{_libdir}/guestfs/
 %{_libdir}/libguestfs.so.*
+%{_mandir}/man1/guestfs-testing.1*
 %{_mandir}/man1/libguestfs-test-tool.1*
 
 
@@ -959,6 +959,11 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Tue Nov 22 2011 Richard W.M. Jones <rjones@redhat.com> - 1:1.14.3-1
+- New upstream stable version 1.14.3.
+- libguestfs_jni.a is no longer built.
+- Add guestfs-testing(1) man page.
+
 * Fri Nov 18 2011 Richard W.M. Jones <rjones@redhat.com> - 1:1.14.2-1
 - Rebase Fedora 16 to new stable libguestfs version 1.14.2.
   This was discussed upstream and announced on Fedora devel list.
