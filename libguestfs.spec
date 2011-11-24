@@ -29,7 +29,7 @@
 Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
-Version:       1.15.5
+Version:       1.15.6
 Release:       1%{?dist}
 License:       LGPLv2+
 Group:         Development/Libraries
@@ -957,6 +957,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Thu Nov 24 2011 Richard W.M. Jones <rjones@redhat.com> - 1:1.15.6-1
+- New upstream version 1.15.6.
+
 * Mon Nov 21 2011 Richard W.M. Jones <rjones@redhat.com> - 1:1.15.5-1
 - New upstream version 1.15.5.
 - Add guestfs-testing(1) man page.
@@ -964,7 +967,7 @@ rm -rf $RPM_BUILD_ROOT
 * Thu Nov 17 2011 Richard W.M. Jones <rjones@redhat.com> - 1:1.15.4-2
 - New upstream version 1.15.4.
 - Remove patch which is now upstream.
-- libguestfs_jni.a is no longer built (we don't know why).
+- libguestfs_jni.a is no longer built.
 
 * Fri Nov 11 2011 Richard W.M. Jones <rjones@redhat.com> - 1:1.15.3-3
 - Add upstream patch to disable part of virt-df test.
