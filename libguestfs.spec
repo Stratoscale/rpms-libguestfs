@@ -37,6 +37,10 @@ URL:           http://libguestfs.org/
 Source0:       http://libguestfs.org/download/1.14-development/%{name}-%{version}.tar.gz
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root
 
+%if 0%{?rhel} >= 7
+ExclusiveArch: x86_64
+%endif
+
 # Basic build requirements:
 BuildRequires: /usr/bin/pod2man
 BuildRequires: /usr/bin/pod2text
