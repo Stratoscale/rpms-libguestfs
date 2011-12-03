@@ -1,0 +1,102 @@
+From 615924abaa968398d6529529fa2f31ae23de825b Mon Sep 17 00:00:00 2001
+From: "Richard W.M. Jones" <rjones@redhat.com>
+Date: Sat, 3 Dec 2011 14:34:52 +0000
+Subject: [PATCH] daemon: Use pkg-config to locate Augeas CFLAGS / libraries.
+
+Augeas 0.10 depends on libxml2, so this is now required in the
+appliance (in fact, it was already present).
+
+However this exposed two bugs:
+
+(1) In libguestfs we use a home-brewed recipe for Augeas flags,
+resulting in this error:
+/usr/include/augeas.h:24:25: fatal error: libxml/tree.h: No such file or directory
+
+(2) Augeas's own augeas.pc didn't include the libxml2 flags, so
+it was broken.  This requires a patch to Augeas 0.10, see:
+https://www.redhat.com/archives/augeas-devel/2011-December/msg00008.html
+
+Change to using pkg-config to detect Augeas.  It is still an optional
+library.
+---
+ appliance/packagelist.in |    1 +
+ configure.ac             |   29 +++++++++++++----------------
+ daemon/Makefile.am       |    4 ++--
+ 3 files changed, 16 insertions(+), 18 deletions(-)
+
+diff --git a/appliance/packagelist.in b/appliance/packagelist.in
+index 9b723d0..550ba8b 100644
+--- a/appliance/packagelist.in
++++ b/appliance/packagelist.in
+@@ -105,6 +105,7 @@ gawk
+ grep
+ gzip
+ jfsutils
++libxml2
+ lsof
+ lvm2
+ lzop
+diff --git a/configure.ac b/configure.ac
+index 6e67eb0..19eb601 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -315,22 +315,19 @@ AC_CHECK_LIB([portablexdr],[xdrmem_create],[],[
+         AC_SEARCH_LIBS([xdrmem_create],[rpc xdr nsl])
+         ])
+ 
+-dnl Check for Augeas (now optional).
+-AC_CHECK_LIB([augeas],[aug_match],[
+-        have_augeas=yes
+-        AUGEAS_LIB="-laugeas"
+-
+-        old_LIBS="$LIBS"
+-        LIBS="$LIBS $AUGEAS_LIB"
+-        dnl Check for functions not available in earlier versions of Augeas.
+-        AC_CHECK_FUNCS([aug_load aug_defvar aug_defnode])
+-        LIBS="$old_LIBS"
+-
+-        ],[have_augeas=no])
+-if test "x$have_augeas" = "xyes"; then
+-        AC_DEFINE([HAVE_AUGEAS],[1],[Define to 1 if you have Augeas])
+-fi
+-AC_SUBST([AUGEAS_LIB])
++dnl Check for Augeas (optional).
++PKG_CHECK_MODULES([AUGEAS], [augeas],
++        [AC_SUBST([AUGEAS_CFLAGS])
++         AC_SUBST([AUGEAS_LIBS])
++         AC_DEFINE([HAVE_AUGEAS],[1],[Define to 1 if you have Augeas])
++
++         old_LIBS="$LIBS"
++         LIBS="$LIBS $AUGEAS_LIBS"
++         dnl Check for functions not available in earlier versions of Augeas.
++         AC_CHECK_FUNCS([aug_load aug_defvar aug_defnode])
++         LIBS="$old_LIBS"
++        ],
++        [AC_MSG_WARN([augeas not found, some core features will be disabled])])
+ 
+ dnl Check for libselinux (optional).
+ AC_CHECK_HEADERS([selinux/selinux.h])
+diff --git a/daemon/Makefile.am b/daemon/Makefile.am
+index 71d6a63..a19a157 100644
+--- a/daemon/Makefile.am
++++ b/daemon/Makefile.am
+@@ -166,7 +166,7 @@ guestfsd_LDADD = \
+ 	liberrnostring.a \
+ 	libprotocol.a \
+ 	$(SELINUX_LIB) \
+-	$(AUGEAS_LIB) \
++	$(AUGEAS_LIBS) \
+ 	$(top_builddir)/gnulib/lib/.libs/libgnu.a \
+ 	$(GETADDRINFO_LIB) \
+ 	$(HOSTENT_LIB) \
+@@ -177,6 +177,6 @@ guestfsd_LDADD = \
+ 	$(SERVENT_LIB)
+ 
+ guestfsd_CPPFLAGS = -I$(top_srcdir)/gnulib/lib -I$(top_builddir)/gnulib/lib
+-guestfsd_CFLAGS = $(WARN_CFLAGS) $(WERROR_CFLAGS)
++guestfsd_CFLAGS = $(WARN_CFLAGS) $(WERROR_CFLAGS) $(AUGEAS_CFLAGS)
+ 
+ .PHONY: force
+-- 
+1.7.6
+

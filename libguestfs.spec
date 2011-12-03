@@ -30,12 +30,15 @@ Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
 Version:       1.15.9
-Release:       1%{?dist}
+Release:       2%{?dist}
 License:       LGPLv2+
 Group:         Development/Libraries
 URL:           http://libguestfs.org/
 Source0:       http://libguestfs.org/download/1.15-development/%{name}-%{version}.tar.gz
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root
+
+# Upstream patch to fix Augeas library detection.
+Patch0:        0001-daemon-Use-pkg-config-to-locate-Augeas-CFLAGS-librar.patch
 
 %if 0%{?rhel} >= 7
 ExclusiveArch: x86_64
@@ -100,6 +103,7 @@ BuildRequires: iputils
 BuildRequires: jfsutils
 BuildRequires: kernel
 BuildRequires: libselinux
+BuildRequires: libxml2
 BuildRequires: lsof
 BuildRequires: lvm2
 BuildRequires: lzop
@@ -154,6 +158,7 @@ Requires:      iputils
 Requires:      jfsutils
 Requires:      kernel
 Requires:      libselinux
+Requires:      libxml2
 Requires:      lsof
 Requires:      lvm2
 Requires:      lzop
@@ -586,6 +591,8 @@ for %{name}.
 %prep
 %setup -q
 
+%patch0 -p1
+
 mkdir -p daemon/m4
 
 # Replace developer-specific README that ships with libguestfs, with
@@ -961,8 +968,11 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
-* Sat Dec  3 2011 Richard W.M. Jones <rjones@redhat.com> - 1:1.15.9-1
+* Sat Dec  3 2011 Richard W.M. Jones <rjones@redhat.com> - 1:1.15.9-2
 - New upstream version 1.15.9.
+- Add upstream patch to fix Augeas library detection.
+- Appliance explicitly requires libxml2 (because Augeas >= 0.10 requires it),
+  although it was implicitly included already.
 
 * Tue Nov 29 2011 Richard W.M. Jones <rjones@redhat.com> - 1:1.15.8-1
 - New upstream version 1.15.8.
