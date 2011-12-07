@@ -1,0 +1,254 @@
+From 564a659873c51b8bb0eb59415882a536a3526c8a Mon Sep 17 00:00:00 2001
+From: Matthew Booth <mbooth@redhat.com>
+Date: Thu, 24 Nov 2011 12:09:03 +0000
+Subject: [PATCH 08/10] Rename mdadm_ apis to md_
+
+This change renames the following 2 apis:
+* mdadm_create -> md_create
+* mdadm_detail -> md_detail
+
+This is more consistent with list_md_devices, and removes a reference to an
+implementation detail from the api.
+(cherry picked from commit 182c25b2a42e9a8f76beba440da328e37f18c9b9)
+---
+ daemon/md.c                          |   24 ++++++++++++------------
+ generator/generator_actions.ml       |    4 ++--
+ images/guest-aux/make-fedora-img.pl  |    6 +++---
+ regressions/test-list-filesystems.sh |    2 +-
+ regressions/test-list-md-devices.sh  |    2 +-
+ regressions/test-mdadm.sh            |   26 +++++++++++++-------------
+ 6 files changed, 32 insertions(+), 32 deletions(-)
+
+diff --git a/daemon/md.c b/daemon/md.c
+index 82ddb82..8e4ff88 100644
+--- a/daemon/md.c
++++ b/daemon/md.c
+@@ -50,9 +50,9 @@ count_bits (uint64_t bitmap)
+ 
+ /* Takes optional arguments, consult optargs_bitmask. */
+ int
+-do_mdadm_create (const char *name, char *const *devices,
+-                 int64_t missingbitmap, int nrdevices, int spare,
+-                 int64_t chunk, const char *level)
++do_md_create (const char *name, char *const *devices,
++              int64_t missingbitmap, int nrdevices, int spare,
++              int64_t chunk, const char *level)
+ {
+   char nrdevices_s[32];
+   char spare_s[32];
+@@ -63,10 +63,10 @@ do_mdadm_create (const char *name, char *const *devices,
+   uint64_t umissingbitmap = (uint64_t) missingbitmap;
+ 
+   /* Check the optional parameters and set defaults where appropriate. */
+-  if (!(optargs_bitmask & GUESTFS_MDADM_CREATE_MISSINGBITMAP_BITMASK))
++  if (!(optargs_bitmask & GUESTFS_MD_CREATE_MISSINGBITMAP_BITMASK))
+     umissingbitmap = 0;
+ 
+-  if (optargs_bitmask & GUESTFS_MDADM_CREATE_SPARE_BITMASK) {
++  if (optargs_bitmask & GUESTFS_MD_CREATE_SPARE_BITMASK) {
+     if (spare < 0) {
+       reply_with_error ("spare must not be negative");
+       return -1;
+@@ -75,7 +75,7 @@ do_mdadm_create (const char *name, char *const *devices,
+   else
+     spare = 0;
+ 
+-  if (optargs_bitmask & GUESTFS_MDADM_CREATE_NRDEVICES_BITMASK) {
++  if (optargs_bitmask & GUESTFS_MD_CREATE_NRDEVICES_BITMASK) {
+     if (nrdevices < 2) {
+       reply_with_error ("nrdevices is less than 2");
+       return -1;
+@@ -84,7 +84,7 @@ do_mdadm_create (const char *name, char *const *devices,
+   else
+     nrdevices = count_strings (devices) + count_bits (umissingbitmap);
+ 
+-  if (optargs_bitmask & GUESTFS_MDADM_CREATE_LEVEL_BITMASK) {
++  if (optargs_bitmask & GUESTFS_MD_CREATE_LEVEL_BITMASK) {
+     if (STRNEQ (level, "linear") && STRNEQ (level, "raid0") &&
+         STRNEQ (level, "0") && STRNEQ (level, "stripe") &&
+         STRNEQ (level, "raid1") && STRNEQ (level, "1") &&
+@@ -100,7 +100,7 @@ do_mdadm_create (const char *name, char *const *devices,
+   else
+     level = "raid1";
+ 
+-  if (optargs_bitmask & GUESTFS_MDADM_CREATE_CHUNK_BITMASK) {
++  if (optargs_bitmask & GUESTFS_MD_CREATE_CHUNK_BITMASK) {
+     /* chunk is bytes in the libguestfs API, but K when we pass it to mdadm */
+     if ((chunk & 1023) != 0) {
+       reply_with_error ("chunk size must be a multiple of 1024 bytes");
+@@ -131,12 +131,12 @@ do_mdadm_create (const char *name, char *const *devices,
+   ADD_ARG (argv, i, "--raid-devices");
+   snprintf (nrdevices_s, sizeof nrdevices_s, "%d", nrdevices);
+   ADD_ARG (argv, i, nrdevices_s);
+-  if (optargs_bitmask & GUESTFS_MDADM_CREATE_SPARE_BITMASK) {
++  if (optargs_bitmask & GUESTFS_MD_CREATE_SPARE_BITMASK) {
+     ADD_ARG (argv, i, "--spare-devices");
+     snprintf (spare_s, sizeof spare_s, "%d", spare);
+     ADD_ARG (argv, i, spare_s);
+   }
+-  if (optargs_bitmask & GUESTFS_MDADM_CREATE_CHUNK_BITMASK) {
++  if (optargs_bitmask & GUESTFS_MD_CREATE_CHUNK_BITMASK) {
+     ADD_ARG (argv, i, "--chunk");
+     snprintf (chunk_s, sizeof chunk_s, "%" PRIi64, chunk / 1024);
+     ADD_ARG (argv, i, chunk_s);
+@@ -233,7 +233,7 @@ error:
+ }
+ 
+ char **
+-do_mdadm_detail(const char *md)
++do_md_detail(const char *md)
+ {
+   int r;
+ 
+@@ -290,7 +290,7 @@ do_mdadm_detail(const char *md)
+     } else {
+       /* Ignore lines with no equals sign (shouldn't happen). Log to stderr so
+        * it will show up in LIBGUESTFS_DEBUG. */
+-      fprintf(stderr, "mdadm-detail: unexpected output ignored: %s", line);
++      fprintf(stderr, "md-detail: unexpected mdadm output ignored: %s", line);
+     }
+   }
+ 
+diff --git a/generator/generator_actions.ml b/generator/generator_actions.ml
+index 0d17044..849db60 100644
+--- a/generator/generator_actions.ml
++++ b/generator/generator_actions.ml
+@@ -6332,7 +6332,7 @@ is for copying blocks within existing files.  See C<guestfs_cp>,
+ C<guestfs_cp_a> and C<guestfs_mv> for general file copying and
+ moving functions.");
+ 
+-  ("mdadm_create", (RErr, [String "name"; DeviceList "devices"], [Int64 "missingbitmap"; Int "nrdevices"; Int "spare"; Int64 "chunk"; String "level"]), 299, [Optional "mdadm"],
++  ("md_create", (RErr, [String "name"; DeviceList "devices"], [Int64 "missingbitmap"; Int "nrdevices"; Int "spare"; Int64 "chunk"; String "level"]), 299, [Optional "mdadm"],
+    [],
+    "create a Linux md (RAID) device",
+    "\
+@@ -6396,7 +6396,7 @@ If not set, this defaults to C<raid1>.
+    "\
+ List all Linux md devices.");
+ 
+-  ("mdadm_detail", (RHashtable "info", [Device "md"], []), 301,  [Optional "mdadm"],
++  ("md_detail", (RHashtable "info", [Device "md"], []), 301,  [Optional "mdadm"],
+    [],
+    "obtain metadata for an MD device",
+    "\
+diff --git a/images/guest-aux/make-fedora-img.pl b/images/guest-aux/make-fedora-img.pl
+index 60d0aa2..de72086 100755
+--- a/images/guest-aux/make-fedora-img.pl
++++ b/images/guest-aux/make-fedora-img.pl
+@@ -92,8 +92,8 @@ EOF
+     $g->part_add("/dev/sd$_", 'p', 524288, -64);
+   }
+ 
+-  $g->mdadm_create('boot', ['/dev/sda1', '/dev/sdb1']);
+-  $g->mdadm_create('root', ['/dev/sda2', '/dev/sdb2']);
++  $g->md_create('boot', ['/dev/sda1', '/dev/sdb1']);
++  $g->md_create('root', ['/dev/sda2', '/dev/sdb2']);
+ 
+   open(my $mdadm, '>', 'mdadm.tmp') or die;
+   print $mdadm <<EOF;
+@@ -103,7 +103,7 @@ EOF
+ 
+   my $i = 0;
+   foreach ('boot', 'root') {
+-    my %detail = $g->mdadm_detail("/dev/md/$_");
++    my %detail = $g->md_detail("/dev/md/$_");
+     print $mdadm "ARRAY /dev/md$i level=raid1 num-devices=2 UUID=",
+                  $detail{uuid}, "\n";
+     $i++;
+diff --git a/regressions/test-list-filesystems.sh b/regressions/test-list-filesystems.sh
+index 1144286..353cdd0 100755
+--- a/regressions/test-list-filesystems.sh
++++ b/regressions/test-list-filesystems.sh
+@@ -50,7 +50,7 @@ vgcreate vg0 /dev/sdb1
+ lvcreate lv0 vg0 16
+ 
+ # Create an md device from sda2 and sdb2
+-mdadm-create test "/dev/sda2 /dev/sdb2" level:raid1
++md-create test "/dev/sda2 /dev/sdb2" level:raid1
+ 
+ # Create filesystems
+ mkfs ext3 /dev/sda1
+diff --git a/regressions/test-list-md-devices.sh b/regressions/test-list-md-devices.sh
+index cd12d80..0216ca9 100755
+--- a/regressions/test-list-md-devices.sh
++++ b/regressions/test-list-md-devices.sh
+@@ -31,7 +31,7 @@ run
+ list-md-devices
+ 
+ # Create a raid1 based on the 2 disks
+-mdadm-create test "/dev/sda /dev/sdb" level:raid1
++md-create test "/dev/sda /dev/sdb" level:raid1
+ EOF
+ )
+ 
+diff --git a/regressions/test-mdadm.sh b/regressions/test-mdadm.sh
+index 8119561..e9b0db5 100755
+--- a/regressions/test-mdadm.sh
++++ b/regressions/test-mdadm.sh
+@@ -16,7 +16,7 @@
+ # along with this program; if not, write to the Free Software
+ # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+ 
+-# Test guestfish mdadm-create command.
++# Test guestfish md-create and md-detail commands.
+ 
+ set -e
+ 
+@@ -53,16 +53,16 @@ part-add /dev/sdd p 12288 16383
+ part-add /dev/sdd p 16384 20479
+ 
+ # RAID 1.
+-mdadm-create r1t1 "/dev/sda1 /dev/sdb1"
+-mdadm-create r1t2 "/dev/sdc1 /dev/sdd1" chunk:65536
++md-create r1t1 "/dev/sda1 /dev/sdb1"
++md-create r1t2 "/dev/sdc1 /dev/sdd1" chunk:65536
+ 
+ # RAID 5.
+-mdadm-create r5t1 "/dev/sda2 /dev/sdb2 /dev/sdc2 /dev/sdd2" \
++md-create r5t1 "/dev/sda2 /dev/sdb2 /dev/sdc2 /dev/sdd2" \
+   missingbitmap:0x10 nrdevices:4 spare:1 level:5
+ 
+-mdadm-create r5t2 "/dev/sda3 /dev/sdb3" missingbitmap:0x1 level:5
++md-create r5t2 "/dev/sda3 /dev/sdb3" missingbitmap:0x1 level:5
+ 
+-mdadm-create r5t3 "/dev/sdc3 /dev/sdd3" \
++md-create r5t3 "/dev/sdc3 /dev/sdd3" \
+   missingbitmap:0x6 nrdevices:2 spare:2 level:5
+ 
+ # Make some filesystems and put some content on the
+@@ -100,11 +100,11 @@ eval `../fish/guestfish --listen`
+ ../fish/guestfish --remote run
+ 
+ for md in `../fish/guestfish --remote list-md-devices`; do
+-  ../fish/guestfish --remote mdadm-detail "${md}" > mdadm-detail.out
++  ../fish/guestfish --remote md-detail "${md}" > md-detail.out
+ 
+-  sed 's/:\s*/=/' mdadm-detail.out > mdadm-detail.out.sh
+-  . mdadm-detail.out.sh
+-  rm -f mdadm-detail.out.sh
++  sed 's/:\s*/=/' md-detail.out > md-detail.out.sh
++  . md-detail.out.sh
++  rm -f md-detail.out.sh
+ 
+   error=0
+   case "$name" in
+@@ -141,8 +141,8 @@ for md in `../fish/guestfish --remote list-md-devices`; do
+   [ ! -z "$metadata" ] || error=1
+ 
+   if [ "$error" == "1" ]; then
+-    echo "$0: Unexpected output from mdadm-detail for device $md"
+-    cat mdadm-detail.out
++    echo "$0: Unexpected output from md-detail for device $md"
++    cat md-detail.out
+     ../fish/guestfish --remote exit
+     exit 1
+   fi
+@@ -150,4 +150,4 @@ done
+ 
+ ../fish/guestfish --remote exit
+ 
+-rm -f mdadm-detail.out md-test1.img md-test2.img md-test3.img md-test4.img
++rm -f md-detail.out md-test1.img md-test2.img md-test3.img md-test4.img
+-- 
+1.7.6
+

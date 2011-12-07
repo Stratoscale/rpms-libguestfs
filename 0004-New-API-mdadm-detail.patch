@@ -1,0 +1,228 @@
+From 123fdc57993380c8b3fc00a0f229bef6d721819c Mon Sep 17 00:00:00 2001
+From: Matthew Booth <mbooth@redhat.com>
+Date: Thu, 17 Nov 2011 12:43:49 +0000
+Subject: [PATCH 04/10] New API: mdadm-detail. (cherry picked from commit
+ c4bd6bba8d88ecf1ebf4a9c2c80a407d9971aaf7)
+
+---
+ daemon/md.c                    |   80 ++++++++++++++++++++++++++++++++++++++++
+ generator/generator_actions.ml |   31 +++++++++++++++
+ regressions/test-mdadm.sh      |   60 +++++++++++++++++++++++++++++-
+ src/MAX_PROC_NR                |    2 +-
+ 4 files changed, 171 insertions(+), 2 deletions(-)
+
+diff --git a/daemon/md.c b/daemon/md.c
+index 257bd0f..82ddb82 100644
+--- a/daemon/md.c
++++ b/daemon/md.c
+@@ -27,6 +27,7 @@
+ #include "daemon.h"
+ #include "actions.h"
+ #include "optgroups.h"
++#include "c-ctype.h"
+ 
+ int
+ optgroup_mdadm_available (void)
+@@ -230,3 +231,82 @@ error:
+   if (r != NULL) free_strings (r);
+   return NULL;
+ }
++
++char **
++do_mdadm_detail(const char *md)
++{
++  int r;
++
++  char *out = NULL, *err = NULL;
++  char **lines = NULL;
++
++  char **ret = NULL;
++  int size = 0, alloc = 0;
++
++  const char *mdadm[] = { "mdadm", "-DY", md, NULL };
++  r = commandv(&out, &err, mdadm);
++  if (r == -1) {
++    reply_with_error("%s", err);
++    goto error;
++  }
++
++  /* Split the command output into lines */
++  lines = split_lines(out);
++  if (lines == NULL) {
++    reply_with_perror("malloc");
++    goto error;
++  }
++
++  /* Parse the output of mdadm -DY:
++   * MD_LEVEL=raid1
++   * MD_DEVICES=2
++   * MD_METADATA=1.0
++   * MD_UUID=cfa81b59:b6cfbd53:3f02085b:58f4a2e1
++   * MD_NAME=localhost.localdomain:0
++   */
++  for (char **i = lines; *i != NULL; i++) {
++    char *line = *i;
++
++    /* Skip blank lines (shouldn't happen) */
++    if (line[0] == '\0') continue;
++
++    /* Split the line in 2 at the equals sign */
++    char *eq = strchr(line, '=');
++    if (eq) {
++      *eq = '\0'; eq++;
++
++      /* Remove the MD_ prefix from the key and translate the remainder to lower
++       * case */
++      if (STRPREFIX(line, "MD_")) {
++        line += 3;
++        for (char *j = line; *j != '\0'; j++) {
++          *j = c_tolower(*j);
++        }
++      }
++
++      /* Add the key/value pair to the output */
++      if (add_string(&ret, &size, &alloc, line) == -1 ||
++          add_string(&ret, &size, &alloc, eq) == -1) goto error;
++    } else {
++      /* Ignore lines with no equals sign (shouldn't happen). Log to stderr so
++       * it will show up in LIBGUESTFS_DEBUG. */
++      fprintf(stderr, "mdadm-detail: unexpected output ignored: %s", line);
++    }
++  }
++
++  free(out);
++  free(err);
++  free(lines); /* We freed the contained strings when we freed out */
++
++  if (add_string(&ret, &size, &alloc, NULL) == -1) return NULL;
++
++  return ret;
++
++error:
++  free(out);
++  free(err);
++  if (lines) free(lines);
++  if (ret) free_strings(ret);
++
++  return NULL;
++}
+diff --git a/generator/generator_actions.ml b/generator/generator_actions.ml
+index 9255a59..0d17044 100644
+--- a/generator/generator_actions.ml
++++ b/generator/generator_actions.ml
+@@ -6396,6 +6396,37 @@ If not set, this defaults to C<raid1>.
+    "\
+ List all Linux md devices.");
+ 
++  ("mdadm_detail", (RHashtable "info", [Device "md"], []), 301,  [Optional "mdadm"],
++   [],
++   "obtain metadata for an MD device",
++   "\
++This command exposes the output of 'mdadm -DY <md>'. The following fields are
++usually present in the returned hash. Other fields may also be present.
++
++=over
++
++=item C<level>
++
++The raid level of the MD device.
++
++=item C<devices>
++
++The number of underlying devices in the MD device.
++
++=item C<metadata>
++
++The metadata version used.
++
++=item C<uuid>
++
++The UUID of the MD device.
++
++=item C<name>
++
++The name of the MD device.
++
++=back");
++
+ ]
+ 
+ let all_functions = non_daemon_functions @ daemon_functions
+diff --git a/regressions/test-mdadm.sh b/regressions/test-mdadm.sh
+index 3ad4f22..8119561 100755
+--- a/regressions/test-mdadm.sh
++++ b/regressions/test-mdadm.sh
+@@ -92,4 +92,62 @@ write /r5t3/baz "testing"
+ 
+ EOF
+ 
+-rm -f md-test1.img md-test2.img md-test3.img md-test4.img
++eval `../fish/guestfish --listen`
++../fish/guestfish --remote add-ro md-test1.img
++../fish/guestfish --remote add-ro md-test2.img
++../fish/guestfish --remote add-ro md-test3.img
++../fish/guestfish --remote add-ro md-test4.img
++../fish/guestfish --remote run
++
++for md in `../fish/guestfish --remote list-md-devices`; do
++  ../fish/guestfish --remote mdadm-detail "${md}" > mdadm-detail.out
++
++  sed 's/:\s*/=/' mdadm-detail.out > mdadm-detail.out.sh
++  . mdadm-detail.out.sh
++  rm -f mdadm-detail.out.sh
++
++  error=0
++  case "$name" in
++    *:r1t1)
++      [ "$level" == "raid1" ] || error=1
++      [ "$devices" == "2" ] || error=1
++      ;;
++
++    *:r1t2)
++      [ "$level" == "raid1" ] || error=1
++      [ "$devices" == "2" ] || error=1
++      ;;
++
++    *:r5t1)
++      [ "$level" == "raid5" ] || error=1
++      [ "$devices" == "4" ] || error=1
++      ;;
++
++    *:r5t2)
++      [ "$level" == "raid5" ] || error=1
++      [ "$devices" == "3" ] || error=1
++      ;;
++
++    *:r5t3)
++      [ "$level" == "raid5" ] || error=1
++      [ "$devices" == "2" ] || error=1
++      ;;
++
++    *)
++      error=1
++  esac
++
++  [[ "$uuid" =~ ([0-9a-f]{8}:){3}[0-9a-f]{8} ]] || error=1
++  [ ! -z "$metadata" ] || error=1
++
++  if [ "$error" == "1" ]; then
++    echo "$0: Unexpected output from mdadm-detail for device $md"
++    cat mdadm-detail.out
++    ../fish/guestfish --remote exit
++    exit 1
++  fi
++done
++
++../fish/guestfish --remote exit
++
++rm -f mdadm-detail.out md-test1.img md-test2.img md-test3.img md-test4.img
+diff --git a/src/MAX_PROC_NR b/src/MAX_PROC_NR
+index 697cb3a..d8fc48a 100644
+--- a/src/MAX_PROC_NR
++++ b/src/MAX_PROC_NR
+@@ -1 +1 @@
+-300
++301
+-- 
+1.7.6
+

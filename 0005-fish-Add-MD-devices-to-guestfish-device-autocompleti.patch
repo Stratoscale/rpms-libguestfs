@@ -1,0 +1,28 @@
+From 84e6bab28792b44b9b42dad056b426c72c7c8fc1 Mon Sep 17 00:00:00 2001
+From: Matthew Booth <mbooth@redhat.com>
+Date: Mon, 21 Nov 2011 15:23:18 +0000
+Subject: [PATCH 05/10] fish: Add MD devices to guestfish device
+ autocompletion. (cherry picked from commit
+ 0cdd9444744e7ae0d82fe4c94d13e9ddd00e8e2d)
+
+---
+ fish/destpaths.c |    3 +++
+ 1 files changed, 3 insertions(+), 0 deletions(-)
+
+diff --git a/fish/destpaths.c b/fish/destpaths.c
+index c7b9dc5..f3cf0f2 100644
+--- a/fish/destpaths.c
++++ b/fish/destpaths.c
+@@ -158,6 +158,9 @@ complete_dest_paths_generator (const char *text, int state)
+ 
+       strs = guestfs_list_dm_devices (g);
+       APPEND_STRS_AND_FREE;
++
++      strs = guestfs_list_md_devices (g);
++      APPEND_STRS_AND_FREE;
+     }
+ 
+     if (len < 1 || text[0] == '/') {
+-- 
+1.7.6
+

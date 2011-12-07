@@ -29,13 +29,24 @@
 Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
-Version:       1.14.5
+Version:       1.14.6
 Release:       1%{?dist}
 License:       LGPLv2+
 Group:         Development/Libraries
 URL:           http://libguestfs.org/
 Source0:       http://libguestfs.org/download/1.14-development/%{name}-%{version}.tar.gz
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root
+
+Patch0001:     0001-New-API-mdadm-create-for-creating-MD-devices.patch
+Patch0002:     0002-New-API-list-md-devices.patch
+Patch0003:     0003-Update-list-filesystems-to-check-md-devices.patch
+Patch0004:     0004-New-API-mdadm-detail.patch
+Patch0005:     0005-fish-Add-MD-devices-to-guestfish-device-autocompleti.patch
+Patch0006:     0006-build-Create-an-MD-variant-of-the-dummy-Fedora-image.patch
+Patch0007:     0007-md-Inspect-MD-devices.patch
+Patch0008:     0008-Rename-mdadm_-apis-to-md_.patch
+Patch0009:     0009-inspection-Cleanup-iteration-over-fstab-entries-in-i.patch
+Patch0010:     0010-inspection-Handle-MD-devices-in-fstab.patch
 
 %if 0%{?rhel} >= 7
 ExclusiveArch: x86_64
@@ -66,6 +77,9 @@ BuildRequires: libconfig-devel
 BuildRequires: ocaml
 BuildRequires: ocaml-findlib-devel
 BuildRequires: systemd-units
+
+# Use git + autotools when applying patches.
+BuildRequires: git, automake, autoconf, libtool, gettext
 
 # This is only needed for RHEL 5 because readline-devel doesn't
 # properly depend on it, but doesn't do any harm on other platforms:
@@ -588,6 +602,17 @@ for %{name}.
 %prep
 %setup -q
 
+git init
+git config user.email "libguestfs@redhat.com"
+git config user.name "libguestfs developers"
+git add .
+git commit -a -q -m "%{name} %{version}"
+git am --whitespace=nowarn %{patches}
+
+# Patches affect Makefile.am and configure.ac, so rerun autotools.
+autoreconf
+autoconf
+
 mkdir -p daemon/m4
 
 # Replace developer-specific README that ships with libguestfs, with
@@ -963,6 +988,11 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Tue Dec  6 2011 Richard W.M. Jones <rjones@redhat.com> - 1:1.14.6-1
+- New upstream stable version 1.14.6.
+- Add support for inspection of MD devices (RHBZ#760245).
+- Use git to manage patches.
+
 * Fri Dec  2 2011 Richard W.M. Jones <rjones@redhat.com> - 1:1.14.5-1
 - New upstream stable version 1.14.5.
 

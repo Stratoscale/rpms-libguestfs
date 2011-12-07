@@ -1,0 +1,280 @@
+From ce20d5484cdaac1258e8c4328183bdb4967856d1 Mon Sep 17 00:00:00 2001
+From: Matthew Booth <mbooth@redhat.com>
+Date: Thu, 10 Nov 2011 17:56:10 +0000
+Subject: [PATCH 02/10] New API: list-md-devices.
+
+Return a list of Linux MD devices detected in the guest.
+
+This API complements list_devices, list_partitions, list_lvs and
+list_dm_devices.
+(cherry picked from commit 00a0fab50b3803be8db5b7d9fa0869a70b0da556)
+---
+ appliance/init                      |    3 ++
+ daemon/daemon.h                     |    1 +
+ daemon/guestfsd.c                   |   24 +++++++++----
+ daemon/md.c                         |   62 +++++++++++++++++++++++++++++++++++
+ generator/generator_actions.ml      |    6 +++
+ regressions/Makefile.am             |    1 +
+ regressions/test-list-md-devices.sh |   59 +++++++++++++++++++++++++++++++++
+ src/MAX_PROC_NR                     |    2 +-
+ 8 files changed, 150 insertions(+), 8 deletions(-)
+ create mode 100755 regressions/test-list-md-devices.sh
+
+diff --git a/appliance/init b/appliance/init
+index ee80334..0f32a55 100755
+--- a/appliance/init
++++ b/appliance/init
+@@ -70,6 +70,9 @@ ifconfig lo 127.0.0.1
+ ifconfig eth0 169.254.2.10
+ route add default gw 169.254.2.2
+ 
++# Scan for MDs.
++mdadm -As --auto=yes --run
++
+ # Scan for LVM.
+ modprobe dm_mod ||:
+ 
+diff --git a/daemon/daemon.h b/daemon/daemon.h
+index 489c38d..69097c3 100644
+--- a/daemon/daemon.h
++++ b/daemon/daemon.h
+@@ -47,6 +47,7 @@ extern int xwrite (int sock, const void *buf, size_t len)
+ extern int xread (int sock, void *buf, size_t len)
+   __attribute__((__warn_unused_result__));
+ 
++extern int add_string_nodup (char ***argv, int *size, int *alloc, char *str);
+ extern int add_string (char ***argv, int *size, int *alloc, const char *str);
+ extern size_t count_strings (char *const *argv);
+ extern void sort_strings (char **argv, int len);
+diff --git a/daemon/guestfsd.c b/daemon/guestfsd.c
+index eacbc1d..38cfd1a 100644
+--- a/daemon/guestfsd.c
++++ b/daemon/guestfsd.c
+@@ -415,10 +415,9 @@ xread (int sock, void *v_buf, size_t len)
+ }
+ 
+ int
+-add_string (char ***argv, int *size, int *alloc, const char *str)
++add_string_nodup (char ***argv, int *size, int *alloc, char *str)
+ {
+   char **new_argv;
+-  char *new_str;
+ 
+   if (*size >= *alloc) {
+     *alloc += 64;
+@@ -426,25 +425,36 @@ add_string (char ***argv, int *size, int *alloc, const char *str)
+     if (new_argv == NULL) {
+       reply_with_perror ("realloc");
+       free_strings (*argv);
++      *argv = NULL;
+       return -1;
+     }
+     *argv = new_argv;
+   }
+ 
++  (*argv)[*size] = str;
++
++  (*size)++;
++  return 0;
++}
++
++int
++add_string (char ***argv, int *size, int *alloc, const char *str)
++{
++  char *new_str;
++
+   if (str) {
+     new_str = strdup (str);
+     if (new_str == NULL) {
+       reply_with_perror ("strdup");
+       free_strings (*argv);
++      *argv = NULL;
+       return -1;
+     }
+-  } else
++  } else {
+     new_str = NULL;
++  }
+ 
+-  (*argv)[*size] = new_str;
+-
+-  (*size)++;
+-  return 0;
++  return add_string_nodup (argv, size, alloc, new_str);
+ }
+ 
+ size_t
+diff --git a/daemon/md.c b/daemon/md.c
+index 1adb4ac..257bd0f 100644
+--- a/daemon/md.c
++++ b/daemon/md.c
+@@ -168,3 +168,65 @@ do_mdadm_create (const char *name, char *const *devices,
+ 
+   return 0;
+ }
++
++static int
++glob_errfunc (const char *epath, int eerrno)
++{
++  fprintf (stderr, "glob: failure reading %s: %s\n", epath, strerror (eerrno));
++  return 1;
++}
++
++char **
++do_list_md_devices (void)
++{
++  char **r = NULL;
++  int size = 0, alloc = 0;
++  glob_t mds;
++
++  memset(&mds, 0, sizeof(mds));
++
++#define PREFIX "/sys/block/md"
++#define SUFFIX "/md"
++
++  /* Look for directories under /sys/block matching md[0-9]*
++   * As an additional check, we also make sure they have a md subdirectory.
++   */
++  int err = glob (PREFIX "[0-9]*" SUFFIX, GLOB_ERR, glob_errfunc, &mds);
++  if (err == GLOB_NOSPACE) {
++    reply_with_error ("glob: returned GLOB_NOSPACE: "
++                      "rerun with LIBGUESTFS_DEBUG=1");
++    goto error;
++  } else if (err == GLOB_ABORTED) {
++    reply_with_error ("glob: returned GLOB_ABORTED: "
++                      "rerun with LIBGUESTFS_DEBUG=1");
++    goto error;
++  }
++
++  for (size_t i = 0; i < mds.gl_pathc; i++) {
++    size_t len = strlen (mds.gl_pathv[i]) - strlen (PREFIX) - strlen (SUFFIX);
++
++#define DEV "/dev/md"
++    char *dev = malloc (strlen(DEV) + len  + 1);
++    if (NULL == dev) {
++      reply_with_perror("malloc");
++      goto error;
++    }
++
++    char *n = dev;
++    n = mempcpy(n, DEV, strlen(DEV));
++    n = mempcpy(n, &mds.gl_pathv[i][strlen(PREFIX)], len);
++    *n = '\0';
++
++    if (add_string_nodup (&r, &size, &alloc, dev) == -1) goto error;
++  }
++
++  if (add_string_nodup (&r, &size, &alloc, NULL) == -1) goto error;
++  globfree (&mds);
++
++  return r;
++
++error:
++  globfree (&mds);
++  if (r != NULL) free_strings (r);
++  return NULL;
++}
+diff --git a/generator/generator_actions.ml b/generator/generator_actions.ml
+index 80814f5..9255a59 100644
+--- a/generator/generator_actions.ml
++++ b/generator/generator_actions.ml
+@@ -6390,6 +6390,12 @@ If not set, this defaults to C<raid1>.
+ 
+ =back");
+ 
++  ("list_md_devices", (RStringList "devices", [], []), 300, [],
++   [],
++   "list Linux md (RAID) devices",
++   "\
++List all Linux md devices.");
++
+ ]
+ 
+ let all_functions = non_daemon_functions @ daemon_functions
+diff --git a/regressions/Makefile.am b/regressions/Makefile.am
+index 5263905..f273464 100644
+--- a/regressions/Makefile.am
++++ b/regressions/Makefile.am
+@@ -45,6 +45,7 @@ TESTS = \
+ 	test-guestfish-tilde.sh \
+ 	test-inspect-fstab.sh \
+ 	test-launch-race.pl \
++	test-list-md-devices.sh \
+ 	test-luks.sh \
+ 	test-luks-list.sh \
+ 	test-lvm-filtering.sh \
+diff --git a/regressions/test-list-md-devices.sh b/regressions/test-list-md-devices.sh
+new file mode 100755
+index 0000000..cd12d80
+--- /dev/null
++++ b/regressions/test-list-md-devices.sh
+@@ -0,0 +1,59 @@
++#!/bin/bash -
++# libguestfs
++# Copyright (C) 2011 Red Hat Inc.
++#
++# This program is free software; you can redistribute it and/or modify
++# it under the terms of the GNU General Public License as published by
++# the Free Software Foundation; either version 2 of the License, or
++# (at your option) any later version.
++#
++# This program is distributed in the hope that it will be useful,
++# but WITHOUT ANY WARRANTY; without even the implied warranty of
++# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++# GNU General Public License for more details.
++#
++# You should have received a copy of the GNU General Public License
++# along with this program; if not, write to the Free Software
++# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
++
++# Test guestfish list-md-devices command
++
++set -e
++
++output=$(
++../fish/guestfish <<EOF
++# Add 2 empty disks
++sparse md-test1.img 100M
++sparse md-test2.img 100M
++run
++
++# list-md-devices should return nothing
++list-md-devices
++
++# Create a raid1 based on the 2 disks
++mdadm-create test "/dev/sda /dev/sdb" level:raid1
++EOF
++)
++
++# Ensure list-md-devices above returned nothing
++if [ ! -z "$output" ]; then
++    echo "$0: error: output of list-md-devices with no MD devices did not match expected output"
++    echo $output
++    exit 1;
++fi
++
++# Ensure list-md-devices now returns the newly created md device
++output=$(
++../fish/guestfish -a md-test1.img -a md-test2.img <<EOF
++run
++list-md-devices
++EOF
++)
++
++if [ "$output" != "/dev/md127" ]; then
++    echo "$0: error: output of list-md-devices did not match expected output"
++    echo "$output"
++    exit 1
++fi
++
++rm -f md-test1.img md-test2.img
+diff --git a/src/MAX_PROC_NR b/src/MAX_PROC_NR
+index 03a5b41..697cb3a 100644
+--- a/src/MAX_PROC_NR
++++ b/src/MAX_PROC_NR
+@@ -1 +1 @@
+-299
++300
+-- 
+1.7.6
+
