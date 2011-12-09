@@ -29,7 +29,7 @@
 Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
-Version:       1.14.6
+Version:       1.14.7
 Release:       1%{?dist}
 License:       LGPLv2+
 Group:         Development/Libraries
@@ -988,6 +988,17 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Fri Dec  9 2011 Richard W.M. Jones <rjones@redhat.com> - 1:1.14.7-1
+- New upstream stable version 1.14.7.
+- Rebase patches.
+- Fix guestmount not always failing with EXIT_FAILURE if fuse_main failed.
+- Fix guestmount -i option leaving dead filesystem if root failed to mount.
+- Fix utimens so it doesn't hang on named pipes (RHBZ#761460).
+- Allow utimens to work for directories (RHBZ#761451).
+- copy-in/copy-out: Wait for the tar subprocess only (RHBZ#760669).
+- fish: Improve error messages when no OS / multi-boot OS found with inspection
+  (RHBZ#760775).
+
 * Tue Dec  6 2011 Richard W.M. Jones <rjones@redhat.com> - 1:1.14.6-1
 - New upstream stable version 1.14.6.
 - Add support for inspection of MD devices (RHBZ#760245).

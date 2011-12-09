@@ -1,4 +1,4 @@
-From 84e6bab28792b44b9b42dad056b426c72c7c8fc1 Mon Sep 17 00:00:00 2001
+From 2bb62516857b807de39f131c18468155c30a19e3 Mon Sep 17 00:00:00 2001
 From: Matthew Booth <mbooth@redhat.com>
 Date: Mon, 21 Nov 2011 15:23:18 +0000
 Subject: [PATCH 05/10] fish: Add MD devices to guestfish device

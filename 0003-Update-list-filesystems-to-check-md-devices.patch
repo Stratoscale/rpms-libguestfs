@@ -1,4 +1,4 @@
-From d8064e0d76f9a5b0efec6224edd98f3b27e0132d Mon Sep 17 00:00:00 2001
+From 05f10346c9c5d4dcf3ea872d8139f56da81cf38a Mon Sep 17 00:00:00 2001
 From: Matthew Booth <mbooth@redhat.com>
 Date: Thu, 10 Nov 2011 17:57:16 +0000
 Subject: [PATCH 03/10] Update list-filesystems to check md devices. (cherry

@@ -1,4 +1,4 @@
-From aad06c7955a6f8b8c49fd52b50ca88b702c01f36 Mon Sep 17 00:00:00 2001
+From 6215620b53c8ff3dc8a659b8ab6e0b63653010e7 Mon Sep 17 00:00:00 2001
 From: Matthew Booth <mbooth@redhat.com>
 Date: Wed, 23 Nov 2011 14:00:53 +0000
 Subject: [PATCH 07/10] md: Inspect MD devices (cherry picked from commit

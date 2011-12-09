@@ -1,4 +1,4 @@
-From 564a659873c51b8bb0eb59415882a536a3526c8a Mon Sep 17 00:00:00 2001
+From b8088b9e59aeadc764c0918827ecf7a184ed8e21 Mon Sep 17 00:00:00 2001
 From: Matthew Booth <mbooth@redhat.com>
 Date: Thu, 24 Nov 2011 12:09:03 +0000
 Subject: [PATCH 08/10] Rename mdadm_ apis to md_
@@ -110,10 +110,10 @@ index 82ddb82..8e4ff88 100644
    }
  
 diff --git a/generator/generator_actions.ml b/generator/generator_actions.ml
-index 0d17044..849db60 100644
+index 39c45a2..dbcbab2 100644
 --- a/generator/generator_actions.ml
 +++ b/generator/generator_actions.ml
-@@ -6332,7 +6332,7 @@ is for copying blocks within existing files.  See C<guestfs_cp>,
+@@ -6353,7 +6353,7 @@ is for copying blocks within existing files.  See C<guestfs_cp>,
  C<guestfs_cp_a> and C<guestfs_mv> for general file copying and
  moving functions.");
  
@@ -122,7 +122,7 @@ index 0d17044..849db60 100644
     [],
     "create a Linux md (RAID) device",
     "\
-@@ -6396,7 +6396,7 @@ If not set, this defaults to C<raid1>.
+@@ -6417,7 +6417,7 @@ If not set, this defaults to C<raid1>.
     "\
  List all Linux md devices.");
  
