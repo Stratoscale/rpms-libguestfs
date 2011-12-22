@@ -30,15 +30,16 @@ Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
 Version:       1.15.13
-Release:       2%{?dist}
+Release:       3%{?dist}
 License:       LGPLv2+
 Group:         Development/Libraries
 URL:           http://libguestfs.org/
 Source0:       http://libguestfs.org/download/1.15-development/%{name}-%{version}.tar.gz
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root
 
-# Upstream patch: tests/protocol: Contains a Perl test so we must set PERL5LIB.
+# Upstream patches:
 Patch0:        0001-tests-protocol-Contains-a-Perl-test-so-we-must-set-P.patch
+Patch1:        0001-tests-lvm-Contains-a-Perl-test-so-we-must-set-PERL5L.patch
 BuildRequires: automake
 
 %if 0%{?rhel} >= 7
@@ -593,6 +594,7 @@ for %{name}.
 %setup -q
 
 %patch0 -p1
+%patch1 -p1
 automake
 
 mkdir -p daemon/m4
@@ -970,11 +972,11 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
-* Thu Dec 22 2011 Richard W.M. Jones <rjones@redhat.com> - 1:1.15.13-2
+* Thu Dec 22 2011 Richard W.M. Jones <rjones@redhat.com> - 1:1.15.13-3
 - New upstream version 1.15.13.
 - Fixes Security: Mitigate possible privilege escalation via SG_IO ioctl
   (CVE-2011-4127, RHBZ#757071).
-- Upstream patch: tests/protocol: Contains a Perl test so we must set PERL5LIB.
+- Add two upstream patches to fix 'make check'.
 
 * Thu Dec 22 2011 Richard W.M. Jones <rjones@redhat.com> - 1:1.15.12-1
 - New upstream version 1.15.12.

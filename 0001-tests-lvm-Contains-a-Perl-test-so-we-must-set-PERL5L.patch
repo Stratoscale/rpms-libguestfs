@@ -1,0 +1,27 @@
+From 6067e1540fab8e8ca85e8c052bbee057882548be Mon Sep 17 00:00:00 2001
+From: "Richard W.M. Jones" <rjones@redhat.com>
+Date: Thu, 22 Dec 2011 22:17:17 +0000
+Subject: [PATCH] tests/lvm: Contains a Perl test so we must set PERL5LIB.
+
+This fixes commit 498758faee6be7e989869bf7feba5e1026a1bb65.
+---
+ tests/lvm/Makefile.am |    3 ++-
+ 1 files changed, 2 insertions(+), 1 deletions(-)
+
+diff --git a/tests/lvm/Makefile.am b/tests/lvm/Makefile.am
+index 290f6b3..9c4c137 100644
+--- a/tests/lvm/Makefile.am
++++ b/tests/lvm/Makefile.am
+@@ -27,7 +27,8 @@ TESTS_ENVIRONMENT = \
+ 	MALLOC_PERTURB_=$(random_val) \
+ 	LD_LIBRARY_PATH=$(top_builddir)/src/.libs \
+ 	LIBGUESTFS_PATH=$(top_builddir)/appliance \
+-	TMPDIR=$(top_builddir)
++	TMPDIR=$(top_builddir) \
++	PERL5LIB=$(top_builddir)/perl/blib/lib:$(top_builddir)/perl/blib/arch
+ 
+ EXTRA_DIST = \
+ 	$(TESTS)
+-- 
+1.7.6
+
