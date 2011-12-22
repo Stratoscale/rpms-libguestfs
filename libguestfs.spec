@@ -29,7 +29,7 @@
 Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
-Version:       1.15.12
+Version:       1.15.13
 Release:       1%{?dist}
 License:       LGPLv2+
 Group:         Development/Libraries
@@ -963,6 +963,11 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Thu Dec 22 2011 Richard W.M. Jones <rjones@redhat.com> - 1:1.15.13-1
+- New upstream version 1.15.13.
+- Fixes Security: Mitigate possible privilege escalation via SG_IO ioctl
+  (CVE-2011-4127, RHBZ#757071).
+
 * Thu Dec 22 2011 Richard W.M. Jones <rjones@redhat.com> - 1:1.15.12-1
 - New upstream version 1.15.12.
 
