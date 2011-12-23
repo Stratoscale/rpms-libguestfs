@@ -1,0 +1,41 @@
+From b5f90793026832889cae3d4997810cb34777cf9a Mon Sep 17 00:00:00 2001
+From: "Richard W.M. Jones" <rjones@redhat.com>
+Date: Fri, 23 Dec 2011 08:28:26 +0000
+Subject: [PATCH] fish: Fix test-guestfish-events.sh so it works when
+ LIBGUESTFS_DEBUG=1 is set.
+
+Various messages were added and changed when this variable was set
+while tests were running.
+---
+ fish/test-guestfish-events.sh |    8 +-------
+ 1 files changed, 1 insertions(+), 7 deletions(-)
+
+diff --git a/fish/test-guestfish-events.sh b/fish/test-guestfish-events.sh
+index ad6fefe..4d301b0 100755
+--- a/fish/test-guestfish-events.sh
++++ b/fish/test-guestfish-events.sh
+@@ -22,7 +22,7 @@ set -e
+ 
+ rm -f test.out
+ 
+-../fish/guestfish -a /dev/null <<'EOF' > test.out
++../fish/guestfish -a /dev/null <<'EOF' | grep -v get_verbose | grep -v get_trace | grep -v 'library .*0x' > test.out
+ trace true
+ 
+ event ev1 * "echo $EVENT $@"
+@@ -53,12 +53,6 @@ if [ "$(cat test.out)" != '"ev1" (0): *: echo $EVENT $@
+ "ev1" (1): *: echo $EVENT $@
+ "ev2" (2): *: echo $EVENT $@
+ "ev2" (2): *: echo $EVENT $@
+-enter get_verbose
+-trace get_verbose
+-trace get_verbose = 0
+-enter get_trace
+-trace get_trace
+-trace get_trace = 1
+ enter get_autosync
+ trace get_autosync
+ trace get_autosync = 1
+-- 
+1.7.6
+
