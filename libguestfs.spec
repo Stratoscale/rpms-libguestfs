@@ -29,19 +29,13 @@
 Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
-Version:       1.15.13
-Release:       4%{?dist}
+Version:       1.15.14
+Release:       1%{?dist}
 License:       LGPLv2+
 Group:         Development/Libraries
 URL:           http://libguestfs.org/
 Source0:       http://libguestfs.org/download/1.15-development/%{name}-%{version}.tar.gz
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root
-
-# Upstream patches:
-Patch0:        0001-tests-protocol-Contains-a-Perl-test-so-we-must-set-P.patch
-Patch1:        0001-tests-lvm-Contains-a-Perl-test-so-we-must-set-PERL5L.patch
-Patch2:        0001-fish-Fix-test-guestfish-events.sh-so-it-works-when-L.patch
-BuildRequires: automake
 
 %if 0%{?rhel} >= 7
 ExclusiveArch: x86_64
@@ -594,11 +588,6 @@ for %{name}.
 %prep
 %setup -q
 
-%patch0 -p1
-%patch1 -p1
-%patch2 -p1
-automake
-
 mkdir -p daemon/m4
 
 # Replace developer-specific README that ships with libguestfs, with
@@ -974,6 +963,10 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Fri Dec 23 2011 Richard W.M. Jones <rjones@redhat.com> - 1:1.15.14-1
+- New upstream version 1.15.14.
+- Remove three patches, now upstream.
+
 * Thu Dec 22 2011 Richard W.M. Jones <rjones@redhat.com> - 1:1.15.13-4
 - New upstream version 1.15.13.
 - Fixes Security: Mitigate possible privilege escalation via SG_IO ioctl
