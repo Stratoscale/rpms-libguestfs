@@ -120,7 +120,7 @@ BuildRequires: strace
 BuildRequires: systemd
 BuildRequires: tar
 BuildRequires: udev
-BuildRequires: util-linux-ng
+BuildRequires: util-linux
 BuildRequires: vim-minimal
 BuildRequires: xfsprogs
 BuildRequires: xz
