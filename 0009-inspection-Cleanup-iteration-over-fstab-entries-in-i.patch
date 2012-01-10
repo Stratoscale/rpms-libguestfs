@@ -1,4 +1,4 @@
-From 4b41f279f986faa41a61bfdda4733e9ee9351fa8 Mon Sep 17 00:00:00 2001
+From 5220c9d556fd25ab7533dbe7269e7e7a3763b749 Mon Sep 17 00:00:00 2001
 From: Matthew Booth <mbooth@redhat.com>
 Date: Fri, 25 Nov 2011 13:16:54 +0000
 Subject: [PATCH 09/10] inspection: Cleanup iteration over fstab entries in

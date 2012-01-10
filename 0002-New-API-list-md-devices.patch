@@ -1,4 +1,4 @@
-From 7db7473ff5891fbba0f87c79eeb25ed8998d9494 Mon Sep 17 00:00:00 2001
+From 351a1c544e4f2826619093afba34c5412a52c544 Mon Sep 17 00:00:00 2001
 From: Matthew Booth <mbooth@redhat.com>
 Date: Thu, 10 Nov 2011 17:56:10 +0000
 Subject: [PATCH 02/10] New API: list-md-devices.
@@ -175,7 +175,7 @@ index 1adb4ac..257bd0f 100644
 +  return NULL;
 +}
 diff --git a/generator/generator_actions.ml b/generator/generator_actions.ml
-index ccb1611..8a83c7a 100644
+index 4726093..2d02526 100644
 --- a/generator/generator_actions.ml
 +++ b/generator/generator_actions.ml
 @@ -6411,6 +6411,12 @@ If not set, this defaults to C<raid1>.

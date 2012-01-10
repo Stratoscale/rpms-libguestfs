@@ -1,4 +1,4 @@
-From e71b821fef96cb1a37e049d25cefc3cc95b06584 Mon Sep 17 00:00:00 2001
+From 5a1c7252e284fcb8d7d055408169ad005659651e Mon Sep 17 00:00:00 2001
 From: "Richard W.M. Jones" <rjones@redhat.com>
 Date: Fri, 11 Nov 2011 11:01:46 +0000
 Subject: [PATCH 01/10] New API: mdadm-create for creating MD devices. (cherry
@@ -206,14 +206,14 @@ index 0000000..1adb4ac
 +  return 0;
 +}
 diff --git a/generator/generator_actions.ml b/generator/generator_actions.ml
-index ece471f..ccb1611 100644
+index 28f20ad..4726093 100644
 --- a/generator/generator_actions.ml
 +++ b/generator/generator_actions.ml
 @@ -6353,6 +6353,64 @@ is for copying blocks within existing files.  See C<guestfs_cp>,
  C<guestfs_cp_a> and C<guestfs_mv> for general file copying and
  moving functions.");
  
-+  ("mdadm_create", (RErr, [String "name"; DeviceList "devices"], [Int64 "missingbitmap"; Int "nrdevices"; Int "spare"; Int64 "chunk"; String "level"]), 299, [Optional "mdadm"],
++  ("mdadm_create", (RErr, [String "name"; DeviceList "devices"], [OInt64 "missingbitmap"; OInt "nrdevices"; OInt "spare"; OInt64 "chunk"; OString "level"]), 299, [Optional "mdadm"],
 +   [],
 +   "create a Linux md (RAID) device",
 +   "\

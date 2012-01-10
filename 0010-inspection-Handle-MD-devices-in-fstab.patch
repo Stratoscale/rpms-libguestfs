@@ -1,4 +1,4 @@
-From dbd10e191b272102d94a523f80f8691fb386f27c Mon Sep 17 00:00:00 2001
+From 777c7e94dad33c52c614bcdb29b91c512e797c47 Mon Sep 17 00:00:00 2001
 From: Matthew Booth <mbooth@redhat.com>
 Date: Fri, 2 Dec 2011 14:04:19 +0000
 Subject: [PATCH 10/10] inspection: Handle MD devices in fstab

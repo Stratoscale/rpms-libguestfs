@@ -1,4 +1,4 @@
-From 3157947e82372047c148cb8c6e81799390457318 Mon Sep 17 00:00:00 2001
+From a30dc60fc7551451a764348cc769228b94cc15e9 Mon Sep 17 00:00:00 2001
 From: Matthew Booth <mbooth@redhat.com>
 Date: Thu, 17 Nov 2011 12:43:49 +0000
 Subject: [PATCH 04/10] New API: mdadm-detail. (cherry picked from commit
@@ -107,7 +107,7 @@ index 257bd0f..82ddb82 100644
 +  return NULL;
 +}
 diff --git a/generator/generator_actions.ml b/generator/generator_actions.ml
-index 8a83c7a..39c45a2 100644
+index 2d02526..98ff43b 100644
 --- a/generator/generator_actions.ml
 +++ b/generator/generator_actions.ml
 @@ -6417,6 +6417,37 @@ If not set, this defaults to C<raid1>.

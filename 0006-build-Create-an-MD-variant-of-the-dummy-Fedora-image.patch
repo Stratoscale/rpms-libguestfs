@@ -1,4 +1,4 @@
-From 1d47aa9403c480b8477dc76f75fce6ec195b8bef Mon Sep 17 00:00:00 2001
+From 6d2b9d1c6e552780c80e6074f7c2d88162991122 Mon Sep 17 00:00:00 2001
 From: Matthew Booth <mbooth@redhat.com>
 Date: Wed, 23 Nov 2011 14:00:50 +0000
 Subject: [PATCH 06/10] build: Create an MD variant of the dummy Fedora image
