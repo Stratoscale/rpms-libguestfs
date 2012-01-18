@@ -29,7 +29,7 @@
 Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
-Version:       1.15.16
+Version:       1.15.17
 Release:       1%{?dist}
 License:       LGPLv2+
 Group:         Development/Libraries
@@ -387,6 +387,8 @@ partitions, block devices, LVs, VGs and PVs found in a disk image
 or virtual machine.  It replaces the deprecated programs
 virt-list-filesystems and virt-list-partitions with a much more
 capable tool.
+
+Virt-format is a command line tool to erase and make blank disks.
 
 Virt-inspector examines a virtual machine and tries to determine the
 version of the OS, the kernel version, what drivers are installed,
@@ -832,6 +834,8 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man1/virt-edit.1*
 %{_bindir}/virt-filesystems
 %{_mandir}/man1/virt-filesystems.1*
+%{_bindir}/virt-format
+%{_mandir}/man1/virt-format.1*
 %{_bindir}/virt-inspector
 %{_mandir}/man1/virt-inspector.1*
 %{_bindir}/virt-ls
@@ -964,6 +968,10 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Wed Jan 18 2012 Richard W.M. Jones <rjones@redhat.com> - 1:1.15.17-1
+- New upstream version 1.15.17.
+- New tool: virt-format.
+
 * Tue Jan 10 2012 Richard W.M. Jones <rjones@redhat.com> - 1:1.15.16-1
 - New upstream version 1.15.16.
 
