@@ -29,7 +29,7 @@
 Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
-Version:       1.15.18
+Version:       1.15.19
 Release:       1%{?dist}
 License:       LGPLv2+
 Group:         Development/Libraries
@@ -40,6 +40,10 @@ BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root
 %if 0%{?rhel} >= 7
 ExclusiveArch: x86_64
 %endif
+
+# Two upstream patches for PHP 5.4.
+Patch1:        0001-php-Enable-make-clean-in-extension-subdirectory.patch
+Patch2:        0002-php-function_entry-zend_function_entry.patch
 
 # Basic build requirements:
 BuildRequires: /usr/bin/pod2man
@@ -115,6 +119,7 @@ BuildRequires: ntfsprogs
 %endif
 BuildRequires: parted
 BuildRequires: procps
+BuildRequires: psmisc
 BuildRequires: reiserfs-utils
 BuildRequires: scrub
 BuildRequires: strace
@@ -170,6 +175,7 @@ Requires:      ntfsprogs
 %endif
 Requires:      parted
 Requires:      procps
+Requires:      psmisc
 Requires:      reiserfs-utils
 Requires:      scrub
 Requires:      strace
@@ -202,6 +208,9 @@ BuildRequires: java-devel
 BuildRequires: php-devel
 BuildRequires: erlang-erts
 BuildRequires: erlang-erl_interface
+BuildRequires: glib2-devel
+BuildRequires: gobject-introspection-devel
+BuildRequires: gjs
 
 # For libguestfs-tools:
 BuildRequires: perl-Sys-Virt
@@ -271,6 +280,9 @@ To mount guest filesystems on the host using FUSE, install
 '%{name}-mount'.
 
 For Erlang bindings, install 'erlang-libguestfs'.
+
+For GObject bindings and GObject Introspection, install
+'libguestfs-gobject-devel'.
 
 For Java bindings, install 'libguestfs-java-devel'.
 
@@ -578,6 +590,30 @@ Requires:      erlang-erts
 erlang-%{name} contains Erlang bindings for %{name}.
 
 
+%package gobject
+Summary:       GObject bindings for %{name}
+Group:         Development/Libraries
+Requires:      %{name} = %{epoch}:%{version}-%{release}
+
+%description gobject
+%{name}-gobject contains GObject bindings for %{name}.
+
+To develop software against these bindings, you need to install
+%{name}-gobject-devel.
+
+
+%package gobject-devel
+Summary:       GObject bindings for %{name}
+Group:         Development/Libraries
+Requires:      %{name}-gobject = %{epoch}:%{version}-%{release}
+
+%description gobject-devel
+%{name}-gobject contains GObject bindings for %{name}.
+
+This package is needed if you want to write software using the
+GObject bindings.  It also contains GObject Introspection information.
+
+
 %package man-pages-uk
 Summary:       Ukrainian (uk) man pages for %{name}
 Group:         Development/Libraries
@@ -592,6 +628,9 @@ for %{name}.
 %setup -q
 
 mkdir -p daemon/m4
+
+%patch1 -p1
+%patch2 -p1
 
 # Replace developer-specific README that ships with libguestfs, with
 # our replacement file.
@@ -740,6 +779,8 @@ make DESTDIR=$RPM_BUILD_ROOT install
 # Delete static libraries, libtool files.
 rm $RPM_BUILD_ROOT%{_libdir}/libguestfs.a
 rm $RPM_BUILD_ROOT%{_libdir}/libguestfs.la
+rm $RPM_BUILD_ROOT%{_libdir}/libguestfs-gobject-1.0.a
+rm $RPM_BUILD_ROOT%{_libdir}/libguestfs-gobject-1.0.la
 
 find $RPM_BUILD_ROOT -name perllocal.pod -delete
 find $RPM_BUILD_ROOT -name .packlist -delete
@@ -961,6 +1002,19 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/guestfs-erlang.3*
 
 
+%files gobject
+%defattr(-,root,root,-)
+%{_libdir}/libguestfs-gobject-1.0.so.0*
+
+
+%files gobject-devel
+%defattr(-,root,root,-)
+%{_libdir}/libguestfs-gobject-1.0.so
+%{_includedir}/guestfs-gobject.h
+%{_libdir}/girepository-1.0/Guestfs-1.0.typelib
+%{_datadir}/gir-1.0/Guestfs-1.0.gir
+
+
 %files man-pages-uk
 %defattr(-,root,root,-)
 %lang(uk) %{_mandir}/uk/man1/*.1*
@@ -968,6 +1022,13 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sun Jan 22 2012 Richard W.M. Jones <rjones@redhat.com> - 1:1.15.19-1
+- New upstream version 1.15.19.
+- +BR psmisc for the appliance.
+- Includes GObject bindings in libguestfs-gobject and
+  libguestfs-gobject-devel subpackages.
+- Include upstream patches for PHP 5.4.
+
 * Thu Jan 19 2012 Richard W.M. Jones <rjones@redhat.com> - 1:1.15.18-1
 - New upstream version 1.15.18.
 

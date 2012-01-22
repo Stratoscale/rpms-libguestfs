@@ -1,0 +1,28 @@
+From 5cfd3e7b3e1a7a4031f676d5b65392c7de113164 Mon Sep 17 00:00:00 2001
+From: "Richard W.M. Jones" <rjones@redhat.com>
+Date: Sun, 22 Jan 2012 14:47:43 +0000
+Subject: [PATCH 2/2] php: function_entry -> zend_function_entry.
+
+function_entry was left over from PHP 3.
+
+See: http://news.php.net/php.pecl.dev/7123
+---
+ generator/generator_php.ml |    2 +-
+ 1 files changed, 1 insertions(+), 1 deletions(-)
+
+diff --git a/generator/generator_php.ml b/generator/generator_php.ml
+index 5e7294c..6038fb7 100644
+--- a/generator/generator_php.ml
++++ b/generator/generator_php.ml
+@@ -106,7 +106,7 @@ PHP_MINIT_FUNCTION (guestfs_php)
+     NULL, PHP_GUESTFS_HANDLE_RES_NAME, module_number);
+ }
+ 
+-static function_entry guestfs_php_functions[] = {
++static zend_function_entry guestfs_php_functions[] = {
+   PHP_FE (guestfs_create, NULL)
+   PHP_FE (guestfs_last_error, NULL)
+ ";
+-- 
+1.7.6
+
