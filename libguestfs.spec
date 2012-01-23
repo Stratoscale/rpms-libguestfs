@@ -29,21 +29,17 @@
 Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
-Version:       1.15.19
+Version:       1.16.0
 Release:       1%{?dist}
 License:       LGPLv2+
 Group:         Development/Libraries
 URL:           http://libguestfs.org/
-Source0:       http://libguestfs.org/download/1.15-development/%{name}-%{version}.tar.gz
+Source0:       http://libguestfs.org/download/1.16-stable/%{name}-%{version}.tar.gz
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root
 
 %if 0%{?rhel} >= 7
 ExclusiveArch: x86_64
 %endif
-
-# Two upstream patches for PHP 5.4.
-Patch1:        0001-php-Enable-make-clean-in-extension-subdirectory.patch
-Patch2:        0002-php-function_entry-zend_function_entry.patch
 
 # Basic build requirements:
 BuildRequires: /usr/bin/pod2man
@@ -629,9 +625,6 @@ for %{name}.
 
 mkdir -p daemon/m4
 
-%patch1 -p1
-%patch2 -p1
-
 # Replace developer-specific README that ships with libguestfs, with
 # our replacement file.
 mv README README.orig
@@ -1005,13 +998,13 @@ rm -rf $RPM_BUILD_ROOT
 %files gobject
 %defattr(-,root,root,-)
 %{_libdir}/libguestfs-gobject-1.0.so.0*
+%{_libdir}/girepository-1.0/Guestfs-1.0.typelib
 
 
 %files gobject-devel
 %defattr(-,root,root,-)
 %{_libdir}/libguestfs-gobject-1.0.so
 %{_includedir}/guestfs-gobject.h
-%{_libdir}/girepository-1.0/Guestfs-1.0.typelib
 %{_datadir}/gir-1.0/Guestfs-1.0.gir
 
 
@@ -1022,6 +1015,11 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Mon Jan 23 2012 Richard W.M. Jones <rjones@redhat.com> - 1:1.16.0-1
+- New upstream version 1.16.0.
+- Remove patches which are now upstream.
+- GObject: Move *.typelib file to base gobject package.
+
 * Sun Jan 22 2012 Richard W.M. Jones <rjones@redhat.com> - 1:1.15.19-1
 - New upstream version 1.15.19.
 - +BR psmisc for the appliance.
