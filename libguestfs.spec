@@ -29,24 +29,13 @@
 Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
-Version:       1.14.9
+Version:       1.16.1
 Release:       1%{?dist}
 License:       LGPLv2+
 Group:         Development/Libraries
 URL:           http://libguestfs.org/
-Source0:       http://libguestfs.org/download/1.14-development/%{name}-%{version}.tar.gz
+Source0:       http://libguestfs.org/download/1.16-stable/%{name}-%{version}.tar.gz
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root
-
-Patch0001:     0001-New-API-mdadm-create-for-creating-MD-devices.patch
-Patch0002:     0002-New-API-list-md-devices.patch
-Patch0003:     0003-Update-list-filesystems-to-check-md-devices.patch
-Patch0004:     0004-New-API-mdadm-detail.patch
-Patch0005:     0005-fish-Add-MD-devices-to-guestfish-device-autocompleti.patch
-Patch0006:     0006-build-Create-an-MD-variant-of-the-dummy-Fedora-image.patch
-Patch0007:     0007-md-Inspect-MD-devices.patch
-Patch0008:     0008-Rename-mdadm_-apis-to-md_.patch
-Patch0009:     0009-inspection-Cleanup-iteration-over-fstab-entries-in-i.patch
-Patch0010:     0010-inspection-Handle-MD-devices-in-fstab.patch
 
 %if 0%{?rhel} >= 7
 ExclusiveArch: x86_64
@@ -57,6 +46,7 @@ BuildRequires: /usr/bin/pod2man
 BuildRequires: /usr/bin/pod2text
 BuildRequires: febootstrap >= 3.7
 BuildRequires: hivex-devel >= 1.2.7-7
+BuildRequires: perl-hivex
 BuildRequires: augeas-devel >= 0.5.0
 BuildRequires: readline-devel
 BuildRequires: genisoimage
@@ -77,9 +67,6 @@ BuildRequires: libconfig-devel
 BuildRequires: ocaml
 BuildRequires: ocaml-findlib-devel
 BuildRequires: systemd-units
-
-# Use git + autotools when applying patches.
-BuildRequires: git, automake, autoconf, libtool, gettext
 
 # This is only needed for RHEL 5 because readline-devel doesn't
 # properly depend on it, but doesn't do any harm on other platforms:
@@ -114,6 +101,7 @@ BuildRequires: iputils
 BuildRequires: jfsutils
 BuildRequires: kernel
 BuildRequires: libselinux
+BuildRequires: libxml2
 BuildRequires: lsof
 BuildRequires: lvm2
 BuildRequires: lzop
@@ -127,6 +115,7 @@ BuildRequires: ntfsprogs
 %endif
 BuildRequires: parted
 BuildRequires: procps
+BuildRequires: psmisc
 BuildRequires: reiserfs-utils
 BuildRequires: scrub
 BuildRequires: strace
@@ -168,6 +157,7 @@ Requires:      iputils
 Requires:      jfsutils
 Requires:      kernel
 Requires:      libselinux
+Requires:      libxml2
 Requires:      lsof
 Requires:      lvm2
 Requires:      lzop
@@ -181,6 +171,7 @@ Requires:      ntfsprogs
 %endif
 Requires:      parted
 Requires:      procps
+Requires:      psmisc
 Requires:      reiserfs-utils
 Requires:      scrub
 Requires:      strace
@@ -213,6 +204,9 @@ BuildRequires: java-devel
 BuildRequires: php-devel
 BuildRequires: erlang-erts
 BuildRequires: erlang-erl_interface
+BuildRequires: glib2-devel
+BuildRequires: gobject-introspection-devel
+BuildRequires: gjs
 
 # For libguestfs-tools:
 BuildRequires: perl-Sys-Virt
@@ -284,6 +278,9 @@ To mount guest filesystems on the host using FUSE, install
 '%{name}-mount'.
 
 For Erlang bindings, install 'erlang-libguestfs'.
+
+For GObject bindings and GObject Introspection, install
+'libguestfs-gobject-devel'.
 
 For Java bindings, install 'libguestfs-java-devel'.
 
@@ -400,6 +397,8 @@ partitions, block devices, LVs, VGs and PVs found in a disk image
 or virtual machine.  It replaces the deprecated programs
 virt-list-filesystems and virt-list-partitions with a much more
 capable tool.
+
+Virt-format is a command line tool to erase and make blank disks.
 
 Virt-inspector examines a virtual machine and tries to determine the
 version of the OS, the kernel version, what drivers are installed,
@@ -589,6 +588,30 @@ Requires:      erlang-erts
 erlang-%{name} contains Erlang bindings for %{name}.
 
 
+%package gobject
+Summary:       GObject bindings for %{name}
+Group:         Development/Libraries
+Requires:      %{name} = %{epoch}:%{version}-%{release}
+
+%description gobject
+%{name}-gobject contains GObject bindings for %{name}.
+
+To develop software against these bindings, you need to install
+%{name}-gobject-devel.
+
+
+%package gobject-devel
+Summary:       GObject bindings for %{name}
+Group:         Development/Libraries
+Requires:      %{name}-gobject = %{epoch}:%{version}-%{release}
+
+%description gobject-devel
+%{name}-gobject contains GObject bindings for %{name}.
+
+This package is needed if you want to write software using the
+GObject bindings.  It also contains GObject Introspection information.
+
+
 %package man-pages-uk
 Summary:       Ukrainian (uk) man pages for %{name}
 Group:         Development/Libraries
@@ -601,17 +624,6 @@ for %{name}.
 
 %prep
 %setup -q
-
-git init
-git config user.email "libguestfs@redhat.com"
-git config user.name "libguestfs developers"
-git add .
-git commit -a -q -m "%{name} %{version}"
-git am --whitespace=nowarn %{patches}
-
-# Patches affect Makefile.am and configure.ac, so rerun autotools.
-autoreconf
-autoconf
 
 mkdir -p daemon/m4
 
@@ -728,7 +740,7 @@ export LIBGUESTFS_TRACE=1
 # 705499   all          F-16   file command strange output on file of all zero
 # 710921   all          F-16   ftrace problems (FIXED)
 # 723555   i386         F-16   GPF when VM shuts down
-# 723822   all          F-16   boot hangs
+# 723822   x86-64       F-16   boot hangs
 # 728911   i386         F-17   TCG fatal error
 # 744426   all          F-17   problem with unstable TSC in 3.1-rc9
 
@@ -762,6 +774,8 @@ make DESTDIR=$RPM_BUILD_ROOT install
 # Delete static libraries, libtool files.
 rm $RPM_BUILD_ROOT%{_libdir}/libguestfs.a
 rm $RPM_BUILD_ROOT%{_libdir}/libguestfs.la
+rm $RPM_BUILD_ROOT%{_libdir}/libguestfs-gobject-1.0.a
+rm $RPM_BUILD_ROOT%{_libdir}/libguestfs-gobject-1.0.la
 
 find $RPM_BUILD_ROOT -name perllocal.pod -delete
 find $RPM_BUILD_ROOT -name .packlist -delete
@@ -856,6 +870,8 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man1/virt-edit.1*
 %{_bindir}/virt-filesystems
 %{_mandir}/man1/virt-filesystems.1*
+%{_bindir}/virt-format
+%{_mandir}/man1/virt-format.1*
 %{_bindir}/virt-inspector
 %{_mandir}/man1/virt-inspector.1*
 %{_bindir}/virt-ls
@@ -981,6 +997,19 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/guestfs-erlang.3*
 
 
+%files gobject
+%defattr(-,root,root,-)
+%{_libdir}/libguestfs-gobject-1.0.so.0*
+%{_libdir}/girepository-1.0/Guestfs-1.0.typelib
+
+
+%files gobject-devel
+%defattr(-,root,root,-)
+%{_libdir}/libguestfs-gobject-1.0.so
+%{_includedir}/guestfs-gobject.h
+%{_datadir}/gir-1.0/Guestfs-1.0.gir
+
+
 %files man-pages-uk
 %defattr(-,root,root,-)
 %lang(uk) %{_mandir}/uk/man1/*.1*
@@ -988,6 +1017,16 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Tue Jan 24 2012 Richard W.M. Jones <rjones@redhat.com> - 1:1.16.1-1
+- New upstream version 1.16.1.
+- Remove patches which are included in 1.16 release.
+- Fix Source URL.
+- Includes new GObject bindings in gobject{,-devel} subpackages.
+- New tool 'virt-format'.
+- +BR perl-hivex.
+- Various BRs added for GObject support.
+- Appliance requires libxml2, psmisc.
+
 * Tue Jan 10 2012 Richard W.M. Jones <rjones@redhat.com> - 1:1.14.9-1
 - New upstream version 1.14.9.
 - Rebase patches.
