@@ -29,12 +29,12 @@
 Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
-Version:       1.16.0
+Version:       1.17.1
 Release:       1%{?dist}
 License:       LGPLv2+
 Group:         Development/Libraries
 URL:           http://libguestfs.org/
-Source0:       http://libguestfs.org/download/1.16-stable/%{name}-%{version}.tar.gz
+Source0:       http://libguestfs.org/download/1.17-development/%{name}-%{version}.tar.gz
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root
 
 %if 0%{?rhel} >= 7
@@ -1015,6 +1015,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Tue Jan 24 2012 Richard W.M. Jones <rjones@redhat.com> - 1:1.17.1-1
+- New upstream version 1.17.1.
+
 * Mon Jan 23 2012 Richard W.M. Jones <rjones@redhat.com> - 1:1.16.0-1
 - New upstream version 1.16.0.
 - Remove patches which are now upstream.
