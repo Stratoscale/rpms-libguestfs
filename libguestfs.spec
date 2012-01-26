@@ -29,7 +29,7 @@
 Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
-Version:       1.17.1
+Version:       1.17.2
 Release:       1%{?dist}
 License:       LGPLv2+
 Group:         Development/Libraries
@@ -61,7 +61,7 @@ BuildRequires: file-devel
 BuildRequires: libvirt-devel
 BuildRequires: po4a
 BuildRequires: gperf
-BuildRequires: db4-utils
+BuildRequires: libdb-utils
 BuildRequires: cpio
 BuildRequires: libconfig-devel
 BuildRequires: ocaml
@@ -97,6 +97,7 @@ BuildRequires: grep
 #%endif
 BuildRequires: gzip
 BuildRequires: hfsplus-tools
+BuildRequires: iproute
 BuildRequires: iputils
 BuildRequires: jfsutils
 BuildRequires: kernel
@@ -107,7 +108,6 @@ BuildRequires: lvm2
 BuildRequires: lzop
 BuildRequires: mdadm
 BuildRequires: module-init-tools
-BuildRequires: net-tools
 BuildRequires: nilfs-utils
 BuildRequires: ntfs-3g
 %ifarch %{ix86} x86_64
@@ -153,6 +153,7 @@ Requires:      grep
 #%endif
 Requires:      gzip
 Requires:      hfsplus-tools
+Requires:      iproute
 Requires:      iputils
 Requires:      jfsutils
 Requires:      kernel
@@ -163,7 +164,6 @@ Requires:      lvm2
 Requires:      lzop
 Requires:      mdadm
 Requires:      module-init-tools
-Requires:      net-tools
 Requires:      nilfs-utils
 Requires:      ntfs-3g
 %ifarch %{ix86} x86_64
@@ -223,7 +223,7 @@ Requires:      febootstrap-supermin-helper >= 3.3
 Requires:      genisoimage
 
 # For core inspection API.
-Requires:      db4-utils
+Requires:      libdb-utils
 
 # Because many previously unreadable binaries have been made readable
 # (because of RHBZ#646469) they will be included in the hostfiles
@@ -757,10 +757,7 @@ chmod +x $borked
 popd
 
 %if %{runtests}
-# because of 728911
-%ifarch x86_64
 make check
-%endif
 %endif
 
 
@@ -1015,6 +1012,12 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Thu Jan 26 2012 Richard W.M. Jones <rjones@redhat.com> - 1:1.17.2-1
+- New upstream version 1.17.2.
+- Use libdb-utils instead of old db4-utils.
+- net-tools is no longer used; replaced by iproute (RHBZ#784647).
+- Try re-enabling tests on i686.
+
 * Tue Jan 24 2012 Richard W.M. Jones <rjones@redhat.com> - 1:1.17.1-1
 - New upstream version 1.17.1.
 
