@@ -1,0 +1,28 @@
+From 8f564ae7a2fb0f170308bd103a6be0a981583b1c Mon Sep 17 00:00:00 2001
+From: "Richard W.M. Jones" <rjones@redhat.com>
+Date: Fri, 27 Jan 2012 15:36:31 +0000
+Subject: [PATCH] appliance: udev >= 176 now requires /dev to be a devtmpfs.
+
+See this udev commit:
+https://git.kernel.org/?p=linux/hotplug/udev.git;a=commitdiff;h=220893b3cbdbf8932f95c44811b169a8f0d33939
+---
+ appliance/init |    3 +++
+ 1 files changed, 3 insertions(+), 0 deletions(-)
+
+diff --git a/appliance/init b/appliance/init
+index d3a6156..4d74f91 100755
+--- a/appliance/init
++++ b/appliance/init
+@@ -18,6 +18,9 @@ rm -f /sys; mkdir /sys
+ mount -t sysfs /sys /sys
+ mkdir -p /run/lock
+ 
++# devtmpfs is required since udev 176
++mount -t devtmpfs /dev /dev
++
+ if [ ! -L /etc/init.d/udev -a -x /etc/init.d/udev ]; then
+   if type service >/dev/null 2>&1; then
+      service udev start
+-- 
+1.7.6
+
