@@ -759,9 +759,7 @@ popd
 %ifarch %{ix86}
 # test-stdalign is broken with i686 and GCC 4.7.
 pushd gnulib/tests
-borked=test-stdalign
-make $borked ||:
-rm $borked
+borked="test-stdalign.o test-stdalign"
 touch $borked
 chmod +x $borked
 popd
