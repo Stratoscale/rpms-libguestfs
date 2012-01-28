@@ -29,8 +29,8 @@
 Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
-Version:       1.17.2
-Release:       3%{?dist}
+Version:       1.17.3
+Release:       1%{?dist}
 License:       LGPLv2+
 Group:         Development/Libraries
 URL:           http://libguestfs.org/
@@ -40,9 +40,6 @@ BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root
 %if 0%{?rhel} >= 7
 ExclusiveArch: x86_64
 %endif
-
-# Upstream patch to work with udev >= 176.
-Patch0001:    0001-appliance-udev-176-now-requires-dev-to-be-a-devtmpfs.patch
 
 # Basic build requirements:
 BuildRequires: /usr/bin/pod2man
@@ -626,8 +623,6 @@ for %{name}.
 %prep
 %setup -q
 
-%patch0001 -p1
-
 mkdir -p daemon/m4
 
 # Replace developer-specific README that ships with libguestfs, with
@@ -1026,6 +1021,10 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sat Jan 28 2012 Richard W.M. Jones <rjones@redhat.com> - 1:1.17.3-1
+- New upstream version 1.17.3.
+- Remove patch now upstream.
+
 * Fri Jan 27 2012 Richard W.M. Jones <rjones@redhat.com> - 1:1.17.2-3
 - Upstream patch to work with udev >= 176.
 
