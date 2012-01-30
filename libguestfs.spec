@@ -204,9 +204,11 @@ BuildRequires: java-devel
 BuildRequires: php-devel
 BuildRequires: erlang-erts
 BuildRequires: erlang-erl_interface
+%if 0%{?fedora} >= 16
 BuildRequires: glib2-devel
 BuildRequires: gobject-introspection-devel
 BuildRequires: gjs
+%endif
 
 # For libguestfs-tools:
 BuildRequires: perl-Sys-Virt
@@ -588,6 +590,7 @@ Requires:      erlang-erts
 erlang-%{name} contains Erlang bindings for %{name}.
 
 
+%if 0%{?fedora} >= 16
 %package gobject
 Summary:       GObject bindings for %{name}
 Group:         Development/Libraries
@@ -610,6 +613,7 @@ Requires:      %{name}-gobject = %{epoch}:%{version}-%{release}
 
 This package is needed if you want to write software using the
 GObject bindings.  It also contains GObject Introspection information.
+%endif
 
 
 %package man-pages-uk
@@ -771,8 +775,10 @@ make DESTDIR=$RPM_BUILD_ROOT install
 # Delete static libraries, libtool files.
 rm $RPM_BUILD_ROOT%{_libdir}/libguestfs.a
 rm $RPM_BUILD_ROOT%{_libdir}/libguestfs.la
+%if 0%{?fedora} >= 16
 rm $RPM_BUILD_ROOT%{_libdir}/libguestfs-gobject-1.0.a
 rm $RPM_BUILD_ROOT%{_libdir}/libguestfs-gobject-1.0.la
+%endif
 
 find $RPM_BUILD_ROOT -name perllocal.pod -delete
 find $RPM_BUILD_ROOT -name .packlist -delete
@@ -994,6 +1000,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/guestfs-erlang.3*
 
 
+%if 0%{?fedora} >= 16
 %files gobject
 %defattr(-,root,root,-)
 %{_libdir}/libguestfs-gobject-1.0.so.0*
@@ -1005,6 +1012,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/libguestfs-gobject-1.0.so
 %{_includedir}/guestfs-gobject.h
 %{_datadir}/gir-1.0/Guestfs-1.0.gir
+%endif
 
 
 %files man-pages-uk
@@ -1018,6 +1026,7 @@ rm -rf $RPM_BUILD_ROOT
 - New upstream version 1.16.2.
 - Try enabling tests on 32 bit.  This works on Rawhide, so it might
   work on Fedora 16.
+- Disable gobject bindings on Fedora < 16.
 
 * Tue Jan 24 2012 Richard W.M. Jones <rjones@redhat.com> - 1:1.16.1-1
 - New upstream version 1.16.1.
