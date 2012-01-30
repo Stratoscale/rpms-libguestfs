@@ -29,7 +29,7 @@
 Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
-Version:       1.16.1
+Version:       1.16.2
 Release:       1%{?dist}
 License:       LGPLv2+
 Group:         Development/Libraries
@@ -759,10 +759,7 @@ chmod +x $borked
 popd
 
 %if %{runtests}
-# because of 728911
-%ifarch x86_64
 make check
-%endif
 %endif
 
 
@@ -1017,6 +1014,11 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Mon Jan 30 2012 Richard W.M. Jones <rjones@redhat.com> - 1:1.16.2-1
+- New upstream version 1.16.2.
+- Try enabling tests on 32 bit.  This works on Rawhide, so it might
+  work on Fedora 16.
+
 * Tue Jan 24 2012 Richard W.M. Jones <rjones@redhat.com> - 1:1.16.1-1
 - New upstream version 1.16.1.
 - Remove patches which are included in 1.16 release.
