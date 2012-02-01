@@ -29,8 +29,8 @@
 Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
-Version:       1.17.3
-Release:       2%{?dist}
+Version:       1.17.4
+Release:       1%{?dist}
 License:       LGPLv2+
 Group:         Development/Libraries
 URL:           http://libguestfs.org/
@@ -40,9 +40,6 @@ BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root
 %if 0%{?rhel} >= 7
 ExclusiveArch: x86_64
 %endif
-
-# Upstream patch to fix OCaml bytecode compilation.
-Patch0001:     0001-ocaml-Various-fixes-for-bytecode-compilation.patch
 
 # Basic build requirements:
 BuildRequires: /usr/bin/pod2man
@@ -626,8 +623,6 @@ for %{name}.
 %prep
 %setup -q
 
-%patch0001 -p1
-
 mkdir -p daemon/m4
 
 # Replace developer-specific README that ships with libguestfs, with
@@ -1026,6 +1021,10 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Wed Feb  1 2012 Richard W.M. Jones <rjones@redhat.com> - 1:1.17.4-1
+- New upstream version 1.17.4.
+- Remove patch now upstream.
+
 * Sat Jan 28 2012 Richard W.M. Jones <rjones@redhat.com> - 1:1.17.3-2
 - New upstream version 1.17.3.
 - Remove patch now upstream.
