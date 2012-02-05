@@ -30,12 +30,16 @@ Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
 Version:       1.17.4
-Release:       2%{?dist}
+Release:       3%{?dist}
 License:       LGPLv2+
 Group:         Development/Libraries
 URL:           http://libguestfs.org/
 Source0:       http://libguestfs.org/download/1.17-development/%{name}-%{version}.tar.gz
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root
+
+%if 0%{?fedora} >= 17
+Patch0:        0001-Workaround-for-usrmove-in-Fedora.patch
+%endif
 
 %if 0%{?rhel} >= 7
 ExclusiveArch: x86_64
@@ -623,6 +627,10 @@ for %{name}.
 %prep
 %setup -q
 
+%if 0%{?fedora} >= 17
+%patch0 -p1
+%endif
+
 mkdir -p daemon/m4
 
 # Replace developer-specific README that ships with libguestfs, with
@@ -1021,8 +1029,8 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
-* Sat Feb 04 2012 Richard W.M. Jones <rjones@redhat.com> - 1:1.17.4-2
-- Bump and rebuild.
+* Sun Feb 04 2012 Richard W.M. Jones <rjones@redhat.com> - 1:1.17.4-3
+- Add workaround for usrmove in Fedora.
 
 * Wed Feb  1 2012 Richard W.M. Jones <rjones@redhat.com> - 1:1.17.4-1
 - New upstream version 1.17.4.

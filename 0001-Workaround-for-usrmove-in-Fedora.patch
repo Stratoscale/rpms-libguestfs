@@ -1,0 +1,40 @@
+From 3ddd9e33fd2c6c75b10d1734d8cdd821ea356863 Mon Sep 17 00:00:00 2001
+From: "Richard W.M. Jones" <rjones@redhat.com>
+Date: Sun, 5 Feb 2012 22:53:07 +0000
+Subject: [PATCH] Workaround for usrmove in Fedora.
+
+---
+ .gnulib               |    2 +-
+ appliance/Makefile.am |    9 +++++----
+ 2 files changed, 6 insertions(+), 5 deletions(-)
+
+diff --git a/.gnulib b/.gnulib
+index b643182..eec8a69 160000
+--- a/.gnulib
++++ b/.gnulib
+@@ -1 +1 @@
+-Subproject commit b64318247b74481e02caacf4c46d83f07be2b88d
++Subproject commit eec8a6915839cfe54a520732da01250cea844314
+diff --git a/appliance/Makefile.am b/appliance/Makefile.am
+index 99896be..0d6b871 100644
+--- a/appliance/Makefile.am
++++ b/appliance/Makefile.am
+@@ -67,10 +67,11 @@ stamp-supermin: make.sh packagelist excludelist
+ supermin.d/daemon.img: ../daemon/guestfsd
+ 	mkdir -p supermin.d
+ 	rm -f $@ $@-t
+-	mkdir sbin
+-	cd sbin && ln ../../daemon/guestfsd
+-	echo -e "sbin\nsbin/guestfsd" | cpio --quiet -o -H newc > $@-t
+-	rm -r sbin
++	mkdir -p usr/sbin
++	cd usr/sbin && ln ../../../daemon/guestfsd
++	echo -e "usr\nusr/sbin\nusr/sbin/guestfsd" | \
++	  cpio --quiet -o -H newc > $@-t
++	rm -r usr
+ 	mv $@-t $@
+ 
+ supermin.d/init.img: init
+-- 
+1.7.9
+
