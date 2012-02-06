@@ -4,17 +4,9 @@ Date: Sun, 5 Feb 2012 22:53:07 +0000
 Subject: [PATCH] Workaround for usrmove in Fedora.
 
 ---
- .gnulib               |    2 +-
  appliance/Makefile.am |    9 +++++----
  2 files changed, 6 insertions(+), 5 deletions(-)
 
-diff --git a/.gnulib b/.gnulib
-index b643182..eec8a69 160000
---- a/.gnulib
-+++ b/.gnulib
-@@ -1 +1 @@
--Subproject commit b64318247b74481e02caacf4c46d83f07be2b88d
-+Subproject commit eec8a6915839cfe54a520732da01250cea844314
 diff --git a/appliance/Makefile.am b/appliance/Makefile.am
 index 99896be..0d6b871 100644
 --- a/appliance/Makefile.am
