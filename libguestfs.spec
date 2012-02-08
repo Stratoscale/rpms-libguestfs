@@ -523,7 +523,7 @@ python-%{name} contains Python bindings for %{name}.
 Summary:       Ruby bindings for %{name}
 Group:         Development/Libraries
 Requires:      %{name} = %{epoch}:%{version}-%{release}
-Requires:      ruby(abi) = 1.8
+Requires:      ruby(abi) = 1.9.1
 Requires:      ruby
 Provides:      ruby(guestfs) = %{version}
 
