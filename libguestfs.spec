@@ -29,7 +29,7 @@
 Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
-Version:       1.16.2
+Version:       1.16.3
 Release:       1%{?dist}
 License:       LGPLv2+
 Group:         Development/Libraries
@@ -1022,6 +1022,10 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Wed Feb  8 2012 Richard W.M. Jones <rjones@redhat.com> - 1:1.16.3-1
+- New upstream stable version 1.16.3.
+- Fixes RHBZ#769304, RHBZ#679737.
+
 * Mon Jan 30 2012 Richard W.M. Jones <rjones@redhat.com> - 1:1.16.2-1
 - New upstream version 1.16.2.
 - Try enabling tests on 32 bit.  This works on Rawhide, so it might
