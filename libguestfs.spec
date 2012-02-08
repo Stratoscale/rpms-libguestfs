@@ -29,8 +29,8 @@
 Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
-Version:       1.17.4
-Release:       8%{?dist}
+Version:       1.17.5
+Release:       1%{?dist}
 License:       LGPLv2+
 Group:         Development/Libraries
 URL:           http://libguestfs.org/
@@ -38,7 +38,6 @@ Source0:       http://libguestfs.org/download/1.17-development/%{name}-%{version
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root
 
 %if 0%{?fedora} >= 17
-Patch0:        0001-Workaround-for-usrmove-in-Fedora.patch
 Patch1:        ruby-1.9-vendor-not-site.patch
 BuildRequires: autoconf, automake, libtool, gettext-devel
 %endif
@@ -628,7 +627,6 @@ for %{name}.
 %setup -q
 
 %if 0%{?fedora} >= 17
-%patch0 -p1
 %patch1 -p1
 autoreconf -i
 %endif
@@ -1031,6 +1029,10 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Wed Feb  8 2012 Richard W.M. Jones <rjones@redhat.com> - 1:1.17.5-1
+- New upstream version 1.17.5.
+- Remove usrmove workaround patch, now upstream.
+
 * Wed Feb  8 2012 Richard W.M. Jones <rjones@redhat.com> - 1:1.17.4-8
 - Further Ruby 1.9 changes.
 
