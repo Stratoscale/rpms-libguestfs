@@ -30,7 +30,7 @@ Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
 Version:       1.17.4
-Release:       7%{?dist}
+Release:       8%{?dist}
 License:       LGPLv2+
 Group:         Development/Libraries
 URL:           http://libguestfs.org/
@@ -39,6 +39,7 @@ BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root
 
 %if 0%{?fedora} >= 17
 Patch0:        0001-Workaround-for-usrmove-in-Fedora.patch
+Patch1:        ruby-1.9-vendor-not-site.patch
 BuildRequires: autoconf, automake, libtool, gettext-devel
 %endif
 
@@ -203,6 +204,7 @@ BuildRequires: perl-libintl
 BuildRequires: python-devel
 BuildRequires: ruby-devel
 BuildRequires: rubygem-rake
+BuildRequires: rubygem(minitest)
 BuildRequires: java >= 1.5.0
 BuildRequires: jpackage-utils
 BuildRequires: java-devel
@@ -526,9 +528,6 @@ Requires:      ruby(abi) = 1.8
 Requires:      ruby
 Provides:      ruby(guestfs) = %{version}
 
-%{!?ruby_sitelib: %global ruby_sitelib %(ruby -rrbconfig -e "puts Config::CONFIG['sitelibdir']")}
-%{!?ruby_sitearch: %global ruby_sitearch %(ruby -rrbconfig -e "puts Config::CONFIG['sitearchdir']")}
-
 %description -n ruby-%{name}
 ruby-%{name} contains Ruby bindings for %{name}.
 
@@ -630,6 +629,7 @@ for %{name}.
 
 %if 0%{?fedora} >= 17
 %patch0 -p1
+%patch1 -p1
 autoreconf -i
 %endif
 
@@ -971,8 +971,8 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(-,root,root,-)
 %doc ruby/examples/*.rb
 %doc ruby/doc/site/*
-%{ruby_sitelib}/guestfs.rb
-%{ruby_sitearch}/_guestfs.so
+%{ruby_vendorlibdir}/guestfs.rb
+%{ruby_vendorarchdir}/_guestfs.so
 %{_mandir}/man3/guestfs-ruby.3*
 
 
@@ -1031,6 +1031,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Wed Feb  8 2012 Richard W.M. Jones <rjones@redhat.com> - 1:1.17.4-8
+- Further Ruby 1.9 changes.
+
 * Tue Feb 07 2012 Richard W.M. Jones <rjones@redhat.com> - 1:1.17.4-7
 - Bump and rebuild for Ruby update.
 
