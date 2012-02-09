@@ -30,7 +30,7 @@ Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
 Version:       1.17.5
-Release:       1%{?dist}
+Release:       2%{?dist}
 License:       LGPLv2+
 Group:         Development/Libraries
 URL:           http://libguestfs.org/
@@ -1029,6 +1029,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Thu Feb  9 2012 Richard W.M. Jones <rjones@redhat.com> - 1:1.17.5-2
+- Rebuild with ruby(abi) = 1.9.1.
+
 * Wed Feb  8 2012 Richard W.M. Jones <rjones@redhat.com> - 1:1.17.5-1
 - New upstream version 1.17.5.
 - Remove usrmove workaround patch, now upstream.
