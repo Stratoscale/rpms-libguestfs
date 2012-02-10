@@ -204,6 +204,7 @@ BuildRequires: python-devel
 BuildRequires: ruby-devel
 BuildRequires: rubygem-rake
 BuildRequires: rubygem(minitest)
+BuildRequires: ruby-irb
 BuildRequires: java >= 1.5.0
 BuildRequires: jpackage-utils
 BuildRequires: java-devel
@@ -1029,6 +1030,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Fri Feb 10 2012 Richard W.M. Jones <rjones@redhat.com> - 1:1.17.5-4
+- +BR ruby-irb.
+
 * Wed Feb  8 2012 Richard W.M. Jones <rjones@redhat.com> - 1:1.17.5-1
 - New upstream version 1.17.5.
 - Remove usrmove workaround patch, now upstream.
