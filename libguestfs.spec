@@ -30,7 +30,7 @@ Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
 Version:       1.16.3
-Release:       1%{?dist}
+Release:       2%{?dist}
 License:       LGPLv2+
 Group:         Development/Libraries
 URL:           http://libguestfs.org/
@@ -98,7 +98,9 @@ BuildRequires: grep
 BuildRequires: gzip
 BuildRequires: hfsplus-tools
 BuildRequires: iputils
+%if !0%{?rhel}
 BuildRequires: jfsutils
+%endif
 BuildRequires: kernel
 BuildRequires: libselinux
 BuildRequires: libxml2
@@ -109,9 +111,11 @@ BuildRequires: mdadm
 BuildRequires: module-init-tools
 BuildRequires: net-tools
 BuildRequires: nilfs-utils
+%if !0%{?rhel}
 BuildRequires: ntfs-3g
 %ifarch %{ix86} x86_64
 BuildRequires: ntfsprogs
+%endif
 %endif
 BuildRequires: parted
 BuildRequires: procps
@@ -154,7 +158,9 @@ Requires:      grep
 Requires:      gzip
 Requires:      hfsplus-tools
 Requires:      iputils
+%if !0%{?rhel}
 Requires:      jfsutils
+%endif
 Requires:      kernel
 Requires:      libselinux
 Requires:      libxml2
@@ -165,9 +171,11 @@ Requires:      mdadm
 Requires:      module-init-tools
 Requires:      net-tools
 Requires:      nilfs-utils
+%if !0%{?rhel}
 Requires:      ntfs-3g
 %ifarch %{ix86} x86_64
 Requires:      ntfsprogs
+%endif
 %endif
 Requires:      parted
 Requires:      procps
@@ -202,8 +210,10 @@ BuildRequires: java >= 1.5.0
 BuildRequires: jpackage-utils
 BuildRequires: java-devel
 BuildRequires: php-devel
+%if !0%{?rhel}
 BuildRequires: erlang-erts
 BuildRequires: erlang-erl_interface
+%endif
 %if 0%{?fedora} >= 16
 BuildRequires: glib2-devel
 BuildRequires: gobject-introspection-devel
@@ -580,6 +590,7 @@ Requires:      php
 php-%{name} contains PHP bindings for %{name}.
 
 
+%if !0%{?rhel}
 %package -n erlang-%{name}
 Summary:       Erlang bindings for %{name}
 Group:         Development/Libraries
@@ -588,6 +599,7 @@ Requires:      erlang-erts
 
 %description -n erlang-%{name}
 erlang-%{name} contains Erlang bindings for %{name}.
+%endif
 
 
 %if 0%{?fedora} >= 16
@@ -1022,6 +1034,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Fri Feb 10 2012 Richard W.M. Jones <rjones@redhat.com> - 1:1.16.3-2
+- Disable some packages not available in RHEL 7.
+
 * Wed Feb  8 2012 Richard W.M. Jones <rjones@redhat.com> - 1:1.16.3-1
 - New upstream stable version 1.16.3.
 - Fixes RHBZ#769304, RHBZ#679737.
