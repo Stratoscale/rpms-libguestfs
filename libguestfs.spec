@@ -30,7 +30,7 @@ Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
 Version:       1.17.5
-Release:       3%{?dist}
+Release:       4%{?dist}
 License:       LGPLv2+
 Group:         Development/Libraries
 URL:           http://libguestfs.org/
@@ -204,6 +204,7 @@ BuildRequires: python-devel
 BuildRequires: ruby-devel
 BuildRequires: rubygem-rake
 BuildRequires: rubygem(minitest)
+BuildRequires: ruby-irb
 BuildRequires: java >= 1.5.0
 BuildRequires: jpackage-utils
 BuildRequires: java-devel
@@ -1029,6 +1030,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Fri Feb 10 2012 Richard W.M. Jones <rjones@redhat.com> - 1:1.17.5-4
+- +BR ruby-irb.
+
 * Fri Feb 10 2012 Petr Pisar <ppisar@redhat.com> - 1:1.17.5-3
 - Rebuild against PCRE 8.30
 
