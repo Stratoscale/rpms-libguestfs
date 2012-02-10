@@ -21,8 +21,8 @@
 Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
-Version:       1.17.5
-Release:       6%{?dist}
+Version:       1.17.6
+Release:       1%{?dist}
 License:       LGPLv2+
 Group:         Development/Libraries
 URL:           http://libguestfs.org/
@@ -1032,11 +1032,12 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
-* Fri Feb 10 2012 Richard W.M. Jones <rjones@redhat.com> - 1:1.17.5-6
+* Fri Feb 10 2012 Richard W.M. Jones <rjones@redhat.com> - 1:1.17.6-1
 - +BR ruby-irb.
 - Make virtio unconditional.  It's been a very long time since disabling
   virtio was a good idea.
 - Disable some packages not available in RHEL 7.
+- New upstream version 1.17.6.
 
 * Fri Feb 10 2012 Petr Pisar <ppisar@redhat.com> - 1:1.17.5-3
 - Rebuild against PCRE 8.30
