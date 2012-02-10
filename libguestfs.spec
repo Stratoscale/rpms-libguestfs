@@ -10,14 +10,6 @@
 %global buildnet 0
 %endif 
 
-# Enable to make the appliance use virtio_blk
-# Default is enabled
-%if %{defined libguestfs_virtio}
-%global with_virtio %{libguestfs_virtio}
-%else
-%global with_virtio 1
-%endif 
-
 # Enable to run tests during check
 # Default is enabled
 %if %{defined libguestfs_runtests}
@@ -679,9 +671,7 @@ cat yum.conf
   --with-extra="fedora=%{fedora},release=%{release}" \
   --with-qemu="qemu-kvm qemu-system-%{_build_arch} qemu" \
   --enable-install-daemon \
-%if %{with_virtio}
   --with-drive-if=virtio \
-%endif
   %{extra} || {
     echo "==== config.log ===="
     cat config.log
@@ -1030,8 +1020,10 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
-* Fri Feb 10 2012 Richard W.M. Jones <rjones@redhat.com> - 1:1.17.5-4
+* Fri Feb 10 2012 Richard W.M. Jones <rjones@redhat.com> - 1:1.17.5-5
 - +BR ruby-irb.
+- Make virtio unconditional.  It's been a very long time since disabling
+  virtio was a good idea.
 
 * Wed Feb  8 2012 Richard W.M. Jones <rjones@redhat.com> - 1:1.17.5-1
 - New upstream version 1.17.5.
