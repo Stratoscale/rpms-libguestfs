@@ -22,7 +22,7 @@ Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
 Version:       1.17.5
-Release:       5%{?dist}
+Release:       6%{?dist}
 License:       LGPLv2+
 Group:         Development/Libraries
 URL:           http://libguestfs.org/
@@ -96,7 +96,9 @@ BuildRequires: gzip
 BuildRequires: hfsplus-tools
 BuildRequires: iproute
 BuildRequires: iputils
+%if !0%{?rhel}
 BuildRequires: jfsutils
+%endif
 BuildRequires: kernel
 BuildRequires: libselinux
 BuildRequires: libxml2
@@ -106,9 +108,11 @@ BuildRequires: lzop
 BuildRequires: mdadm
 BuildRequires: module-init-tools
 BuildRequires: nilfs-utils
+%if !0%{?rhel}
 BuildRequires: ntfs-3g
 %ifarch %{ix86} x86_64
 BuildRequires: ntfsprogs
+%endif
 %endif
 BuildRequires: parted
 BuildRequires: procps
@@ -152,7 +156,9 @@ Requires:      gzip
 Requires:      hfsplus-tools
 Requires:      iproute
 Requires:      iputils
+%if !0%{?rhel}
 Requires:      jfsutils
+%endif
 Requires:      kernel
 Requires:      libselinux
 Requires:      libxml2
@@ -162,9 +168,11 @@ Requires:      lzop
 Requires:      mdadm
 Requires:      module-init-tools
 Requires:      nilfs-utils
+%if !0%{?rhel}
 Requires:      ntfs-3g
 %ifarch %{ix86} x86_64
 Requires:      ntfsprogs
+%endif
 %endif
 Requires:      parted
 Requires:      procps
@@ -201,8 +209,10 @@ BuildRequires: java >= 1.5.0
 BuildRequires: jpackage-utils
 BuildRequires: java-devel
 BuildRequires: php-devel
+%if !0%{?rhel}
 BuildRequires: erlang-erts
 BuildRequires: erlang-erl_interface
+%endif
 BuildRequires: glib2-devel
 BuildRequires: gobject-introspection-devel
 BuildRequires: gjs
@@ -572,6 +582,7 @@ Requires:      php
 php-%{name} contains PHP bindings for %{name}.
 
 
+%if !0%{?rhel}
 %package -n erlang-%{name}
 Summary:       Erlang bindings for %{name}
 Group:         Development/Libraries
@@ -580,6 +591,7 @@ Requires:      erlang-erts
 
 %description -n erlang-%{name}
 erlang-%{name} contains Erlang bindings for %{name}.
+%endif
 
 
 %package gobject
@@ -1020,10 +1032,11 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
-* Fri Feb 10 2012 Richard W.M. Jones <rjones@redhat.com> - 1:1.17.5-5
+* Fri Feb 10 2012 Richard W.M. Jones <rjones@redhat.com> - 1:1.17.5-6
 - +BR ruby-irb.
 - Make virtio unconditional.  It's been a very long time since disabling
   virtio was a good idea.
+- Disable some packages not available in RHEL 7.
 
 * Fri Feb 10 2012 Petr Pisar <ppisar@redhat.com> - 1:1.17.5-3
 - Rebuild against PCRE 8.30
