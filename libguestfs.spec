@@ -128,7 +128,9 @@ BuildRequires: vim-minimal
 BuildRequires: xfsprogs
 BuildRequires: xz
 BuildRequires: zerofree
+%if !0%{?rhel}
 BuildRequires: zfs-fuse
+%endif
 
 # Must match the above set of BuildRequires exactly!
 Requires:      acl
@@ -188,7 +190,9 @@ Requires:      vim-minimal
 Requires:      xfsprogs
 Requires:      xz
 Requires:      zerofree
+%if !0%{?rhel}
 Requires:      zfs-fuse
+%endif
 
 # These are only required if you want to build the bindings for
 # different languages:
@@ -1002,6 +1006,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/php/modules/guestfs_php.so
 
 
+%if !0%{?rhel}
 %files -n erlang-%{name}
 %defattr(-,root,root,-)
 %doc erlang/README
@@ -1010,6 +1015,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_bindir}/erl-guestfs
 %{_libdir}/erlang/lib/%{name}-%{version}
 %{_mandir}/man3/guestfs-erlang.3*
+%endif
 
 
 %files gobject
