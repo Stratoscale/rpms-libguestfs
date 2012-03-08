@@ -21,7 +21,7 @@
 Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
-Version:       1.17.12
+Version:       1.17.13
 Release:       1%{?dist}
 License:       LGPLv2+
 Group:         Development/Libraries
@@ -626,6 +626,16 @@ This package is needed if you want to write software using the
 GObject bindings.  It also contains GObject Introspection information.
 
 
+%package man-pages-ja
+Summary:       Japanese (ja) man pages for %{name}
+Group:         Development/Libraries
+Requires:      %{name} = %{epoch}:%{version}-%{release}
+
+%description man-pages-ja
+%{name}-man-pages-ja contains Japanese (ja) man pages
+for %{name}.
+
+
 %package man-pages-uk
 Summary:       Ukrainian (uk) man pages for %{name}
 Group:         Development/Libraries
@@ -819,11 +829,6 @@ rm $RPM_BUILD_ROOT%{_libdir}/libguestfs_jni.la
 # Move installed documentation back to the source directory so
 # we can install it using a %%doc rule.
 mv $RPM_BUILD_ROOT%{_docdir}/libguestfs installed-docs
-
-# Remove Japanese manpages, since these are not translated fully at
-# the moment.  When these are translated properly we intend to add
-# them back.
-rm -rf $RPM_BUILD_ROOT%{_mandir}/ja/man{1,3}/
 
 # For the libguestfs-live-service subpackage install the systemd
 # service and udev rules.
@@ -1035,6 +1040,12 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/gir-1.0/Guestfs-1.0.gir
 
 
+%files man-pages-ja
+%defattr(-,root,root,-)
+%lang(ja) %{_mandir}/ja/man1/*.1*
+%lang(ja) %{_mandir}/ja/man3/*.3*
+
+
 %files man-pages-uk
 %defattr(-,root,root,-)
 %lang(uk) %{_mandir}/uk/man1/*.1*
@@ -1042,6 +1053,12 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Thu Mar 08 2012 Richard W.M. Jones <rjones@redhat.com> - 1:1.17.13-1
+- New upstream version 1.17.13.
+
+* Thu Mar 08 2012 Richard W.M. Jones <rjones@redhat.com> - 1:1.17.12-2
+- Enable Japanese man pages, since these are in a better state upstream.
+
 * Wed Mar 07 2012 Richard W.M. Jones <rjones@redhat.com> - 1:1.17.12-1
 - New upstream version 1.17.12.
 
