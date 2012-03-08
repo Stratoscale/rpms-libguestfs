@@ -29,7 +29,7 @@
 Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
-Version:       1.16.8
+Version:       1.16.9
 Release:       1%{?dist}
 License:       LGPLv2+
 Group:         Development/Libraries
@@ -67,6 +67,8 @@ BuildRequires: libconfig-devel
 BuildRequires: ocaml
 BuildRequires: ocaml-findlib-devel
 BuildRequires: systemd-units
+BuildRequires: netpbm-progs
+BuildRequires: icoutils
 
 # This is only needed for RHEL 5 because readline-devel doesn't
 # properly depend on it, but doesn't do any harm on other platforms:
@@ -242,6 +244,8 @@ Requires:      genisoimage
 
 # For core inspection API.
 Requires:      db4-utils
+Requires:      netpbm-progs
+Requires:      icoutils
 
 # Because many previously unreadable binaries have been made readable
 # (because of RHBZ#646469) they will be included in the hostfiles
@@ -1040,6 +1044,13 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Thu Mar 08 2012 Richard W.M. Jones <rjones@redhat.com> - 1:1.16.9-1
+- New upstream stable version 1.16.9.
+
+* Thu Mar 08 2012 Richard W.M. Jones <rjones@redhat.com> - 1:1.16.8-2
+- Require netpbm-progs, icoutils.  These are needed for icon generation
+  during inspection, but were not being pulled in before.
+
 * Mon Mar 05 2012 Richard W.M. Jones <rjones@redhat.com> - 1:1.16.8-1
 - New upstream stable version 1.16.8.
 
