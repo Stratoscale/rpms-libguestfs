@@ -21,7 +21,7 @@
 Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
-Version:       1.17.19
+Version:       1.17.21
 Release:       1%{?dist}
 License:       LGPLv2+
 Group:         Development/Libraries
@@ -315,6 +315,10 @@ Summary:       Development tools and libraries for %{name}
 Group:         Development/Libraries
 Requires:      %{name} = %{epoch}:%{version}-%{release}
 Requires:      pkgconfig
+
+# For libguestfs-make-fixed-appliance.
+Requires:      xz
+Requires:      libguestfs-tools-c
 
 
 %description devel
@@ -866,7 +870,9 @@ rm -rf $RPM_BUILD_ROOT
 %doc examples/*.c
 %doc installed-docs/*
 %{_libdir}/libguestfs.so
+%{_sbindir}/libguestfs-make-fixed-appliance
 %{_mandir}/man1/guestfs-recipes.1*
+%{_mandir}/man1/libguestfs-make-fixed-appliance.1*
 %{_mandir}/man3/guestfs.3*
 %{_mandir}/man3/guestfs-examples.3*
 %{_mandir}/man3/libguestfs.3*
@@ -1053,6 +1059,10 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Wed Mar 21 2012 Richard W.M. Jones <rjones@redhat.com> - 1:1.17.21-1
+- New upstream version 1.17.21.
+- Add libguestfs-make-fixed-appliance (with man page).
+
 * Fri Mar 16 2012 Richard W.M. Jones <rjones@redhat.com> - 1:1.17.19-1
 - New upstream version 1.17.19.
 
