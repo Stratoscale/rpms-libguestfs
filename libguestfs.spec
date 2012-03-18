@@ -22,7 +22,7 @@ Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
 Version:       1.17.20
-Release:       1%{?dist}
+Release:       2%{?dist}
 License:       LGPLv2+
 Group:         Development/Libraries
 URL:           http://libguestfs.org/
@@ -780,6 +780,9 @@ export LIBGUESTFS_TRACE=1
 # checksum at runtime.
 export SKIP_TEST_CHECKSUM_DEVICE=1
 
+# RHBZ#804345: dm-crypt module is broken in F18.
+export SKIP_TEST_LUKS_SH=1
+
 # Work around 'test-getlogin_r.c:55: assertion failed' in Gnulib tests.
 pushd gnulib/tests
 borked=test-getlogin_r
@@ -1059,6 +1062,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sun Mar 18 2012 Richard W.M. Jones <rjones@redhat.com> - 1:1.17.20-2
+- Disable LUKS tests because LUKS is broken in Rawhide (RHBZ#804345).
+
 * Sat Mar 17 2012 Richard W.M. Jones <rjones@redhat.com> - 1:1.17.20-1
 - New upstream version 1.17.20.
 
