@@ -34,7 +34,7 @@ Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
 Version:       1.2.14
-Release:       7%{?dist}
+Release:       8%{?dist}
 License:       LGPLv2+
 Group:         Development/Libraries
 URL:           http://libguestfs.org/
@@ -661,6 +661,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Fri Mar 30 2012 Richard W.M. Jones <rjones@redhat.com> - 1:1.2.14-8
+- Bump and rebuild.
+
 * Mon Oct 24 2011 Richard W.M. Jones <rjones@redhat.com> - 1:1.2.14-7
 - Bump and rebuild - zlib moved the libraries around in RHEL 5.7.
   resolves: rhbz#748370.
