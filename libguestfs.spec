@@ -22,7 +22,7 @@ Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
 Version:       1.17.22
-Release:       1%{?dist}
+Release:       2%{?dist}
 License:       LGPLv2+
 Group:         Development/Libraries
 URL:           http://libguestfs.org/
@@ -622,6 +622,7 @@ To develop software against these bindings, you need to install
 Summary:       GObject bindings for %{name}
 Group:         Development/Libraries
 Requires:      %{name}-gobject = %{epoch}:%{version}-%{release}
+Requires:      gtk-doc
 
 %description gobject-devel
 %{name}-gobject contains GObject bindings for %{name}.
@@ -1042,8 +1043,9 @@ rm -rf $RPM_BUILD_ROOT
 %files gobject-devel
 %defattr(-,root,root,-)
 %{_libdir}/libguestfs-gobject-1.0.so
-%{_includedir}/guestfs-gobject.h
+%{_includedir}/guestfs-gobject*.h
 %{_datadir}/gir-1.0/Guestfs-1.0.gir
+%{_datadir}/gtk-doc/html/guestfs
 
 
 %files man-pages-ja
@@ -1059,6 +1061,10 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Fri Mar 29 2012 Richard W.M. Jones <rjones@redhat.com> - 1:1.17.22-2
+- Include all gobject header files.
+- Include gtk-doc, and depend on the gtk-doc package at runtime.
+
 * Thu Mar 29 2012 Richard W.M. Jones <rjones@redhat.com> - 1:1.17.22-1
 - New upstream version 1.17.22.
 
