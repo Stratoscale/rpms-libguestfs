@@ -21,8 +21,8 @@
 Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
-Version:       1.17.22
-Release:       2%{?dist}
+Version:       1.17.23
+Release:       1%{?dist}
 License:       LGPLv2+
 Group:         Development/Libraries
 URL:           http://libguestfs.org/
@@ -1061,6 +1061,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sun Apr 01 2012 Richard W.M. Jones <rjones@redhat.com> - 1:1.17.23-1
+- New upstream version 1.17.23.
+
 * Fri Mar 29 2012 Richard W.M. Jones <rjones@redhat.com> - 1:1.17.22-2
 - Include all gobject header files.
 - Include gtk-doc, and depend on the gtk-doc package at runtime.
