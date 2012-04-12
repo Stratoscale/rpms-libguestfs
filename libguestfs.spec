@@ -22,14 +22,14 @@ Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
 Version:       1.17.28
-Release:       1%{?dist}
+Release:       2%{?dist}
 License:       LGPLv2+
 Group:         Development/Libraries
 URL:           http://libguestfs.org/
 Source0:       http://libguestfs.org/download/1.17-development/%{name}-%{version}.tar.gz
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root
 
-%if 0%{?fedora} >= 17
+%if 0%{?fedora} >= 17 || 0%{?rhel} >= 7
 Patch1:        ruby-1.9-vendor-not-site.patch
 BuildRequires: autoconf, automake, libtool, gettext-devel
 %endif
@@ -654,7 +654,7 @@ for %{name}.
 %prep
 %setup -q
 
-%if 0%{?fedora} >= 17
+%if 0%{?fedora} >= 17 || 0%{?rhel} >= 7
 %patch1 -p1
 autoreconf -i
 %endif
@@ -1062,6 +1062,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Thu Apr 12 2012 Richard W.M. Jones <rjones@redhat.com> - 1:1.17.28-2
+- Enable ruby 1.9 patch in RHEL 7 (RHBZ#812139).
+
 * Thu Apr 12 2012 Richard W.M. Jones <rjones@redhat.com> - 1:1.17.28-1
 - New upstream version 1.17.28.
 
