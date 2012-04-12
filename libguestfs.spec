@@ -21,7 +21,7 @@
 Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
-Version:       1.17.27
+Version:       1.17.28
 Release:       1%{?dist}
 License:       LGPLv2+
 Group:         Development/Libraries
@@ -872,6 +872,7 @@ rm -rf $RPM_BUILD_ROOT
 %doc installed-docs/*
 %{_libdir}/libguestfs.so
 %{_sbindir}/libguestfs-make-fixed-appliance
+%{_mandir}/man1/guestfs-performance.1*
 %{_mandir}/man1/guestfs-recipes.1*
 %{_mandir}/man1/libguestfs-make-fixed-appliance.1*
 %{_mandir}/man3/guestfs.3*
@@ -1061,6 +1062,12 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Thu Apr 12 2012 Richard W.M. Jones <rjones@redhat.com> - 1:1.17.28-1
+- New upstream version 1.17.28.
+
+* Wed Apr 11 2012 Richard W.M. Jones <rjones@redhat.com> - 1:1.17.27-2
+- Add guestfs-performance(1) manual page.
+
 * Tue Apr 10 2012 Richard W.M. Jones <rjones@redhat.com> - 1:1.17.27-1
 - New upstream version 1.17.27.
 
