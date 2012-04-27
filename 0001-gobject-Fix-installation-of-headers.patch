@@ -1,0 +1,83 @@
+From d448ae0c2bff2079212734835899e17cac468620 Mon Sep 17 00:00:00 2001
+From: "Richard W.M. Jones" <rjones@redhat.com>
+Date: Fri, 27 Apr 2012 09:10:43 +0100
+Subject: [PATCH] gobject: Fix installation of headers.
+
+RPM build errors:
+error: Installed (but unpackaged) file(s) found:
+   /usr/include/optargs-add_domain.h
+   /usr/include/optargs-add_drive_opts.h
+   /usr/include/optargs-btrfs_filesystem_resize.h
+   /usr/include/optargs-compress_device_out.h
+   /usr/include/optargs-compress_out.h
+   /usr/include/optargs-copy_device_to_device.h
+   /usr/include/optargs-copy_device_to_file.h
+   /usr/include/optargs-copy_file_to_device.h
+   /usr/include/optargs-copy_file_to_file.h
+   /usr/include/optargs-e2fsck.h
+   /usr/include/optargs-inspect_get_icon.h
+   /usr/include/optargs-md_create.h
+   /usr/include/optargs-mkfs_btrfs.h
+   /usr/include/optargs-mkfs_opts.h
+   /usr/include/optargs-mount_9p.h
+   /usr/include/optargs-mount_local.h
+   /usr/include/optargs-ntfsclone_out.h
+   /usr/include/optargs-ntfsfix.h
+   /usr/include/optargs-ntfsresize_opts.h
+   /usr/include/optargs-set_e2attrs.h
+   /usr/include/optargs-test0.h
+   /usr/include/optargs-tune2fs.h
+   /usr/include/optargs-umount_local.h
+   /usr/include/session.h
+   /usr/include/struct-application.h
+   /usr/include/struct-btrfssubvolume.h
+   /usr/include/struct-dirent.h
+   /usr/include/struct-inotify_event.h
+   /usr/include/struct-int_bool.h
+   /usr/include/struct-isoinfo.h
+   /usr/include/struct-lvm_lv.h
+   /usr/include/struct-lvm_pv.h
+   /usr/include/struct-lvm_vg.h
+   /usr/include/struct-mdstat.h
+   /usr/include/struct-partition.h
+   /usr/include/struct-stat.h
+   /usr/include/struct-statvfs.h
+   /usr/include/struct-version.h
+   /usr/include/struct-xattr.h
+   /usr/include/tristate.h
+
+We want to put these headers into the subdirectory, but not
+guestfs-gobject.h.  This isn't easy with automake.
+---
+ gobject/Makefile.am |    8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
+
+diff --git a/gobject/Makefile.am b/gobject/Makefile.am
+index bceec9b..4fe1098 100644
+--- a/gobject/Makefile.am
++++ b/gobject/Makefile.am
+@@ -39,7 +39,7 @@ libname = libguestfs-gobject-1.0.la
+ 
+ lib_LTLIBRARIES = $(libname)
+ 
+-libguestfs_gobject_1_0_ladir = $(includedir)
++libguestfs_gobject_1_0_ladir = $(includedir)/guestfs-gobject
+ 
+ libguestfs_gobject_1_0_la_HEADERS = $(guestfs_gobject_headers)
+ libguestfs_gobject_1_0_la_SOURCES = $(guestfs_gobject_sources)
+@@ -49,6 +49,12 @@ libguestfs_gobject_1_0_la_LIBS = $(GOBJECT_LIBS)
+ libguestfs_gobject_1_0_la_LDFLAGS = $(LDFLAGS) -L$(top_builddir)/src
+ libguestfs_gobject_1_0_la_LIBADD = -lguestfs
+ 
++# All the headers except <guestfs-gobject.h> should be installed
++# in the subdirectory.
++install-data-hook:
++	rm $(DESTDIR)$(includedir)/guestfs-gobject/guestfs-gobject.h
++	install -m 0644 include/guestfs-gobject.h $(DESTDIR)$(includedir)
++
+ -include $(INTROSPECTION_MAKEFILE)
+ INTROSPECTION_GIRS =
+ INTROSPECTION_SCANNER_ARGS = --add-include-path=$(srcdir) --warn-all
+-- 
+1.7.10
+

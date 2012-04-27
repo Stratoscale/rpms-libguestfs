@@ -22,7 +22,7 @@ Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
 Version:       1.17.36
-Release:       1%{?dist}
+Release:       2%{?dist}
 License:       LGPLv2+
 Group:         Development/Libraries
 URL:           http://libguestfs.org/
@@ -33,6 +33,8 @@ BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root
 Patch1:        ruby-1.9-vendor-not-site.patch
 BuildRequires: autoconf, automake, libtool, gettext-devel
 %endif
+
+Patch10:       0001-gobject-Fix-installation-of-headers.patch
 
 %if 0%{?rhel} >= 7
 ExclusiveArch: x86_64
@@ -659,6 +661,9 @@ for %{name}.
 autoreconf -i
 %endif
 
+%patch10 -p1
+autoreconf -i
+
 mkdir -p daemon/m4
 
 # Replace developer-specific README that ships with libguestfs, with
@@ -1044,7 +1049,9 @@ rm -rf $RPM_BUILD_ROOT
 %files gobject-devel
 %defattr(-,root,root,-)
 %{_libdir}/libguestfs-gobject-1.0.so
-%{_includedir}/guestfs-gobject*.h
+%{_includedir}/guestfs-gobject.h
+%dir %{_includedir}/guestfs-gobject
+%{_includedir}/guestfs-gobject/*.h
 %{_datadir}/gir-1.0/Guestfs-1.0.gir
 %{_datadir}/gtk-doc/html/guestfs
 
@@ -1062,6 +1069,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Fri Apr 27 2012 Richard W.M. Jones <rjones@redhat.com> - 1:1.17.36-2
+- Add upstream patch to fix installation of gobject headers.
+
 * Thu Apr 26 2012 Richard W.M. Jones <rjones@redhat.com> - 1:1.17.36-1
 - New upstream version 1.17.36.
 
