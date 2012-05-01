@@ -22,7 +22,7 @@ Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
 Version:       1.17.38
-Release:       1%{?dist}
+Release:       2%{?dist}
 License:       LGPLv2+
 Group:         Development/Libraries
 URL:           http://libguestfs.org/
@@ -95,7 +95,10 @@ BuildRequires: grep
 #BuildRequires: grub
 #%endif
 BuildRequires: gzip
+# hfsplus-tools has issues on ARM due to issues with clang
+%ifnarch %{arm}
 BuildRequires: hfsplus-tools
+%endif
 BuildRequires: iproute
 BuildRequires: iputils
 %if !0%{?rhel}
@@ -130,8 +133,11 @@ BuildRequires: vim-minimal
 BuildRequires: xfsprogs
 BuildRequires: xz
 BuildRequires: zerofree
+# Not supported on ARM http://zfs-fuse.net/issues/94
+%ifnarch %{arm}
 %if !0%{?rhel}
 BuildRequires: zfs-fuse
+%endif
 %endif
 
 # Must match the above set of BuildRequires exactly!
@@ -157,7 +163,10 @@ Requires:      grep
 #Requires:      grub
 #%endif
 Requires:      gzip
+# hfsplus-tools has issues on ARM due to issues with clang
+%ifnarch %{arm}
 Requires:      hfsplus-tools
+%endif
 Requires:      iproute
 Requires:      iputils
 %if !0%{?rhel}
@@ -192,8 +201,11 @@ Requires:      vim-minimal
 Requires:      xfsprogs
 Requires:      xz
 Requires:      zerofree
+# Not supported on ARM http://zfs-fuse.net/issues/94
+%ifnarch %{arm}
 %if !0%{?rhel}
 Requires:      zfs-fuse
+%endif
 %endif
 
 # These are only required if you want to build the bindings for
@@ -1065,6 +1077,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Tue May  1 2012 Peter Robinson <pbrobinson@fedoraproject.org> - 1:1.17.38-2
+- Update supported filesystems for ARM
+
 * Tue May 01 2012 Richard W.M. Jones <rjones@redhat.com> - 1:1.17.38-1
 - New upstream version 1.17.38.
 
