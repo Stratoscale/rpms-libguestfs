@@ -22,7 +22,7 @@ Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
 Version:       1.17.38
-Release:       2%{?dist}
+Release:       3%{?dist}
 License:       LGPLv2+
 Group:         Development/Libraries
 URL:           http://libguestfs.org/
@@ -254,11 +254,8 @@ Requires:      libdb-utils
 Requires:      netpbm-progs
 Requires:      icoutils
 
-# Because many previously unreadable binaries have been made readable
-# (because of RHBZ#646469) they will be included in the hostfiles
-# list, which means that this libguestfs won't work with versions of
-# glibc built before the change.
-Requires:      glibc >= 2.13.90-4
+# For core mount-local (FUSE) API.
+Requires:      fuse
 
 # Provide our own custom requires for the supermin appliance.
 Source1:       libguestfs-find-requires.sh
@@ -385,12 +382,6 @@ Requires:      perl(Win::Hivex) >= 1.2.7
 
 # for virt-make-fs:
 Requires:      qemu-img
-
-# for virt-sysprep:
-Requires:      /usr/bin/fusermount
-Requires:      /usr/bin/getopt
-Requires:      /usr/bin/guestmount
-Requires:      /usr/bin/virt-inspector
 
 
 %description tools
@@ -1077,6 +1068,11 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Wed May 02 2012 Richard W.M. Jones <rjones@redhat.com> - 1:1.17.38-3
+- Remove explicit runtime deps for old virt-sysprep.
+- Add explicit runtime dep on fuse (RHBZ#767852, thanks Pádraig Brady).
+- Remove explicit versioned dep on glibc.
+
 * Tue May  1 2012 Peter Robinson <pbrobinson@fedoraproject.org> - 1:1.17.38-2
 - Update supported filesystems for ARM
 
