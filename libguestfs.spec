@@ -21,8 +21,8 @@
 Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
-Version:       1.17.38
-Release:       3%{?dist}
+Version:       1.17.39
+Release:       1%{?dist}
 License:       LGPLv2+
 Group:         Development/Libraries
 URL:           http://libguestfs.org/
@@ -1068,6 +1068,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Thu May 03 2012 Richard W.M. Jones <rjones@redhat.com> - 1:1.17.39-1
+- New upstream version 1.17.39.
+
 * Wed May 02 2012 Richard W.M. Jones <rjones@redhat.com> - 1:1.17.38-3
 - Remove explicit runtime deps for old virt-sysprep.
 - Add explicit runtime dep on fuse (RHBZ#767852, thanks Pádraig Brady).
