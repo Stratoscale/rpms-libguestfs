@@ -22,7 +22,7 @@ Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
 Version:       1.17.39
-Release:       1%{?dist}
+Release:       2%{?dist}
 License:       LGPLv2+
 Group:         Development/Libraries
 URL:           http://libguestfs.org/
@@ -66,6 +66,7 @@ BuildRequires: ocaml-findlib-devel
 BuildRequires: systemd-units
 BuildRequires: netpbm-progs
 BuildRequires: icoutils
+BuildRequires: perl-XML-XPath
 
 # This is only needed for RHEL 5 because readline-devel doesn't
 # properly depend on it, but doesn't do any harm on other platforms:
@@ -1068,6 +1069,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Thu May 03 2012 Richard W.M. Jones <rjones@redhat.com> - 1:1.17.39-2
+- BR perl-XML-XPath to run the new XML test.
+
 * Thu May 03 2012 Richard W.M. Jones <rjones@redhat.com> - 1:1.17.39-1
 - New upstream version 1.17.39.
 
