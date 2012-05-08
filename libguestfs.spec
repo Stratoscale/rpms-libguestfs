@@ -22,7 +22,7 @@ Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
 Version:       1.17.39
-Release:       2%{?dist}
+Release:       3%{?dist}
 License:       LGPLv2+
 Group:         Development/Libraries
 URL:           http://libguestfs.org/
@@ -96,9 +96,10 @@ BuildRequires: grep
 #BuildRequires: grub
 #%endif
 BuildRequires: gzip
-# hfsplus-tools has issues on ARM due to issues with clang
 %ifnarch %{arm}
+%if !0%{?rhel}
 BuildRequires: hfsplus-tools
+%endif
 %endif
 BuildRequires: iproute
 BuildRequires: iputils
@@ -164,9 +165,10 @@ Requires:      grep
 #Requires:      grub
 #%endif
 Requires:      gzip
-# hfsplus-tools has issues on ARM due to issues with clang
 %ifnarch %{arm}
+%if !0%{?rhel}
 Requires:      hfsplus-tools
+%endif
 %endif
 Requires:      iproute
 Requires:      iputils
@@ -1069,6 +1071,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Tue May  8 2012 Richard W.M. Jones <rjones@redhat.com> - 1:1.17.39-3
+- Disable hfsplus-tools on RHEL 7.
+
 * Thu May 03 2012 Richard W.M. Jones <rjones@redhat.com> - 1:1.17.39-2
 - BR perl-XML-XPath to run the new XML test.
 
