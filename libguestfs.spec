@@ -22,7 +22,7 @@ Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
 Version:       1.17.42
-Release:       1%{?dist}
+Release:       2%{?dist}
 License:       LGPLv2+
 Group:         Development/Libraries
 URL:           http://libguestfs.org/
@@ -272,6 +272,9 @@ Source3:       99-guestfsd.rules
 
 # Replacement README file for Fedora users.
 Source4:       README-replacement.in
+
+# https://fedoraproject.org/wiki/Packaging:No_Bundled_Libraries#Packages_granted_exceptions
+Provides:      bundled(gnulib)
 
 
 %description
@@ -1071,6 +1074,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Tue May 15 2012 Richard W.M. Jones <rjones@redhat.com> - 1:1.17.42-2
+- Bundled gnulib (RHBZ#821767).
+
 * Mon May 14 2012 Richard W.M. Jones <rjones@redhat.com> - 1:1.17.42-1
 - New upstream version 1.17.42.
 
