@@ -21,8 +21,8 @@
 Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
-Version:       1.17.42
-Release:       4%{?dist}
+Version:       1.17.43
+Release:       1%{?dist}
 License:       LGPLv2+
 Group:         Development/Libraries
 URL:           http://libguestfs.org/
@@ -1082,6 +1082,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Thu May 17 2012 Richard W.M. Jones <rjones@redhat.com> - 1:1.17.43-1
+- New upstream version 1.17.43.
+
 * Thu May 17 2012 Richard W.M. Jones <rjones@redhat.com> - 1:1.17.42-4
 - On RHEL 7 only, remove reiserfs-utils, zerofree.
 
