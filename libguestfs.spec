@@ -22,7 +22,7 @@ Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
 Version:       1.17.42
-Release:       2%{?dist}
+Release:       3%{?dist}
 License:       LGPLv2+
 Group:         Development/Libraries
 URL:           http://libguestfs.org/
@@ -114,8 +114,8 @@ BuildRequires: lvm2
 BuildRequires: lzop
 BuildRequires: mdadm
 BuildRequires: module-init-tools
-BuildRequires: nilfs-utils
 %if !0%{?rhel}
+BuildRequires: nilfs-utils
 BuildRequires: ntfs-3g
 %ifarch %{ix86} x86_64
 BuildRequires: ntfsprogs
@@ -183,8 +183,8 @@ Requires:      lvm2
 Requires:      lzop
 Requires:      mdadm
 Requires:      module-init-tools
-Requires:      nilfs-utils
 %if !0%{?rhel}
+Requires:      nilfs-utils
 Requires:      ntfs-3g
 %ifarch %{ix86} x86_64
 Requires:      ntfsprogs
@@ -1074,6 +1074,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Thu May 17 2012 Richard W.M. Jones <rjones@redhat.com> - 1:1.17.42-3
+- On RHEL 7 only, remove nilfs-utils.
+
 * Tue May 15 2012 Richard W.M. Jones <rjones@redhat.com> - 1:1.17.42-2
 - Bundled gnulib (RHBZ#821767).
 
