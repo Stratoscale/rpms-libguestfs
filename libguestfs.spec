@@ -199,7 +199,7 @@ Requires:      strace
 Requires:      systemd
 Requires:      tar
 Requires:      udev
-Requires:      util-linux-ng
+Requires:      util-linux
 Requires:      vim-minimal
 Requires:      xfsprogs
 Requires:      xz
