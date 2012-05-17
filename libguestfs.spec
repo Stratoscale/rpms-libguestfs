@@ -22,7 +22,7 @@ Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
 Version:       1.17.42
-Release:       3%{?dist}
+Release:       4%{?dist}
 License:       LGPLv2+
 Group:         Development/Libraries
 URL:           http://libguestfs.org/
@@ -124,7 +124,9 @@ BuildRequires: ntfsprogs
 BuildRequires: parted
 BuildRequires: procps
 BuildRequires: psmisc
+%if !0%{?rhel}
 BuildRequires: reiserfs-utils
+%endif
 BuildRequires: scrub
 BuildRequires: strace
 BuildRequires: systemd
@@ -134,7 +136,9 @@ BuildRequires: util-linux
 BuildRequires: vim-minimal
 BuildRequires: xfsprogs
 BuildRequires: xz
+%if !0%{?rhel}
 BuildRequires: zerofree
+%endif
 # Not supported on ARM http://zfs-fuse.net/issues/94
 %ifnarch %{arm}
 %if !0%{?rhel}
@@ -193,7 +197,9 @@ Requires:      ntfsprogs
 Requires:      parted
 Requires:      procps
 Requires:      psmisc
+%if !0%{?rhel}
 Requires:      reiserfs-utils
+%endif
 Requires:      scrub
 Requires:      strace
 Requires:      systemd
@@ -203,7 +209,9 @@ Requires:      util-linux
 Requires:      vim-minimal
 Requires:      xfsprogs
 Requires:      xz
+%if !0%{?rhel}
 Requires:      zerofree
+%endif
 # Not supported on ARM http://zfs-fuse.net/issues/94
 %ifnarch %{arm}
 %if !0%{?rhel}
@@ -1074,6 +1082,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Thu May 17 2012 Richard W.M. Jones <rjones@redhat.com> - 1:1.17.42-4
+- On RHEL 7 only, remove reiserfs-utils, zerofree.
+
 * Thu May 17 2012 Richard W.M. Jones <rjones@redhat.com> - 1:1.17.42-3
 - On RHEL 7 only, remove nilfs-utils.
 
