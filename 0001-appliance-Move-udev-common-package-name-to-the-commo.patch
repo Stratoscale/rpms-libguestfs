@@ -1,0 +1,50 @@
+From a7e4a6c692554e4207b3bdff65946427e66e9fce Mon Sep 17 00:00:00 2001
+From: "Richard W.M. Jones" <rjones@redhat.com>
+Date: Mon, 28 May 2012 10:01:45 -0400
+Subject: [PATCH 1/2] appliance: Move udev (common package name) to the common
+ section.
+
+This should be just code motion.
+---
+ appliance/packagelist.in |    4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
+
+diff --git a/appliance/packagelist.in b/appliance/packagelist.in
+index c4484db..980dc0e 100644
+--- a/appliance/packagelist.in
++++ b/appliance/packagelist.in
+@@ -40,7 +40,6 @@
+   reiserfs-utils
+   libselinux
+   systemd /* for /sbin/reboot */
+-  udev
+   util-linux-ng
+   vim-minimal
+   xz
+@@ -64,7 +63,6 @@
+   ntfs-3g
+   ntfsprogs
+   reiserfsprogs
+-  udev
+   ufsutils
+   util-linux
+   vim-tiny
+@@ -87,7 +85,6 @@
+   ntfsprogs
+   ntfs-3g
+   reiserfsprogs
+-  udev
+   util-linux-ng
+   xz
+ #endif /* ARCHLINUX */
+@@ -125,6 +122,7 @@ psmisc
+ scrub
+ strace
+ tar
++udev
+ #ifndef UBUNTU
+ /* on Ubuntu contains a file in /lib64 which conflicts with libc6 that has
+  * /lib64 as a symbolic link
+-- 
+1.7.10.1
+

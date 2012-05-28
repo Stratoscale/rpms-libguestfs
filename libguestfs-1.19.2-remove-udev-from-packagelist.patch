@@ -1,0 +1,11 @@
+--- libguestfs/appliance/packagelist.in.orig	2012-05-28 16:44:31.259942705 +0100
++++ libguestfs/appliance/packagelist.in	2012-05-28 16:44:33.919892387 +0100
+@@ -122,7 +122,7 @@
+ scrub
+ strace
+ tar
+-udev
++/*udev*/
+ #ifndef UBUNTU
+ /* on Ubuntu contains a file in /lib64 which conflicts with libc6 that has
+  * /lib64 as a symbolic link
