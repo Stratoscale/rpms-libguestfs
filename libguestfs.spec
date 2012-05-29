@@ -22,7 +22,7 @@ Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
 Version:       1.19.2
-Release:       2%{?dist}
+Release:       3%{?dist}
 License:       LGPLv2+
 Group:         Development/Libraries
 URL:           http://libguestfs.org/
@@ -773,65 +773,16 @@ export LIBGUESTFS_DEBUG=1
 # output even when combined with trace (see RHBZ#673477).
 export LIBGUESTFS_TRACE=1
 
-# Uncomment one of these, depending on whether you want to
-# do a very long and thorough test ('make check') or just
-# a quick test to see if things generally work.
-
-# Tracking test issues:
-# BZ       archs        branch reason
-# 494075   ppc, ppc64          openbios bug causes "invalid/unsupported opcode"
-# 504273   ppc, ppc64          "no opcode defined"
-# 505109   ppc, ppc64          "Boot failure! No secondary bootloader specified"
-# 502058   i386, x86-64 F-11   need to boot with noapic (WORKAROUND ENABLED)
-# 502074   i386         all    commands segfault randomly (fixed itself)
-# 503236   i386         F-12   cryptomgr_test at doublefault_fn
-# 507066   all          F-12   sequence of chroot calls (FIXED)
-# 513249   all          F-12   guestfwd broken in qemu (FIXED)
-# 516022   all          F-12   virtio-net gives "Network is unreachable" errors
-#                                 (FIXED)
-# 516096   ?            F-11   race condition in swapoff/blockdev --rereadpt
-# 516543   ?            F-12   qemu-kvm segfaults when run inside a VM (FIXED)
-# 548121   all          F-13   udevsettle command is broken (WORKAROUND)
-# 553689   all          F-13   missing SeaBIOS (FIXED)
-# 563103   all          F-13   glibc incorrect emulation of preadv/pwritev
-#                                 (sort of FIXED)
-# 567567   32-bit       all    guestfish xstrtol test failure on 32-bit (FIXED)
-# 575734   all          F-14   microsecond resolution for blkid cache (FIXED)
-# 630583   all          all    kernel hangs setting scheduler to noop
-# 630777   all          F-15   task lvm blocked for more than 120 seconds
-#                                 (FIXED)
-# 705499   all          F-16   file command strange output on file of all zero
-# 710921   all          F-16   ftrace problems (FIXED)
-# 723555   i386         F-16   GPF when VM shuts down
-# 723822   x86-64       F-16   boot hangs
-# 728911   i386         F-17   TCG fatal error
-# 744426   all          F-17   problem with unstable TSC in 3.1-rc9
-
 # This test fails because we build the ISO after encoding the checksum
 # of the ISO in the test itself.  Need to fix the test to work out the
 # checksum at runtime.
 export SKIP_TEST_CHECKSUM_DEVICE=1
 
-# Work around 'test-getlogin_r.c:55: assertion failed' in Gnulib tests.
-pushd gnulib/tests
-borked=test-getlogin_r
-make $borked
-rm $borked
-touch $borked
-chmod +x $borked
-popd
-
-%ifarch %{ix86}
-# test-stdalign is broken with i686 and GCC 4.7.
-pushd gnulib/tests
-borked="test-stdalign.o test-stdalign"
-touch $borked
-chmod +x $borked
-popd
-%endif
-
 %if %{runtests}
+# !i386 because of RHBZ#825944
+%ifnarch %{ix86}
 make check
+%endif
 %endif
 
 
@@ -1096,6 +1047,11 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Tue May 29 2012 Richard W.M. Jones <rjones@redhat.com> - 1:1.19.2-3
+- Remove obsolete list of bugs in make check rule.
+- Remove some obsolete test workarounds.
+- Disable i386 tests (because of RHBZ#825944).
+
 * Mon May 28 2012 Richard W.M. Jones <rjones@redhat.com> - 1:1.19.2-2
 - Include patches to fix udev.
 
