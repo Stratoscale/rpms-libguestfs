@@ -22,7 +22,7 @@ Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
 Version:       1.19.3
-Release:       1%{?dist}
+Release:       2%{?dist}
 License:       LGPLv2+
 Group:         Development/Libraries
 URL:           http://libguestfs.org/
@@ -33,10 +33,6 @@ BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root
 Patch1:        ruby-1.9-vendor-not-site.patch
 BuildRequires: autoconf, automake, libtool, gettext-devel
 %endif
-
-# Upstream patches to fix udev since it was moved into systemd.
-Patch2:        0001-appliance-Move-udev-common-package-name-to-the-commo.patch
-Patch3:        0002-appliance-udevd-has-been-renamed-since-it-joined-sys.patch
 
 # Non-upstream patch to remove udev from the packagelist.  systemd now
 # 'obsoletes' udev, but febootstrap doesn't get this relationship
@@ -686,8 +682,6 @@ for %{name}.
 autoreconf -i
 %endif
 
-%patch2 -p1
-%patch3 -p1
 %patch4 -p1
 
 mkdir -p daemon/m4
@@ -1044,8 +1038,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
-* Fri Jun 01 2012 Richard W.M. Jones <rjones@redhat.com> - 1:1.19.3-1
+* Fri Jun 01 2012 Richard W.M. Jones <rjones@redhat.com> - 1:1.19.3-2
 - New upstream version 1.19.3.
+- Remove patches which are now upstream.
 
 * Tue May 29 2012 Richard W.M. Jones <rjones@redhat.com> - 1:1.19.2-3
 - Remove obsolete list of bugs in make check rule.
