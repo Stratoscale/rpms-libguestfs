@@ -21,8 +21,8 @@
 Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
-Version:       1.19.2
-Release:       3%{?dist}
+Version:       1.19.3
+Release:       1%{?dist}
 License:       LGPLv2+
 Group:         Development/Libraries
 URL:           http://libguestfs.org/
@@ -779,10 +779,7 @@ export LIBGUESTFS_TRACE=1
 export SKIP_TEST_CHECKSUM_DEVICE=1
 
 %if %{runtests}
-# !i386 because of RHBZ#825944
-%ifnarch %{ix86}
 make check
-%endif
 %endif
 
 
@@ -1047,6 +1044,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Fri Jun 01 2012 Richard W.M. Jones <rjones@redhat.com> - 1:1.19.3-1
+- New upstream version 1.19.3.
+
 * Tue May 29 2012 Richard W.M. Jones <rjones@redhat.com> - 1:1.19.2-3
 - Remove obsolete list of bugs in make check rule.
 - Remove some obsolete test workarounds.
