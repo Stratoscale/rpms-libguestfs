@@ -21,8 +21,8 @@
 Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
-Version:       1.19.5
-Release:       2%{?dist}
+Version:       1.19.6
+Release:       1%{?dist}
 License:       LGPLv2+
 Group:         Development/Libraries
 URL:           http://libguestfs.org/
@@ -47,14 +47,14 @@ ExclusiveArch: x86_64
 # Basic build requirements:
 BuildRequires: /usr/bin/pod2man
 BuildRequires: /usr/bin/pod2text
-BuildRequires: febootstrap >= 3.7
+BuildRequires: febootstrap >= 3.15
 BuildRequires: hivex-devel >= 1.2.7-7
 BuildRequires: perl-hivex
 BuildRequires: augeas-devel >= 0.5.0
 BuildRequires: readline-devel
 BuildRequires: genisoimage
 BuildRequires: libxml2-devel
-BuildRequires: qemu-kvm >= 0.10-7
+BuildRequires: qemu-kvm >= 1.0
 BuildRequires: createrepo
 BuildRequires: glibc-static
 BuildRequires: libselinux-devel
@@ -260,8 +260,8 @@ BuildRequires: qemu-img
 BuildRequires: parted >= 3.0-2
 
 # Runtime requires:
-Requires:      qemu-kvm >= 0.12
-Requires:      febootstrap-supermin-helper >= 3.3
+Requires:      qemu-kvm >= 1.0
+Requires:      febootstrap-supermin-helper >= 3.15
 
 # For libguestfs-test-tool.
 Requires:      genisoimage
@@ -731,7 +731,6 @@ cat yum.conf
   --with-extra="fedora=%{fedora},release=%{release}" \
   --with-qemu="qemu-kvm qemu-system-%{_build_arch} qemu" \
   --enable-install-daemon \
-  --with-drive-if=virtio \
   %{extra} || {
     echo "==== config.log ===="
     cat config.log
@@ -1038,6 +1037,12 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Tue Jun 12 2012 Richard W.M. Jones <rjones@redhat.com> - 1:1.19.6-1
+- New upstream version 1.19.6.
+- This version defaults to using virtio-scsi.
+- Requires qemu >= 1.0.
+- Requires febootstrap >= 3.15.
+
 * Mon Jun 11 2012 Petr Pisar <ppisar@redhat.com> - 1:1.19.5-2
 - Perl 5.16 rebuild
 
