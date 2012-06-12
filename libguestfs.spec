@@ -1039,6 +1039,9 @@ rm -rf $RPM_BUILD_ROOT
 %changelog
 * Tue Jun 12 2012 Richard W.M. Jones <rjones@redhat.com> - 1:1.19.6-1
 - New upstream version 1.19.6.
+
+* Tue Jun 12 2012 Richard W.M. Jones <rjones@redhat.com> - 1:1.19.6-1
+- New upstream version 1.19.6.
 - This version defaults to using virtio-scsi.
 - Requires qemu >= 1.0.
 - Requires febootstrap >= 3.15.
