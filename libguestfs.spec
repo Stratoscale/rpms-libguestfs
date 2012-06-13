@@ -22,7 +22,7 @@ Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
 Version:       1.19.6
-Release:       1%{?dist}
+Release:       2%{?dist}
 License:       LGPLv2+
 Group:         Development/Libraries
 URL:           http://libguestfs.org/
@@ -47,7 +47,7 @@ ExclusiveArch: x86_64
 # Basic build requirements:
 BuildRequires: /usr/bin/pod2man
 BuildRequires: /usr/bin/pod2text
-BuildRequires: febootstrap >= 3.15
+BuildRequires: febootstrap >= 3.16
 BuildRequires: hivex-devel >= 1.2.7-7
 BuildRequires: perl-hivex
 BuildRequires: augeas-devel >= 0.5.0
@@ -261,7 +261,7 @@ BuildRequires: parted >= 3.0-2
 
 # Runtime requires:
 Requires:      qemu-kvm >= 1.0
-Requires:      febootstrap-supermin-helper >= 3.15
+Requires:      febootstrap-supermin-helper >= 3.16
 
 # For libguestfs-test-tool.
 Requires:      genisoimage
@@ -1037,6 +1037,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Wed Jun 12 2012 Richard W.M. Jones <rjones@redhat.com> - 1:1.19.6-2
+- Require febootstrap >= 3.16.
+
 * Tue Jun 12 2012 Richard W.M. Jones <rjones@redhat.com> - 1:1.19.6-1
 - New upstream version 1.19.6.
 
