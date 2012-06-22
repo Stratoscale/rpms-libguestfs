@@ -10,8 +10,8 @@ files=`sed "s/['\"]/\\\&/g"`
 # Use ordinary find-requires first.
 echo $files | tr [:blank:] '\n' | $original_find_requires
 
-# Is initramfs.*.supermin.hostfiles included in the list of files?
-hostfiles=`echo $files | tr [:blank:] '\n' | grep 'initramfs\..*\.supermin\.hostfiles$'`
+# Is supermin.d/hostfiles included in the list of files?
+hostfiles=`echo $files | tr [:blank:] '\n' | grep 'supermin\.d/hostfiles$'`
 
 if [ -z "$hostfiles" ]; then
     exit 0

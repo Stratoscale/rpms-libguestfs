@@ -1,0 +1,107 @@
+#!/bin/sh
+
+usage() {
+  echo >&2 "\
+Usage: $0 [OPTION]...
+Bootstrap this package from the checked-out sources.
+"
+}
+
+for option
+do
+  case $option in
+  --help)
+    usage
+    exit;;
+  *)
+    echo >&2 "$0: $option: unknown option"
+    exit 1;;
+  esac
+done
+
+# Get gnulib files.
+
+echo "$0: getting gnulib files..."
+git submodule init || exit $?
+git submodule update || exit $?
+GNULIB_SRCDIR=.gnulib
+
+# Autoreconf runs aclocal before libtoolize, which causes spurious
+# warnings if the initial aclocal is confused by the libtoolized
+# (or worse out-of-date) macro directory.
+libtoolize --copy --install
+
+gnulib_tool=$GNULIB_SRCDIR/gnulib-tool
+<$gnulib_tool || exit
+
+(cd daemon && mkdir -p tests lib && ../$gnulib_tool --update)
+
+modules='
+accept4
+arpa_inet
+byteswap
+c-ctype
+cloexec
+closeout
+connect
+dup3
+error
+filevercmp
+fsusage
+fts
+full-read
+full-write
+futimens
+getaddrinfo
+getline
+gitlog-to-changelog
+glob
+gnu-make
+gnumakefile
+hash
+hash-pjw
+human
+ignore-value
+lock
+maintainer-makefile
+manywarnings
+mkdtemp
+netdb
+netinet_in
+openat
+perror
+pread
+progname
+read-file
+readlink
+select
+setenv
+sleep
+socket
+strchrnul
+strerror
+strndup
+symlinkat
+sys_select
+sys_wait
+vasprintf
+vc-list-files
+warnings
+xalloc
+xalloc-die
+xstrtol
+xstrtoll
+xvasprintf
+'
+
+$gnulib_tool			\
+  --avoid=dummy			\
+  --with-tests			\
+  --m4-base=m4			\
+  --source-base=gnulib/lib	\
+  --tests-base=gnulib/tests	\
+  --libtool			\
+  --import $modules
+
+# Disable autopoint and libtoolize, since they were already done above.
+AUTOPOINT=true LIBTOOLIZE=true autoreconf --verbose --install

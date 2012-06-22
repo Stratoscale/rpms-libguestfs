@@ -1,0 +1,89 @@
+From b3ce10d46479d46e9c9708193edd9fc0e34aa68c Mon Sep 17 00:00:00 2001
+From: Richard W.M. Jones <rjones@redhat.com>
+Date: Sat, 16 Jun 2012 14:34:25 +0100
+Subject: [PATCH 05/19] EPEL 5: Remove Erlang bindings.
+
+---
+ Makefile.am  |    3 ---
+ configure.ac |   23 -----------------------
+ po/POTFILES  |    2 --
+ 3 files changed, 0 insertions(+), 28 deletions(-)
+
+diff --git a/Makefile.am b/Makefile.am
+index be9191c..6bd6047 100644
+--- a/Makefile.am
++++ b/Makefile.am
+@@ -84,9 +84,6 @@ endif
+ if HAVE_PHP
+ SUBDIRS += php
+ endif
+-if HAVE_ERLANG
+-SUBDIRS += erlang erlang/examples
+-endif
+ if HAVE_GOBJECT
+ SUBDIRS += gobject
+ endif
+diff --git a/configure.ac b/configure.ac
+index e8d2073..b472031 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -1115,25 +1115,6 @@ AS_IF([test "x$enable_php" != "xno"],
+         ])
+ AM_CONDITIONAL([HAVE_PHP], [test "x$PHP" != "xno" && test "x$PHPIZE" != "xno"])
+ 
+-dnl Erlang
+-ERLANG=no
+-AC_ARG_ENABLE([erlang],
+-    AS_HELP_STRING([--disable-erlang], [Disable Erlang language bindings]),
+-         [],
+-         [enable_erlang=yes])
+-# NB: Don't use AS_IF here: it doesn't work.
+-if test "x$enable_erlang" != "xno"; then
+-        ERLANG=
+-        AC_ERLANG_PATH_ERLC([no])
+-
+-        if test "x$ERLC" != "xno"; then
+-            AC_ERLANG_CHECK_LIB([erl_interface], [],
+-                                [AC_MSG_FAILURE([Erlang erl_interface library not installed.  Use --disable-erlang to disable.])])
+-            AC_ERLANG_SUBST_LIB_DIR
+-        fi
+-fi
+-AM_CONDITIONAL([HAVE_ERLANG], [test "x$ERLANG" != "xno" && test "x$ERLC" != "xno"])
+-
+ dnl Check for Perl modules needed by Perl virt tools (virt-df, etc.)
+ AS_IF([test "x$PERL" != "xno"],
+         [
+@@ -1242,8 +1223,6 @@ AC_CONFIG_FILES([Makefile
+                  daemon/Makefile
+                  df/Makefile
+                  edit/Makefile
+-                 erlang/Makefile
+-                 erlang/examples/Makefile
+                  examples/Makefile
+                  fish/Makefile
+                  format/Makefile
+@@ -1325,8 +1304,6 @@ echo -n "Haskell bindings .................... "
+ if test "x$HAVE_HASKELL_TRUE" = "x"; then echo "yes"; else echo "no"; fi
+ echo -n "PHP bindings ........................ "
+ if test "x$HAVE_PHP_TRUE" = "x"; then echo "yes"; else echo "no"; fi
+-echo -n "Erlang bindings ..................... "
+-if test "x$HAVE_ERLANG_TRUE" = "x"; then echo "yes"; else echo "no"; fi
+ echo    "guestfish and C virt tools .......... yes"
+ echo -n "Perl virt tools ..................... "
+ if test "x$HAVE_TOOLS_TRUE" = "x"; then echo "yes"; else echo "no"; fi
+diff --git a/po/POTFILES b/po/POTFILES
+index 747b341..3e3f300 100644
+--- a/po/POTFILES
++++ b/po/POTFILES
+@@ -91,8 +91,6 @@ df/domains.c
+ df/main.c
+ df/output.c
+ edit/virt-edit.c
+-erlang/erl-guestfs-proto.c
+-erlang/erl-guestfs.c
+ fish/alloc.c
+ fish/cmds.c
+ fish/cmds_gperf.c
+-- 
+1.7.4.1
+

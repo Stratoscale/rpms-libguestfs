@@ -1,0 +1,108 @@
+From 1729508fb2e62f48590747f7a505b0c5ba5b202e Mon Sep 17 00:00:00 2001
+From: Richard W.M. Jones <rjones@redhat.com>
+Date: Sat, 16 Jun 2012 10:19:39 +0100
+Subject: [PATCH 01/19] EPEL 5: Remove checks which fail with ancient qemu.
+
+Note that g->qemu_version and g->qemu_devices will both
+be empty strings.
+---
+ configure.ac |   57 ---------------------------------------------------------
+ src/launch.c |   14 ++------------
+ 2 files changed, 2 insertions(+), 69 deletions(-)
+
+diff --git a/configure.ac b/configure.ac
+index 1a82511..4f954ed 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -573,63 +573,6 @@ This could be a very old version of qemu, or qemu might not be
+ working.
+ ])
+     fi
+-
+-    AC_MSG_CHECKING([that $QEMU -version works])
+-    if $QEMU -version >&AS_MESSAGE_LOG_FD 2>&1; then
+-        AC_MSG_RESULT([yes])
+-    else
+-        AC_MSG_RESULT([no])
+-        AC_MSG_FAILURE(
+-[$QEMU -version: command failed.
+-
+-This could be a very old version of qemu, or qemu might not be
+-working.
+-])
+-    fi
+-
+-    AC_MSG_CHECKING([for $QEMU version >= 1])
+-    if $QEMU -version | grep -sq 'version @<:@1-@:>@'; then
+-        AC_MSG_RESULT([yes])
+-    else
+-        AC_MSG_RESULT([no])
+-        AC_MSG_FAILURE([$QEMU version must be >= 1.0.])
+-    fi
+-
+-    AC_MSG_CHECKING([that $QEMU -machine accel=kvm:tcg -device ? works])
+-    if $QEMU -machine accel=kvm:tcg -device \? >&AS_MESSAGE_LOG_FD 2>&1; then
+-        AC_MSG_RESULT([yes])
+-    else
+-        AC_MSG_RESULT([no])
+-        AC_MSG_FAILURE([$QEMU -machine accel=kvm:tcg -device ? doesn't work.])
+-    fi
+-
+-    AC_MSG_CHECKING([for virtio-serial support in $QEMU])
+-    if $QEMU $QEMU_OPTIONS -machine accel=kvm:tcg -device \? 2>&1 | grep -sq virtio-serial; then
+-        AC_MSG_RESULT([yes])
+-    else
+-        AC_MSG_RESULT([no])
+-        AC_MSG_FAILURE(
+-[I did not find virtio-serial support in
+-$QEMU.
+-
+-virtio-serial support in qemu or KVM is essential for libguestfs
+-to operate.
+-
+-Usually this means that you have to install a newer version of qemu
+-and/or KVM.  Please read the relevant section in the README file for
+-more information about this.
+-
+-You can override this test by setting the environment variable
+-vmchannel_test=no
+-
+-However if you don't have the right support in your qemu, then this
+-just delays the pain.
+-
+-If I am using the wrong qemu or you want to compile qemu from source
+-and install it in another location, then you should configure with
+-the --with-qemu option.
+-])
+-    fi
+ fi
+ 
+ dnl Enable packet dumps when in verbose mode.  This generates lots
+diff --git a/src/launch.c b/src/launch.c
+index 72eca51..f21b331 100644
+--- a/src/launch.c
++++ b/src/launch.c
+@@ -1365,18 +1365,8 @@ test_qemu (guestfs_h *g)
+     return -1;
+   }
+ 
+-  snprintf (cmd, sizeof cmd, "LC_ALL=C '%s' -nographic -version 2>/dev/null",
+-            g->qemu);
+-
+-  if (test_qemu_cmd (g, cmd, &g->qemu_version) == -1)
+-    goto qemu_error;
+-
+-  snprintf (cmd, sizeof cmd,
+-            "LC_ALL=C '%s' -nographic -machine accel=kvm:tcg -device '?' 2>&1",
+-            g->qemu);
+-
+-  if (test_qemu_cmd (g, cmd, &g->qemu_devices) == -1)
+-    goto qemu_error;
++  g->qemu_version = safe_strdup (g, "");
++  g->qemu_devices = safe_strdup (g, "");
+ 
+   return 0;
+ }
+-- 
+1.7.4.1
+

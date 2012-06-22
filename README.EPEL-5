@@ -1,0 +1,139 @@
+libguestfs for EPEL 5
+=====================
+by Richard W.M. Jones <rjones@redhat.com>
+
+
+This package contains modern libguestfs for EPEL 5.  Although
+libguestfs is supplied in RHEL 5, the version supplied is very old and
+is only intended to be used with virt-v2v from RHEL 5.  It is only
+available in the RHEL-5-V2V channel.
+
+Therefore there exists a need for a modern libguestfs for RHEL 5
+users.  This package supplies this through the community-supported
+EPEL repository.
+
+
+(1) Installation
+----------------
+
+After enabling the EPEL repository, install libguestfs in the normal
+way using yum.  No post-installation configuration should be needed.
+
+You must have a non-Xen kernel installed on the host.  Note that the
+non-Xen kernel just needs to be installed, it does *not* need to be
+running (you can run libguestfs under Xen if you want).  The non-Xen
+kernel is used to boot the libguestfs appliance.
+
+You must use this package together with the version of qemu-kvm from
+RHEL 5 (usually called 'kvm-83-NNN.el5').  Alternate versions of qemu,
+KVM, using $LIBGUESTFS_QEMU or QEMU wrappers, will probably not work.
+
+Hardware virtualization will greatly improve the performance of
+libguestfs, but it is not required.  libguestfs cannot use hardware
+virtualization when run in a Xen domain (not even dom0).  For more
+performance tips, read guestfs-performance(1).
+
+
+(2) Getting help
+----------------
+
+This package is supported voluntarily by the EPEL community and by the
+upstream libguestfs maintainers.
+
+It is *not* supported by Red Hat.
+
+It *cannot* be used with the virt-v2v package from RHEL 5.  If you
+need to use virt-v2v on RHEL 5, use the libguestfs package from the
+same RHN channel.  However we would advise you to use RHEL 6 or later
+because that version of virt-v2v is substantially more powerful.
+
+To get help with this package, contact the libguestfs maintainers.
+See http://libguestfs.org for links to the mailing list, IRC, and how
+to file bugs.
+
+
+(3) Features not available
+--------------------------
+
+The following features are not compatible with RHEL 5 and have been
+removed completely:
+
+ - PHP bindings
+
+ - GObject, GObject introspection, anything that uses GObject
+   Introspection such as the Javascript bindings
+
+ - Erlang bindings
+
+ - The btrfs filesystem.
+
+ - guestfs_fstrim
+
+ - guestfs_wipefs
+
+ - Various APIs that take UUIDs (eg. guestfs_mkswap_U)
+
+ - virtio-scsi
+
+ - Internationalization of any non-C programs.
+
+
+(4) Features that may not work
+------------------------------
+
+The following features may not work in this version of libguestfs:
+
+ - LUKS (encrypted filesystems within guests)
+
+ - MD (RAID devices within guests)
+
+ - FUSE, guestmount, the mount-local API.  These appear to have some
+   problems because of the older version of FUSE in RHEL 5.
+
+ - virt-sysprep '--script' option (because it requires FUSE).
+
+ - The 'ntfsclone_*' APIs only partially work.  In particular,
+   the 'metadataonly' flag is not working, and maybe other parts
+   of this API won't work.
+
+ - guestfs_vfs_label cannot read labels from NTFS filesystems.
+
+ - guestfs_blkid may return fewer fields than expected on a more modern
+   Linux system.
+
+ - guestfs_txz_in and guestfs_txz_out don't work.
+
+ - guestfs_utimens doesn't let you set the time on a symbolic link (this
+   is a limitation of the RHEL 5 kernel).
+
+ - guestfs_mkswap_label followed by guestfs_swapon_label does not work.
+   The reasons are not well understood.
+
+ - Adding drives using non-virtio-blk interfaces.
+
+
+(5) Other notes
+---------------
+
+An artificial pause of 1 second has been added after unmounting any
+filesystem.
+
+*Without* the 1 second pause, the following test case will fail
+sometimes:
+
+  guestfish <<EOF
+  sparse test1.img 1G
+  run
+  part-disk /dev/sda mbr
+  mkfs msdos /dev/sda1
+  mount /dev/sda1 /
+  touch /foo
+  umount /
+  mkfs ntfs /dev/sda1
+  # Next command would fail:
+  mount /dev/sda1 /
+  vfs-type /dev/sda1 -x
+  EOF
+
+With the 1 second pause, this case passes.  The reason is not
+understood.
