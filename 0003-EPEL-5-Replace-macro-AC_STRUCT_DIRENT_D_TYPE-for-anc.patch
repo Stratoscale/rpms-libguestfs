@@ -1,4 +1,4 @@
-From 4826bf83d92a9240e64df7cd9714be9a6a1a6c09 Mon Sep 17 00:00:00 2001
+From e0313adcce407c4e3852be1c5d3d8f9cc0a2399b Mon Sep 17 00:00:00 2001
 From: Richard W.M. Jones <rjones@redhat.com>
 Date: Sat, 16 Jun 2012 10:46:20 +0100
 Subject: [PATCH 03/19] EPEL 5: Replace macro AC_STRUCT_DIRENT_D_TYPE for ancient autoconf.
@@ -8,7 +8,7 @@ Subject: [PATCH 03/19] EPEL 5: Replace macro AC_STRUCT_DIRENT_D_TYPE for ancient
  1 files changed, 1 insertions(+), 1 deletions(-)
 
 diff --git a/configure.ac b/configure.ac
-index 545bf44..e8d2073 100644
+index 4b71ebc..a99f84f 100644
 --- a/configure.ac
 +++ b/configure.ac
 @@ -176,7 +176,7 @@ dnl Check sizeof long.

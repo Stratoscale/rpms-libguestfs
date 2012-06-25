@@ -1,4 +1,4 @@
-From 312e54a701c8c92bbad271052fbabd18df0bd9f3 Mon Sep 17 00:00:00 2001
+From cf34afed82ce83e43e77abc615294d286839c993 Mon Sep 17 00:00:00 2001
 From: Richard W.M. Jones <rjones@redhat.com>
 Date: Mon, 18 Jun 2012 12:18:35 +0100
 Subject: [PATCH 12/19] EPEL 5: Pass --preserve-dup-deps explicitly to libtool.
@@ -10,7 +10,7 @@ https://lists.gnu.org/archive/html/bug-gnulib/2012-06/msg00162.html
  1 files changed, 1 insertions(+), 1 deletions(-)
 
 diff --git a/configure.ac b/configure.ac
-index 87e6723..f67512d 100644
+index 2276c76..956e4a3 100644
 --- a/configure.ac
 +++ b/configure.ac
 @@ -1128,7 +1128,7 @@ AC_SUBST(MAX_PROC_NR)

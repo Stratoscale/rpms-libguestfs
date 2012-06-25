@@ -1,4 +1,4 @@
-From ccdd965e175bfcb6e9d9d0134168ec20293db18e Mon Sep 17 00:00:00 2001
+From 4c02df1f17155e310be92816b4ea9b1d77dc6466 Mon Sep 17 00:00:00 2001
 From: Richard W.M. Jones <rjones@redhat.com>
 Date: Fri, 22 Jun 2012 21:58:32 +0100
 Subject: [PATCH 19/19] EPEL 5: Add 1 second pause after unmounting any filesystem.

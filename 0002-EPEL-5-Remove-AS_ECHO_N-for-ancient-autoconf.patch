@@ -1,4 +1,4 @@
-From be26d1c6303b98fb5f0d91acaaa4225390e03caa Mon Sep 17 00:00:00 2001
+From 06711d7973ef583b9b95253229d6082a5afd8e08 Mon Sep 17 00:00:00 2001
 From: Richard W.M. Jones <rjones@redhat.com>
 Date: Sat, 16 Jun 2012 10:23:19 +0100
 Subject: [PATCH 02/19] EPEL 5: Remove AS_ECHO_N for ancient autoconf.
@@ -8,7 +8,7 @@ Subject: [PATCH 02/19] EPEL 5: Remove AS_ECHO_N for ancient autoconf.
  1 files changed, 13 insertions(+), 13 deletions(-)
 
 diff --git a/configure.ac b/configure.ac
-index 4f954ed..545bf44 100644
+index d5f12a4..4b71ebc 100644
 --- a/configure.ac
 +++ b/configure.ac
 @@ -1311,33 +1311,33 @@ echo

@@ -1,4 +1,4 @@
-From baaf5e09f299f05080197b6dd30805f6827c06f6 Mon Sep 17 00:00:00 2001
+From f25c54fab15a68dd3f9f0104fdc99b2f6848d636 Mon Sep 17 00:00:00 2001
 From: Richard W.M. Jones <rjones@redhat.com>
 Date: Sun, 17 Jun 2012 23:01:43 +0100
 Subject: [PATCH 07/19] EPEL 5: Remove PHP bindings.
@@ -24,7 +24,7 @@ index 88e3815..5175bf3 100644
  # Unconditional because nothing is built yet.
  SUBDIRS += csharp
 diff --git a/configure.ac b/configure.ac
-index ac053d1..d18c76b 100644
+index 38281cb..12ebb6c 100644
 --- a/configure.ac
 +++ b/configure.ac
 @@ -1101,20 +1101,6 @@ AS_IF([test "x$enable_haskell" != "xno"],

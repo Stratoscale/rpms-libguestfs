@@ -1,4 +1,4 @@
-From 3a0ff23ba832f40d3a00e4ef0bdbaff6dd772af4 Mon Sep 17 00:00:00 2001
+From 3fd80b4a0f77fa388d252777ed54c814efcd2e2b Mon Sep 17 00:00:00 2001
 From: Richard W.M. Jones <rjones@redhat.com>
 Date: Fri, 22 Jun 2012 14:46:43 +0100
 Subject: [PATCH 18/19] EPEL 5: Add mkisofs to package list.

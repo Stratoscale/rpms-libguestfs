@@ -1,4 +1,4 @@
-From 124eb61eb680ccd7e7db895773333ae346c26ca4 Mon Sep 17 00:00:00 2001
+From 948bc6535ade9bbb3b468a97b65cdff8d61681bf Mon Sep 17 00:00:00 2001
 From: Richard W.M. Jones <rjones@redhat.com>
 Date: Sun, 17 Jun 2012 22:58:58 +0100
 Subject: [PATCH 09/19] EPEL 5: Add gnulib utimensat module.

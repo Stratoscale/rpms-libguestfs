@@ -1,4 +1,4 @@
-From 8401aeb8c5e0700007d9207a3ff4ce566885b3b7 Mon Sep 17 00:00:00 2001
+From 550ed74ae3f41a52882db8408572ca9e9c20053c Mon Sep 17 00:00:00 2001
 From: Richard W.M. Jones <rjones@redhat.com>
 Date: Mon, 18 Jun 2012 16:06:34 +0100
 Subject: [PATCH 14/19] EPEL 5: Add "null vmchannel" back for qemu without virtio-serial support.
@@ -173,7 +173,7 @@ index b09f74e..eedd3cc 100644
    main_loop (sock);
  
 diff --git a/src/launch.c b/src/launch.c
-index 31b5d4d..528c677 100644
+index ac318aa..edafe3b 100644
 --- a/src/launch.c
 +++ b/src/launch.c
 @@ -73,10 +73,14 @@
@@ -191,7 +191,7 @@ index 31b5d4d..528c677 100644
  static int qemu_supports (guestfs_h *g, const char *option);
  static int qemu_supports_device (guestfs_h *g, const char *device_name);
  static int qemu_supports_virtio_scsi (guestfs_h *g);
-@@ -530,7 +534,9 @@ launch_appliance (guestfs_h *g)
+@@ -549,7 +553,9 @@ launch_appliance (guestfs_h *g)
    int r;
    int wfd[2], rfd[2];
    char guestfsd_sock[256];
@@ -202,7 +202,7 @@ index 31b5d4d..528c677 100644
  
    /* At present you must add drives before starting the appliance.  In
     * future when we enable hotplugging you won't need to do this.
-@@ -566,37 +572,43 @@ launch_appliance (guestfs_h *g)
+@@ -585,37 +591,43 @@ launch_appliance (guestfs_h *g)
    if (qemu_supports (g, NULL) == -1)
      goto cleanup0;
  
@@ -261,7 +261,7 @@ index 31b5d4d..528c677 100644
    if (!g->direct) {
      if (pipe (wfd) == -1 || pipe (rfd) == -1) {
        perrorf (g, "pipe");
-@@ -777,30 +789,20 @@ launch_appliance (guestfs_h *g)
+@@ -796,30 +808,20 @@ launch_appliance (guestfs_h *g)
      if (qemu_supports (g, "-rtc-td-hack"))
        add_cmdline (g, "-rtc-td-hack");
  
@@ -303,7 +303,7 @@ index 31b5d4d..528c677 100644
  
  #ifdef VALGRIND_DAEMON
      /* Set up virtio-serial channel for valgrind messages. */
-@@ -812,14 +814,6 @@ launch_appliance (guestfs_h *g)
+@@ -831,14 +833,6 @@ launch_appliance (guestfs_h *g)
      add_cmdline (g, "virtserialport,chardev=valgrind,name=org.libguestfs.valgrind");
  #endif
  
@@ -318,7 +318,7 @@ index 31b5d4d..528c677 100644
  #if defined(__arm__)
  #define SERIAL_CONSOLE "ttyAMA0"
  #else
-@@ -840,11 +834,13 @@ launch_appliance (guestfs_h *g)
+@@ -859,11 +853,13 @@ launch_appliance (guestfs_h *g)
                LINUX_CMDLINE
                "%s "             /* (root) */
                "%s "             /* (selinux) */
@@ -332,7 +332,7 @@ index 31b5d4d..528c677 100644
                g->verbose ? "guestfs_verbose=1" : "",
                getenv ("TERM") ? : "linux",
                g->append ? g->append : "");
-@@ -1015,19 +1011,30 @@ launch_appliance (guestfs_h *g)
+@@ -1034,19 +1030,30 @@ launch_appliance (guestfs_h *g)
  
    g->state = LAUNCHING;
  
@@ -374,7 +374,7 @@ index 31b5d4d..528c677 100644
  
    close (g->sock); /* Close the listening socket. */
    g->sock = r; /* This is the accepted data socket. */
-@@ -1563,6 +1570,83 @@ drive_name (size_t index, char *ret)
+@@ -1582,6 +1589,83 @@ drive_name (size_t index, char *ret)
    return ret;
  }
  

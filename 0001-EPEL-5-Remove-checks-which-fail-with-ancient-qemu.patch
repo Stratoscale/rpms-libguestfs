@@ -1,4 +1,4 @@
-From 1729508fb2e62f48590747f7a505b0c5ba5b202e Mon Sep 17 00:00:00 2001
+From 5313dea53275270882b3ad8a6d34e1bdbbc55110 Mon Sep 17 00:00:00 2001
 From: Richard W.M. Jones <rjones@redhat.com>
 Date: Sat, 16 Jun 2012 10:19:39 +0100
 Subject: [PATCH 01/19] EPEL 5: Remove checks which fail with ancient qemu.
@@ -11,7 +11,7 @@ be empty strings.
  2 files changed, 2 insertions(+), 69 deletions(-)
 
 diff --git a/configure.ac b/configure.ac
-index 1a82511..4f954ed 100644
+index 580ae18..d5f12a4 100644
 --- a/configure.ac
 +++ b/configure.ac
 @@ -573,63 +573,6 @@ This could be a very old version of qemu, or qemu might not be
@@ -79,10 +79,10 @@ index 1a82511..4f954ed 100644
  
  dnl Enable packet dumps when in verbose mode.  This generates lots
 diff --git a/src/launch.c b/src/launch.c
-index 72eca51..f21b331 100644
+index cd78501..5f0cdf1 100644
 --- a/src/launch.c
 +++ b/src/launch.c
-@@ -1365,18 +1365,8 @@ test_qemu (guestfs_h *g)
+@@ -1384,18 +1384,8 @@ test_qemu (guestfs_h *g)
      return -1;
    }
  
