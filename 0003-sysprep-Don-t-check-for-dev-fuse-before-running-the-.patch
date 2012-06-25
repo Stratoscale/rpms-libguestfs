@@ -1,0 +1,30 @@
+From 448803d625b6673d233ce765412c784320d9923c Mon Sep 17 00:00:00 2001
+From: Richard W.M. Jones <rjones@redhat.com>
+Date: Mon, 25 Jun 2012 15:19:58 +0100
+Subject: [PATCH 3/3] sysprep: Don't check for /dev/fuse before running the test.
+
+The program doesn't actually require FUSE when used without
+any --script options.
+---
+ sysprep/test-virt-sysprep.sh |    5 -----
+ 1 files changed, 0 insertions(+), 5 deletions(-)
+
+diff --git a/sysprep/test-virt-sysprep.sh b/sysprep/test-virt-sysprep.sh
+index 5e541fe..2443ce2 100755
+--- a/sysprep/test-virt-sysprep.sh
++++ b/sysprep/test-virt-sysprep.sh
+@@ -19,11 +19,6 @@
+ export LANG=C
+ set -e
+ 
+-if [ ! -w /dev/fuse ]; then
+-    echo "$0: SKIPPING test, because there is no /dev/fuse."
+-    exit 0
+-fi
+-
+ # virt-sysprep with the -n option doesn't modify the guest.  It ought
+ # to be able to sysprep any of our test guests.
+ 
+-- 
+1.7.4.1
+

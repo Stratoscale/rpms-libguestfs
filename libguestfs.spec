@@ -22,7 +22,7 @@ Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
 Version:       1.19.11
-Release:       1%{?dist}
+Release:       2%{?dist}
 License:       LGPLv2+
 Group:         Development/Libraries
 URL:           http://libguestfs.org/
@@ -58,6 +58,11 @@ Patch0016:     0016-EPEL-5-sparsify-Fix-command-line-options-for-old-qem.patch
 Patch0017:     0017-EPEL-5-Remove-Fedora-MD-test-images.patch
 Patch0018:     0018-EPEL-5-Add-mkisofs-to-package-list.patch
 Patch0019:     0019-EPEL-5-Add-1-second-pause-after-unmounting-any-files.patch
+
+# Upstream in libguestfs >= 1.19.12.
+Patch0101:     0001-tests-Allow-SELinux-tests-to-be-skipped-with-an-envi.patch
+Patch0102:     0002-fish-Allow-mount-local-test-to-be-skipped-with-envir.patch
+Patch0103:     0003-sysprep-Don-t-check-for-dev-fuse-before-running-the-.patch
 
 # Basic build requirements:
 BuildRequires: /usr/bin/pod2man
@@ -668,8 +673,13 @@ export SKIP_TEST_NTFSCLONE_SH=1
 # IDE interface not supported.
 export SKIP_TEST_RHBZ690819_SH=1
 
-# FUSE not supported.
+# FUSE is only partially working, and in any case we cannot do any
+# tests in RHEL 5 because it requires the current user to be added
+# to the 'fuse' group, which we can't do in Koji.
 export SKIP_TEST_FUSE_SH=1
+export SKIP_TEST_MOUNT_LOCAL_SH=1
+export SKIP_TEST_SELINUX_XATTRS_FUSE=1
+export SKIP_TEST_SELINUX_SELINUX_FUSE=1
 export SKIP_TEST_VIRT_SYSPREP_SCRIPT_SH=1
 
 # blkid can't read NTFS labels.
@@ -901,7 +911,7 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
-* Mon Jun 25 2012 Richard W.M. Jones <rjones@redhat.com> - 1:1.19.11-1
+* Mon Jun 25 2012 Richard W.M. Jones <rjones@redhat.com> - 1:1.19.11-2
 - New upstream version 1.19.11.
 
 * Fri Jun 22 2012 Richard W.M. Jones <rjones@redhat.com> - 1:1.19.10-1
