@@ -1,0 +1,37 @@
+From 770d3912240a88bfc17f2bf9f9c04fa7f505251a Mon Sep 17 00:00:00 2001
+From: Richard W.M. Jones <rjones@redhat.com>
+Date: Tue, 26 Jun 2012 18:38:23 +0100
+Subject: [PATCH 21/21] ocaml: Allow parallel mount-local test to be skipped.
+
+FUSE is not very reliable on RHEL 5.
+---
+ ocaml/t/guestfs_500_parallel_mount_local.ml |   13 +++++++++++++
+ 1 files changed, 13 insertions(+), 0 deletions(-)
+
+diff --git a/ocaml/t/guestfs_500_parallel_mount_local.ml b/ocaml/t/guestfs_500_parallel_mount_local.ml
+index 779afc1..5a432f0 100644
+--- a/ocaml/t/guestfs_500_parallel_mount_local.ml
++++ b/ocaml/t/guestfs_500_parallel_mount_local.ml
+@@ -41,6 +41,19 @@ let clip low high v = min high (max low v)
+ let rec main () =
+   Random.self_init ();
+ 
++  (* Allow the test to be skipped by setting this environment variable.
++   * This is for RHEL 5, where FUSE doesn't work very reliably.
++   *)
++  let () =
++    let name = "SKIP_TEST_GUESTFS_500_PARALLEL_MOUNT_LOCAL_ML" in
++    let value = try Sys.getenv name with Not_found -> "" in
++    if value <> "" then (
++      printf "%s: test skipped because %s is set.\n"
++        Sys.executable_name name;
++      exit 0
++    )
++  in
++
+   (* Choose the number of threads based on the amount of free memory. *)
+   let nr_threads =
+     let mbytes =
+-- 
+1.7.4.1
+
