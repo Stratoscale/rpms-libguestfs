@@ -1,7 +1,7 @@
-From 20ceae3b5ca57b3f108cc8c53a5073856d7f9305 Mon Sep 17 00:00:00 2001
+From d704229f97c5a63de5921b72ee96dc5cb4887d1b Mon Sep 17 00:00:00 2001
 From: Richard W.M. Jones <rjones@redhat.com>
 Date: Sat, 16 Jun 2012 14:34:25 +0100
-Subject: [PATCH 05/19] EPEL 5: Remove Erlang bindings.
+Subject: [PATCH 05/20] EPEL 5: Remove Erlang bindings.
 
 ---
  Makefile.am  |    3 ---
@@ -24,7 +24,7 @@ index be9191c..6bd6047 100644
  SUBDIRS += gobject
  endif
 diff --git a/configure.ac b/configure.ac
-index a99f84f..ed2c39f 100644
+index d29bb4a..63fd338 100644
 --- a/configure.ac
 +++ b/configure.ac
 @@ -1115,25 +1115,6 @@ AS_IF([test "x$enable_php" != "xno"],

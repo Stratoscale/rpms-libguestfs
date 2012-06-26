@@ -21,8 +21,8 @@
 Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
-Version:       1.19.11
-Release:       2%{?dist}
+Version:       1.19.12
+Release:       1%{?dist}
 License:       LGPLv2+
 Group:         Development/Libraries
 URL:           http://libguestfs.org/
@@ -39,6 +39,8 @@ Source12:      gnulib-4fb7ea20122.tar.gz
 
 BuildRequires: autoconf, automake, libtool
 
+# These patches come from the "oldlinux" branch upstream.
+# https://github.com/libguestfs/libguestfs/commits/oldlinux
 Patch0001:     0001-EPEL-5-Remove-checks-which-fail-with-ancient-qemu.patch
 Patch0002:     0002-EPEL-5-Remove-AS_ECHO_N-for-ancient-autoconf.patch
 Patch0003:     0003-EPEL-5-Replace-macro-AC_STRUCT_DIRENT_D_TYPE-for-anc.patch
@@ -58,11 +60,6 @@ Patch0016:     0016-EPEL-5-sparsify-Fix-command-line-options-for-old-qem.patch
 Patch0017:     0017-EPEL-5-Remove-Fedora-MD-test-images.patch
 Patch0018:     0018-EPEL-5-Add-mkisofs-to-package-list.patch
 Patch0019:     0019-EPEL-5-Add-1-second-pause-after-unmounting-any-files.patch
-
-# Upstream in libguestfs >= 1.19.12.
-Patch0101:     0001-tests-Allow-SELinux-tests-to-be-skipped-with-an-envi.patch
-Patch0102:     0002-fish-Allow-mount-local-test-to-be-skipped-with-envir.patch
-Patch0103:     0003-sysprep-Don-t-check-for-dev-fuse-before-running-the-.patch
 
 # Basic build requirements:
 BuildRequires: /usr/bin/pod2man
@@ -911,6 +908,10 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Tue Jun 25 2012 Richard W.M. Jones <rjones@redhat.com> - 1:1.19.12-1
+- New upstream version 1.19.12.
+- Update patches.
+
 * Mon Jun 25 2012 Richard W.M. Jones <rjones@redhat.com> - 1:1.19.11-2
 - New upstream version 1.19.11.
 

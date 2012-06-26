@@ -111,6 +111,9 @@ The following features may not work in this version of libguestfs:
 
  - Adding drives using non-virtio-blk interfaces.
 
+ - Enabling trace in multi-threaded programs may cause a segfault.
+   Appears to be caused by a bug in RHEL 5 glibc open_memstream(3).
+
 
 (5) Other notes
 ---------------

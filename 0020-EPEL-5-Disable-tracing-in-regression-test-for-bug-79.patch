@@ -1,0 +1,31 @@
+From c479015862ab0dad8926bf796a0d58ac4e6aba1e Mon Sep 17 00:00:00 2001
+From: Richard W.M. Jones <rjones@redhat.com>
+Date: Tue, 26 Jun 2012 14:52:20 +0100
+Subject: [PATCH 20/20] EPEL 5: Disable tracing in regression test for bug 790721.
+
+Works around a problem in RHEL 5 glibc impl of open_memstream
+in threaded programs.
+---
+ tests/regressions/rhbz790721.c |    6 ++++++
+ 1 files changed, 6 insertions(+), 0 deletions(-)
+
+diff --git a/tests/regressions/rhbz790721.c b/tests/regressions/rhbz790721.c
+index bcb5820..13cf7f1 100644
+--- a/tests/regressions/rhbz790721.c
++++ b/tests/regressions/rhbz790721.c
+@@ -107,6 +107,12 @@ start_thread (void *vi)
+     pthread_exit (vi);
+   }
+ 
++  /* Hack for RHEL 5: open_memstream occasionally returns a bogus
++   * pointer, causing trace to segfault.  Only appears to happen in
++   * multithreaded programs though.
++   */
++  guestfs_set_trace (g, 0);
++
+   if (guestfs_add_drive_opts (g, "/dev/null",
+                               GUESTFS_ADD_DRIVE_OPTS_FORMAT, "raw",
+                               GUESTFS_ADD_DRIVE_OPTS_READONLY, 1,
+-- 
+1.7.4.1
+
