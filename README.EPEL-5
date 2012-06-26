@@ -56,7 +56,7 @@ to file bugs.
 --------------------------
 
 The following features are not compatible with RHEL 5 and have been
-removed completely:
+either removed completely or disabled:
 
  - PHP bindings
 
@@ -77,11 +77,30 @@ removed completely:
 
  - Internationalization of any non-C programs.
 
+ - guestfs_vfs_label cannot read labels from NTFS filesystems.
+
+ - guestfs_blkid may return fewer fields than expected on a more modern
+   Linux system.
+
+ - guestfs_txz_in and guestfs_txz_out are not implemented.
+
+ - guestfs_utimens doesn't let you set the time on a symbolic link (this
+   is a limitation of the RHEL 5 kernel).
+
+ - guestfs_mkswap_label followed by guestfs_swapon_label does not work.
+   The reasons are not well understood.
+
+ - Adding drives using non-virtio-blk interfaces.
+
+ - The 'ntfsclone_*' APIs only partially work.  In particular,
+   the 'metadataonly' flag is not working, and maybe other parts
+   of this API won't work.
+
 
 (4) Features that may not work
 ------------------------------
 
-The following features may not work in this version of libguestfs:
+The following features may not work fully in this version of libguestfs:
 
  - LUKS (encrypted filesystems within guests)
 
@@ -91,25 +110,6 @@ The following features may not work in this version of libguestfs:
    problems because of the older version of FUSE in RHEL 5.
 
  - virt-sysprep '--script' option (because it requires FUSE).
-
- - The 'ntfsclone_*' APIs only partially work.  In particular,
-   the 'metadataonly' flag is not working, and maybe other parts
-   of this API won't work.
-
- - guestfs_vfs_label cannot read labels from NTFS filesystems.
-
- - guestfs_blkid may return fewer fields than expected on a more modern
-   Linux system.
-
- - guestfs_txz_in and guestfs_txz_out don't work.
-
- - guestfs_utimens doesn't let you set the time on a symbolic link (this
-   is a limitation of the RHEL 5 kernel).
-
- - guestfs_mkswap_label followed by guestfs_swapon_label does not work.
-   The reasons are not well understood.
-
- - Adding drives using non-virtio-blk interfaces.
 
  - Enabling trace in multi-threaded programs may cause a segfault.
    Appears to be caused by a bug in RHEL 5 glibc open_memstream(3).
