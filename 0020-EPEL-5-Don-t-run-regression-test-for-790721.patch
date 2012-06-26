@@ -1,4 +1,4 @@
-From 177209566130b98dc1b256762e761b71c2fdf14a Mon Sep 17 00:00:00 2001
+From cba3aaf3cb4802d5571445a97688e6977fed5a13 Mon Sep 17 00:00:00 2001
 From: Richard W.M. Jones <rjones@redhat.com>
 Date: Tue, 26 Jun 2012 20:28:13 +0100
 Subject: [PATCH 20/20] EPEL 5: Don't run regression test for 790721.
@@ -9,7 +9,7 @@ Segfaults for reasons not understood.
  1 files changed, 3 insertions(+), 3 deletions(-)
 
 diff --git a/tests/regressions/Makefile.am b/tests/regressions/Makefile.am
-index 3027cd8..8e1976c 100644
+index 22a364c..cfa7856 100644
 --- a/tests/regressions/Makefile.am
 +++ b/tests/regressions/Makefile.am
 @@ -27,12 +27,12 @@ TESTS = \

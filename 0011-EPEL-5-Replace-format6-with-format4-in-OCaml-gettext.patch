@@ -1,4 +1,4 @@
-From f4e0a0bbbb40124afd98d80f2b1b1a69df4b9d30 Mon Sep 17 00:00:00 2001
+From 3526cb18a65ee6766c68f401e0b0ef2c6506e53e Mon Sep 17 00:00:00 2001
 From: Richard W.M. Jones <rjones@redhat.com>
 Date: Mon, 18 Jun 2012 08:35:14 +0100
 Subject: [PATCH 11/20] EPEL 5: Replace format6 with format4 in OCaml gettext routines.
@@ -8,7 +8,7 @@ Subject: [PATCH 11/20] EPEL 5: Replace format6 with format4 in OCaml gettext rou
  1 files changed, 5 insertions(+), 5 deletions(-)
 
 diff --git a/configure.ac b/configure.ac
-index 79058a0..84ce3a8 100644
+index 1b1c22f..c684e24 100644
 --- a/configure.ac
 +++ b/configure.ac
 @@ -786,14 +786,14 @@ EOF

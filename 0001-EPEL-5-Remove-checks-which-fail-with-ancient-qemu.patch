@@ -1,4 +1,4 @@
-From dbd3527715c430c03a6a94871d0ed818bbc40771 Mon Sep 17 00:00:00 2001
+From ec832ebaab57328aae0e403ddbb68830a0af0fbc Mon Sep 17 00:00:00 2001
 From: Richard W.M. Jones <rjones@redhat.com>
 Date: Sat, 16 Jun 2012 10:19:39 +0100
 Subject: [PATCH 01/20] EPEL 5: Remove checks which fail with ancient qemu.
@@ -11,7 +11,7 @@ be empty strings.
  2 files changed, 2 insertions(+), 69 deletions(-)
 
 diff --git a/configure.ac b/configure.ac
-index 3b0ea11..8932f16 100644
+index dc2a103..75d2c5e 100644
 --- a/configure.ac
 +++ b/configure.ac
 @@ -573,63 +573,6 @@ This could be a very old version of qemu, or qemu might not be

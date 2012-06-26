@@ -1,4 +1,4 @@
-From ce21f625938f8f8bd0dfdf603c5d89b5ebc9666b Mon Sep 17 00:00:00 2001
+From 06ca4eebe87808d650a441a8f936afb0b7d1f0b4 Mon Sep 17 00:00:00 2001
 From: Richard W.M. Jones <rjones@redhat.com>
 Date: Fri, 22 Jun 2012 10:24:48 +0100
 Subject: [PATCH 16/20] EPEL 5: sparsify: Fix command line options for old qemu-img.

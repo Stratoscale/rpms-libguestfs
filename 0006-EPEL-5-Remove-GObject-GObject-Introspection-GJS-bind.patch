@@ -1,4 +1,4 @@
-From 52fe6ceb87d8716abe2d32c1b3ca6476d8519b50 Mon Sep 17 00:00:00 2001
+From cffb90f873293433eb9dcc1d30e75effedc1fe5c Mon Sep 17 00:00:00 2001
 From: Richard W.M. Jones <rjones@redhat.com>
 Date: Sat, 16 Jun 2012 14:35:06 +0100
 Subject: [PATCH 06/20] EPEL 5: Remove GObject / GObject Introspection / GJS bindings.
@@ -24,7 +24,7 @@ index 6bd6047..88e3815 100644
  # Unconditional because nothing is built yet.
  SUBDIRS += csharp
 diff --git a/configure.ac b/configure.ac
-index 63fd338..939abbf 100644
+index 399a726..4d60102 100644
 --- a/configure.ac
 +++ b/configure.ac
 @@ -1136,67 +1136,6 @@ AS_IF([test "x$PERL" != "xno"],

@@ -1,4 +1,4 @@
-From 44bdc038ddeb4cf85eeef3d611e7c53b859450f7 Mon Sep 17 00:00:00 2001
+From a61d5f78cad9d28df1955dc33755a5d822dca208 Mon Sep 17 00:00:00 2001
 From: Richard W.M. Jones <rjones@redhat.com>
 Date: Fri, 22 Jun 2012 13:15:49 +0100
 Subject: [PATCH 17/20] EPEL 5: Remove Fedora MD test images.
@@ -10,7 +10,7 @@ eg. '/dev/md/boot'.
  1 files changed, 1 insertions(+), 14 deletions(-)
 
 diff --git a/tests/guests/Makefile.am b/tests/guests/Makefile.am
-index 3e5aea0..649cebe 100644
+index 77ce61b..ad8ca5a 100644
 --- a/tests/guests/Makefile.am
 +++ b/tests/guests/Makefile.am
 @@ -38,7 +38,7 @@ EXTRA_DIST = \
@@ -24,7 +24,7 @@ index 3e5aea0..649cebe 100644
  
 @@ -51,19 +51,6 @@ fedora.img: guest-aux/make-fedora-img.pl \
  	LAYOUT=partitions \
- 	../../run $<
+ 	../../run --test $<
  
 -# Make a (dummy) Fedora image using md devices
 -fedora-md1.img fedora-md2.img: stamp-fedora-md.img
@@ -36,7 +36,7 @@ index 3e5aea0..649cebe 100644
 -	TMPDIR=$(top_builddir) \
 -	SRCDIR=$(srcdir) \
 -	LAYOUT=partitions-md \
--	../../run $<
+-	../../run --test $<
 -	touch $@
 -
  guest-aux/fedora-name.db: guest-aux/fedora-name.db.txt

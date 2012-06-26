@@ -1,4 +1,4 @@
-From 26fa681c4c55fe15513c86cde67237f8364058f8 Mon Sep 17 00:00:00 2001
+From bbce9576f61fc2a5108950fb85a2a1de300e5888 Mon Sep 17 00:00:00 2001
 From: Richard W.M. Jones <rjones@redhat.com>
 Date: Sat, 16 Jun 2012 13:55:44 +0100
 Subject: [PATCH 04/20] EPEL 5: Don't use C99-style variable decls in for-loop.

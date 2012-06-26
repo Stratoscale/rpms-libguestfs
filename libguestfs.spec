@@ -21,8 +21,8 @@
 Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
-Version:       1.19.12
-Release:       3%{?dist}
+Version:       1.19.13
+Release:       1%{?dist}
 License:       LGPLv2+
 Group:         Development/Libraries
 URL:           http://libguestfs.org/
@@ -61,9 +61,6 @@ Patch0017:     0017-EPEL-5-Remove-Fedora-MD-test-images.patch
 Patch0018:     0018-EPEL-5-Add-mkisofs-to-package-list.patch
 Patch0019:     0019-EPEL-5-Add-1-second-pause-after-unmounting-any-files.patch
 Patch0020:     0020-EPEL-5-Don-t-run-regression-test-for-790721.patch
-
-# Patch upstream in libguestfs >= 1.19.13.
-Patch0021:     0021-ocaml-Allow-parallel-mount-local-test-to-be-skipped.patch
 
 # Basic build requirements:
 BuildRequires: /usr/bin/pod2man
@@ -913,6 +910,10 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Wed Jun 25 2012 Richard W.M. Jones <rjones@redhat.com> - 1:1.19.13-1
+- New upstream version 1.19.13.
+- Update patches.
+
 * Tue Jun 25 2012 Richard W.M. Jones <rjones@redhat.com> - 1:1.19.12-3
 - New upstream version 1.19.12.
 - Update patches.

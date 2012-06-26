@@ -1,4 +1,4 @@
-From cb8e7f77d5dd32ab6760db4fd10bb654f6dd225f Mon Sep 17 00:00:00 2001
+From 1bf6cb7241d8d76e40b5e89f5219da681d98350a Mon Sep 17 00:00:00 2001
 From: Richard W.M. Jones <rjones@redhat.com>
 Date: Mon, 18 Jun 2012 16:06:34 +0100
 Subject: [PATCH 14/20] EPEL 5: Add "null vmchannel" back for qemu without virtio-serial support.
