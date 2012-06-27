@@ -1,0 +1,32 @@
+From 6afb7336e33dc28c4fd1a4545a8298ee36c10723 Mon Sep 17 00:00:00 2001
+From: "Richard W.M. Jones" <rjones@redhat.com>
+Date: Wed, 27 Jun 2012 10:54:02 +0100
+Subject: [PATCH] gobject: bindtests: gjs exception behaviour changed, fix
+ test.
+
+When libguestfs calls 'error (g, "error")', gjs in F17 throws
+error.message == "Error invoking Guestfs.test0rinterr: error"
+
+In F18, error.message is simply the string "error".
+
+Fix the test so it works for both cases.
+---
+ gobject/bindtests-manual.js |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/gobject/bindtests-manual.js b/gobject/bindtests-manual.js
+index 84a1546..8f4ef15 100644
+--- a/gobject/bindtests-manual.js
++++ b/gobject/bindtests-manual.js
+@@ -26,7 +26,7 @@ function check_error(f) {
+     g[f]();
+   } catch (error) {
+     threw = true;
+-    if (!error.message.match(/: error$/)) {
++    if (!error.message.match(/error$/)) {
+       print(f + " threw unexpected error: " + error.message);
+       fail = true;
+     }
+-- 
+1.7.10.2
+

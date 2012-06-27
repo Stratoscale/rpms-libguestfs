@@ -22,7 +22,7 @@ Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
 Version:       1.19.13
-Release:       1%{?dist}
+Release:       2%{?dist}
 License:       LGPLv2+
 Group:         Development/Libraries
 URL:           http://libguestfs.org/
@@ -39,6 +39,9 @@ BuildRequires: autoconf, automake, libtool, gettext-devel
 # right.  When udev disappears from the repository we can remove this
 # patch.
 Patch4:        libguestfs-1.19.2-remove-udev-from-packagelist.patch
+
+# Upstream patch to fix GObject/Javascript tests.
+Patch5:        0001-gobject-bindtests-gjs-exception-behaviour-changed-fi.patch
 
 %if 0%{?rhel} >= 7
 ExclusiveArch: x86_64
@@ -683,6 +686,7 @@ autoreconf -i
 %endif
 
 %patch4 -p1
+%patch5 -p1
 
 mkdir -p daemon/m4
 
@@ -1037,8 +1041,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
-* Wed Jun 27 2012 Richard W.M. Jones <rjones@redhat.com> - 1:1.19.13-1
+* Wed Jun 27 2012 Richard W.M. Jones <rjones@redhat.com> - 1:1.19.13-2
 - New upstream version 1.19.13.
+- Add upstream patch to fix GObject/Javascript tests.
 
 * Tue Jun 26 2012 Richard W.M. Jones <rjones@redhat.com> - 1:1.19.12-1
 - New upstream version 1.19.12.
