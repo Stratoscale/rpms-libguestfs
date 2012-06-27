@@ -40,9 +40,6 @@ BuildRequires: autoconf, automake, libtool, gettext-devel
 # patch.
 Patch4:        libguestfs-1.19.2-remove-udev-from-packagelist.patch
 
-# Upstream patch to fix GObject/Javascript tests.
-Patch5:        0001-gobject-bindtests-gjs-exception-behaviour-changed-fi.patch
-
 %if 0%{?rhel} >= 7
 ExclusiveArch: x86_64
 %endif
@@ -686,7 +683,6 @@ autoreconf -i
 %endif
 
 %patch4 -p1
-%patch5 -p1
 
 mkdir -p daemon/m4
 
