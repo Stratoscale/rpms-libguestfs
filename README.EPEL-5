@@ -17,7 +17,17 @@ EPEL repository.
 ----------------
 
 After enabling the EPEL repository, install libguestfs in the normal
-way using yum.  No post-installation configuration should be needed.
+way using yum.  It appears that yum from RHEL 5 cannot resolve the
+complicated upgrade from old libguestfs to this version, so you may
+need to do:
+
+ yum remove libguestfs          # remove old packages
+ yum install libguestfs [etc]
+
+Note that only x86-64 packages are available.  32 bit packages cannot
+be supplied because there is no 32 bit KVM on RHEL 5.
+
+No post-installation configuration should be needed.
 
 You must have a non-Xen kernel installed on the host.  Note that the
 non-Xen kernel just needs to be installed, it does *not* need to be
@@ -76,6 +86,8 @@ either removed completely or disabled:
  - virtio-scsi
 
  - Internationalization of any non-C programs.
+
+ - Japanese and Ukrainian man pages.
 
  - guestfs_vfs_label cannot read labels from NTFS filesystems.
 

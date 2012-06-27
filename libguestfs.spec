@@ -22,7 +22,7 @@ Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
 Version:       1.19.13
-Release:       2%{?dist}
+Release:       4%{?dist}
 License:       LGPLv2+
 Group:         Development/Libraries
 URL:           http://libguestfs.org/
@@ -240,8 +240,8 @@ Requires:      fuse
 # Provide our own custom requires for the supermin appliance.
 Source1:       libguestfs-find-requires.sh
 %global _use_internal_dependency_generator 0
-%global __find_provides %{_rpmconfigdir}/find-provides
-%global __find_requires %{SOURCE1} %{_rpmconfigdir}/find-requires
+%global __find_provides /usr/lib/rpm/find-provides
+%global __find_requires %{SOURCE1} /usr/lib/rpm/find-requires
 
 # Replacement README file for EL5 users.
 Source4:       README.EPEL-5
@@ -477,7 +477,6 @@ python-%{name} contains Python bindings for %{name}.
 Summary:       Ruby bindings for %{name}
 Group:         Development/Libraries
 Requires:      %{name} = %{epoch}:%{version}-%{release}
-Requires:      ruby(abi) = 1.9.1
 Requires:      ruby
 Provides:      ruby(guestfs) = %{version}
 
@@ -521,26 +520,6 @@ Requires:      jpackage-utils
 
 %description javadoc
 %{name}-javadoc contains the Java documentation for %{name}.
-
-
-%package man-pages-ja
-Summary:       Japanese (ja) man pages for %{name}
-Group:         Development/Libraries
-Requires:      %{name} = %{epoch}:%{version}-%{release}
-
-%description man-pages-ja
-%{name}-man-pages-ja contains Japanese (ja) man pages
-for %{name}.
-
-
-%package man-pages-uk
-Summary:       Ukrainian (uk) man pages for %{name}
-Group:         Development/Libraries
-Requires:      %{name} = %{epoch}:%{version}-%{release}
-
-%description man-pages-uk
-%{name}-man-pages-uk contains Ukrainian (uk) man pages
-for %{name}.
 
 
 %prep
@@ -617,7 +596,6 @@ cat yum.conf
   --mandir=%{_mandir} \
   --sysconfdir=%{_sysconfdir} \
   --with-qemu="qemu-kvm" \
-  --enable-install-daemon \
   %{extra} || {
     echo "==== config.log ===="
     cat config.log
@@ -877,8 +855,8 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(-,root,root,-)
 %doc ruby/examples/*.rb
 %doc ruby/doc/site/*
-%{ruby_vendorlibdir}/guestfs.rb
-%{ruby_vendorarchdir}/_guestfs.so
+/usr/lib/ruby/site_ruby/1.8/guestfs.rb
+/usr/lib64/ruby/site_ruby/1.8/x86_64-linux/_guestfs.so
 %{_mandir}/man3/guestfs-ruby.3*
 
 
@@ -899,22 +877,14 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/javadoc/%{name}-java-%{version}
 
 
-%files man-pages-ja
-%defattr(-,root,root,-)
-%lang(ja) %{_mandir}/ja/man1/*.1*
-%lang(ja) %{_mandir}/ja/man3/*.3*
-
-
-%files man-pages-uk
-%defattr(-,root,root,-)
-%lang(uk) %{_mandir}/uk/man1/*.1*
-%lang(uk) %{_mandir}/uk/man3/*.3*
-
-
 %changelog
-* Wed Jun 27 2012 Richard W.M. Jones <rjones@redhat.com> - 1:1.19.13-2
+* Wed Jun 27 2012 Richard W.M. Jones <rjones@redhat.com> - 1:1.19.13-4
 - New upstream version 1.19.13.
 - Update patches.
+- _rpmconfigdir doesn't exist in RHEL 5, so replace with absolute path.
+- ruby_* doesn't exist in RHEL 5, so replace with absolute paths.
+- Remove ja and uk man pages.
+- Don't install the daemon.
 
 * Tue Jun 26 2012 Richard W.M. Jones <rjones@redhat.com> - 1:1.19.12-3
 - New upstream version 1.19.12.
