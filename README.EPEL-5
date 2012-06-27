@@ -111,9 +111,6 @@ The following features may not work fully in this version of libguestfs:
 
  - virt-sysprep '--script' option (because it requires FUSE).
 
- - Enabling trace in multi-threaded programs may cause a segfault.
-   Appears to be caused by a bug in RHEL 5 glibc open_memstream(3).
-
 
 (5) Other notes
 ---------------

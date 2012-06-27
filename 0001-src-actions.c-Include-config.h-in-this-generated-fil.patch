@@ -1,0 +1,29 @@
+From 0ffcbb36b4baf33af7af0d9df7cdf1ce597036ca Mon Sep 17 00:00:00 2001
+From: Richard W.M. Jones <rjones@redhat.com>
+Date: Wed, 27 Jun 2012 15:30:56 +0100
+Subject: [PATCH] src/actions.c: Include <config.h> in this generated file.
+
+On RHEL 5, because _GNU_SOURCE was not defined, open_memstream was not
+being declared, resulting in miscompilation and a segfault in the
+trace code whenever open_memstream returned a pointer >= 0x80000000
+(which would be truncated to a 32 bit int and then sign-extended).
+---
+ generator/generator_c.ml |    2 ++
+ 1 files changed, 2 insertions(+), 0 deletions(-)
+
+diff --git a/generator/generator_c.ml b/generator/generator_c.ml
+index 3e7f314..d2275ac 100644
+--- a/generator/generator_c.ml
++++ b/generator/generator_c.ml
+@@ -658,6 +658,8 @@ and generate_client_actions () =
+   generate_header CStyle LGPLv2plus;
+ 
+   pr "\
++#include <config.h>
++
+ #include <stdio.h>
+ #include <stdlib.h>
+ #include <stdint.h>
+-- 
+1.7.4.1
+
