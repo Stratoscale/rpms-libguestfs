@@ -69,6 +69,7 @@ BuildRequires: cpio
 BuildRequires: libconfig-devel
 BuildRequires: ocaml
 BuildRequires: ocaml-findlib-devel
+BuildRequires: ocaml-gettext-devel
 BuildRequires: systemd-units
 BuildRequires: netpbm-progs
 BuildRequires: icoutils
