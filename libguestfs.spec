@@ -54,7 +54,7 @@ BuildRequires: augeas-devel >= 0.5.0
 BuildRequires: readline-devel
 BuildRequires: genisoimage
 BuildRequires: libxml2-devel
-BuildRequires: qemu-kvm >= 1.1.0
+BuildRequires: qemu-kvm >= 2:1.1.0
 BuildRequires: createrepo
 BuildRequires: glibc-static
 BuildRequires: libselinux-devel
@@ -261,7 +261,7 @@ BuildRequires: qemu-img
 BuildRequires: parted >= 3.0-2
 
 # Runtime requires:
-Requires:      qemu-kvm >= 1.1.0
+Requires:      qemu-kvm >= 2:1.1.0
 Requires:      febootstrap-supermin-helper >= 3.17
 
 # For libguestfs-test-tool.
