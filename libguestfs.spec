@@ -45,7 +45,8 @@ ExclusiveArch: x86_64
 %endif
 
 # Basic build requirements:
-BuildRequires: /usr/bin/pod2man
+BuildRequires: perl(Pod::Simple)
+BuildRequires: perl(Pod::Man)
 BuildRequires: /usr/bin/pod2text
 BuildRequires: febootstrap >= 3.17
 BuildRequires: hivex-devel >= 1.2.7-7
