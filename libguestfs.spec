@@ -34,9 +34,6 @@ Patch1:        ruby-1.9-vendor-not-site.patch
 BuildRequires: autoconf, automake, libtool, gettext-devel
 %endif
 
-# Upstream patch to disable OCaml FUSE test when /dev/fuse is not writable.
-Patch2:        0001-ocaml-Skip-mount-local-test-if-dev-fuse-is-not-writa.patch
-
 # Non-upstream patch to remove udev from the packagelist.  systemd now
 # 'obsoletes' udev, but febootstrap doesn't get this relationship
 # right.  When udev disappears from the repository we can remove this
@@ -687,7 +684,6 @@ for %{name}.
 autoreconf -i
 %endif
 
-%patch2 -p1
 %patch4 -p1
 
 mkdir -p daemon/m4
