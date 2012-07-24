@@ -816,6 +816,9 @@ mkdir -p $RPM_BUILD_ROOT%{_sysconfdir}/udev/rules.d
 install -m 0644 %{SOURCE2} $RPM_BUILD_ROOT%{_unitdir}
 install -m 0644 %{SOURCE3} $RPM_BUILD_ROOT%{_sysconfdir}/udev/rules.d
 
+# For SELinux to work with the libvirt attach method.
+mkdir -p $RPM_BUILD_ROOT%{_localstatedir}/run/libguestfs
+
 # Find locale files.
 %find_lang %{name}
 
@@ -837,6 +840,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/libguestfs.so.*
 %{_mandir}/man1/guestfs-testing.1*
 %{_mandir}/man1/libguestfs-test-tool.1*
+%dir %attr(0755,root,root) %{_localstatedir}/run/libguestfs
 
 
 %files devel
