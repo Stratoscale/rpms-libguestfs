@@ -39,10 +39,6 @@ BuildRequires: autoconf, automake, libtool, gettext-devel
 # patch.
 Patch4:        libguestfs-1.19.2-remove-udev-from-packagelist.patch
 
-# Upstream patches to fix use of 'run' in builds.
-Patch11:       0001-build-Use-top_builddir-run-in-Makefile.am-s.patch
-Patch12:       0002-tests-Consistent-use-of-top_builddir-run-test-when-b.patch
-
 %if 0%{?rhel} >= 7
 ExclusiveArch: x86_64
 %endif
@@ -688,9 +684,6 @@ autoreconf -i
 %endif
 
 %patch4 -p1
-
-%patch11 -p1
-%patch12 -p1
 
 mkdir -p daemon/m4
 
