@@ -27,7 +27,6 @@ License:       LGPLv2+
 Group:         Development/Libraries
 URL:           http://libguestfs.org/
 Source0:       http://libguestfs.org/download/1.19-development/%{name}-%{version}.tar.gz
-BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root
 
 %if 0%{?fedora} >= 17 || 0%{?rhel} >= 7
 Patch1:        ruby-1.9-vendor-not-site.patch
@@ -779,8 +778,6 @@ make check
 
 
 %install
-rm -rf $RPM_BUILD_ROOT
-
 make DESTDIR=$RPM_BUILD_ROOT install
 
 # Delete static libraries, libtool files.
@@ -823,17 +820,12 @@ mkdir -p $RPM_BUILD_ROOT%{_localstatedir}/run/libguestfs
 %find_lang %{name}
 
 
-%clean
-rm -rf $RPM_BUILD_ROOT
-
-
 %post -p /sbin/ldconfig
 
 %postun -p /sbin/ldconfig
 
 
 %files -f %{name}.lang
-%defattr(-,root,root,-)
 %doc COPYING README
 %{_bindir}/libguestfs-test-tool
 %{_libdir}/guestfs/
@@ -844,7 +836,6 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %files devel
-%defattr(-,root,root,-)
 %doc AUTHORS BUGS ChangeLog HACKING TODO README RELEASE-NOTES ROADMAP
 %doc examples/*.c
 %doc installed-docs/*
@@ -862,7 +853,6 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %files tools-c
-%defattr(-,root,root,-)
 %doc README
 %config(noreplace) %{_sysconfdir}/libguestfs-tools.conf
 %dir %{_sysconfdir}/bash_completion.d
@@ -904,7 +894,6 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %files tools
-%defattr(-,root,root,-)
 %doc README
 %{_bindir}/virt-list-filesystems
 %{_mandir}/man1/virt-list-filesystems.1*
@@ -921,7 +910,6 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %files live-service
-%defattr(-,root,root,-)
 %doc COPYING README
 %{_sbindir}/guestfsd
 %{_unitdir}/guestfsd.service
@@ -929,7 +917,6 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %files -n ocaml-%{name}
-%defattr(-,root,root,-)
 %{_libdir}/ocaml/guestfs
 %exclude %{_libdir}/ocaml/guestfs/*.a
 %exclude %{_libdir}/ocaml/guestfs/*.cmxa
@@ -940,7 +927,6 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %files -n ocaml-%{name}-devel
-%defattr(-,root,root,-)
 %doc ocaml/examples/*.ml
 %{_libdir}/ocaml/guestfs/*.a
 %{_libdir}/ocaml/guestfs/*.cmxa
@@ -950,7 +936,6 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %files -n perl-Sys-Guestfs
-%defattr(-,root,root,-)
 %doc perl/examples
 %{perl_vendorarch}/*
 %{_mandir}/man3/Sys::Guestfs.3pm*
@@ -959,7 +944,6 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %files -n python-%{name}
-%defattr(-,root,root,-)
 %doc python/examples/*.py
 %{python_sitearch}/*
 %{python_sitelib}/*.py
@@ -969,7 +953,6 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %files -n ruby-%{name}
-%defattr(-,root,root,-)
 %doc ruby/examples/*.rb
 %doc ruby/doc/site/*
 %{ruby_vendorlibdir}/guestfs.rb
@@ -978,24 +961,20 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %files java
-%defattr(-,root,root,-)
 %{_libdir}/libguestfs_jni*.so.*
 %{_datadir}/java/*.jar
 
 
 %files java-devel
-%defattr(-,root,root,-)
 %{_libdir}/libguestfs_jni*.so
 %{_mandir}/man3/guestfs-java.3*
 
 
 %files javadoc
-%defattr(-,root,root,-)
 %{_datadir}/javadoc/%{name}-java-%{version}
 
 
 %files -n php-%{name}
-%defattr(-,root,root,-)
 %doc php/README-PHP
 %dir %{_sysconfdir}/php.d
 %{_sysconfdir}/php.d/guestfs_php.ini
@@ -1004,7 +983,6 @@ rm -rf $RPM_BUILD_ROOT
 
 %if !0%{?rhel}
 %files -n erlang-%{name}
-%defattr(-,root,root,-)
 %doc erlang/README
 %doc erlang/examples/*.erl
 %doc erlang/examples/LICENSE
@@ -1015,13 +993,11 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %files gobject
-%defattr(-,root,root,-)
 %{_libdir}/libguestfs-gobject-1.0.so.0*
 %{_libdir}/girepository-1.0/Guestfs-1.0.typelib
 
 
 %files gobject-devel
-%defattr(-,root,root,-)
 %{_libdir}/libguestfs-gobject-1.0.so
 %{_includedir}/guestfs-gobject.h
 %dir %{_includedir}/guestfs-gobject
@@ -1031,13 +1007,11 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %files man-pages-ja
-%defattr(-,root,root,-)
 %lang(ja) %{_mandir}/ja/man1/*.1*
 %lang(ja) %{_mandir}/ja/man3/*.3*
 
 
 %files man-pages-uk
-%defattr(-,root,root,-)
 %lang(uk) %{_mandir}/uk/man1/*.1*
 %lang(uk) %{_mandir}/uk/man3/*.3*
 
