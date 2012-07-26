@@ -22,7 +22,7 @@ Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
 Version:       1.19.26
-Release:       1%{?dist}
+Release:       2%{?dist}
 License:       LGPLv2+
 Group:         Development/Libraries
 URL:           http://libguestfs.org/
@@ -38,6 +38,10 @@ BuildRequires: autoconf, automake, libtool, gettext-devel
 # right.  When udev disappears from the repository we can remove this
 # patch.
 Patch4:        libguestfs-1.19.2-remove-udev-from-packagelist.patch
+
+# Upstream patches to fix use of 'run' in builds.
+Patch11:       0001-build-Use-top_builddir-run-in-Makefile.am-s.patch
+Patch12:       0002-tests-Consistent-use-of-top_builddir-run-test-when-b.patch
 
 %if 0%{?rhel} >= 7
 ExclusiveArch: x86_64
@@ -1017,6 +1021,10 @@ mkdir -p $RPM_BUILD_ROOT%{_localstatedir}/run/libguestfs
 
 
 %changelog
+* Thu Jul 26 2012 Richard W.M. Jones <rjones@redhat.com> - 1:1.19.26-2
+- Remove old RPM-isms like defattr.
+- Add upstream patches to fix use of 'run' script in tests.
+
 * Thu Jul 26 2012 Richard W.M. Jones <rjones@redhat.com> - 1:1.19.26-1
 - New upstream version 1.19.26.
 

@@ -1,0 +1,102 @@
+From 590774ed9e005dc85ca6851939e76d02da6624c8 Mon Sep 17 00:00:00 2001
+From: "Richard W.M. Jones" <rjones@redhat.com>
+Date: Thu, 26 Jul 2012 21:56:37 +0100
+Subject: [PATCH 1/2] build: Use $(top_builddir)/run in Makefile.am's.
+
+Not necessary, but this makes all invocations of 'run' consistent.
+There is no functional change.
+---
+ Makefile.am              |    2 +-
+ inspector/Makefile.am    |    8 ++++----
+ sysprep/Makefile.am      |    4 ++--
+ tests/guests/Makefile.am |    4 ++--
+ 4 files changed, 9 insertions(+), 9 deletions(-)
+
+diff --git a/Makefile.am b/Makefile.am
+index cc1e8c8..2954be1 100644
+--- a/Makefile.am
++++ b/Makefile.am
+@@ -252,7 +252,7 @@ CLEANFILES = \
+ # is NOT a substitute for proper testing!
+ 
+ quickcheck:
+-	./run test-tool/libguestfs-test-tool $(QUICKCHECK_TEST_TOOL_ARGS)
++	$(top_builddir)/run test-tool/libguestfs-test-tool $(QUICKCHECK_TEST_TOOL_ARGS)
+ 
+ # Run extra-tests in tests/extra/ subdirectory.
+ 
+diff --git a/inspector/Makefile.am b/inspector/Makefile.am
+index ce3aca9..3a1893d 100644
+--- a/inspector/Makefile.am
++++ b/inspector/Makefile.am
+@@ -104,22 +104,22 @@ endif
+ 
+ example-debian.xml:
+ 	rm -f $@ $@-t
+-	../run --test \
++	$(top_builddir)/run --test \
+ 	    $(builddir)/virt-inspector ../tests/guests/debian.img > $@-t
+ 	mv $@-t $@
+ example-fedora.xml:
+ 	rm -f $@ $@-t
+-	../run --test \
++	$(top_builddir)/run --test \
+ 	    $(builddir)/virt-inspector ../tests/guests/fedora.img > $@-t
+ 	mv $@-t $@
+ example-ubuntu.xml:
+ 	rm -f $@ $@-t
+-	../run --test \
++	$(top_builddir)/run --test \
+ 	    $(builddir)/virt-inspector ../tests/guests/ubuntu.img > $@-t
+ 	mv $@-t $@
+ example-windows.xml:
+ 	rm -f $@ $@-t
+-	../run --test \
++	$(top_builddir)/run --test \
+ 	    $(builddir)/virt-inspector ../tests/guests/windows.img | \
+ 	    fgrep -v '<uuid>' > $@-t
+ 	mv $@-t $@
+diff --git a/sysprep/Makefile.am b/sysprep/Makefile.am
+index e56a971..c52a65f 100644
+--- a/sysprep/Makefile.am
++++ b/sysprep/Makefile.am
+@@ -108,12 +108,12 @@ stamp-virt-sysprep.pod: virt-sysprep.pod sysprep-extra-options.pod sysprep-opera
+ 
+ sysprep-extra-options.pod: virt-sysprep
+ 	rm -f $@ $@-t
+-	../run ./$< --dump-pod-options > $@-t
++	$(top_builddir)/run ./$< --dump-pod-options > $@-t
+ 	mv $@-t $@
+ 
+ sysprep-operations.pod: virt-sysprep
+ 	rm -f $@ $@-t
+-	../run ./$< --dump-pod > $@-t
++	$(top_builddir)/run ./$< --dump-pod > $@-t
+ 	mv $@-t $@
+ 
+ # Tests.
+diff --git a/tests/guests/Makefile.am b/tests/guests/Makefile.am
+index ff983ff..21311de 100644
+--- a/tests/guests/Makefile.am
++++ b/tests/guests/Makefile.am
+@@ -49,7 +49,7 @@ fedora.img: guest-aux/make-fedora-img.pl \
+ 	TMPDIR=$(top_builddir) \
+ 	SRCDIR=$(srcdir) \
+ 	LAYOUT=partitions \
+-	../../run --test $<
++	$(top_builddir)/run --test $<
+ 
+ # Make a (dummy) Fedora image using md devices
+ fedora-md1.img fedora-md2.img: stamp-fedora-md.img
+@@ -61,7 +61,7 @@ stamp-fedora-md.img: guest-aux/make-fedora-img.pl \
+ 	TMPDIR=$(top_builddir) \
+ 	SRCDIR=$(srcdir) \
+ 	LAYOUT=partitions-md \
+-	../../run --test $<
++	$(top_builddir)/run --test $<
+ 	touch $@
+ 
+ guest-aux/fedora-name.db: guest-aux/fedora-name.db.txt
+-- 
+1.7.10.4
+
