@@ -689,6 +689,9 @@ autoreconf -i
 
 %patch4 -p1
 
+%patch11 -p1
+%patch12 -p1
+
 mkdir -p daemon/m4
 
 # Replace developer-specific README that ships with libguestfs, with
