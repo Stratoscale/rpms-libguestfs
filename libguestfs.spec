@@ -719,10 +719,6 @@ enabled=1
 gpgcheck=0
 EOF
 %define extra --with-febootstrap-yum-config=$(pwd)/yum.conf
-echo "==== /etc/yum.conf ===="
-cat /etc/yum.conf
-echo "==== our yum.conf ===="
-cat yum.conf
 %endif
 
 ./configure \
@@ -732,30 +728,11 @@ cat yum.conf
   --with-extra="fedora=%{fedora},release=%{release}" \
   --with-qemu="qemu-kvm qemu-system-%{_build_arch} qemu" \
   --enable-install-daemon \
-  %{extra} || {
-    echo "==== config.log ===="
-    cat config.log
-    exit 1
-}
-
-echo "==== config.log ===="
-cat config.log
+  %{extra}
 
 # 'INSTALLDIRS' ensures that perl libs are installed in the vendor dir
 # not the site dir.
 make V=1 INSTALLDIRS=vendor %{?_smp_mflags}
-
-# Useful for debugging appliance problems.
-for f in appliance/supermin.d/*.img; do
-    b=`basename $f`
-    echo "==== $b ===="
-    ls -l $f
-    cpio -itv < $f
-done
-echo "==== hostfiles ===="
-ls -l appliance/supermin.d/hostfiles
-cat appliance/supermin.d/hostfiles
-echo "======================================================================"
 
 
 %check
