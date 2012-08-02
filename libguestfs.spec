@@ -22,7 +22,7 @@ Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
 Version:       1.19.28
-Release:       1%{?dist}
+Release:       2%{?dist}
 License:       LGPLv2+
 Group:         Development/Libraries
 URL:           http://libguestfs.org/
@@ -997,8 +997,9 @@ mkdir -p $RPM_BUILD_ROOT%{_localstatedir}/run/libguestfs
 
 
 %changelog
-* Thu Aug 02 2012 Richard W.M. Jones <rjones@redhat.com> - 1:1.19.28-1
+* Thu Aug 02 2012 Richard W.M. Jones <rjones@redhat.com> - 1:1.19.28-2
 - New upstream version 1.19.28.
+- Update libguestfs-find-requires to generate ordinary lib dependencies.
 
 * Wed Aug  1 2012 Richard W.M. Jones <rjones@redhat.com> - 1:1.19.27-2
 - Disable tests because of RHBZ#844485.

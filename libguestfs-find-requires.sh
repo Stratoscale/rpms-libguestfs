@@ -1,5 +1,12 @@
-#!/bin/sh -
+#!/bin/bash -
 # Additional custom requires for libguestfs package.
+#
+# Note this script is *ONLY* applicable to Fedora 17+ (ie. with UsrMove)
+# since we now assume that /usr/lib{,64} and /lib{,64} are the same
+# directory and hence that:
+#
+#   Requires: libfoo.so.1           <=>  /usr/lib/libfoo.so.1 exists
+#   Requires: libfoo.so.1()(64bit)  <=>  /usr/lib64/libfoo.so.1 exists
 
 original_find_requires="$1"
 shift
@@ -18,9 +25,13 @@ if [ -z "$hostfiles" ]; then
 fi
 
 # Generate extra requires for libraries listed in hostfiles.
-sofiles=`grep 'lib.*\.so\.' $hostfiles | fgrep -v '*' | sed 's|^\.||'`
+sofiles=`grep 'lib.*\.so\.' $hostfiles | fgrep -v '*'`
 for f in $sofiles; do
     if [ -f "$f" ]; then
-        echo "$f"
+        if [[ "$f" =~ /lib64/(.*) ]]; then
+            echo "${BASH_REMATCH[1]}()(64bit)"
+        elif [[ "$f" =~ /lib/(.*) ]]; then
+            echo "${BASH_REMATCH[1]}"
+        fi
     fi
 done
