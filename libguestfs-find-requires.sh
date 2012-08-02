@@ -28,10 +28,12 @@ fi
 sofiles=`grep 'lib.*\.so\.' $hostfiles | fgrep -v '*'`
 for f in $sofiles; do
     if [ -f "$f" ]; then
-        if [[ "$f" =~ /lib64/(.*) ]]; then
-            echo "${BASH_REMATCH[1]}()(64bit)"
-        elif [[ "$f" =~ /lib/(.*) ]]; then
-            echo "${BASH_REMATCH[1]}"
+        if [[ "$f" =~ (/usr)?/lib64/([^/]*)$ ]]; then
+            echo "${BASH_REMATCH[2]}()(64bit)"
+        elif [[ "$f" =~ (/usr)?/lib/([^/]*)$ ]]; then
+            echo "${BASH_REMATCH[2]}"
+        else
+            echo "$f"
         fi
     fi
 done
