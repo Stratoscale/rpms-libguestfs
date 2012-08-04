@@ -87,6 +87,7 @@ BuildRequires: augeas-libs
 BuildRequires: bash
 BuildRequires: binutils
 BuildRequires: btrfs-progs
+BuildRequires: bzip2
 BuildRequires: coreutils
 BuildRequires: cpio
 BuildRequires: cryptsetup
@@ -128,12 +129,14 @@ BuildRequires: ntfs-3g
 BuildRequires: ntfsprogs
 %endif
 %endif
+BuildRequires: openssh-clients
 BuildRequires: parted
 BuildRequires: procps
 BuildRequires: psmisc
 %if !0%{?rhel}
 BuildRequires: reiserfs-utils
 %endif
+BuildRequires: rsync
 BuildRequires: scrub
 BuildRequires: strace
 BuildRequires: systemd
@@ -160,6 +163,7 @@ Requires:      augeas-libs
 Requires:      bash
 Requires:      binutils
 Requires:      btrfs-progs
+Requires:      bzip2
 Requires:      coreutils
 Requires:      cpio
 Requires:      cryptsetup
@@ -201,12 +205,14 @@ Requires:      ntfs-3g
 Requires:      ntfsprogs
 %endif
 %endif
+Requires:      openssh-clients
 Requires:      parted
 Requires:      procps
 Requires:      psmisc
 %if !0%{?rhel}
 Requires:      reiserfs-utils
 %endif
+Requires:      rsync
 Requires:      scrub
 Requires:      strace
 Requires:      systemd
