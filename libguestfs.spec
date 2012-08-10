@@ -30,7 +30,7 @@ Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
 Version:       1.16.29
-Release:       1%{?dist}
+Release:       2%{?dist}
 License:       LGPLv2+
 Group:         Development/Libraries
 URL:           http://libguestfs.org/
@@ -773,14 +773,16 @@ export LIBGUESTFS_TRACE=1
 # checksum at runtime.
 export SKIP_TEST_CHECKSUM_DEVICE=1
 
-# Work around 'test-getlogin_r.c:55: assertion failed' in Gnulib tests.
+%ifarch %{ix86}
+# test-stdalign is broken with i686 and GCC 4.7.
 pushd gnulib/tests
-borked=test-getlogin_r
+borked=test-stdalign
 make $borked
 rm $borked
 touch $borked
 chmod +x $borked
 popd
+%endif
 
 %if %{runtests}
 make check
@@ -1044,6 +1046,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sun Aug 19 2012 Richard W.M. Jones <rjones@redhat.com> - 1:1.16.29-2
+- Cherry pick patches from F17 to fix the tests.
+
 * Mon Aug 06 2012 Richard W.M. Jones <rjones@redhat.com> - 1:1.16.29-1
 - New upstream stable version 1.16.29.
 
