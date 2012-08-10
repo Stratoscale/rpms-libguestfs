@@ -22,7 +22,7 @@ Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
 Version:       1.18.6
-Release:       2%{?dist}
+Release:       3%{?dist}
 License:       LGPLv2+
 Group:         Development/Libraries
 URL:           http://libguestfs.org/
@@ -801,7 +801,9 @@ export SKIP_TEST_CHECKSUM_DEVICE=1
 %ifarch %{ix86}
 # test-stdalign is broken with i686 and GCC 4.7.
 pushd gnulib/tests
-borked="test-stdalign.o test-stdalign"
+borked=test-stdalign
+make $borked
+rm $borked
 touch $borked
 chmod +x $borked
 popd
@@ -1073,7 +1075,7 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
-* Fri Aug 10 2012 Richard W.M. Jones <rjones@redhat.com> - 1:1.18.6-2
+* Fri Aug 10 2012 Richard W.M. Jones <rjones@redhat.com> - 1:1.18.6-3
 - New upstream stable version 1.18.6.
 - Remove testlogin_r workaround, since this is patched upstream.
 
