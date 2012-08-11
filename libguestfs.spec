@@ -22,7 +22,7 @@ Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
 Version:       1.19.29
-Release:       1%{?dist}
+Release:       2%{?dist}
 License:       LGPLv2+
 Group:         Development/Libraries
 URL:           http://libguestfs.org/
@@ -816,13 +816,14 @@ mkdir -p $RPM_BUILD_ROOT%{_localstatedir}/run/libguestfs
 %{_bindir}/libguestfs-test-tool
 %{_libdir}/guestfs/
 %{_libdir}/libguestfs.so.*
+%{_mandir}/man1/guestfs-release-notes.1*
 %{_mandir}/man1/guestfs-testing.1*
 %{_mandir}/man1/libguestfs-test-tool.1*
 %dir %attr(0755,root,root) %{_localstatedir}/run/libguestfs
 
 
 %files devel
-%doc AUTHORS BUGS ChangeLog HACKING TODO README RELEASE-NOTES ROADMAP
+%doc AUTHORS BUGS ChangeLog HACKING TODO README ROADMAP
 %doc examples/*.c
 %doc installed-docs/*
 %{_libdir}/libguestfs.so
@@ -1003,8 +1004,9 @@ mkdir -p $RPM_BUILD_ROOT%{_localstatedir}/run/libguestfs
 
 
 %changelog
-* Sat Aug 11 2012 Richard W.M. Jones <rjones@redhat.com> - 1:1.19.29-1
+* Sat Aug 11 2012 Richard W.M. Jones <rjones@redhat.com> - 1:1.19.29-2
 - New upstream version 1.19.29.
+- Remove RELEASE NOTES from doc section, and add equivalent man page.
 
 * Fri Aug 10 2012 Richard W.M. Jones <rjones@redhat.com> - 1:1.19.28-4
 - Bump and rebuild.
