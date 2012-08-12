@@ -11,9 +11,11 @@ list:
 This Fedora package comes with a lot of help and examples to get you
 started.
 
-The first places to start are the manual pages.  Type:
+The first place to start are the manual pages.  Type:
 
   man guestfs
+  man guestfs-faq
+  man guestfs-release-notes
   man guestfish
   man virt-cat   # and other virt-* tools
 
@@ -24,8 +26,6 @@ find:
  - BUGS: list of open bugs in this version
 
  - ChangeLog: the detailed list of changes in this version
-
- - RELEASE-NOTES: the release notes for the last major version
 
  - ROADMAP: the roadmap for future versions
 
