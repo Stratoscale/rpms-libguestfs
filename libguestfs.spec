@@ -816,6 +816,9 @@ mkdir -p $RPM_BUILD_ROOT%{_localstatedir}/run/libguestfs
 %{_bindir}/libguestfs-test-tool
 %{_libdir}/guestfs/
 %{_libdir}/libguestfs.so.*
+%{_mandir}/man1/guestfs-faq.1*
+%{_mandir}/man1/guestfs-performance.1*
+%{_mandir}/man1/guestfs-recipes.1*
 %{_mandir}/man1/guestfs-release-notes.1*
 %{_mandir}/man1/guestfs-testing.1*
 %{_mandir}/man1/libguestfs-test-tool.1*
@@ -828,9 +831,6 @@ mkdir -p $RPM_BUILD_ROOT%{_localstatedir}/run/libguestfs
 %doc installed-docs/*
 %{_libdir}/libguestfs.so
 %{_sbindir}/libguestfs-make-fixed-appliance
-%{_mandir}/man1/guestfs-faq.1*
-%{_mandir}/man1/guestfs-performance.1*
-%{_mandir}/man1/guestfs-recipes.1*
 %{_mandir}/man1/libguestfs-make-fixed-appliance.1*
 %{_mandir}/man3/guestfs.3*
 %{_mandir}/man3/guestfs-examples.3*
