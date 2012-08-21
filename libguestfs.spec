@@ -492,24 +492,13 @@ safely edit files in running guests.
 This daemon is *not* required by %{name}.
 
 
+# https://fedoraproject.org/wiki/Packaging:ScriptletSnippets#Systemd
 %post live-service
-if [ $1 -eq 1 ] ; then
-    # Initial installation.
-    /bin/systemctl daemon-reload >/dev/null 2>&1 || :
-fi
-
+%systemd_post guestfsd.service
 %preun live-service
-if [ $1 -eq 0 ] ; then
-    # Package removal, not upgrade.
-    /bin/systemctl stop guestfsd.service > /dev/null 2>&1 || :
-fi
-
+%systemd_preun guestfsd.service
 %postun live-service
-/bin/systemctl daemon-reload >/dev/null 2>&1 || :
-if [ $1 -ge 1 ] ; then
-    # Package upgrade, not uninstall.
-    /bin/systemctl try-restart guestfsd.service >/dev/null 2>&1 || :
-fi
+%systemd_postun_with_restart guestfsd.service
 
 
 %package -n ocaml-%{name}
