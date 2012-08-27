@@ -22,7 +22,7 @@ Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
 Version:       1.19.33
-Release:       2%{?dist}
+Release:       3%{?dist}
 License:       LGPLv2+
 Group:         Development/Libraries
 URL:           http://libguestfs.org/
@@ -909,7 +909,7 @@ mkdir -p $RPM_BUILD_ROOT%{_localstatedir}/run/libguestfs
 
 
 %files -n perl-Sys-Guestfs
-%doc perl/examples
+%doc perl/examples/*.pl
 %{perl_vendorarch}/*
 %{_mandir}/man3/Sys::Guestfs.3pm*
 %{_mandir}/man3/Sys::Guestfs::Lib.3pm*
@@ -939,6 +939,7 @@ mkdir -p $RPM_BUILD_ROOT%{_localstatedir}/run/libguestfs
 
 
 %files java-devel
+%doc java/examples/*.java
 %{_libdir}/libguestfs_jni*.so
 %{_mandir}/man3/guestfs-java.3*
 
@@ -990,6 +991,10 @@ mkdir -p $RPM_BUILD_ROOT%{_localstatedir}/run/libguestfs
 
 
 %changelog
+* Mon Aug 27 2012 Richard W.M. Jones <rjones@redhat.com> - 1:1.19.33-3
+- Fix Perl examples directory so we only include the examples.
+- Add Java examples to java-devel RPM.
+
 * Tue Aug 21 2012 Richard W.M. Jones <rjones@redhat.com> - 1:1.19.33-2
 - New upstream version 1.19.33.
 - Reenable tests.
