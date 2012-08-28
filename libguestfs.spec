@@ -22,7 +22,7 @@ Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
 Version:       1.19.33
-Release:       3%{?dist}
+Release:       1%{?dist}
 License:       LGPLv2+
 Group:         Development/Libraries
 URL:           http://libguestfs.org/
@@ -991,6 +991,9 @@ mkdir -p $RPM_BUILD_ROOT%{_localstatedir}/run/libguestfs
 
 
 %changelog
+* Tue Aug 28 2012 Richard W.M. Jones <rjones@redhat.com> - 1:1.19.33-1
+- New upstream version 1.19.33.
+
 * Mon Aug 27 2012 Richard W.M. Jones <rjones@redhat.com> - 1:1.19.33-3
 - Fix Perl examples directory so we only include the examples.
 - Add Java examples to java-devel RPM.
