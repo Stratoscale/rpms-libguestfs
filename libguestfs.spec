@@ -33,9 +33,6 @@ Patch1:        ruby-1.9-vendor-not-site.patch
 BuildRequires: autoconf, automake, libtool, gettext-devel
 %endif
 
-# Upstream patch to fix Perl bindtests on 32 bit.
-Patch2:        0001-perl-bindtests-Fix-64-bit-integers-on-input-on-32-bi.patch
-
 # Non-upstream patch to remove udev from the packagelist.  systemd now
 # 'obsoletes' udev, but febootstrap doesn't get this relationship
 # right.  When udev disappears from the repository we can remove this
@@ -680,8 +677,6 @@ for %{name}.
 %patch1 -p1
 autoreconf -i
 %endif
-
-%patch2 -p1
 
 %patch4 -p1
 
