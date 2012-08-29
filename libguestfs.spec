@@ -22,7 +22,7 @@ Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
 Version:       1.19.34
-Release:       1%{?dist}
+Release:       2%{?dist}
 License:       LGPLv2+
 Group:         Development/Libraries
 URL:           http://libguestfs.org/
@@ -32,6 +32,9 @@ Source0:       http://libguestfs.org/download/1.19-development/%{name}-%{version
 Patch1:        ruby-1.9-vendor-not-site.patch
 BuildRequires: autoconf, automake, libtool, gettext-devel
 %endif
+
+# Upstream patch to fix Perl bindtests on 32 bit.
+Patch2:        0001-perl-bindtests-Fix-64-bit-integers-on-input-on-32-bi.patch
 
 # Non-upstream patch to remove udev from the packagelist.  systemd now
 # 'obsoletes' udev, but febootstrap doesn't get this relationship
@@ -678,6 +681,8 @@ for %{name}.
 autoreconf -i
 %endif
 
+%patch2 -p1
+
 %patch4 -p1
 
 mkdir -p daemon/m4
@@ -991,6 +996,9 @@ mkdir -p $RPM_BUILD_ROOT%{_localstatedir}/run/libguestfs
 
 
 %changelog
+* Wed Aug 29 2012 Richard W.M. Jones <rjones@redhat.com> - 1:1.19.34-2
+- Add upstream patch to fix Perl bindtests on 32 bit.
+
 * Tue Aug 28 2012 Richard W.M. Jones <rjones@redhat.com> - 1:1.19.34-1
 - New upstream version 1.19.34.
 
