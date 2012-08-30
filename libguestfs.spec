@@ -716,10 +716,7 @@ EOF
 %define extra --with-febootstrap-yum-config=$(pwd)/yum.conf
 %endif
 
-./configure \
-  --prefix=%{_prefix} --libdir=%{_libdir} \
-  --mandir=%{_mandir} \
-  --sysconfdir=%{_sysconfdir} \
+%{configure} \
   --with-extra="fedora=%{fedora},release=%{release}" \
   --with-qemu="qemu-kvm qemu-system-%{_build_arch} qemu" \
   --enable-install-daemon \
@@ -991,6 +988,9 @@ mkdir -p $RPM_BUILD_ROOT%{_localstatedir}/run/libguestfs
 
 
 %changelog
+* Thu Aug 30 2012 Richard W.M. Jones <rjones@redhat.com> - 1:1.19.36-1
+- Use configure RPM macro instead of ./configure.
+
 * Wed Aug 29 2012 Richard W.M. Jones <rjones@redhat.com> - 1:1.19.35-1
 - New upstream version 1.19.35.
 
