@@ -717,7 +717,8 @@ EOF
 %endif
 
 %{configure} \
-  --with-extra="fedora=%{fedora},release=%{release}" \
+  --with-default-attach-method=libvirt \
+  --with-extra="fedora=%{fedora},release=%{release},libvirt" \
   --with-qemu="qemu-kvm qemu-system-%{_build_arch} qemu" \
   --enable-install-daemon \
   %{extra}
@@ -989,6 +990,8 @@ mkdir -p $RPM_BUILD_ROOT%{_localstatedir}/run/libguestfs
 
 %changelog
 * Thu Aug 30 2012 Richard W.M. Jones <rjones@redhat.com> - 1:1.19.36-1
+- Switch to using libvirt as the backend for running the appliance.  See:
+  https://www.redhat.com/archives/libguestfs/2012-August/msg00070.html
 - Use configure RPM macro instead of ./configure.
 
 * Wed Aug 29 2012 Richard W.M. Jones <rjones@redhat.com> - 1:1.19.35-1
