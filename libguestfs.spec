@@ -22,7 +22,7 @@ Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
 Version:       1.19.36
-Release:       1%{?dist}
+Release:       2%{?dist}
 License:       LGPLv2+
 Group:         Development/Libraries
 URL:           http://libguestfs.org/
@@ -74,6 +74,7 @@ BuildRequires: systemd-units
 BuildRequires: netpbm-progs
 BuildRequires: icoutils
 BuildRequires: perl-XML-XPath
+BuildRequires: libvirt-daemon-qemu
 
 # This is only needed for RHEL 5 because readline-devel doesn't
 # properly depend on it, but doesn't do any harm on other platforms:
@@ -280,6 +281,9 @@ Requires:      icoutils
 
 # For core mount-local (FUSE) API.
 Requires:      fuse
+
+# For libvirt attach method.
+Requires:      libvirt-daemon-qemu
 
 # Provide our own custom requires for the supermin appliance.
 Source1:       libguestfs-find-requires.sh
@@ -989,8 +993,9 @@ mkdir -p $RPM_BUILD_ROOT%{_localstatedir}/run/libguestfs
 
 
 %changelog
-* Thu Aug 30 2012 Richard W.M. Jones <rjones@redhat.com> - 1:1.19.36-1
+* Thu Aug 30 2012 Richard W.M. Jones <rjones@redhat.com> - 1:1.19.36-2
 - New upstream version 1.19.36.
+- Require libvirt-daemon-qemu (for libvirt attach method).
 
 * Thu Aug 30 2012 Richard W.M. Jones <rjones@redhat.com> - 1:1.19.36-1
 - Switch to using libvirt as the backend for running the appliance.  See:
