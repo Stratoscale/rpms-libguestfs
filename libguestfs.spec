@@ -747,7 +747,9 @@ export LIBGUESTFS_TRACE=1
 export SKIP_TEST_CHECKSUM_DEVICE=1
 
 %if %{runtests}
-make check
+# Disabled because of:
+# https://bugzilla.redhat.com/show_bug.cgi?id=853408
+#make check
 %endif
 
 
