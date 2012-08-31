@@ -47,7 +47,7 @@ ExclusiveArch: x86_64
 BuildRequires: perl(Pod::Simple)
 BuildRequires: perl(Pod::Man)
 BuildRequires: /usr/bin/pod2text
-BuildRequires: febootstrap >= 3.17
+BuildRequires: febootstrap >= 3.20
 BuildRequires: hivex-devel >= 1.2.7-7
 BuildRequires: perl-hivex
 BuildRequires: augeas-devel >= 0.5.0
@@ -269,7 +269,7 @@ BuildRequires: parted >= 3.0-2
 
 # Runtime requires:
 Requires:      qemu-kvm >= 2:1.1.0
-Requires:      febootstrap-supermin-helper >= 3.17
+Requires:      febootstrap-supermin-helper >= 3.20
 
 # For libguestfs-test-tool.
 Requires:      genisoimage
