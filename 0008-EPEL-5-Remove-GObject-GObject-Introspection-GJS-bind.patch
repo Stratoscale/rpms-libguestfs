@@ -1,19 +1,19 @@
-From cffb90f873293433eb9dcc1d30e75effedc1fe5c Mon Sep 17 00:00:00 2001
+From 471ed5723343032ce7eaf083f672cf12e337a524 Mon Sep 17 00:00:00 2001
 From: Richard W.M. Jones <rjones@redhat.com>
 Date: Sat, 16 Jun 2012 14:35:06 +0100
-Subject: [PATCH 06/20] EPEL 5: Remove GObject / GObject Introspection / GJS bindings.
+Subject: [PATCH 08/29] EPEL 5: Remove GObject / GObject Introspection / GJS bindings.
 
 ---
  Makefile.am  |    3 --
  configure.ac |   68 ----------------------------------------------------------
- po/POTFILES  |   42 -----------------------------------
- 3 files changed, 0 insertions(+), 113 deletions(-)
+ po/POTFILES  |   58 -------------------------------------------------
+ 3 files changed, 0 insertions(+), 129 deletions(-)
 
 diff --git a/Makefile.am b/Makefile.am
-index 6bd6047..88e3815 100644
+index 281864f..710a81c 100644
 --- a/Makefile.am
 +++ b/Makefile.am
-@@ -84,9 +84,6 @@ endif
+@@ -88,9 +88,6 @@ endif
  if HAVE_PHP
  SUBDIRS += php
  endif
@@ -24,10 +24,10 @@ index 6bd6047..88e3815 100644
  # Unconditional because nothing is built yet.
  SUBDIRS += csharp
 diff --git a/configure.ac b/configure.ac
-index 399a726..4d60102 100644
+index deace63..1a37987 100644
 --- a/configure.ac
 +++ b/configure.ac
-@@ -1136,67 +1136,6 @@ AS_IF([test "x$PERL" != "xno"],
+@@ -1167,67 +1167,6 @@ AS_IF([test "x$PERL" != "xno"],
  AM_CONDITIONAL([HAVE_TOOLS],
      [test "x$PERL" != "xno" && test "x$missing_perl_modules" != "xyes"])
  
@@ -95,7 +95,7 @@ index 399a726..4d60102 100644
  dnl Library versioning.
  MAX_PROC_NR=`cat $srcdir/src/MAX_PROC_NR`
  AC_SUBST(MAX_PROC_NR)
-@@ -1230,9 +1169,6 @@ AC_CONFIG_FILES([Makefile
+@@ -1261,9 +1200,6 @@ AC_CONFIG_FILES([Makefile
                   generator/Makefile
                   gnulib/lib/Makefile
                   gnulib/tests/Makefile
@@ -105,7 +105,7 @@ index 399a726..4d60102 100644
                   haskell/Makefile
                   inspector/Makefile
                   java/Makefile
-@@ -1310,10 +1246,6 @@ if test "x$HAVE_TOOLS_TRUE" = "x"; then echo "yes"; else echo "no"; fi
+@@ -1345,10 +1281,6 @@ if test "x$HAVE_TOOLS_TRUE" = "x"; then echo "yes"; else echo "no"; fi
  echo -n "OCaml virt tools .................... "
  if test "x$HAVE_OCAML_TRUE" = "x"; then echo "yes"; else echo "no"; fi
  echo "FUSE filesystem ..................... $enable_fuse"
@@ -117,15 +117,15 @@ index 399a726..4d60102 100644
  if test "x$HAVE_GNU_GETTEXT_TRUE" = "x"; then echo "yes"; else echo "no"; fi
  echo
 diff --git a/po/POTFILES b/po/POTFILES
-index 3e3f300..3e87532 100644
+index 2942d79..c9c592c 100644
 --- a/po/POTFILES
 +++ b/po/POTFILES
-@@ -130,48 +130,6 @@ fish/time.c
- fish/virt.c
+@@ -134,64 +134,6 @@ fish/tilde.c
+ fish/time.c
  format/format.c
  fuse/guestmount.c
 -gobject/src/optargs-add_domain.c
--gobject/src/optargs-add_drive_opts.c
+-gobject/src/optargs-add_drive.c
 -gobject/src/optargs-btrfs_filesystem_resize.c
 -gobject/src/optargs-btrfs_fsck.c
 -gobject/src/optargs-compress_device_out.c
@@ -136,23 +136,37 @@ index 3e3f300..3e87532 100644
 -gobject/src/optargs-copy_file_to_file.c
 -gobject/src/optargs-e2fsck.c
 -gobject/src/optargs-fstrim.c
+-gobject/src/optargs-grep.c
+-gobject/src/optargs-hivex_open.c
 -gobject/src/optargs-inspect_get_icon.c
+-gobject/src/optargs-internal_test.c
 -gobject/src/optargs-md_create.c
+-gobject/src/optargs-mkfs.c
 -gobject/src/optargs-mkfs_btrfs.c
--gobject/src/optargs-mkfs_opts.c
+-gobject/src/optargs-mkswap.c
 -gobject/src/optargs-mount_9p.c
 -gobject/src/optargs-mount_local.c
 -gobject/src/optargs-ntfsclone_out.c
 -gobject/src/optargs-ntfsfix.c
--gobject/src/optargs-ntfsresize_opts.c
+-gobject/src/optargs-ntfsresize.c
+-gobject/src/optargs-rsync.c
+-gobject/src/optargs-rsync_in.c
+-gobject/src/optargs-rsync_out.c
 -gobject/src/optargs-set_e2attrs.c
--gobject/src/optargs-test0.c
+-gobject/src/optargs-tar_in.c
+-gobject/src/optargs-tar_out.c
 -gobject/src/optargs-tune2fs.c
+-gobject/src/optargs-umount.c
 -gobject/src/optargs-umount_local.c
+-gobject/src/optargs-xfs_admin.c
+-gobject/src/optargs-xfs_growfs.c
+-gobject/src/optargs-xfs_repair.c
 -gobject/src/session.c
 -gobject/src/struct-application.c
 -gobject/src/struct-btrfssubvolume.c
 -gobject/src/struct-dirent.c
+-gobject/src/struct-hivex_node.c
+-gobject/src/struct-hivex_value.c
 -gobject/src/struct-inotify_event.c
 -gobject/src/struct-int_bool.c
 -gobject/src/struct-isoinfo.c
@@ -163,12 +177,14 @@ index 3e3f300..3e87532 100644
 -gobject/src/struct-partition.c
 -gobject/src/struct-stat.c
 -gobject/src/struct-statvfs.c
+-gobject/src/struct-utsname.c
 -gobject/src/struct-version.c
 -gobject/src/struct-xattr.c
+-gobject/src/struct-xfsinfo.c
 -gobject/src/tristate.c
  inspector/virt-inspector.c
  java/com_redhat_et_libguestfs_GuestFS.c
- ocaml/guestfs_c.c
+ ocaml/guestfs-c-actions.c
 -- 
 1.7.4.1
 

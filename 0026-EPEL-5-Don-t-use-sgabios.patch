@@ -1,0 +1,33 @@
+From d1061a6d55fe69906722aa655adb17ff1966f10d Mon Sep 17 00:00:00 2001
+From: Richard W.M. Jones <rjones@redhat.com>
+Date: Fri, 31 Aug 2012 10:24:06 +0100
+Subject: [PATCH 26/29] EPEL 5: Don't use sgabios.
+
+Old qemu doesn't support '-device' parameter.
+---
+ src/launch-appliance.c |    9 ---------
+ 1 files changed, 0 insertions(+), 9 deletions(-)
+
+diff --git a/src/launch-appliance.c b/src/launch-appliance.c
+index 59ca93c..529c372 100644
+--- a/src/launch-appliance.c
++++ b/src/launch-appliance.c
+@@ -386,15 +386,6 @@ launch_appliance (guestfs_h *g, const char *arg)
+     add_cmdline (g, "-serial");
+     add_cmdline (g, "stdio");
+ 
+-    /* Use sgabios instead of vgabios.  This means we'll see BIOS
+-     * messages on the serial port, and also works around this bug
+-     * in qemu 1.1.0:
+-     * https://bugs.launchpad.net/qemu/+bug/1021649
+-     * QEmu has included sgabios upstream since just before 1.0.
+-     */
+-    add_cmdline (g, "-device");
+-    add_cmdline (g, "sga");
+-
+     /* Null vmchannel. */
+     add_cmdline (g, "-net");
+     add_cmdline (g, "user,vlan=0,net=" NETWORK);
+-- 
+1.7.4.1
+

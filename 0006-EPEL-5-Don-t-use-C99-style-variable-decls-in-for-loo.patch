@@ -1,19 +1,19 @@
-From bbce9576f61fc2a5108950fb85a2a1de300e5888 Mon Sep 17 00:00:00 2001
+From 091fecaaaa729dbef19a5cb87e4e2b2c80f2a4ef Mon Sep 17 00:00:00 2001
 From: Richard W.M. Jones <rjones@redhat.com>
 Date: Sat, 16 Jun 2012 13:55:44 +0100
-Subject: [PATCH 04/20] EPEL 5: Don't use C99-style variable decls in for-loop.
+Subject: [PATCH 06/29] EPEL 5: Don't use C99-style variable decls in for-loop.
 
 ---
  daemon/md.c                      |    6 ++++--
  generator/generator_bindtests.ml |    3 ++-
- src/inspect_fs_unix.c            |   22 ++++++++++++++--------
- 3 files changed, 20 insertions(+), 11 deletions(-)
+ src/inspect-fs-unix.c            |   19 ++++++++++++-------
+ 3 files changed, 18 insertions(+), 10 deletions(-)
 
 diff --git a/daemon/md.c b/daemon/md.c
-index 0e2f704..7baaab8 100644
+index 4281b4e..0f5d8f5 100644
 --- a/daemon/md.c
 +++ b/daemon/md.c
-@@ -202,7 +202,8 @@ do_list_md_devices (void)
+@@ -204,7 +204,8 @@ do_list_md_devices (void)
      goto error;
    }
  
@@ -23,7 +23,7 @@ index 0e2f704..7baaab8 100644
      size_t len = strlen (mds.gl_pathv[i]) - strlen (PREFIX) - strlen (SUFFIX);
  
  #define DEV "/dev/md"
-@@ -278,7 +279,8 @@ do_md_detail(const char *md)
+@@ -280,7 +281,8 @@ do_md_detail(const char *md)
         * case */
        if (STRPREFIX (line, "MD_")) {
          line += 3;
@@ -34,10 +34,10 @@ index 0e2f704..7baaab8 100644
          }
        }
 diff --git a/generator/generator_bindtests.ml b/generator/generator_bindtests.ml
-index 76e5f38..8cf2fec 100644
+index 54c46fa..6b0e328 100644
 --- a/generator/generator_bindtests.ml
 +++ b/generator/generator_bindtests.ml
-@@ -185,7 +185,8 @@ print_strings (char *const *argv)
+@@ -247,7 +247,8 @@ print_strings (guestfs_h *g, char *const *argv)
               pr "  r = safe_calloc (g, sizeof *r, 1);\n";
               pr "  r->len = len;\n";
               pr "  r->val = safe_calloc (g, r->len, sizeof *r->val);\n";
@@ -47,11 +47,11 @@ index 76e5f38..8cf2fec 100644
               pr "    r->val[i].pv_size = i;\n";
               pr "  }\n";
               pr "  return r;\n"
-diff --git a/src/inspect_fs_unix.c b/src/inspect_fs_unix.c
-index 06936c2..4dc9f6e 100644
---- a/src/inspect_fs_unix.c
-+++ b/src/inspect_fs_unix.c
-@@ -918,7 +918,8 @@ uuid_hash(const void *x, size_t table_size)
+diff --git a/src/inspect-fs-unix.c b/src/inspect-fs-unix.c
+index c00e69b..231dbd3 100644
+--- a/src/inspect-fs-unix.c
++++ b/src/inspect-fs-unix.c
+@@ -919,7 +919,8 @@ uuid_hash(const void *x, size_t table_size)
    const md_uuid *a = x;
  
    size_t h = a->uuid[0];
@@ -61,7 +61,7 @@ index 06936c2..4dc9f6e 100644
      h ^= a->uuid[i];
    }
  
-@@ -931,7 +932,8 @@ uuid_cmp(const void *x, const void *y)
+@@ -932,7 +933,8 @@ uuid_cmp(const void *x, const void *y)
    const md_uuid *a = x;
    const md_uuid *b = y;
  
@@ -71,7 +71,7 @@ index 06936c2..4dc9f6e 100644
      if (a->uuid[i] != b->uuid[i]) return 0;
    }
  
-@@ -995,8 +997,9 @@ map_app_md_devices (guestfs_h *g, Hash_table **map)
+@@ -996,8 +998,9 @@ map_app_md_devices (guestfs_h *g, Hash_table **map)
    mds = guestfs_list_md_devices(g);
    if (mds == NULL) goto error;
  
@@ -83,7 +83,7 @@ index 06936c2..4dc9f6e 100644
      if (detail == NULL) goto error;
  
      /* Iterate over keys until we find uuid */
-@@ -1116,7 +1119,8 @@ map_md_devices(guestfs_h *g, Hash_table **map)
+@@ -1117,7 +1120,8 @@ map_md_devices(guestfs_h *g, Hash_table **map)
                                     mdadm_app_free);
    if (!*map) g->abort_cb();
  
@@ -93,17 +93,7 @@ index 06936c2..4dc9f6e 100644
      /* Get device name and uuid for each array */
      char *dev_path = safe_asprintf(g, "%s/devicename", *match);
      char *dev = guestfs_aug_get(g, dev_path);
-@@ -1241,7 +1245,8 @@ resolve_fstab_device (guestfs_h *g, const char *spec, Hash_table *md_map)
- 
-       /* Calculate the numerical index of the disk */
-       i = disk[0] - 'a';
--      for (char *p = disk + 1; *p != '\0'; p++) {
-+      char *p;
-+      for (p = disk + 1; *p != '\0'; p++) {
-         i += 1; i *= 26;
-         i += *p - 'a';
-       }
-@@ -1335,7 +1340,8 @@ inspect_with_augeas (guestfs_h *g, struct inspect_fs *fs,
+@@ -1433,7 +1437,8 @@ inspect_with_augeas (guestfs_h *g, struct inspect_fs *fs,
                       int (*f) (guestfs_h *, struct inspect_fs *))
  {
    /* Security: Refuse to do this if a config file is too large. */
@@ -113,7 +103,7 @@ index 06936c2..4dc9f6e 100644
      if (guestfs_exists(g, *i) == 0) continue;
  
      int64_t size = guestfs_filesize (g, *i);
-@@ -1373,7 +1379,7 @@ inspect_with_augeas (guestfs_h *g, struct inspect_fs *fs,
+@@ -1471,7 +1476,7 @@ inspect_with_augeas (guestfs_h *g, struct inspect_fs *fs,
  
  #define EXCL " and . != \""
  #define EXCL_LEN (strlen(EXCL))

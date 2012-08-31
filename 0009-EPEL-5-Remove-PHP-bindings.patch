@@ -1,7 +1,7 @@
-From 03db70c2ea3c259134cef2b638dc3ea5056ae1d6 Mon Sep 17 00:00:00 2001
+From f4a1318f01f19b2503c29c6cae9a2cdaf695bee1 Mon Sep 17 00:00:00 2001
 From: Richard W.M. Jones <rjones@redhat.com>
 Date: Sun, 17 Jun 2012 23:01:43 +0100
-Subject: [PATCH 07/20] EPEL 5: Remove PHP bindings.
+Subject: [PATCH 09/29] EPEL 5: Remove PHP bindings.
 
 ---
  Makefile.am  |    3 ---
@@ -10,10 +10,10 @@ Subject: [PATCH 07/20] EPEL 5: Remove PHP bindings.
  3 files changed, 0 insertions(+), 21 deletions(-)
 
 diff --git a/Makefile.am b/Makefile.am
-index 88e3815..5175bf3 100644
+index 710a81c..9d67397 100644
 --- a/Makefile.am
 +++ b/Makefile.am
-@@ -81,9 +81,6 @@ endif
+@@ -85,9 +85,6 @@ endif
  if HAVE_HASKELL
  SUBDIRS += haskell
  endif
@@ -24,10 +24,10 @@ index 88e3815..5175bf3 100644
  # Unconditional because nothing is built yet.
  SUBDIRS += csharp
 diff --git a/configure.ac b/configure.ac
-index 4d60102..1b1c22f 100644
+index 1a37987..4f94be9 100644
 --- a/configure.ac
 +++ b/configure.ac
-@@ -1101,20 +1101,6 @@ AS_IF([test "x$enable_haskell" != "xno"],
+@@ -1132,20 +1132,6 @@ AS_IF([test "x$enable_haskell" != "xno"],
  AM_CONDITIONAL([HAVE_HASKELL],
      [test "x$GHC" != "xno"])
  
@@ -48,7 +48,7 @@ index 4d60102..1b1c22f 100644
  dnl Check for Perl modules needed by Perl virt tools (virt-df, etc.)
  AS_IF([test "x$PERL" != "xno"],
          [
-@@ -1179,7 +1165,6 @@ AC_CONFIG_FILES([Makefile
+@@ -1210,7 +1196,6 @@ AC_CONFIG_FILES([Makefile
                   perl/Makefile
                   perl/Makefile.PL
                   perl/examples/Makefile
@@ -56,7 +56,7 @@ index 4d60102..1b1c22f 100644
                   po-docs/Makefile
                   po-docs/ja/Makefile
                   po-docs/uk/Makefile
-@@ -1238,8 +1223,6 @@ echo -n "Java bindings ....................... "
+@@ -1273,8 +1258,6 @@ echo -n "Java bindings ....................... "
  if test "x$HAVE_JAVA_TRUE" = "x"; then echo "yes"; else echo "no"; fi
  echo -n "Haskell bindings .................... "
  if test "x$HAVE_HASKELL_TRUE" = "x"; then echo "yes"; else echo "no"; fi
@@ -66,10 +66,10 @@ index 4d60102..1b1c22f 100644
  echo -n "Perl virt tools ..................... "
  if test "x$HAVE_TOOLS_TRUE" = "x"; then echo "yes"; else echo "no"; fi
 diff --git a/po/POTFILES b/po/POTFILES
-index 3e87532..0e06f4e 100644
+index c9c592c..7609f47 100644
 --- a/po/POTFILES
 +++ b/po/POTFILES
-@@ -139,7 +139,6 @@ perl/Guestfs.c
+@@ -142,7 +142,6 @@ perl/Guestfs.c
  perl/bindtests.pl
  perl/lib/Sys/Guestfs.pm
  perl/lib/Sys/Guestfs/Lib.pm

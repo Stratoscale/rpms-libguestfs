@@ -1,0 +1,42 @@
+From 16065fe8654dc6bba9517ba969b7291ce60602e4 Mon Sep 17 00:00:00 2001
+From: Richard W.M. Jones <rjones@redhat.com>
+Date: Fri, 22 Jun 2012 10:24:48 +0100
+Subject: [PATCH 19/29] EPEL 5: sparsify: Fix command line options for old qemu-img.
+
+This didn't have -o backing_file etc.  Use old -b and -F options instead.
+---
+ sparsify/sparsify.ml |   18 ++++++------------
+ 1 files changed, 6 insertions(+), 12 deletions(-)
+
+diff --git a/sparsify/sparsify.ml b/sparsify/sparsify.ml
+index 379ccf4..9041ca2 100644
+--- a/sparsify/sparsify.ml
++++ b/sparsify/sparsify.ml
+@@ -207,18 +207,12 @@ let overlaydisk =
+ 
+   (* Create it with the indisk as the backing file. *)
+   let cmd =
+-    let options =
+-      let backing_file_option =
+-        [sprintf "backing_file=%s" (replace_str indisk "," ",,")] in
+-      let backing_fmt_option =
+-        match format with
+-        | None -> []
+-        | Some fmt -> [sprintf "backing_fmt=%s" fmt] in
+-      let version3 =
+-        if qemu_img_version >= 1.1 then ["compat=1.1"] else [] in
+-      backing_file_option @ backing_fmt_option @ version3 in
+-    sprintf "qemu-img create -f qcow2 -o %s %s > /dev/null"
+-      (Filename.quote (String.concat "," options)) (Filename.quote tmp) in
++    sprintf "qemu-img create -f qcow2%s -b %s %s > /dev/null"
++      (match format with
++       | None -> ""
++       | Some fmt -> sprintf " -F %s" fmt)
++      (replace_str indisk "," ",,")
++      (Filename.quote tmp) in
+   if verbose then
+     printf "%s\n%!" cmd;
+   if Sys.command cmd <> 0 then
+-- 
+1.7.4.1
+

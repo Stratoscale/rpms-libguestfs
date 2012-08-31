@@ -1,7 +1,7 @@
-From f14d4f6577e5ca9689e38be35bf6322731d43399 Mon Sep 17 00:00:00 2001
+From e794f3a5d7f5016d8e059e2158407365c85f2060 Mon Sep 17 00:00:00 2001
 From: Richard W.M. Jones <rjones@redhat.com>
 Date: Sun, 17 Jun 2012 22:58:58 +0100
-Subject: [PATCH 09/20] EPEL 5: Add gnulib utimensat module.
+Subject: [PATCH 11/29] EPEL 5: Add gnulib utimensat module.
 
 This function is missing in RHEL 5-era kernels.
 ---
@@ -10,10 +10,10 @@ This function is missing in RHEL 5-era kernels.
  2 files changed, 3 insertions(+), 0 deletions(-)
 
 diff --git a/bootstrap b/bootstrap
-index dd5006c..feb67f0 100755
+index be0dfe4..de6e506 100755
 --- a/bootstrap
 +++ b/bootstrap
-@@ -84,6 +84,7 @@ strndup
+@@ -88,6 +88,7 @@ strndup
  symlinkat
  sys_select
  sys_wait
@@ -22,7 +22,7 @@ index dd5006c..feb67f0 100755
  vc-list-files
  warnings
 diff --git a/m4/.gitignore b/m4/.gitignore
-index 7fa447d..efc04be 100644
+index 78b0628..936fc97 100644
 --- a/m4/.gitignore
 +++ b/m4/.gitignore
 @@ -53,6 +53,7 @@
@@ -31,9 +31,9 @@ index 7fa447d..efc04be 100644
  /fseeko.m4
 +/fstatat.m4
  /fstat.m4
+ /fstatat.m4
  /fsusage.m4
- /ftell.m4
-@@ -235,6 +236,7 @@
+@@ -238,6 +239,7 @@
  /usleep.m4
  /utimbuf.m4
  /utimecmp.m4

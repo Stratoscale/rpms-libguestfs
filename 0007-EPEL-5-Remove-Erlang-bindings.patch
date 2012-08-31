@@ -1,7 +1,7 @@
-From 90d6987412c2f9e413f826c6e52bc24fa5de5723 Mon Sep 17 00:00:00 2001
+From 12e28180ebe9dc15490ce183399ff11d2fbe0e2b Mon Sep 17 00:00:00 2001
 From: Richard W.M. Jones <rjones@redhat.com>
 Date: Sat, 16 Jun 2012 14:34:25 +0100
-Subject: [PATCH 05/20] EPEL 5: Remove Erlang bindings.
+Subject: [PATCH 07/29] EPEL 5: Remove Erlang bindings.
 
 ---
  Makefile.am  |    3 ---
@@ -10,10 +10,10 @@ Subject: [PATCH 05/20] EPEL 5: Remove Erlang bindings.
  3 files changed, 0 insertions(+), 28 deletions(-)
 
 diff --git a/Makefile.am b/Makefile.am
-index be9191c..6bd6047 100644
+index c71c66a..281864f 100644
 --- a/Makefile.am
 +++ b/Makefile.am
-@@ -84,9 +84,6 @@ endif
+@@ -88,9 +88,6 @@ endif
  if HAVE_PHP
  SUBDIRS += php
  endif
@@ -24,10 +24,10 @@ index be9191c..6bd6047 100644
  SUBDIRS += gobject
  endif
 diff --git a/configure.ac b/configure.ac
-index 5e67931..399a726 100644
+index 4e141f6..deace63 100644
 --- a/configure.ac
 +++ b/configure.ac
-@@ -1115,25 +1115,6 @@ AS_IF([test "x$enable_php" != "xno"],
+@@ -1146,25 +1146,6 @@ AS_IF([test "x$enable_php" != "xno"],
          ])
  AM_CONDITIONAL([HAVE_PHP], [test "x$PHP" != "xno" && test "x$PHPIZE" != "xno"])
  
@@ -53,7 +53,7 @@ index 5e67931..399a726 100644
  dnl Check for Perl modules needed by Perl virt tools (virt-df, etc.)
  AS_IF([test "x$PERL" != "xno"],
          [
-@@ -1242,8 +1223,6 @@ AC_CONFIG_FILES([Makefile
+@@ -1273,8 +1254,6 @@ AC_CONFIG_FILES([Makefile
                   daemon/Makefile
                   df/Makefile
                   edit/Makefile
@@ -62,7 +62,7 @@ index 5e67931..399a726 100644
                   examples/Makefile
                   fish/Makefile
                   format/Makefile
-@@ -1325,8 +1304,6 @@ echo -n "Haskell bindings .................... "
+@@ -1360,8 +1339,6 @@ echo -n "Haskell bindings .................... "
  if test "x$HAVE_HASKELL_TRUE" = "x"; then echo "yes"; else echo "no"; fi
  echo -n "PHP bindings ........................ "
  if test "x$HAVE_PHP_TRUE" = "x"; then echo "yes"; else echo "no"; fi
@@ -72,18 +72,18 @@ index 5e67931..399a726 100644
  echo -n "Perl virt tools ..................... "
  if test "x$HAVE_TOOLS_TRUE" = "x"; then echo "yes"; else echo "no"; fi
 diff --git a/po/POTFILES b/po/POTFILES
-index 747b341..3e3f300 100644
+index 19cb0b5..2942d79 100644
 --- a/po/POTFILES
 +++ b/po/POTFILES
-@@ -91,8 +91,6 @@ df/domains.c
+@@ -95,8 +95,6 @@ df/domains.c
  df/main.c
  df/output.c
  edit/virt-edit.c
 -erlang/erl-guestfs-proto.c
 -erlang/erl-guestfs.c
  fish/alloc.c
+ fish/cmds-gperf.c
  fish/cmds.c
- fish/cmds_gperf.c
 -- 
 1.7.4.1
 

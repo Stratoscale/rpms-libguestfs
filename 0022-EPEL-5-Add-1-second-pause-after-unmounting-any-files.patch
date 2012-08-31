@@ -1,7 +1,7 @@
-From 7da9fb725679c81fb641b97e502bad75815df65c Mon Sep 17 00:00:00 2001
+From 9a62a5956168d4ec4d02898318ac8ca325451e9c Mon Sep 17 00:00:00 2001
 From: Richard W.M. Jones <rjones@redhat.com>
 Date: Fri, 22 Jun 2012 21:58:32 +0100
-Subject: [PATCH 19/20] EPEL 5: Add 1 second pause after unmounting any filesystem.
+Subject: [PATCH 22/29] EPEL 5: Add 1 second pause after unmounting any filesystem.
 
 This fixes the test-charset-fidelity test case.  A simpler example
 which fails without this is:
@@ -24,10 +24,10 @@ which fails without this is:
  1 files changed, 6 insertions(+), 0 deletions(-)
 
 diff --git a/daemon/mount.c b/daemon/mount.c
-index 0661eb8..6cfe3e3 100644
+index c84faaf..1e8aac1 100644
 --- a/daemon/mount.c
 +++ b/daemon/mount.c
-@@ -216,6 +216,9 @@ do_umount (const char *pathordevice)
+@@ -237,6 +237,9 @@ do_umount (const char *pathordevice,
  
    free (err);
  
@@ -37,7 +37,7 @@ index 0661eb8..6cfe3e3 100644
    return 0;
  }
  
-@@ -376,6 +379,9 @@ do_umount_all (void)
+@@ -397,6 +400,9 @@ do_umount_all (void)
  
    free_stringslen (mounts.argv, mounts.size);
  

@@ -1,16 +1,16 @@
-From a61d5f78cad9d28df1955dc33755a5d822dca208 Mon Sep 17 00:00:00 2001
+From c91abaaa5ff64af96a543f698f71f4deff0cbcb9 Mon Sep 17 00:00:00 2001
 From: Richard W.M. Jones <rjones@redhat.com>
 Date: Fri, 22 Jun 2012 13:15:49 +0100
-Subject: [PATCH 17/20] EPEL 5: Remove Fedora MD test images.
+Subject: [PATCH 20/29] EPEL 5: Remove Fedora MD test images.
 
 On RHEL 5, mdadm is not able to create md devices with aliases,
 eg. '/dev/md/boot'.
 ---
- tests/guests/Makefile.am |   15 +--------------
- 1 files changed, 1 insertions(+), 14 deletions(-)
+ tests/guests/Makefile.am |   12 +-----------
+ 1 files changed, 1 insertions(+), 11 deletions(-)
 
 diff --git a/tests/guests/Makefile.am b/tests/guests/Makefile.am
-index 77ce61b..ad8ca5a 100644
+index a05dceb..d98f12d 100644
 --- a/tests/guests/Makefile.am
 +++ b/tests/guests/Makefile.am
 @@ -38,7 +38,7 @@ EXTRA_DIST = \
@@ -20,11 +20,11 @@ index 77ce61b..ad8ca5a 100644
 -check_DATA = debian.img fedora.img fedora-md1.img fedora-md2.img ubuntu.img windows.img
 +check_DATA = debian.img fedora.img ubuntu.img windows.img
  
- CLEANFILES = $(check_DATA) stamp-fedora-md.img
+ CLEANFILES = $(check_DATA) stamp-fedora-md.img *.tmp.*
  
-@@ -51,19 +51,6 @@ fedora.img: guest-aux/make-fedora-img.pl \
- 	LAYOUT=partitions \
- 	../../run --test $<
+@@ -48,16 +48,6 @@ fedora.img: guest-aux/make-fedora-img.pl \
+ 		guest-aux/fedora-packages.db
+ 	SRCDIR=$(srcdir) LAYOUT=partitions $(top_builddir)/run --test $<
  
 -# Make a (dummy) Fedora image using md devices
 -fedora-md1.img fedora-md2.img: stamp-fedora-md.img
@@ -33,10 +33,7 @@ index 77ce61b..ad8ca5a 100644
 -		guest-aux/fedora-name.db \
 -		guest-aux/fedora-packages.db
 -	rm -f $@
--	TMPDIR=$(top_builddir) \
--	SRCDIR=$(srcdir) \
--	LAYOUT=partitions-md \
--	../../run --test $<
+-	SRCDIR=$(srcdir) LAYOUT=partitions-md $(top_builddir)/run --test $<
 -	touch $@
 -
  guest-aux/fedora-name.db: guest-aux/fedora-name.db.txt

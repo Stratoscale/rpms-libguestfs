@@ -1,0 +1,194 @@
+From a1d981edeae120a0523d0974c703f1a956202415 Mon Sep 17 00:00:00 2001
+From: Richard W.M. Jones <rjones@redhat.com>
+Date: Fri, 31 Aug 2012 19:12:27 +0100
+Subject: [PATCH 02/29] tests: Attach copyright and license (GPLv2+) notices to various test scripts.
+
+For some reason these tests did not have license notices.
+---
+ cat/test-virt-cat.sh                |   16 ++++++++++++++++
+ cat/test-virt-filesystems.sh        |   16 ++++++++++++++++
+ cat/test-virt-ls.sh                 |   16 ++++++++++++++++
+ df/test-virt-df.sh                  |   16 ++++++++++++++++
+ edit/test-virt-edit.sh              |   16 ++++++++++++++++
+ tools/test-virt-list-filesystems.sh |   16 ++++++++++++++++
+ tools/test-virt-tar.sh              |   16 ++++++++++++++++
+ 7 files changed, 112 insertions(+), 0 deletions(-)
+
+diff --git a/cat/test-virt-cat.sh b/cat/test-virt-cat.sh
+index 7984456..5c05156 100755
+--- a/cat/test-virt-cat.sh
++++ b/cat/test-virt-cat.sh
+@@ -1,4 +1,20 @@
+ #!/bin/bash -
++# libguestfs
++# Copyright (C) 2009-2012 Red Hat Inc.
++#
++# This program is free software; you can redistribute it and/or modify
++# it under the terms of the GNU General Public License as published by
++# the Free Software Foundation; either version 2 of the License, or
++# (at your option) any later version.
++#
++# This program is distributed in the hope that it will be useful,
++# but WITHOUT ANY WARRANTY; without even the implied warranty of
++# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++# GNU General Public License for more details.
++#
++# You should have received a copy of the GNU General Public License
++# along with this program; if not, write to the Free Software
++# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+ 
+ export LANG=C
+ set -e
+diff --git a/cat/test-virt-filesystems.sh b/cat/test-virt-filesystems.sh
+index e664e1a..b413bac 100755
+--- a/cat/test-virt-filesystems.sh
++++ b/cat/test-virt-filesystems.sh
+@@ -1,4 +1,20 @@
+ #!/bin/bash -
++# libguestfs
++# Copyright (C) 2009-2012 Red Hat Inc.
++#
++# This program is free software; you can redistribute it and/or modify
++# it under the terms of the GNU General Public License as published by
++# the Free Software Foundation; either version 2 of the License, or
++# (at your option) any later version.
++#
++# This program is distributed in the hope that it will be useful,
++# but WITHOUT ANY WARRANTY; without even the implied warranty of
++# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++# GNU General Public License for more details.
++#
++# You should have received a copy of the GNU General Public License
++# along with this program; if not, write to the Free Software
++# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+ 
+ export LANG=C
+ set -e
+diff --git a/cat/test-virt-ls.sh b/cat/test-virt-ls.sh
+index b7b02a3..9cfe9db 100755
+--- a/cat/test-virt-ls.sh
++++ b/cat/test-virt-ls.sh
+@@ -1,4 +1,20 @@
+ #!/bin/bash -
++# libguestfs
++# Copyright (C) 2012 Red Hat Inc.
++#
++# This program is free software; you can redistribute it and/or modify
++# it under the terms of the GNU General Public License as published by
++# the Free Software Foundation; either version 2 of the License, or
++# (at your option) any later version.
++#
++# This program is distributed in the hope that it will be useful,
++# but WITHOUT ANY WARRANTY; without even the implied warranty of
++# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++# GNU General Public License for more details.
++#
++# You should have received a copy of the GNU General Public License
++# along with this program; if not, write to the Free Software
++# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+ 
+ export LANG=C
+ set -e
+diff --git a/df/test-virt-df.sh b/df/test-virt-df.sh
+index af503a3..dd5abf6 100755
+--- a/df/test-virt-df.sh
++++ b/df/test-virt-df.sh
+@@ -1,4 +1,20 @@
+ #!/bin/bash -
++# libguestfs
++# Copyright (C) 2009-2012 Red Hat Inc.
++#
++# This program is free software; you can redistribute it and/or modify
++# it under the terms of the GNU General Public License as published by
++# the Free Software Foundation; either version 2 of the License, or
++# (at your option) any later version.
++#
++# This program is distributed in the hope that it will be useful,
++# but WITHOUT ANY WARRANTY; without even the implied warranty of
++# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++# GNU General Public License for more details.
++#
++# You should have received a copy of the GNU General Public License
++# along with this program; if not, write to the Free Software
++# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+ 
+ export LANG=C
+ set -e
+diff --git a/edit/test-virt-edit.sh b/edit/test-virt-edit.sh
+index 865e35b..a587dc6 100755
+--- a/edit/test-virt-edit.sh
++++ b/edit/test-virt-edit.sh
+@@ -1,4 +1,20 @@
+ #!/bin/bash -
++# libguestfs
++# Copyright (C) 2009-2012 Red Hat Inc.
++#
++# This program is free software; you can redistribute it and/or modify
++# it under the terms of the GNU General Public License as published by
++# the Free Software Foundation; either version 2 of the License, or
++# (at your option) any later version.
++#
++# This program is distributed in the hope that it will be useful,
++# but WITHOUT ANY WARRANTY; without even the implied warranty of
++# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++# GNU General Public License for more details.
++#
++# You should have received a copy of the GNU General Public License
++# along with this program; if not, write to the Free Software
++# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+ 
+ export LANG=C
+ set -e
+diff --git a/tools/test-virt-list-filesystems.sh b/tools/test-virt-list-filesystems.sh
+index 210ea13..89f7d33 100755
+--- a/tools/test-virt-list-filesystems.sh
++++ b/tools/test-virt-list-filesystems.sh
+@@ -1,4 +1,20 @@
+ #!/bin/bash -
++# libguestfs
++# Copyright (C) 2009-2012 Red Hat Inc.
++#
++# This program is free software; you can redistribute it and/or modify
++# it under the terms of the GNU General Public License as published by
++# the Free Software Foundation; either version 2 of the License, or
++# (at your option) any later version.
++#
++# This program is distributed in the hope that it will be useful,
++# but WITHOUT ANY WARRANTY; without even the implied warranty of
++# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++# GNU General Public License for more details.
++#
++# You should have received a copy of the GNU General Public License
++# along with this program; if not, write to the Free Software
++# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+ 
+ export LANG=C
+ set -e
+diff --git a/tools/test-virt-tar.sh b/tools/test-virt-tar.sh
+index 1417989..6c4a644 100755
+--- a/tools/test-virt-tar.sh
++++ b/tools/test-virt-tar.sh
+@@ -1,4 +1,20 @@
+ #!/bin/bash -
++# libguestfs
++# Copyright (C) 2009-2012 Red Hat Inc.
++#
++# This program is free software; you can redistribute it and/or modify
++# it under the terms of the GNU General Public License as published by
++# the Free Software Foundation; either version 2 of the License, or
++# (at your option) any later version.
++#
++# This program is distributed in the hope that it will be useful,
++# but WITHOUT ANY WARRANTY; without even the implied warranty of
++# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++# GNU General Public License for more details.
++#
++# You should have received a copy of the GNU General Public License
++# along with this program; if not, write to the Free Software
++# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+ 
+ export LANG=C
+ set -e
+-- 
+1.7.4.1
+

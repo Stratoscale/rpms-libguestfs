@@ -1,17 +1,17 @@
-From 0caa5ea6b7ec3db3e2959c9d94d530728feded92 Mon Sep 17 00:00:00 2001
+From 8a40ce033a717b4d78b150aedcd831c7b63719ad Mon Sep 17 00:00:00 2001
 From: Richard W.M. Jones <rjones@redhat.com>
 Date: Sat, 16 Jun 2012 10:23:19 +0100
-Subject: [PATCH 02/20] EPEL 5: Remove AS_ECHO_N for ancient autoconf.
+Subject: [PATCH 04/29] EPEL 5: Remove AS_ECHO_N for ancient autoconf.
 
 ---
  configure.ac |   26 +++++++++++++-------------
  1 files changed, 13 insertions(+), 13 deletions(-)
 
 diff --git a/configure.ac b/configure.ac
-index 75d2c5e..6bcb86e 100644
+index 0db1176..7f20c5a 100644
 --- a/configure.ac
 +++ b/configure.ac
-@@ -1311,33 +1311,33 @@ echo
+@@ -1346,33 +1346,33 @@ echo
  echo    "Daemon .............................. $enable_daemon"
  echo    "Appliance ........................... $enable_appliance"
  echo    "QEMU ................................ $QEMU $QEMU_OPTIONS"

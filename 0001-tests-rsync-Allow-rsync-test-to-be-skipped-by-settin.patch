@@ -1,0 +1,28 @@
+From d754f4a5a30e0473754004c187b919dcc05e8f6f Mon Sep 17 00:00:00 2001
+From: Richard W.M. Jones <rjones@redhat.com>
+Date: Fri, 31 Aug 2012 19:05:51 +0100
+Subject: [PATCH 01/29] tests/rsync: Allow rsync test to be skipped by setting SKIP_TEST_RSYNC_SH=1.
+
+---
+ tests/rsync/test-rsync.sh |    5 +++++
+ 1 files changed, 5 insertions(+), 0 deletions(-)
+
+diff --git a/tests/rsync/test-rsync.sh b/tests/rsync/test-rsync.sh
+index e7f62f9..0aa7477 100755
+--- a/tests/rsync/test-rsync.sh
++++ b/tests/rsync/test-rsync.sh
+@@ -24,6 +24,11 @@ set -e
+ 
+ guestfish=../../fish/guestfish
+ 
++if [ -n "$SKIP_TEST_RSYNC_SH" ]; then
++    echo "$0: test skipped because environment variable is set."
++    exit 77
++fi
++
+ # Check we have the rsync command.
+ if ! rsync --help >/dev/null 2>&1; then
+     echo "$0: skipping test because local rsync command is not available"
+-- 
+1.7.4.1
+

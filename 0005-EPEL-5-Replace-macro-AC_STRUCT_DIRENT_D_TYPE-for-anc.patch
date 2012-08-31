@@ -1,17 +1,17 @@
-From 8574fda19307d84ec72472c650c81cebe7a8ec81 Mon Sep 17 00:00:00 2001
+From a62e60ccfcc25b5ea14ec05cb99478412323dc33 Mon Sep 17 00:00:00 2001
 From: Richard W.M. Jones <rjones@redhat.com>
 Date: Sat, 16 Jun 2012 10:46:20 +0100
-Subject: [PATCH 03/20] EPEL 5: Replace macro AC_STRUCT_DIRENT_D_TYPE for ancient autoconf.
+Subject: [PATCH 05/29] EPEL 5: Replace macro AC_STRUCT_DIRENT_D_TYPE for ancient autoconf.
 
 ---
  configure.ac |    2 +-
  1 files changed, 1 insertions(+), 1 deletions(-)
 
 diff --git a/configure.ac b/configure.ac
-index 6bcb86e..5e67931 100644
+index 7f20c5a..4e141f6 100644
 --- a/configure.ac
 +++ b/configure.ac
-@@ -176,7 +176,7 @@ dnl Check sizeof long.
+@@ -190,7 +190,7 @@ dnl Check sizeof long.
  AC_CHECK_SIZEOF([long])
  
  dnl Check if dirent (readdir) supports d_type member.

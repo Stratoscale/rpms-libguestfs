@@ -1,7 +1,7 @@
-From 1a242d8084c7376a51b7ea0a8b53db79b11b04bf Mon Sep 17 00:00:00 2001
+From f27a26238699e4ffb004ee496cd1249fcff2d2a6 Mon Sep 17 00:00:00 2001
 From: Richard W.M. Jones <rjones@redhat.com>
 Date: Fri, 22 Jun 2012 10:06:47 +0100
-Subject: [PATCH 15/20] EPEL 5: Fix blkid to return "LVM2_member" for PVs.
+Subject: [PATCH 18/29] EPEL 5: Fix blkid to return "LVM2_member" for PVs.
 
 Old blkid in RHEL 5 didn't return the right thing for PVs.
 ---
@@ -9,10 +9,10 @@ Old blkid in RHEL 5 didn't return the right thing for PVs.
  1 files changed, 20 insertions(+), 0 deletions(-)
 
 diff --git a/daemon/blkid.c b/daemon/blkid.c
-index 7cc7889..32168a3 100644
+index b6bc22d..310de94 100644
 --- a/daemon/blkid.c
 +++ b/daemon/blkid.c
-@@ -51,6 +51,26 @@ get_blkid_tag (const char *device, const char *tag)
+@@ -53,6 +53,26 @@ get_blkid_tag (const char *device, const char *tag)
    free (err);
  
    if (r == 2) {                 /* means UUID etc not found */

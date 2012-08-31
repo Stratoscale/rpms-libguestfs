@@ -21,8 +21,8 @@
 Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
-Version:       1.19.13
-Release:       4%{?dist}
+Version:       1.19.37
+Release:       1%{?dist}
 License:       LGPLv2+
 Group:         Development/Libraries
 URL:           http://libguestfs.org/
@@ -41,33 +41,40 @@ BuildRequires: autoconf, automake, libtool
 
 # These patches come from the "oldlinux" branch upstream.
 # https://github.com/libguestfs/libguestfs/commits/oldlinux
-Patch0001:     0001-EPEL-5-Remove-checks-which-fail-with-ancient-qemu.patch
-Patch0002:     0002-EPEL-5-Remove-AS_ECHO_N-for-ancient-autoconf.patch
-Patch0003:     0003-EPEL-5-Replace-macro-AC_STRUCT_DIRENT_D_TYPE-for-anc.patch
-Patch0004:     0004-EPEL-5-Don-t-use-C99-style-variable-decls-in-for-loo.patch
-Patch0005:     0005-EPEL-5-Remove-Erlang-bindings.patch
-Patch0006:     0006-EPEL-5-Remove-GObject-GObject-Introspection-GJS-bind.patch
-Patch0007:     0007-EPEL-5-Remove-PHP-bindings.patch
-Patch0008:     0008-EPEL-5-Define-le64toh-if-not-defined.patch
-Patch0009:     0009-EPEL-5-Add-gnulib-utimensat-module.patch
-Patch0010:     0010-EPEL-5-Old-ocamlopt-didn-t-support-debugging-g-optio.patch
-Patch0011:     0011-EPEL-5-Replace-format6-with-format4-in-OCaml-gettext.patch
-Patch0012:     0012-EPEL-5-Pass-preserve-dup-deps-explicitly-to-libtool.patch
-Patch0013:     0013-EPEL-5-Remove-id-from-drive-parameter-on-qemu-comman.patch
-Patch0014:     0014-EPEL-5-Add-null-vmchannel-back-for-qemu-without-virt.patch
-Patch0015:     0015-EPEL-5-Fix-blkid-to-return-LVM2_member-for-PVs.patch
-Patch0016:     0016-EPEL-5-sparsify-Fix-command-line-options-for-old-qem.patch
-Patch0017:     0017-EPEL-5-Remove-Fedora-MD-test-images.patch
-Patch0018:     0018-EPEL-5-Add-mkisofs-to-package-list.patch
-Patch0019:     0019-EPEL-5-Add-1-second-pause-after-unmounting-any-files.patch
-
-# Upstream in libguestfs >= 1.19.14.
-Patch0020:     0001-src-actions.c-Include-config.h-in-this-generated-fil.patch
+Patch0001:     0001-tests-rsync-Allow-rsync-test-to-be-skipped-by-settin.patch
+Patch0002:     0002-tests-Attach-copyright-and-license-GPLv2-notices-to-.patch
+Patch0003:     0003-EPEL-5-Remove-checks-which-fail-with-ancient-qemu.patch
+Patch0004:     0004-EPEL-5-Remove-AS_ECHO_N-for-ancient-autoconf.patch
+Patch0005:     0005-EPEL-5-Replace-macro-AC_STRUCT_DIRENT_D_TYPE-for-anc.patch
+Patch0006:     0006-EPEL-5-Don-t-use-C99-style-variable-decls-in-for-loo.patch
+Patch0007:     0007-EPEL-5-Remove-Erlang-bindings.patch
+Patch0008:     0008-EPEL-5-Remove-GObject-GObject-Introspection-GJS-bind.patch
+Patch0009:     0009-EPEL-5-Remove-PHP-bindings.patch
+Patch0010:     0010-EPEL-5-Define-le64toh-le32toh-if-not-defined.patch
+Patch0011:     0011-EPEL-5-Add-gnulib-utimensat-module.patch
+Patch0012:     0012-EPEL-5-Old-ocamlopt-didn-t-support-debugging-g-optio.patch
+Patch0013:     0013-EPEL-5-Replace-format6-with-format4-in-OCaml-gettext.patch
+Patch0014:     0014-EPEL-5-Pass-preserve-dup-deps-explicitly-to-libtool.patch
+Patch0015:     0015-EPEL-5-Remove-id-from-drive-parameter-on-qemu-comman.patch
+Patch0016:     0016-EPEL-5-Add-null-vmchannel-back-for-qemu-without-virt.patch
+Patch0017:     0017-EPEL-5-Disable-libvirt-attach-method.patch
+Patch0018:     0018-EPEL-5-Fix-blkid-to-return-LVM2_member-for-PVs.patch
+Patch0019:     0019-EPEL-5-sparsify-Fix-command-line-options-for-old-qem.patch
+Patch0020:     0020-EPEL-5-Remove-Fedora-MD-test-images.patch
+Patch0021:     0021-EPEL-5-Add-mkisofs-to-package-list.patch
+Patch0022:     0022-EPEL-5-Add-1-second-pause-after-unmounting-any-files.patch
+Patch0023:     0023-EPEL-5-podwrapper-Remove-HTML-output.patch
+Patch0024:     0024-EPEL-5-podwrapper-Don-t-use-Pod-Man.patch
+Patch0025:     0025-EPEL-5-Revert-Mac-OS-X-Use-libtool-mode-execute-inst.patch
+Patch0026:     0026-EPEL-5-Don-t-use-sgabios.patch
+Patch0027:     0027-EPEL-5-Revert-daemon-Remove-e2prog-hack-only-needed-.patch
+Patch0028:     0028-EPEL-5-Disable-tar-xz-test.patch
+Patch0029:     0029-EPEL-5-Ignore-sparsify-error-if-qemu-img-help-is-kil.patch
 
 # Basic build requirements:
 BuildRequires: /usr/bin/pod2man
 BuildRequires: /usr/bin/pod2text
-BuildRequires: febootstrap >= 3.18
+BuildRequires: febootstrap >= 3.20
 BuildRequires: hivex-devel >= 1.2.7-7
 BuildRequires: perl-hivex
 BuildRequires: augeas-devel >= 0.5.0
@@ -225,7 +232,7 @@ BuildRequires: git
 
 # Runtime requires:
 Requires:      kvm
-Requires:      febootstrap-supermin-helper >= 3.18
+Requires:      febootstrap-supermin-helper >= 3.20
 
 # For libguestfs-test-tool.
 Requires:      mkisofs
@@ -676,6 +683,11 @@ export SKIP_TEST_UTIMENS_3=1
 # Timing problem in this test.
 export SKIP_TEST_SWAPON_LABEL=1
 
+# 9p is not supported in this qemu.
+export SKIP_TEST_9P_SH=1
+
+# rsync doesn't work because of different IP addresses.
+export SKIP_TEST_RSYNC_SH=1
 
 %if %{runtests}
 make check
@@ -878,6 +890,12 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sat Sep  1 2012 Richard W.M. Jones <rjones@redhat.com> - 1:1.19.37-1
+- Upstream to 1.19.37.
+- Update patches from 'oldlinux' branch.
+- Skip more tests that would fail in RHEL 5.
+- Require febootstrap >= 3.20.
+
 * Wed Jun 27 2012 Richard W.M. Jones <rjones@redhat.com> - 1:1.19.13-4
 - New upstream version 1.19.13.
 - Update patches.
