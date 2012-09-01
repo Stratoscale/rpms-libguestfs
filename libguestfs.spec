@@ -22,7 +22,7 @@ Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
 Version:       1.19.37
-Release:       3%{?dist}
+Release:       4%{?dist}
 License:       LGPLv2+
 Group:         Development/Libraries
 URL:           http://libguestfs.org/
@@ -753,7 +753,7 @@ rm -rf $RPM_BUILD_ROOT
 
 %files devel
 %defattr(-,root,root,-)
-%doc AUTHORS BUGS ChangeLog HACKING TODO README RELEASE-NOTES ROADMAP
+%doc AUTHORS BUGS ChangeLog HACKING TODO README ROADMAP
 %doc examples/*.c
 %doc installed-docs/*
 %{_libdir}/libguestfs.so
@@ -892,7 +892,7 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
-* Sat Sep  1 2012 Richard W.M. Jones <rjones@redhat.com> - 1:1.19.37-3
+* Sat Sep  1 2012 Richard W.M. Jones <rjones@redhat.com> - 1:1.19.37-4
 - Upstream to 1.19.37.
 - Update patches from 'oldlinux' branch.
 - Skip more tests that would fail in RHEL 5.
