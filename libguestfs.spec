@@ -22,7 +22,7 @@ Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
 Version:       1.19.37
-Release:       2%{?dist}
+Release:       3%{?dist}
 License:       LGPLv2+
 Group:         Development/Libraries
 URL:           http://libguestfs.org/
@@ -743,6 +743,10 @@ rm -rf $RPM_BUILD_ROOT
 %{_bindir}/libguestfs-test-tool
 %{_libdir}/guestfs/
 %{_libdir}/libguestfs.so.*
+%{_mandir}/man1/guestfs-faq.1*
+%{_mandir}/man1/guestfs-performance.1*
+%{_mandir}/man1/guestfs-recipes.1*
+%{_mandir}/man1/guestfs-release-notes.1*
 %{_mandir}/man1/guestfs-testing.1*
 %{_mandir}/man1/libguestfs-test-tool.1*
 
@@ -754,9 +758,6 @@ rm -rf $RPM_BUILD_ROOT
 %doc installed-docs/*
 %{_libdir}/libguestfs.so
 %{_sbindir}/libguestfs-make-fixed-appliance
-%{_mandir}/man1/guestfs-faq.1*
-%{_mandir}/man1/guestfs-performance.1*
-%{_mandir}/man1/guestfs-recipes.1*
 %{_mandir}/man1/libguestfs-make-fixed-appliance.1*
 %{_mandir}/man3/guestfs.3*
 %{_mandir}/man3/guestfs-examples.3*
@@ -891,11 +892,12 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
-* Sat Sep  1 2012 Richard W.M. Jones <rjones@redhat.com> - 1:1.19.37-2
+* Sat Sep  1 2012 Richard W.M. Jones <rjones@redhat.com> - 1:1.19.37-3
 - Upstream to 1.19.37.
 - Update patches from 'oldlinux' branch.
 - Skip more tests that would fail in RHEL 5.
 - Require febootstrap >= 3.20.
+- Add guestfs-release-notes(1).
 
 * Wed Jun 27 2012 Richard W.M. Jones <rjones@redhat.com> - 1:1.19.13-4
 - New upstream version 1.19.13.
