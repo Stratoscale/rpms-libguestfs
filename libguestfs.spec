@@ -75,6 +75,7 @@ BuildRequires: netpbm-progs
 BuildRequires: icoutils
 BuildRequires: perl-XML-XPath
 BuildRequires: libvirt-daemon-qemu
+BuildRequires: perl(Expect)
 
 # This is only needed for RHEL 5 because readline-devel doesn't
 # properly depend on it, but doesn't do any harm on other platforms:
