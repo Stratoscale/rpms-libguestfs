@@ -22,7 +22,7 @@ Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
 Version:       1.19.40
-Release:       1%{?dist}
+Release:       2%{?dist}
 License:       LGPLv2+
 Group:         Development/Libraries
 URL:           http://libguestfs.org/
@@ -748,9 +748,7 @@ export LIBGUESTFS_TRACE=1
 export SKIP_TEST_CHECKSUM_DEVICE=1
 
 %if %{runtests}
-# Disabled because of:
-# https://bugzilla.redhat.com/show_bug.cgi?id=853408
-#make check
+make check
 %endif
 
 
@@ -996,6 +994,9 @@ mkdir -p $RPM_BUILD_ROOT%{_localstatedir}/run/libguestfs
 
 
 %changelog
+* Wed Sep 12 2012 Richard W.M. Jones <rjones@redhat.com> - 1:1.19.40-2
+- Enable tests because RHBZ#853408 has been fixed in qemu-1.2.0-3.fc18.
+
 * Wed Sep 05 2012 Richard W.M. Jones <rjones@redhat.com> - 1:1.19.40-1
 - New upstream version 1.19.40.
 
