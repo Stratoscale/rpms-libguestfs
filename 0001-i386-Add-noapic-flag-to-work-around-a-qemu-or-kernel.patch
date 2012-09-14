@@ -1,0 +1,40 @@
+From a0fec28ff8679e7233cde035fe7506ceaac9991b Mon Sep 17 00:00:00 2001
+From: "Richard W.M. Jones" <rjones@redhat.com>
+Date: Thu, 13 Sep 2012 15:25:56 +0100
+Subject: [PATCH] i386: Add noapic flag to work around a qemu or kernel bug.
+
+https://bugzilla.redhat.com/show_bug.cgi?id=857026
+---
+ src/launch-libvirt.c | 9 ++++++++-
+ 1 file changed, 8 insertions(+), 1 deletion(-)
+
+diff --git a/src/launch-libvirt.c b/src/launch-libvirt.c
+index 3711363..e3de406 100644
+--- a/src/launch-libvirt.c
++++ b/src/launch-libvirt.c
+@@ -588,6 +588,12 @@ construct_libvirt_xml_boot (guestfs_h *g, xmlTextWriterPtr xo,
+ #define SERIAL_CONSOLE "ttyS0"
+ #endif
+ 
++#ifdef __i386__
++#define I386_NO_APIC "noapic " /* workaround for RHBZ#857026 */
++#else
++#define I386_NO_APIC
++#endif
++
+ #define LINUX_CMDLINE							\
+     "panic=1 "         /* force kernel to panic if daemon exits */	\
+     "console=" SERIAL_CONSOLE " " /* serial console */		        \
+@@ -595,7 +601,8 @@ construct_libvirt_xml_boot (guestfs_h *g, xmlTextWriterPtr xo,
+     "no_timer_check "  /* fix for RHBZ#502058 */                        \
+     "acpi=off "        /* we don't need ACPI, turn it off */		\
+     "printk.time=1 "   /* display timestamp before kernel messages */   \
+-    "cgroup_disable=memory " /* saves us about 5 MB of RAM */
++    "cgroup_disable=memory " /* saves us about 5 MB of RAM */           \
++    I386_NO_APIC
+ 
+   /* Linux kernel command line. */
+   guestfs___drive_name (appliance_index, appliance_root);
+-- 
+1.7.12
+

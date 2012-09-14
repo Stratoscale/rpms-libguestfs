@@ -22,7 +22,7 @@ Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
 Version:       1.19.40
-Release:       2%{?dist}
+Release:       3%{?dist}
 License:       LGPLv2+
 Group:         Development/Libraries
 URL:           http://libguestfs.org/
@@ -37,7 +37,11 @@ BuildRequires: autoconf, automake, libtool, gettext-devel
 # 'obsoletes' udev, but febootstrap doesn't get this relationship
 # right.  When udev disappears from the repository we can remove this
 # patch.
-Patch4:        libguestfs-1.19.2-remove-udev-from-packagelist.patch
+Patch2:        libguestfs-1.19.2-remove-udev-from-packagelist.patch
+
+# Non-upstream patch to add the noapic flag on the kernel command line
+# on i386 only.  This works around a bug in 32-bit qemu (RHBZ#857026).
+Patch3:        0001-i386-Add-noapic-flag-to-work-around-a-qemu-or-kernel.patch
 
 %if 0%{?rhel} >= 7
 ExclusiveArch: x86_64
@@ -682,8 +686,8 @@ for %{name}.
 %patch1 -p1
 autoreconf -i
 %endif
-
-%patch4 -p1
+%patch2 -p1
+%patch3 -p1
 
 mkdir -p daemon/m4
 
@@ -994,6 +998,10 @@ mkdir -p $RPM_BUILD_ROOT%{_localstatedir}/run/libguestfs
 
 
 %changelog
+* Fri Sep 14 2012 Richard W.M. Jones <rjones@redhat.com> - 1:1.19.40-3
+- Add (non-upstream) patch to add the noapic flag on the kernel
+  command line on i386 only.  This works around a bug in 32-bit qemu.
+
 * Wed Sep 12 2012 Richard W.M. Jones <rjones@redhat.com> - 1:1.19.40-2
 - Enable tests because RHBZ#853408 has been fixed in qemu-1.2.0-3.fc18.
 
