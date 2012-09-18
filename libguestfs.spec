@@ -22,7 +22,7 @@ Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
 Version:       1.19.42
-Release:       1%{?dist}
+Release:       2%{?dist}
 License:       LGPLv2+
 Group:         Development/Libraries
 URL:           http://libguestfs.org/
@@ -1005,8 +1005,9 @@ mkdir -p $RPM_BUILD_ROOT%{_localstatedir}/run/libguestfs
 
 
 %changelog
-* Tue Sep 18 2012 Richard W.M. Jones <rjones@redhat.com> - 1:1.19.42-1
+* Tue Sep 18 2012 Richard W.M. Jones <rjones@redhat.com> - 1:1.19.42-2
 - New upstream version 1.19.42.
+- Rebase sVirt (disable) patch.
 
 * Sun Sep 16 2012 Richard W.M. Jones <rjones@redhat.com> - 1:1.19.41-1
 - New upstream version 1.19.41.
