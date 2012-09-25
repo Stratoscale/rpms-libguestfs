@@ -22,7 +22,7 @@ Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
 Version:       1.19.44
-Release:       1%{?dist}
+Release:       2%{?dist}
 License:       LGPLv2+
 Group:         Development/Libraries
 URL:           http://libguestfs.org/
@@ -43,11 +43,9 @@ Patch2:        libguestfs-1.19.2-remove-udev-from-packagelist.patch
 # on i386 only.  This works around a bug in 32-bit qemu (RHBZ#857026).
 Patch3:        0001-i386-Add-noapic-flag-to-work-around-a-qemu-or-kernel.patch
 
-# Temporary patch (not upstream) to disable sVirt.  Before we can
-# enable sVirt we must fix libvirt (at a minimum: RHBZ#853393, but
-# also RHBZ#857659 would be good) and SELinux policy (required:
-# RHBZ#857453; nice to have: RHBZ#856634).
-Patch4:        0001-Revert-launch-libvirt-Enable-sVirt.patch
+# Upstream patch to label the custom $TMPDIR used in test-launch-race.
+# (Can be removed when 1.19.45 released and/or RHBZ#860235 is fixed).
+Patch4:        0001-test-launch-race-Add-SELinux-label-to-TMPDIR.patch
 
 %if 0%{?rhel} >= 7
 ExclusiveArch: x86_64
@@ -67,6 +65,7 @@ BuildRequires: libxml2-devel
 BuildRequires: qemu-kvm >= 2:1.1.0
 BuildRequires: createrepo
 BuildRequires: glibc-static
+BuildRequires: libselinux-utils
 BuildRequires: libselinux-devel
 BuildRequires: fuse-devel
 BuildRequires: pcre-devel
@@ -294,7 +293,8 @@ Requires:      icoutils
 Requires:      fuse
 
 # For libvirt attach method.
-Requires:      libvirt-daemon-qemu
+Requires:      libvirt-daemon-qemu >= 0.10.2-3
+Requires:      selinux-policy >= 3.11.1-23
 
 # Provide our own custom requires for the supermin appliance.
 Source1:       libguestfs-find-requires.sh
@@ -688,6 +688,12 @@ for %{name}.
 %prep
 %setup -q
 
+if [ "$(getenforce | tr '[A-Z]' '[a-z]')" != "disabled" ]; then
+    # For sVirt to work, the local temporary directory we use in the
+    # tests must be labelled the same way as /tmp.
+    chcon --reference=/tmp tmp
+fi
+
 %if 0%{?fedora} >= 17 || 0%{?rhel} >= 7
 %patch1 -p1
 autoreconf -i
@@ -698,7 +704,7 @@ autoreconf -i
 
 mkdir -p daemon/m4
 
-# Replace developer-specific README that ships with libguestfs, with
+# Replace developer-centric README that ships with libguestfs, with
 # our replacement file.
 mv README README.orig
 sed 's/@VERSION@/%{version}/g' < %{SOURCE4} > README
@@ -1005,6 +1011,10 @@ mkdir -p $RPM_BUILD_ROOT%{_localstatedir}/run/libguestfs
 
 
 %changelog
+* Tue Sep 25 2012 Richard W.M. Jones <rjones@redhat.com> - 1:1.19.44-2
+- Enable sVirt (NB: requires libvirt >= 0.10.2-3, selinux-policy >= 3.11.1-23).
+- Add upstream patch to label the custom $TMPDIR used in test-launch-race.
+
 * Mon Sep 24 2012 Richard W.M. Jones <rjones@redhat.com> - 1:1.19.44-1
 - New upstream version 1.19.44.
 
