@@ -43,10 +43,6 @@ Patch2:        libguestfs-1.19.2-remove-udev-from-packagelist.patch
 # on i386 only.  This works around a bug in 32-bit qemu (RHBZ#857026).
 Patch3:        0001-i386-Add-noapic-flag-to-work-around-a-qemu-or-kernel.patch
 
-# Upstream patch to label the custom $TMPDIR used in test-launch-race.
-# (Can be removed when 1.19.45 released and/or RHBZ#860235 is fixed).
-Patch4:        0001-test-launch-race-Add-SELinux-label-to-TMPDIR.patch
-
 %if 0%{?rhel} >= 7
 ExclusiveArch: x86_64
 %endif
@@ -294,7 +290,7 @@ Requires:      fuse
 
 # For libvirt attach method.
 Requires:      libvirt-daemon-qemu >= 0.10.2-3
-Requires:      selinux-policy >= 3.11.1-23
+Requires:      selinux-policy >= 3.11.1-25
 
 # Provide our own custom requires for the supermin appliance.
 Source1:       libguestfs-find-requires.sh
@@ -700,7 +696,6 @@ autoreconf -i
 %endif
 %patch2 -p1
 %patch3 -p1
-%patch4 -p1
 
 mkdir -p daemon/m4
 
