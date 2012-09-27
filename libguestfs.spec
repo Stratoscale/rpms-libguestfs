@@ -58,7 +58,6 @@ BuildRequires: augeas-devel >= 0.5.0
 BuildRequires: readline-devel
 BuildRequires: genisoimage
 BuildRequires: libxml2-devel
-BuildRequires: qemu-kvm >= 2:1.1.0
 BuildRequires: createrepo
 BuildRequires: glibc-static
 BuildRequires: libselinux-utils
@@ -273,8 +272,7 @@ BuildRequires: qemu-img
 # Force new parted for Linux 3.0 (RHBZ#710882).
 BuildRequires: parted >= 3.0-2
 
-# Runtime requires:
-Requires:      qemu-kvm >= 2:1.1.0
+# For building the appliance.
 Requires:      febootstrap-supermin-helper >= 3.20
 
 # For core inspection API.
@@ -287,6 +285,9 @@ Requires:      fuse
 
 # For libvirt attach method.
 Requires:      libvirt-daemon-qemu >= 0.10.2-3
+%ifarch %{ix86} x86_64
+Requires:      libvirt-daemon-kvm >= 0.10.2-3
+%endif
 Requires:      selinux-policy >= 3.11.1-25
 
 # Provide our own custom requires for the supermin appliance.
