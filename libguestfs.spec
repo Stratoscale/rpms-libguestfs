@@ -277,9 +277,6 @@ BuildRequires: parted >= 3.0-2
 Requires:      qemu-kvm >= 2:1.1.0
 Requires:      febootstrap-supermin-helper >= 3.20
 
-# For libguestfs-test-tool.
-Requires:      genisoimage
-
 # For core inspection API.
 Requires:      libdb-utils
 Requires:      netpbm-progs
