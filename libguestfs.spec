@@ -900,6 +900,7 @@ mkdir -p $RPM_BUILD_ROOT%{_localstatedir}/run/libguestfs
 %{_sbindir}/guestfsd
 %{_unitdir}/guestfsd.service
 %{_sysconfdir}/udev/rules.d/99-guestfsd.rules
+%{_mandir}/man8/guestfsd.8*
 
 
 %files -n ocaml-%{name}
