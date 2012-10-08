@@ -765,6 +765,7 @@ export SKIP_TEST_BTRFS_SUBVOLUME_DELETE=1
 export SKIP_TEST_BTRFS_SUBVOLUME_SNAPSHOT=1
 export SKIP_TEST_MKFS_BTRFS=1
 perl -i.bak -e 'while (<>) {print unless /tests\/btrfs/}' Makefile.am
+perl -i.bak -e 'while (<>) {print unless /tests\/charset/}' Makefile.am
 
 %if %{runtests}
 make check
