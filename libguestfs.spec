@@ -757,16 +757,6 @@ export LIBGUESTFS_TRACE=1
 # checksum at runtime.
 export SKIP_TEST_CHECKSUM_DEVICE=1
 
-# Disable all btrfs tests (RHBZ#863978).
-export SKIP_TEST_BTRFS_FSCK=1
-export SKIP_TEST_BTRFS_SET_SEEDING=1
-export SKIP_TEST_BTRFS_FILESYSTEM_SYNC=1
-export SKIP_TEST_BTRFS_SUBVOLUME_DELETE=1
-export SKIP_TEST_BTRFS_SUBVOLUME_SNAPSHOT=1
-export SKIP_TEST_MKFS_BTRFS=1
-perl -i.bak -e 'while (<>) {print unless /tests\/btrfs/}' Makefile.am
-perl -i.bak -e 'while (<>) {print unless /tests\/charset/}' Makefile.am
-
 %if %{runtests}
 make check
 %endif
