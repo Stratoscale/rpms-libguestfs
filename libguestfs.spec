@@ -22,7 +22,7 @@ Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
 Version:       1.19.49
-Release:       1%{?dist}
+Release:       2%{?dist}
 License:       LGPLv2+
 Group:         Development/Libraries
 URL:           http://libguestfs.org/
@@ -794,9 +794,12 @@ mv $RPM_BUILD_ROOT%{_docdir}/libguestfs installed-docs
 # For the libguestfs-live-service subpackage install the systemd
 # service and udev rules.
 mkdir -p $RPM_BUILD_ROOT%{_unitdir}
-mkdir -p $RPM_BUILD_ROOT%{_sysconfdir}/udev/rules.d
+mkdir -p $RPM_BUILD_ROOT%{_prefix}/lib/udev/rules.d
 install -m 0644 %{SOURCE2} $RPM_BUILD_ROOT%{_unitdir}
-install -m 0644 %{SOURCE3} $RPM_BUILD_ROOT%{_sysconfdir}/udev/rules.d
+install -m 0644 %{SOURCE3} $RPM_BUILD_ROOT%{_prefix}/lib/udev/rules.d
+# This deals with UsrMove:
+mv $RPM_BUILD_ROOT/lib/udev/rules.d/99-guestfs-serial.rules \
+  $RPM_BUILD_ROOT%{_prefix}/lib/udev/rules.d
 
 # For SELinux to work with the libvirt attach method.
 mkdir -p $RPM_BUILD_ROOT%{_localstatedir}/run/libguestfs
@@ -899,8 +902,9 @@ mkdir -p $RPM_BUILD_ROOT%{_localstatedir}/run/libguestfs
 %doc COPYING README
 %{_sbindir}/guestfsd
 %{_unitdir}/guestfsd.service
-%{_sysconfdir}/udev/rules.d/99-guestfsd.rules
 %{_mandir}/man8/guestfsd.8*
+%{_prefix}/lib/udev/rules.d/99-guestfsd.rules
+%{_prefix}/lib/udev/rules.d/99-guestfs-serial.rules
 
 
 %files -n ocaml-%{name}
@@ -1005,6 +1009,9 @@ mkdir -p $RPM_BUILD_ROOT%{_localstatedir}/run/libguestfs
 
 
 %changelog
+* Tue Oct 09 2012 Richard W.M. Jones <rjones@redhat.com> - 1:1.19.49-2
+- Install all libguestfs-live-service udev rules into /usr/lib/udev/rules.d.
+
 * Tue Oct 09 2012 Richard W.M. Jones <rjones@redhat.com> - 1:1.19.49-1
 - New upstream version 1.19.49.
 
