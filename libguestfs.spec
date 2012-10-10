@@ -22,7 +22,7 @@ Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
 Version:       1.19.49
-Release:       2%{?dist}
+Release:       3%{?dist}
 License:       LGPLv2+
 Group:         Development/Libraries
 URL:           http://libguestfs.org/
@@ -42,6 +42,9 @@ Patch2:        libguestfs-1.19.2-remove-udev-from-packagelist.patch
 # Non-upstream patch to add the noapic flag on the kernel command line
 # on i386 only.  This works around a bug in 32-bit qemu (RHBZ#857026).
 Patch3:        0001-i386-Add-noapic-flag-to-work-around-a-qemu-or-kernel.patch
+
+# Upstream patch to workaround btrfs problems with kernel 3.7.0.
+Patch4:        0001-btrfs-Add-an-extended-workaround-for-btrfs-failures-.patch
 
 %if 0%{?rhel} >= 7
 ExclusiveArch: x86_64
@@ -694,6 +697,7 @@ autoreconf -i
 %endif
 %patch2 -p1
 %patch3 -p1
+%patch4 -p1
 
 mkdir -p daemon/m4
 
@@ -1009,6 +1013,9 @@ mkdir -p $RPM_BUILD_ROOT%{_localstatedir}/run/libguestfs
 
 
 %changelog
+* Wed Oct 10 2012 Richard W.M. Jones <rjones@redhat.com> - 1:1.19.49-3
+- Upstream patch to workaround btrfs problems with kernel 3.7.0.
+
 * Tue Oct 09 2012 Richard W.M. Jones <rjones@redhat.com> - 1:1.19.49-2
 - Install all libguestfs-live-service udev rules into /usr/lib/udev/rules.d.
 

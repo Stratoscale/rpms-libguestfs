@@ -1,0 +1,36 @@
+From a03f536f0dae3ca20e11b7c2ba41e4a7eb1f28c9 Mon Sep 17 00:00:00 2001
+From: "Richard W.M. Jones" <rjones@redhat.com>
+Date: Wed, 10 Oct 2012 11:15:39 +0100
+Subject: [PATCH] btrfs: Add an extended workaround for btrfs failures seen
+ with kernel 3.7.0.
+
+See:
+https://bugzilla.redhat.com/show_bug.cgi?id=863978
+and:
+http://thread.gmane.org/gmane.comp.file-systems.btrfs/20257
+
+This extends the fix in commit d9e5b514aa4ef6d659b267e8caef4ebec8a221b1
+because I missed the case where mkfs.btrfs is called directly.
+---
+ daemon/btrfs.c |    5 +++++
+ 1 file changed, 5 insertions(+)
+
+diff --git a/daemon/btrfs.c b/daemon/btrfs.c
+index 8ecde01..8b80475 100644
+--- a/daemon/btrfs.c
++++ b/daemon/btrfs.c
+@@ -204,6 +204,11 @@ do_mkfs_btrfs (char *const *devices,
+     return -1;
+   }
+ 
++  /* Workaround for RHBZ#863978, possibly in kernel 3.7.0.  Can be
++   * fixed when we work out what's going on upstream.
++   */
++  sync_disks ();
++
+   free (err);
+   return 0;
+ }
+-- 
+1.7.10.4
+
