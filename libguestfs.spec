@@ -22,7 +22,7 @@ Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
 Version:       1.19.50
-Release:       1%{?dist}
+Release:       2%{?dist}
 License:       LGPLv2+
 Group:         Development/Libraries
 URL:           http://libguestfs.org/
@@ -53,7 +53,8 @@ BuildRequires: perl(Pod::Man)
 BuildRequires: /usr/bin/pod2text
 BuildRequires: febootstrap >= 3.20
 BuildRequires: hivex-devel >= 1.2.7-7
-BuildRequires: perl-hivex
+BuildRequires: perl(Win::Hivex)
+BuildRequires: perl(Win::Hivex::Regedit)
 BuildRequires: augeas-devel >= 0.5.0
 BuildRequires: readline-devel
 BuildRequires: genisoimage
@@ -77,7 +78,8 @@ BuildRequires: ocaml-gettext-devel
 BuildRequires: systemd-units
 BuildRequires: netpbm-progs
 BuildRequires: icoutils
-BuildRequires: perl-XML-XPath
+BuildRequires: perl(XML::XPath)
+BuildRequires: perl(XML::XPath::XMLParser)
 BuildRequires: libvirt-daemon-qemu
 BuildRequires: perl(Expect)
 
@@ -241,13 +243,12 @@ Requires:      zfs-fuse
 # These are only required if you want to build the bindings for
 # different languages:
 BuildRequires: perl-devel
-BuildRequires: perl-Test-Simple
-BuildRequires: perl-Test-Pod
-BuildRequires: perl-Test-Pod-Coverage
-BuildRequires: perl-ExtUtils-MakeMaker
-BuildRequires: perl-String-ShellQuote
-BuildRequires: perl-XML-Writer
-BuildRequires: perl-libintl
+BuildRequires: perl(Test::More)
+BuildRequires: perl(Test::Pod) >= 1.00
+BuildRequires: perl(Test::Pod::Coverage) >= 1.00
+BuildRequires: perl(ExtUtils::MakeMaker)
+BuildRequires: perl(String::ShellQuote)
+BuildRequires: perl(Locale::TextDomain)
 BuildRequires: python-devel
 BuildRequires: ruby-devel
 BuildRequires: rubygem-rake
@@ -266,7 +267,7 @@ BuildRequires: gobject-introspection-devel
 BuildRequires: gjs
 
 # For libguestfs-tools:
-BuildRequires: perl-Sys-Virt
+BuildRequires: perl(Sys::Virt)
 BuildRequires: qemu-img
 
 # Force new parted for Linux 3.0 (RHBZ#710882).
@@ -1009,6 +1010,9 @@ mkdir -p $RPM_BUILD_ROOT%{_localstatedir}/run/libguestfs
 
 
 %changelog
+* Thu Oct 11 2012 Petr Pisar <ppisar@redhat.com> - 1:1.19.50-2
+- Correct perl dependencies
+
 * Thu Oct 11 2012 Richard W.M. Jones <rjones@redhat.com> - 1:1.19.50-1
 - New upstream version 1.19.50.
 
