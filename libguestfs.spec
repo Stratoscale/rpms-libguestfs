@@ -22,7 +22,7 @@ Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
 Version:       1.19.53
-Release:       2%{?dist}
+Release:       3%{?dist}
 License:       LGPLv2+
 Group:         Development/Libraries
 URL:           http://libguestfs.org/
@@ -773,7 +773,9 @@ perl -i.bak -e 'while (<>) {print unless /tests\/btrfs/}' Makefile.am
 perl -i.bak -e 'while (<>) {print unless /tests\/charset/}' Makefile.am
 
 %if %{runtests}
+%ifnarch %{ix86} # RHBZ#870042
 make check
+%endif
 %endif
 
 
@@ -1024,6 +1026,9 @@ mkdir -p $RPM_BUILD_ROOT%{_localstatedir}/run/libguestfs
 
 
 %changelog
+* Thu Oct 24 2012 Richard W.M. Jones <rjones@redhat.com> - 1:1.19.53-3
+- Disable tests on ix86 because qemu/kernel is broken (RHBZ#870042).
+
 * Wed Oct 24 2012 Richard W.M. Jones <rjones@redhat.com> - 1:1.19.53-2
 - Add upstream patch to fix guestfish tests.
 
