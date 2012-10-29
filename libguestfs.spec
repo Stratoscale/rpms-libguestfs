@@ -21,8 +21,8 @@
 Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
-Version:       1.19.53
-Release:       3%{?dist}
+Version:       1.19.54
+Release:       1%{?dist}
 License:       LGPLv2+
 Group:         Development/Libraries
 URL:           http://libguestfs.org/
@@ -1022,6 +1022,9 @@ mkdir -p $RPM_BUILD_ROOT%{_localstatedir}/run/libguestfs
 
 
 %changelog
+* Mon Oct 29 2012 Richard W.M. Jones <rjones@redhat.com> - 1:1.19.54-1
+- New upstream version 1.19.54.
+
 * Thu Oct 24 2012 Richard W.M. Jones <rjones@redhat.com> - 1:1.19.53-3
 - Disable tests on ix86 because qemu/kernel is broken (RHBZ#870042).
 
