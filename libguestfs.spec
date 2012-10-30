@@ -765,8 +765,9 @@ export SKIP_TEST_BTRFS_FILESYSTEM_SYNC=1
 export SKIP_TEST_BTRFS_SUBVOLUME_DELETE=1
 export SKIP_TEST_BTRFS_SUBVOLUME_SNAPSHOT=1
 export SKIP_TEST_MKFS_BTRFS=1
-perl -i.bak -e 'while (<>) {print unless /tests\/btrfs/}' Makefile.am
-perl -i.bak -e 'while (<>) {print unless /tests\/charset/}' Makefile.am
+export SKIP_TEST_BTRFS_DEVICES_SH=1
+export SKIP_TEST_BTRFS_SUBVOLUME_DEFAULT_PL=1
+export SKIP_TEST_CHARSET_FIDELITY=1
 
 %if %{runtests}
 %ifnarch %{ix86} # RHBZ#870042
