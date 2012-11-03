@@ -22,7 +22,7 @@ Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
 Version:       1.19.56
-Release:       1%{?dist}
+Release:       2%{?dist}
 License:       LGPLv2+
 Group:         Development/Libraries
 URL:           http://libguestfs.org/
@@ -42,6 +42,9 @@ Patch2:        libguestfs-1.19.2-remove-udev-from-packagelist.patch
 # Non-upstream patch to add the noapic flag on the kernel command line
 # on i386 only.  This works around a bug in 32-bit qemu (RHBZ#857026).
 Patch3:        0001-i386-Add-noapic-flag-to-work-around-a-qemu-or-kernel.patch
+
+# Upstream patch to fix wipefs test.
+Patch4:        0001-tests-wipefs-Don-t-try-to-wipe-mounted-filesystem.patch
 
 %if 0%{?rhel} >= 7
 ExclusiveArch: x86_64
@@ -695,6 +698,7 @@ autoreconf -i
 %endif
 %patch2 -p1
 %patch3 -p1
+%patch4 -p1
 
 mkdir -p daemon/m4
 
@@ -1023,6 +1027,9 @@ mkdir -p $RPM_BUILD_ROOT%{_localstatedir}/run/libguestfs
 
 
 %changelog
+* Sat Nov 03 2012 Richard W.M. Jones <rjones@redhat.com> - 1:1.19.56-2
+- Add upstream patch to fix wipefs test.
+
 * Fri Nov 02 2012 Richard W.M. Jones <rjones@redhat.com> - 1:1.19.56-1
 - New upstream version 1.19.56.
 

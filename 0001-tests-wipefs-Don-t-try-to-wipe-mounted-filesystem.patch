@@ -1,0 +1,30 @@
+From 6ac943fbef4fa8386da456048f856a387f941fc2 Mon Sep 17 00:00:00 2001
+From: "Richard W.M. Jones" <rjones@redhat.com>
+Date: Sat, 3 Nov 2012 10:10:12 +0000
+Subject: [PATCH] tests: wipefs: Don't try to wipe mounted filesystem.
+
+Previously wipefs (the utility) allowed this, but it's obviously a bad
+thing to do and the new wipefs gives an error if you try it:
+
+wipefs: error: /dev/VG/LV: probing initialization failed: Device or resource busy
+---
+ generator/actions.ml | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/generator/actions.ml b/generator/actions.ml
+index 5c3de52..65d2785 100644
+--- a/generator/actions.ml
++++ b/generator/actions.ml
+@@ -8967,7 +8967,8 @@ is I<not> intended that you try to parse the output string." };
+     optional = Some "wipefs";
+     tests = [
+       InitBasicFSonLVM, Always, TestRun (
+-        [["wipefs"; "/dev/VG/LV"]])
++        [["umount"; "/dev/VG/LV"; ""; ""];
++         ["wipefs"; "/dev/VG/LV"]])
+     ];
+     shortdesc = "wipe a filesystem signature from a device";
+     longdesc = "\
+-- 
+1.7.11.4
+
