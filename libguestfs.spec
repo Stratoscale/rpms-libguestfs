@@ -43,12 +43,6 @@ Patch2:        libguestfs-1.19.2-remove-udev-from-packagelist.patch
 # on i386 only.  This works around a bug in 32-bit qemu (RHBZ#857026).
 Patch3:        0001-i386-Add-noapic-flag-to-work-around-a-qemu-or-kernel.patch
 
-# Upstream patch to fix wipefs test.
-Patch4:        0001-tests-wipefs-Don-t-try-to-wipe-mounted-filesystem.patch
-
-# Upstream patch to allow skipping the virt-format test.
-Patch5:        0001-format-Allow-virt-format-test-to-be-skipped-by-setti.patch
-
 %if 0%{?rhel} >= 7
 ExclusiveArch: x86_64
 %endif
@@ -701,8 +695,6 @@ autoreconf -i
 %endif
 %patch2 -p1
 %patch3 -p1
-%patch4 -p1
-%patch5 -p1
 
 mkdir -p daemon/m4
 
