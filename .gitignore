@@ -1,5 +1,6 @@
 .build*.log
 *.rpm
+clog
 /x86_64/
 /i386/
 /noarch/
