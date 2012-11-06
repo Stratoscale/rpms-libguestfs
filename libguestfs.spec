@@ -22,7 +22,7 @@ Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
 Version:       1.19.56
-Release:       2%{?dist}
+Release:       3%{?dist}
 License:       LGPLv2+
 Group:         Development/Libraries
 URL:           http://libguestfs.org/
@@ -45,6 +45,9 @@ Patch3:        0001-i386-Add-noapic-flag-to-work-around-a-qemu-or-kernel.patch
 
 # Upstream patch to fix wipefs test.
 Patch4:        0001-tests-wipefs-Don-t-try-to-wipe-mounted-filesystem.patch
+
+# Upstream patch to allow skipping the virt-format test.
+Patch5:        0001-format-Allow-virt-format-test-to-be-skipped-by-setti.patch
 
 %if 0%{?rhel} >= 7
 ExclusiveArch: x86_64
@@ -699,6 +702,7 @@ autoreconf -i
 %patch2 -p1
 %patch3 -p1
 %patch4 -p1
+%patch5 -p1
 
 mkdir -p daemon/m4
 
@@ -772,6 +776,9 @@ export SKIP_TEST_MKFS_BTRFS=1
 export SKIP_TEST_BTRFS_DEVICES_SH=1
 export SKIP_TEST_BTRFS_SUBVOLUME_DEFAULT_PL=1
 export SKIP_TEST_CHARSET_FIDELITY=1
+
+# Disable virt-format test (RHBZ#872831).
+export SKIP_TEST_VIRT_FORMAT_SH=1
 
 %if %{runtests}
 %ifnarch %{ix86} # RHBZ#870042
@@ -1027,6 +1034,10 @@ mkdir -p $RPM_BUILD_ROOT%{_localstatedir}/run/libguestfs
 
 
 %changelog
+* Tue Nov 06 2012 Richard W.M. Jones <rjones@redhat.com> - 1:1.19.56-3
+- Add upstream patch to disable virt-format test, and disable
+  it because wipefs utility is broken.
+
 * Sat Nov 03 2012 Richard W.M. Jones <rjones@redhat.com> - 1:1.19.56-2
 - Add upstream patch to fix wipefs test.
 

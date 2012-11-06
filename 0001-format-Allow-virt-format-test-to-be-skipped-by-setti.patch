@@ -1,0 +1,29 @@
+From 0fa4a5cb0503e28b836d62ec80d1bd93ca31422b Mon Sep 17 00:00:00 2001
+From: "Richard W.M. Jones" <rjones@redhat.com>
+Date: Tue, 6 Nov 2012 13:05:15 +0000
+Subject: [PATCH] format: Allow virt-format test to be skipped by setting
+ SKIP_TEST_VIRT_FORMAT_SH=1.
+
+---
+ format/test-virt-format.sh | 5 +++++
+ 1 file changed, 5 insertions(+)
+
+diff --git a/format/test-virt-format.sh b/format/test-virt-format.sh
+index 2035e67..a6f81e0 100755
+--- a/format/test-virt-format.sh
++++ b/format/test-virt-format.sh
+@@ -20,6 +20,11 @@
+ 
+ set -e
+ 
++if [ -n "$SKIP_TEST_VIRT_FORMAT_SH" ]; then
++    echo "$0: test skipped because environment variable is set."
++    exit 77
++fi
++
+ rm -f test1.img
+ 
+ ../fish/guestfish -N bootrootlv exit
+-- 
+1.7.11.4
+
