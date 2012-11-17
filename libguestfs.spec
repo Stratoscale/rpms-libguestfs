@@ -1075,7 +1075,7 @@ mkdir -p $RPM_BUILD_ROOT%{_localstatedir}/run/libguestfs
 * Mon Oct 29 2012 Richard W.M. Jones <rjones@redhat.com> - 1:1.19.54-1
 - New upstream version 1.19.54.
 
-* Thu Oct 24 2012 Richard W.M. Jones <rjones@redhat.com> - 1:1.19.53-3
+* Wed Oct 24 2012 Richard W.M. Jones <rjones@redhat.com> - 1:1.19.53-3
 - Disable tests on ix86 because qemu/kernel is broken (RHBZ#870042).
 
 * Wed Oct 24 2012 Richard W.M. Jones <rjones@redhat.com> - 1:1.19.53-2
@@ -1277,7 +1277,7 @@ mkdir -p $RPM_BUILD_ROOT%{_localstatedir}/run/libguestfs
 - New upstream version 1.19.7.
 - Require febotstrap >= 3.17.
 
-* Wed Jun 12 2012 Richard W.M. Jones <rjones@redhat.com> - 1:1.19.6-2
+* Tue Jun 12 2012 Richard W.M. Jones <rjones@redhat.com> - 1:1.19.6-2
 - Require febootstrap >= 3.16.
 
 * Tue Jun 12 2012 Richard W.M. Jones <rjones@redhat.com> - 1:1.19.6-1
@@ -1417,7 +1417,7 @@ mkdir -p $RPM_BUILD_ROOT%{_localstatedir}/run/libguestfs
 * Sun Apr 01 2012 Richard W.M. Jones <rjones@redhat.com> - 1:1.17.23-1
 - New upstream version 1.17.23.
 
-* Fri Mar 29 2012 Richard W.M. Jones <rjones@redhat.com> - 1:1.17.22-2
+* Thu Mar 29 2012 Richard W.M. Jones <rjones@redhat.com> - 1:1.17.22-2
 - Include all gobject header files.
 - Include gtk-doc, and depend on the gtk-doc package at runtime.
 
@@ -1626,7 +1626,7 @@ mkdir -p $RPM_BUILD_ROOT%{_localstatedir}/run/libguestfs
 * Tue Nov  1 2011 Richard W.M. Jones <rjones@redhat.com> - 1:1.15.1-1
 - New upstream version 1.15.1.
 
-* Thu Oct 26 2011 Richard W.M. Jones <rjones@redhat.com> - 1:1.15.0-1
+* Fri Oct 26 2011 Richard W.M. Jones <rjones@redhat.com> - 1:1.15.0-1
 - Stable branch 1.14.0 was released.  This is the new development
   branch version 1.15.0.
 
@@ -1954,7 +1954,7 @@ mkdir -p $RPM_BUILD_ROOT%{_localstatedir}/run/libguestfs
 * Thu Mar 24 2011 Richard W.M. Jones <rjones@redhat.com> - 1:1.9.13-1
 - New upstream version 1.9.13.
 
-* Thu Mar 18 2011 Richard W.M. Jones <rjones@redhat.com> - 1:1.9.12-1
+* Fri Mar 18 2011 Richard W.M. Jones <rjones@redhat.com> - 1:1.9.12-1
 - New upstream version 1.9.12.
 
 * Wed Mar 16 2011 Richard W.M. Jones <rjones@redhat.com> - 1:1.9.11-2
@@ -2038,7 +2038,7 @@ mkdir -p $RPM_BUILD_ROOT%{_localstatedir}/run/libguestfs
 - New upstream version 1.7.24.
 - Adds getxattr/lgetxattr APIs to support guestfs-browser.
 
-* Sun Dec 11 2010 Richard Jones <rjones@redhat.com> - 1:1.7.23-1
+* Sat Dec 11 2010 Richard Jones <rjones@redhat.com> - 1:1.7.23-1
 - New upstream version 1.7.23.
 
 * Sat Dec 11 2010 Richard Jones <rjones@redhat.com> - 1:1.7.22-1
