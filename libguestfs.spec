@@ -22,7 +22,7 @@ Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
 Version:       1.19.60
-Release:       1%{?dist}
+Release:       2%{?dist}
 License:       LGPLv2+
 Group:         Development/Libraries
 URL:           http://libguestfs.org/
@@ -801,6 +801,7 @@ rm $RPM_BUILD_ROOT%{_libdir}/libguestfs.a
 rm $RPM_BUILD_ROOT%{_libdir}/libguestfs.la
 rm $RPM_BUILD_ROOT%{_libdir}/libguestfs-gobject-1.0.a
 rm $RPM_BUILD_ROOT%{_libdir}/libguestfs-gobject-1.0.la
+rm $RPM_BUILD_ROOT%{_libdir}/lua/*/libluaguestfs.la
 
 find $RPM_BUILD_ROOT -name perllocal.pod -delete
 find $RPM_BUILD_ROOT -name .packlist -delete
@@ -1047,6 +1048,9 @@ mkdir -p $RPM_BUILD_ROOT%{_localstatedir}/run/libguestfs
 
 
 %changelog
+* Sat Nov 17 2012 Richard W.M. Jones <rjones@redhat.com> - 1:1.19.60-2
+- Remove Lua bogus libtool *.la file.
+
 * Sat Nov 17 2012 Richard W.M. Jones <rjones@redhat.com> - 1:1.19.60-1
 - New upstream version 1.19.60.
 
