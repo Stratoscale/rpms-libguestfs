@@ -1075,9 +1075,6 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
-* Sat Nov 17 2012 Richard W.M. Jones <rjones@redhat.com> - 1:1.18.10-1
-- New upstream stable version 1.18.10.
-
 * Tue Oct 30 2012 Richard W.M. Jones <rjones@redhat.com> - 1:1.18.10-1
 - New upstream stable version 1.18.10.
 
