@@ -82,6 +82,8 @@ BuildRequires: perl(XML::XPath)
 BuildRequires: perl(XML::XPath::XMLParser)
 BuildRequires: libvirt-daemon-qemu
 BuildRequires: perl(Expect)
+BuildRequires: lua
+BuildRequires: lua-devel
 
 # This is only needed for RHEL 5 because readline-devel doesn't
 # properly depend on it, but doesn't do any harm on other platforms:
@@ -344,6 +346,8 @@ For GObject bindings and GObject Introspection, install
 'libguestfs-gobject-devel'.
 
 For Java bindings, install 'libguestfs-java-devel'.
+
+For Lua bindings, install 'lua-guestfs'
 
 For OCaml bindings, install 'ocaml-libguestfs-devel'.
 
@@ -633,6 +637,16 @@ Requires:      erlang-erts
 %description -n erlang-%{name}
 erlang-%{name} contains Erlang bindings for %{name}.
 %endif
+
+
+%package -n lua-guestfs
+Summary:       Lua bindings for %{name}
+Group:         Development/Libraries
+Requires:      %{name} = %{epoch}:%{version}-%{release}
+Requires:      lua
+
+%description -n lua-guestfs
+lua-guestfs contains Lua bindings for %{name}.
 
 
 %package gobject
@@ -999,6 +1013,13 @@ mkdir -p $RPM_BUILD_ROOT%{_localstatedir}/run/libguestfs
 %{_libdir}/erlang/lib/%{name}-%{version}
 %{_mandir}/man3/guestfs-erlang.3*
 %endif
+
+
+%files -n lua-guestfs
+%doc lua/examples/*.lua
+%doc lua/examples/LICENSE
+%{_libdir}/lua/*/guestfs.so
+%{_mandir}/man3/guestfs-lua.3*
 
 
 %files gobject
