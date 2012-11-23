@@ -22,7 +22,7 @@ Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
 Version:       1.19.63
-Release:       1%{?dist}
+Release:       2%{?dist}
 License:       LGPLv2+
 Group:         Development/Libraries
 URL:           http://libguestfs.org/
@@ -38,10 +38,6 @@ BuildRequires: autoconf, automake, libtool, gettext-devel
 # right.  When udev disappears from the repository we can remove this
 # patch.
 Patch2:        libguestfs-1.19.2-remove-udev-from-packagelist.patch
-
-# Non-upstream patch to add the noapic flag on the kernel command line
-# on i386 only.  This works around a bug in 32-bit qemu (RHBZ#857026).
-Patch3:        0001-i386-Add-noapic-flag-to-work-around-a-qemu-or-kernel.patch
 
 %if 0%{?rhel} >= 7
 ExclusiveArch: x86_64
@@ -710,7 +706,6 @@ fi
 autoreconf -i
 %endif
 %patch2 -p1
-%patch3 -p1
 
 mkdir -p daemon/m4
 
@@ -789,9 +784,7 @@ export SKIP_TEST_CHARSET_FIDELITY=1
 export SKIP_TEST_VIRT_FORMAT_SH=1
 
 %if %{runtests}
-%ifnarch %{ix86} # RHBZ#870042
 make check
-%endif
 %endif
 
 
@@ -1050,6 +1043,14 @@ mkdir -p $RPM_BUILD_ROOT%{_localstatedir}/run/libguestfs
 
 
 %changelog
+* Fri Nov 23 2012 Richard W.M. Jones <rjones@redhat.com> - 1:1.19.63-2
+- Remove non-upstream patch designed to work around
+  https://bugzilla.redhat.com/show_bug.cgi?id=857026
+  to see if this has been fixed.
+- Re-enable tests on i686 to see if
+  https://bugzilla.redhat.com/show_bug.cgi?id=870042
+  has been fixed.
+
 * Fri Nov 23 2012 Richard W.M. Jones <rjones@redhat.com> - 1:1.19.63-1
 - New upstream version 1.19.63.
 
