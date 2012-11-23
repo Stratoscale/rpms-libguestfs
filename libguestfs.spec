@@ -21,7 +21,7 @@
 Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
-Version:       1.19.62
+Version:       1.19.63
 Release:       1%{?dist}
 License:       LGPLv2+
 Group:         Development/Libraries
@@ -84,6 +84,8 @@ BuildRequires: libvirt-daemon-qemu
 BuildRequires: perl(Expect)
 BuildRequires: lua
 BuildRequires: lua-devel
+BuildRequires: libacl-devel
+BuildRequires: libcap-devel
 
 # This is only needed for RHEL 5 because readline-devel doesn't
 # properly depend on it, but doesn't do any harm on other platforms:
@@ -1048,6 +1050,9 @@ mkdir -p $RPM_BUILD_ROOT%{_localstatedir}/run/libguestfs
 
 
 %changelog
+* Fri Nov 23 2012 Richard W.M. Jones <rjones@redhat.com> - 1:1.19.63-1
+- New upstream version 1.19.63.
+
 * Tue Nov 20 2012 Richard W.M. Jones <rjones@redhat.com> - 1:1.19.62-1
 - New upstream version 1.19.62.
 
