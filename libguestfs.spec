@@ -748,9 +748,6 @@ EOF
 %define extra --with-febootstrap-yum-config=$(pwd)/yum.conf
 %endif
 
-# Hack to work around glibc header bug <rpc/svc.h> RHBZ#882137.
-export CFLAGS="-Dattribute_hidden= %{optflags}"
-
 %{configure} \
   --with-default-attach-method=libvirt \
   --with-extra="fedora=%{fedora},release=%{release},libvirt" \
