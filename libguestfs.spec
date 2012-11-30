@@ -22,7 +22,7 @@ Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
 Version:       1.19.65
-Release:       1%{?dist}
+Release:       2%{?dist}
 License:       LGPLv2+
 Group:         Development/Libraries
 URL:           http://libguestfs.org/
@@ -748,6 +748,9 @@ EOF
 %define extra --with-febootstrap-yum-config=$(pwd)/yum.conf
 %endif
 
+# Hack to work around glibc header bug <rpc/svc.h> RHBZ#882137.
+export CFLAGS="-Dattribute_hidden= %{optflags}"
+
 %{configure} \
   --with-default-attach-method=libvirt \
   --with-extra="fedora=%{fedora},release=%{release},libvirt" \
@@ -1048,6 +1051,9 @@ mkdir -p $RPM_BUILD_ROOT%{_localstatedir}/run/libguestfs
 
 
 %changelog
+* Fri Nov 30 2012 Richard W.M. Jones <rjones@redhat.com> - 1:1.19.65-2
+- Add a hack to work around glibc header bug <rpc/svc.h>.
+
 * Thu Nov 29 2012 Richard W.M. Jones <rjones@redhat.com> - 1:1.19.65-1
 - New upstream version 1.19.65.
 
