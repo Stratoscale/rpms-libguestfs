@@ -21,23 +21,17 @@
 Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
-Version:       1.19.66
+Version:       1.20.0
 Release:       1%{?dist}
 License:       LGPLv2+
 Group:         Development/Libraries
 URL:           http://libguestfs.org/
-Source0:       http://libguestfs.org/download/1.19-development/%{name}-%{version}.tar.gz
+Source0:       http://libguestfs.org/download/1.20-stable/%{name}-%{version}.tar.gz
 
 %if 0%{?fedora} >= 17 || 0%{?rhel} >= 7
 Patch1:        ruby-1.9-vendor-not-site.patch
 BuildRequires: autoconf, automake, libtool, gettext-devel
 %endif
-
-# Non-upstream patch to remove udev from the packagelist.  systemd now
-# 'obsoletes' udev, but febootstrap doesn't get this relationship
-# right.  When udev disappears from the repository we can remove this
-# patch.
-Patch2:        libguestfs-1.19.2-remove-udev-from-packagelist.patch
 
 # Non-upstream patch to add the noapic flag on the kernel command line
 # on i386 only.  This works around a bug in 32-bit qemu (RHBZ#857026).
@@ -127,13 +121,15 @@ BuildRequires: iputils
 BuildRequires: jfsutils
 %endif
 BuildRequires: kernel
+BuildRequires: kmod
+BuildRequires: libldm
 BuildRequires: libselinux
 BuildRequires: libxml2
 BuildRequires: lsof
+BuildRequires: lsscsi
 BuildRequires: lvm2
 BuildRequires: lzop
 BuildRequires: mdadm
-BuildRequires: module-init-tools
 %if !0%{?rhel}
 BuildRequires: nilfs-utils
 BuildRequires: ntfs-3g
@@ -158,6 +154,7 @@ BuildRequires: util-linux
 BuildRequires: vim-minimal
 BuildRequires: xfsprogs
 BuildRequires: xz
+BuildRequires: yajl
 %if !0%{?rhel}
 BuildRequires: zerofree
 %endif
@@ -203,13 +200,15 @@ Requires:      iputils
 Requires:      jfsutils
 %endif
 Requires:      kernel
+Requires:      kmod
+Requires:      libldm
 Requires:      libselinux
 Requires:      libxml2
 Requires:      lsof
+Requires:      lsscsi
 Requires:      lvm2
 Requires:      lzop
 Requires:      mdadm
-Requires:      module-init-tools
 %if !0%{?rhel}
 Requires:      nilfs-utils
 Requires:      ntfs-3g
@@ -234,6 +233,7 @@ Requires:      util-linux
 Requires:      vim-minimal
 Requires:      xfsprogs
 Requires:      xz
+Requires:      yajl
 %if !0%{?rhel}
 Requires:      zerofree
 %endif
@@ -293,7 +293,7 @@ Requires:      libvirt-daemon-qemu >= 0.10.2-3
 %ifarch %{ix86} x86_64
 Requires:      libvirt-daemon-kvm >= 0.10.2-3
 %endif
-Requires:      selinux-policy >= 3.11.1-25
+Requires:      selinux-policy >= 3.11.1-63
 
 # Provide our own custom requires for the supermin appliance.
 Source1:       libguestfs-find-requires.sh
@@ -709,7 +709,6 @@ fi
 %patch1 -p1
 autoreconf -i
 %endif
-%patch2 -p1
 %patch3 -p1
 
 mkdir -p daemon/m4
@@ -718,6 +717,12 @@ mkdir -p daemon/m4
 # our replacement file.
 mv README README.orig
 sed 's/@VERSION@/%{version}/g' < %{SOURCE4} > README
+
+# Remove udev from the packagelist.  systemd now 'obsoletes' udev, but
+# febootstrap doesn't get this relationship right.  When udev
+# disappears from the repository we can stop doing this.
+cp appliance/packagelist.in appliance/packagelist.in.orig
+grep -Ev '\budev\b' < appliance/packagelist.in.orig > appliance/packagelist.in
 
 
 %build
@@ -1048,6 +1053,13 @@ mkdir -p $RPM_BUILD_ROOT%{_localstatedir}/run/libguestfs
 
 
 %changelog
+* Thu Dec 13 2012 Richard W.M. Jones <rjones@redhat.com> - 1:1.20.0-1
+- New upstream version 1.20.0.
+- New source URL for this branch.
+- Reconcile upstream packagelist, BRs and Requires lists.
+- Requires newest SELinux policy so that SVirt works.
+- Fix patch 2.  Actually, remove and replace with a small script.
+
 * Sat Dec 01 2012 Richard W.M. Jones <rjones@redhat.com> - 1:1.19.66-1
 - New upstream version 1.19.66.
 
