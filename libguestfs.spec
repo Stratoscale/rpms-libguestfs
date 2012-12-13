@@ -1676,7 +1676,7 @@ mkdir -p $RPM_BUILD_ROOT%{_localstatedir}/run/libguestfs
 * Tue Nov  1 2011 Richard W.M. Jones <rjones@redhat.com> - 1:1.15.1-1
 - New upstream version 1.15.1.
 
-* Fri Oct 26 2011 Richard W.M. Jones <rjones@redhat.com> - 1:1.15.0-1
+* Fri Oct 28 2011 Richard W.M. Jones <rjones@redhat.com> - 1:1.15.0-1
 - Stable branch 1.14.0 was released.  This is the new development
   branch version 1.15.0.
 
