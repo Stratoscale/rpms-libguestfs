@@ -1086,7 +1086,7 @@ mkdir -p $RPM_BUILD_ROOT%{_localstatedir}/run/libguestfs
     package name (but not the binary) is different in RHEL 7.
   * Add workaround for libvirt/KVM bug RHBZ#878406.
   * Do not depend on libvirt-daemon-qemu.
-  * Do not depend on libldm (not yet in RHEL 7: RHBZ#887812).
+  * Do not depend on libldm (not yet in RHEL 7: RHBZ#887894).
 
 * Thu Dec 13 2012 Richard W.M. Jones <rjones@redhat.com> - 1:1.20.0-1
 - New upstream version 1.20.0.
