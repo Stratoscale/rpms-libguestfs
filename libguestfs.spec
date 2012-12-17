@@ -74,8 +74,14 @@ BuildRequires: netpbm-progs
 BuildRequires: icoutils
 BuildRequires: perl(XML::XPath)
 BuildRequires: perl(XML::XPath::XMLParser)
+%if !0%{?rhel}
 BuildRequires: libvirt-daemon-qemu
+%else
+BuildRequires: libvirt-daemon-kvm
+%endif
+%if !0%{?rhel}
 BuildRequires: perl(Expect)
+%endif
 BuildRequires: lua
 BuildRequires: lua-devel
 BuildRequires: libacl-devel
@@ -273,7 +279,7 @@ BuildRequires: gjs
 
 # For libguestfs-tools:
 BuildRequires: perl(Sys::Virt)
-BuildRequires: qemu-img
+BuildRequires: /usr/bin/qemu-img
 
 # Force new parted for Linux 3.0 (RHBZ#710882).
 BuildRequires: parted >= 3.0-2
@@ -290,7 +296,9 @@ Requires:      icoutils
 Requires:      fuse
 
 # For libvirt attach method.
+%if !0%{?rhel}
 Requires:      libvirt-daemon-qemu >= 0.10.2-3
+%endif
 %ifarch %{ix86} x86_64
 Requires:      libvirt-daemon-kvm >= 0.10.2-3
 %endif
@@ -393,7 +401,7 @@ Requires:      /usr/bin/man
 Requires:      /bin/vi
 
 # for virt-sparsify:
-Requires:      qemu-img
+Requires:      /usr/bin/qemu-img
 
 # Obsolete and replace earlier packages.
 Provides:      guestfish = %{epoch}:%{version}-%{release}
@@ -425,7 +433,7 @@ Requires:      perl(XML::Writer)
 Requires:      perl(Win::Hivex) >= 1.2.7
 
 # for virt-make-fs:
-Requires:      qemu-img
+Requires:      /usr/bin/qemu-img
 
 
 %description tools
@@ -794,8 +802,18 @@ export SKIP_TEST_CHARSET_FIDELITY=1
 # Disable virt-format test (RHBZ#872831).
 export SKIP_TEST_VIRT_FORMAT_SH=1
 
+%if 0%{?rhel}
+# Workaround for libvirt/KVM RHBZ#878406
+cat > qemu-wrapper.sh <<'EOF'
+#!/bin/sh -
+exec /usr/libexec/qemu-kvm -machine accel=tcg "$@"
+EOF
+chmod +x qemu-wrapper.sh
+export LIBGUESTFS_QEMU=`pwd`/qemu-wrapper.sh
+%endif
+
 %if %{runtests}
-make check
+make check -k
 %endif
 
 
@@ -1058,6 +1076,13 @@ mkdir -p $RPM_BUILD_ROOT%{_localstatedir}/run/libguestfs
 - New upstream version 1.21.1 (development branch).
 - Fix source URL.
 - Rebase ruby site/vendor patch.
+- Use 'make check -k' so we get to see all test failures at once.
+- For RHEL 7:
+  * Do not depend on perl(Expect) (only needed to test virt-rescue).
+  * Depend on /usr/bin/qemu-img instead of qemu-img package, since the
+    package name (but not the binary) is different in RHEL 7.
+  * Add workaround for libvirt/KVM bug RHBZ#878406.
+  * Do not depend on libvirt-daemon-qemu.
 
 * Thu Dec 13 2012 Richard W.M. Jones <rjones@redhat.com> - 1:1.20.0-1
 - New upstream version 1.20.0.
