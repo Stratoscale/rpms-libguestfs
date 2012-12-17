@@ -86,7 +86,9 @@ BuildRequires: lua
 BuildRequires: lua-devel
 BuildRequires: libacl-devel
 BuildRequires: libcap-devel
+%if !0%{?rhel}
 BuildRequires: libldm-devel
+%endif
 
 # This is only needed for RHEL 5 because readline-devel doesn't
 # properly depend on it, but doesn't do any harm on other platforms:
@@ -129,7 +131,9 @@ BuildRequires: jfsutils
 %endif
 BuildRequires: kernel
 BuildRequires: kmod
+%if !0%{?rhel}
 BuildRequires: libldm
+%endif
 BuildRequires: libselinux
 BuildRequires: libxml2
 BuildRequires: lsof
@@ -208,7 +212,9 @@ Requires:      jfsutils
 %endif
 Requires:      kernel
 Requires:      kmod
+%if !0%{?rhel}
 Requires:      libldm
+%endif
 Requires:      libselinux
 Requires:      libxml2
 Requires:      lsof
@@ -1080,6 +1086,7 @@ mkdir -p $RPM_BUILD_ROOT%{_localstatedir}/run/libguestfs
     package name (but not the binary) is different in RHEL 7.
   * Add workaround for libvirt/KVM bug RHBZ#878406.
   * Do not depend on libvirt-daemon-qemu.
+  * Do not depend on libldm (not yet in RHEL 7: RHBZ#887812).
 
 * Thu Dec 13 2012 Richard W.M. Jones <rjones@redhat.com> - 1:1.20.0-1
 - New upstream version 1.20.0.
