@@ -100,6 +100,7 @@ BuildRequires: e2fsprogs
 BuildRequires: file
 BuildRequires: findutils
 BuildRequires: gawk
+BuildRequires: gdisk
 BuildRequires: gfs2-utils
 #BuildRequires: gfs-utils
 BuildRequires: grep
@@ -167,6 +168,7 @@ Requires:      e2fsprogs
 Requires:      file
 Requires:      findutils
 Requires:      gawk
+Requires:      gdisk
 Requires:      gfs2-utils
 #Requires:      gfs-utils
 Requires:      grep
@@ -1022,6 +1024,7 @@ mkdir -p $RPM_BUILD_ROOT%{_localstatedir}/run/libguestfs
 %changelog
 * Mon Dec 17 2012 Richard W.M. Jones <rjones@redhat.com> - 1:1.21.1-3
 - Remove all RHEL-specific hacks since I've now branched RHEL 7.
+- Add BR gdisk.
 
 * Mon Dec 17 2012 Richard W.M. Jones <rjones@redhat.com> - 1:1.21.1-2
 - New upstream version 1.21.1 (development branch).
