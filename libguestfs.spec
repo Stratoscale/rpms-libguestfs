@@ -22,13 +22,13 @@ Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
 Version:       1.21.1
-Release:       2%{?dist}
+Release:       3%{?dist}
 License:       LGPLv2+
 Group:         Development/Libraries
 URL:           http://libguestfs.org/
 Source0:       http://libguestfs.org/download/1.21-development/%{name}-%{version}.tar.gz
 
-%if 0%{?fedora} >= 17 || 0%{?rhel} >= 7
+%if 0%{?fedora} >= 17
 Patch1:        ruby-1.9-vendor-not-site.patch
 BuildRequires: autoconf, automake, libtool, gettext-devel
 %endif
@@ -36,10 +36,6 @@ BuildRequires: autoconf, automake, libtool, gettext-devel
 # Non-upstream patch to add the noapic flag on the kernel command line
 # on i386 only.  This works around a bug in 32-bit qemu (RHBZ#857026).
 Patch3:        0001-i386-Add-noapic-flag-to-work-around-a-qemu-or-kernel.patch
-
-%if 0%{?rhel} >= 7
-ExclusiveArch: x86_64
-%endif
 
 # Basic build requirements:
 BuildRequires: perl(Pod::Simple)
@@ -74,21 +70,13 @@ BuildRequires: netpbm-progs
 BuildRequires: icoutils
 BuildRequires: perl(XML::XPath)
 BuildRequires: perl(XML::XPath::XMLParser)
-%if !0%{?rhel}
 BuildRequires: libvirt-daemon-qemu
-%else
-BuildRequires: libvirt-daemon-kvm
-%endif
-%if !0%{?rhel}
 BuildRequires: perl(Expect)
-%endif
 BuildRequires: lua
 BuildRequires: lua-devel
 BuildRequires: libacl-devel
 BuildRequires: libcap-devel
-%if !0%{?rhel}
 BuildRequires: libldm-devel
-%endif
 
 # This is only needed for RHEL 5 because readline-devel doesn't
 # properly depend on it, but doesn't do any harm on other platforms:
@@ -120,20 +108,14 @@ BuildRequires: grep
 #%endif
 BuildRequires: gzip
 %ifnarch %{arm}
-%if !0%{?rhel}
 BuildRequires: hfsplus-tools
-%endif
 %endif
 BuildRequires: iproute
 BuildRequires: iputils
-%if !0%{?rhel}
 BuildRequires: jfsutils
-%endif
 BuildRequires: kernel
 BuildRequires: kmod
-%if !0%{?rhel}
 BuildRequires: libldm
-%endif
 BuildRequires: libselinux
 BuildRequires: libxml2
 BuildRequires: lsof
@@ -141,20 +123,16 @@ BuildRequires: lsscsi
 BuildRequires: lvm2
 BuildRequires: lzop
 BuildRequires: mdadm
-%if !0%{?rhel}
 BuildRequires: nilfs-utils
 BuildRequires: ntfs-3g
 %ifarch %{ix86} x86_64
 BuildRequires: ntfsprogs
 %endif
-%endif
 BuildRequires: openssh-clients
 BuildRequires: parted
 BuildRequires: procps
 BuildRequires: psmisc
-%if !0%{?rhel}
 BuildRequires: reiserfs-utils
-%endif
 BuildRequires: rsync
 BuildRequires: scrub
 BuildRequires: strace
@@ -166,14 +144,10 @@ BuildRequires: vim-minimal
 BuildRequires: xfsprogs
 BuildRequires: xz
 BuildRequires: yajl
-%if !0%{?rhel}
 BuildRequires: zerofree
-%endif
 # Not supported on ARM http://zfs-fuse.net/issues/94
 %ifnarch %{arm}
-%if !0%{?rhel}
 BuildRequires: zfs-fuse
-%endif
 %endif
 
 # Must match the above set of BuildRequires exactly!
@@ -201,20 +175,14 @@ Requires:      grep
 #%endif
 Requires:      gzip
 %ifnarch %{arm}
-%if !0%{?rhel}
 Requires:      hfsplus-tools
-%endif
 %endif
 Requires:      iproute
 Requires:      iputils
-%if !0%{?rhel}
 Requires:      jfsutils
-%endif
 Requires:      kernel
 Requires:      kmod
-%if !0%{?rhel}
 Requires:      libldm
-%endif
 Requires:      libselinux
 Requires:      libxml2
 Requires:      lsof
@@ -222,20 +190,16 @@ Requires:      lsscsi
 Requires:      lvm2
 Requires:      lzop
 Requires:      mdadm
-%if !0%{?rhel}
 Requires:      nilfs-utils
 Requires:      ntfs-3g
 %ifarch %{ix86} x86_64
 Requires:      ntfsprogs
 %endif
-%endif
 Requires:      openssh-clients
 Requires:      parted
 Requires:      procps
 Requires:      psmisc
-%if !0%{?rhel}
 Requires:      reiserfs-utils
-%endif
 Requires:      rsync
 Requires:      scrub
 Requires:      strace
@@ -247,14 +211,10 @@ Requires:      vim-minimal
 Requires:      xfsprogs
 Requires:      xz
 Requires:      yajl
-%if !0%{?rhel}
 Requires:      zerofree
-%endif
 # Not supported on ARM http://zfs-fuse.net/issues/94
 %ifnarch %{arm}
-%if !0%{?rhel}
 Requires:      zfs-fuse
-%endif
 %endif
 
 # These are only required if you want to build the bindings for
@@ -275,10 +235,8 @@ BuildRequires: java >= 1.5.0
 BuildRequires: jpackage-utils
 BuildRequires: java-devel
 BuildRequires: php-devel
-%if !0%{?rhel}
 BuildRequires: erlang-erts
 BuildRequires: erlang-erl_interface
-%endif
 BuildRequires: glib2-devel
 BuildRequires: gobject-introspection-devel
 BuildRequires: gjs
@@ -302,9 +260,7 @@ Requires:      icoutils
 Requires:      fuse
 
 # For libvirt attach method.
-%if !0%{?rhel}
 Requires:      libvirt-daemon-qemu >= 0.10.2-3
-%endif
 %ifarch %{ix86} x86_64
 Requires:      libvirt-daemon-kvm >= 0.10.2-3
 %endif
@@ -644,7 +600,6 @@ Requires:      php
 php-%{name} contains PHP bindings for %{name}.
 
 
-%if !0%{?rhel}
 %package -n erlang-%{name}
 Summary:       Erlang bindings for %{name}
 Group:         Development/Libraries
@@ -653,7 +608,6 @@ Requires:      erlang-erts
 
 %description -n erlang-%{name}
 erlang-%{name} contains Erlang bindings for %{name}.
-%endif
 
 
 %package -n lua-guestfs
@@ -720,7 +674,7 @@ if [ "$(getenforce | tr '[A-Z]' '[a-z]')" != "disabled" ]; then
     chcon --reference=/tmp tmp
 fi
 
-%if 0%{?fedora} >= 17 || 0%{?rhel} >= 7
+%if 0%{?fedora} >= 17
 %patch1 -p1
 autoreconf -i
 %endif
@@ -807,16 +761,6 @@ export SKIP_TEST_CHARSET_FIDELITY=1
 
 # Disable virt-format test (RHBZ#872831).
 export SKIP_TEST_VIRT_FORMAT_SH=1
-
-%if 0%{?rhel}
-# Workaround for libvirt/KVM RHBZ#878406
-cat > qemu-wrapper.sh <<'EOF'
-#!/bin/sh -
-exec /usr/libexec/qemu-kvm -machine accel=tcg "$@"
-EOF
-chmod +x qemu-wrapper.sh
-export LIBGUESTFS_QEMU=`pwd`/qemu-wrapper.sh
-%endif
 
 %if %{runtests}
 make check -k
@@ -1035,7 +979,6 @@ mkdir -p $RPM_BUILD_ROOT%{_localstatedir}/run/libguestfs
 %{_libdir}/php/modules/guestfs_php.so
 
 
-%if !0%{?rhel}
 %files -n erlang-%{name}
 %doc erlang/README
 %doc erlang/examples/*.erl
@@ -1043,7 +986,6 @@ mkdir -p $RPM_BUILD_ROOT%{_localstatedir}/run/libguestfs
 %{_bindir}/erl-guestfs
 %{_libdir}/erlang/lib/%{name}-%{version}
 %{_mandir}/man3/guestfs-erlang.3*
-%endif
 
 
 %files -n lua-guestfs
@@ -1078,6 +1020,9 @@ mkdir -p $RPM_BUILD_ROOT%{_localstatedir}/run/libguestfs
 
 
 %changelog
+* Mon Dec 17 2012 Richard W.M. Jones <rjones@redhat.com> - 1:1.21.1-3
+- Remove all RHEL-specific hacks since I've now branched RHEL 7.
+
 * Mon Dec 17 2012 Richard W.M. Jones <rjones@redhat.com> - 1:1.21.1-2
 - New upstream version 1.21.1 (development branch).
 - Fix source URL.
