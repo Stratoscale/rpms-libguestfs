@@ -22,7 +22,7 @@ Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
 Version:       1.20.1
-Release:       1%{?dist}
+Release:       2%{?dist}
 License:       LGPLv2+
 Group:         Development/Libraries
 URL:           http://libguestfs.org/
@@ -73,6 +73,7 @@ BuildRequires: lua-devel
 BuildRequires: libacl-devel
 BuildRequires: libcap-devel
 BuildRequires: libldm-devel
+BuildRequires: yajl-devel
 
 # This is only needed for RHEL 5 because readline-devel doesn't
 # properly depend on it, but doesn't do any harm on other platforms:
@@ -1015,9 +1016,10 @@ mkdir -p $RPM_BUILD_ROOT%{_localstatedir}/run/libguestfs
 
 
 %changelog
-* Mon Dec 17 2012 Richard W.M. Jones <rjones@redhat.com> - 1:1.20.1-1
+* Thu Dec 20 2012 Richard W.M. Jones <rjones@redhat.com> - 1:1.20.1-2
 - New upstream stable branch version 1.20.1.
 - Remove all RHEL-specific hacks since I've now branched RHEL 7.
+- Add BR yajl-devel (RHBZ#887812).
 
 * Mon Dec 17 2012 Richard W.M. Jones <rjones@redhat.com> - 1:1.20.0-2
 - Use 'make check -k' so we get to see all test failures at once.
