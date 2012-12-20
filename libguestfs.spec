@@ -73,6 +73,7 @@ BuildRequires: lua-devel
 BuildRequires: libacl-devel
 BuildRequires: libcap-devel
 BuildRequires: libldm-devel
+BuildRequires: yajl-devel
 
 # This is only needed for RHEL 5 because readline-devel doesn't
 # properly depend on it, but doesn't do any harm on other platforms:
