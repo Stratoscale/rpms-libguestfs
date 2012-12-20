@@ -33,10 +33,6 @@ Patch1:        ruby-1.9-vendor-not-site.patch
 BuildRequires: autoconf, automake, libtool, gettext-devel
 %endif
 
-# Non-upstream patch to add the noapic flag on the kernel command line
-# on i386 only.  This works around a bug in 32-bit qemu (RHBZ#857026).
-Patch3:        0001-i386-Add-noapic-flag-to-work-around-a-qemu-or-kernel.patch
-
 # Basic build requirements:
 BuildRequires: perl(Pod::Simple)
 BuildRequires: perl(Pod::Man)
@@ -680,7 +676,6 @@ fi
 %patch1 -p1
 autoreconf -i
 %endif
-%patch3 -p1
 
 mkdir -p daemon/m4
 
