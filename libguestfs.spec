@@ -22,7 +22,7 @@ Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
 Version:       1.21.2
-Release:       1%{?dist}
+Release:       2%{?dist}
 License:       LGPLv2+
 Group:         Development/Libraries
 URL:           http://libguestfs.org/
@@ -717,7 +717,7 @@ failovermethod=priority
 enabled=1
 gpgcheck=0
 EOF
-%define extra --with-febootstrap-yum-config=$(pwd)/yum.conf
+%define extra --with-febootstrap-packager-config=$(pwd)/yum.conf
 %endif
 
 %{configure} \
@@ -1018,8 +1018,9 @@ mkdir -p $RPM_BUILD_ROOT%{_localstatedir}/run/libguestfs
 
 
 %changelog
-* Sat Dec 22 2012 Richard W.M. Jones <rjones@redhat.com> - 1:1.21.2-1
+* Sat Dec 22 2012 Richard W.M. Jones <rjones@redhat.com> - 1:1.21.2-2
 - New upstream version 1.21.2.
+- Use new --with-febootstrap-packager-config option.
 
 * Mon Dec 17 2012 Richard W.M. Jones <rjones@redhat.com> - 1:1.21.1-3
 - Remove all RHEL-specific hacks since I've now branched RHEL 7.
