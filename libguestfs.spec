@@ -22,7 +22,7 @@ Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
 Version:       1.21.3
-Release:       1%{?dist}
+Release:       2%{?dist}
 License:       LGPLv2+
 Group:         Development/Libraries
 URL:           http://libguestfs.org/
@@ -674,8 +674,17 @@ if [ "$(getenforce | tr '[A-Z]' '[a-z]')" != "disabled" ]; then
 fi
 
 %if 0%{?fedora} >= 17
+%if 0%{?fedora} >= 19
+# Very ugly workaround for a bug in automake 1.13.1:
+cp ocaml/Makefile.in ocaml/Makefile.in.bak
+%endif
 %patch1 -p1
 autoreconf -i
+%if 0%{?fedora} >= 19
+# Very ugly workaround for a bug in automake 1.13.1:
+cp ocaml/Makefile.in.bak ocaml/Makefile.in
+touch ocaml/Makefile.in
+%endif
 %endif
 
 mkdir -p daemon/m4
@@ -1018,7 +1027,7 @@ mkdir -p $RPM_BUILD_ROOT%{_localstatedir}/run/libguestfs
 
 
 %changelog
-* Thu Jan 17 2013 Richard W.M. Jones <rjones@redhat.com> - 1:1.21.3-1
+* Thu Jan 17 2013 Richard W.M. Jones <rjones@redhat.com> - 1:1.21.3-2
 - New upstream version 1.21.3.
 
 * Sat Jan 12 2013 Richard W.M. Jones <rjones@redhat.com> - 1:1.21.2-3
