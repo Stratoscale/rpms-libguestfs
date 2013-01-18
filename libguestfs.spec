@@ -22,7 +22,7 @@ Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
 Version:       1.20.2
-Release:       4%{?dist}
+Release:       5%{?dist}
 License:       LGPLv2+
 Group:         Development/Libraries
 URL:           http://libguestfs.org/
@@ -112,6 +112,7 @@ BuildRequires: iputils
 BuildRequires: jfsutils
 BuildRequires: kernel
 BuildRequires: kmod
+BuildRequires: libcap
 BuildRequires: libldm
 BuildRequires: libselinux
 BuildRequires: libxml2
@@ -179,6 +180,7 @@ Requires:      iputils
 Requires:      jfsutils
 Requires:      kernel
 Requires:      kmod
+Requires:      libcap
 Requires:      libldm
 Requires:      libselinux
 Requires:      libxml2
@@ -1004,6 +1006,7 @@ mkdir -p $RPM_BUILD_ROOT%{_localstatedir}/run/libguestfs
 %{_includedir}/guestfs-gobject/*.h
 %{_datadir}/gir-1.0/Guestfs-1.0.gir
 %{_datadir}/gtk-doc/html/guestfs
+%{_libdir}/pkgconfig/libguestfs-gobject-1.0.pc
 
 
 %files man-pages-ja
@@ -1021,6 +1024,8 @@ mkdir -p $RPM_BUILD_ROOT%{_localstatedir}/run/libguestfs
 - Disable xfs_growfs test because xfs is broken on F18 (see RHBZ#909602).
 - Disable virt-make-fs using btrfs (because of RHBZ#863978).
 - Depend on openjdk instead of GCJ-based java.
+- Add libguestfs-gobject-1.0.pc.
+- Add explicit dependency on libcap, needed by the appliance.
 
 * Thu Feb 14 2013 Richard W.M. Jones <rjones@redhat.com> - 1:1.20.2-2
 - New upstream stable branch version 1.20.2.
