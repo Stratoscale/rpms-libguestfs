@@ -22,7 +22,7 @@ Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
 Version:       1.20.2
-Release:       3%{?dist}
+Release:       4%{?dist}
 License:       LGPLv2+
 Group:         Development/Libraries
 URL:           http://libguestfs.org/
@@ -228,9 +228,9 @@ BuildRequires: ruby-devel
 BuildRequires: rubygem-rake
 BuildRequires: rubygem(minitest)
 BuildRequires: ruby-irb
-BuildRequires: java >= 1.5.0
+BuildRequires: java-1.7.0-openjdk
+BuildRequires: java-1.7.0-openjdk-devel
 BuildRequires: jpackage-utils
-BuildRequires: java-devel
 BuildRequires: php-devel
 BuildRequires: erlang-erts
 BuildRequires: erlang-erl_interface
@@ -1017,9 +1017,10 @@ mkdir -p $RPM_BUILD_ROOT%{_localstatedir}/run/libguestfs
 
 
 %changelog
-* Fri Feb 15 2013 Richard W.M. Jones <rjones@redhat.com> - 1:1.20.2-3
+* Fri Feb 15 2013 Richard W.M. Jones <rjones@redhat.com> - 1:1.20.2-4
 - Disable xfs_growfs test because xfs is broken on F18 (see RHBZ#909602).
 - Disable virt-make-fs using btrfs (because of RHBZ#863978).
+- Depend on openjdk instead of GCJ-based java.
 
 * Thu Feb 14 2013 Richard W.M. Jones <rjones@redhat.com> - 1:1.20.2-2
 - New upstream stable branch version 1.20.2.
