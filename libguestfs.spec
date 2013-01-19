@@ -22,7 +22,7 @@ Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
 Version:       1.21.4
-Release:       1%{?dist}
+Release:       2%{?dist}
 License:       LGPLv2+
 Group:         Development/Libraries
 URL:           http://libguestfs.org/
@@ -232,9 +232,9 @@ BuildRequires: ruby-devel
 BuildRequires: rubygem-rake
 BuildRequires: rubygem(minitest)
 BuildRequires: ruby-irb
-BuildRequires: java >= 1.5.0
+BuildRequires: java-1.7.0-openjdk
+BuildRequires: java-1.7.0-openjdk-devel
 BuildRequires: jpackage-utils
-BuildRequires: java-devel
 BuildRequires: php-devel
 BuildRequires: erlang-erts
 BuildRequires: erlang-erl_interface
@@ -1021,6 +1021,9 @@ mkdir -p $RPM_BUILD_ROOT%{_localstatedir}/run/libguestfs
 
 
 %changelog
+* Sat Jan 19 2013 Richard W.M. Jones <rjones@redhat.com> - 1:1.21.4-2
+- Depend on openjdk instead of java.
+
 * Thu Jan 17 2013 Richard W.M. Jones <rjones@redhat.com> - 1:1.21.4-1
 - New upstream version 1.21.4.
 - Add libguestfs-gobject-1.0.pc.
