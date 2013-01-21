@@ -1,0 +1,28 @@
+From e18e20793f12745e96cc28eedd85e3118f8e20e7 Mon Sep 17 00:00:00 2001
+From: "Richard W.M. Jones" <rjones@redhat.com>
+Date: Mon, 21 Jan 2013 08:15:54 +0000
+Subject: [PATCH] tests: virt-make-fs: Allow btrfs to be skipped.
+
+---
+ tools/test-virt-make-fs.sh | 5 +++++
+ 1 file changed, 5 insertions(+)
+
+diff --git a/tools/test-virt-make-fs.sh b/tools/test-virt-make-fs.sh
+index 80ee4bb..316d959 100755
+--- a/tools/test-virt-make-fs.sh
++++ b/tools/test-virt-make-fs.sh
+@@ -32,6 +32,11 @@ perl -MSys::Guestfs '-MSys::Guestfs::Lib qw(feature_available)' -e '
+   feature_available ($g, "btrfs") and print "btrfs_available=yes\n";
+ ')
+ 
++# Allow btrfs to be disabled when btrfs is broken (eg. RHBZ#863978).
++if [ -n "$SKIP_TEST_VIRT_MAKE_FS_BTRFS" ]; then
++    btrfs_available=
++fi
++
+ declare -a choices
+ 
+ # Return a random element from the array 'choices'.
+-- 
+1.8.1
+
