@@ -22,7 +22,7 @@ Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
 Version:       1.21.7
-Release:       1%{?dist}
+Release:       2%{?dist}
 License:       LGPLv2+
 Group:         Development/Libraries
 URL:           http://libguestfs.org/
@@ -757,20 +757,15 @@ export LIBGUESTFS_TRACE=1
 # checksum at runtime.
 export SKIP_TEST_CHECKSUM_DEVICE=1
 
-# Disable all btrfs tests (RHBZ#863978).
-export SKIP_TEST_BTRFS_FSCK=1
-export SKIP_TEST_BTRFS_SET_SEEDING=1
-export SKIP_TEST_BTRFS_FILESYSTEM_SYNC=1
-export SKIP_TEST_BTRFS_SUBVOLUME_DELETE=1
-export SKIP_TEST_BTRFS_SUBVOLUME_SNAPSHOT=1
-export SKIP_TEST_MKFS_BTRFS=1
-export SKIP_TEST_BTRFS_DEVICES_SH=1
-export SKIP_TEST_BTRFS_SUBVOLUME_DEFAULT_PL=1
+# This triggers a bug in btrfs (RHBZ#907554).
 export SKIP_TEST_CHARSET_FIDELITY=1
-export SKIP_TEST_VIRT_MAKE_FS_BTRFS=1
 
 # Disable virt-format test (RHBZ#872831).
 export SKIP_TEST_VIRT_FORMAT_SH=1
+
+# The btrfs subvolume list command changed its output format.  Matt
+# has a patch to fix this which we're waiting for.
+export SKIP_TEST_BTRFS_SUBVOLUME_DEFAULT_PL=1
 
 %if %{runtests}
 make check -k
@@ -1031,8 +1026,9 @@ mkdir -p $RPM_BUILD_ROOT%{_localstatedir}/run/libguestfs
 
 
 %changelog
-* Mon Feb  4 2013 Richard W.M. Jones <rjones@redhat.com> - 1:1.21.7-1
+* Mon Feb  4 2013 Richard W.M. Jones <rjones@redhat.com> - 1:1.21.7-2
 - New development version 1.21.7.
+- Re-enable btrfs tests, apparently fixed upstream.
 
 * Mon Jan 28 2013 Richard W.M. Jones <rjones@redhat.com> - 1:1.21.6-1
 - New development version 1.21.6.
