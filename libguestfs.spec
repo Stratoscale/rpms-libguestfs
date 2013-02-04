@@ -21,7 +21,7 @@
 Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
-Version:       1.21.6
+Version:       1.21.7
 Release:       1%{?dist}
 License:       LGPLv2+
 Group:         Development/Libraries
@@ -32,6 +32,11 @@ Source0:       http://libguestfs.org/download/1.21-development/%{name}-%{version
 Patch1:        ruby-1.9-vendor-not-site.patch
 BuildRequires: autoconf, automake, libtool, gettext-devel
 %endif
+
+# 1.21.7 missed out some files from EXTRA_DIST.
+Source5:       guestfs-internal-all.h
+Source6:       guestfs-internal-frontend.h
+Patch2:        0001-build-Add-src-guestfs-internal-all-frontend-.h-to-EX.patch
 
 # Basic build requirements:
 BuildRequires: perl(Pod::Simple)
@@ -675,6 +680,10 @@ if [ "$(getenforce | tr '[A-Z]' '[a-z]')" != "disabled" ]; then
     chcon --reference=/tmp tmp
 fi
 
+# 1.21.7 missed out some files from EXTRA_DIST.
+cp %{SOURCE5} %{SOURCE6} src/
+%patch2 -p1
+
 %if 0%{?fedora} >= 17
 %patch1 -p1
 autoreconf -i
@@ -1022,6 +1031,9 @@ mkdir -p $RPM_BUILD_ROOT%{_localstatedir}/run/libguestfs
 
 
 %changelog
+* Mon Feb  4 2013 Richard W.M. Jones <rjones@redhat.com> - 1:1.21.7-1
+- New development version 1.21.7.
+
 * Mon Jan 28 2013 Richard W.M. Jones <rjones@redhat.com> - 1:1.21.6-1
 - New development version 1.21.6.
 
