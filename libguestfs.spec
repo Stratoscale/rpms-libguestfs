@@ -33,11 +33,6 @@ Patch1:        ruby-1.9-vendor-not-site.patch
 BuildRequires: autoconf, automake, libtool, gettext-devel
 %endif
 
-# 1.21.7 missed out some files from EXTRA_DIST.
-Source5:       guestfs-internal-all.h
-Source6:       guestfs-internal-frontend.h
-Patch2:        0001-build-Add-src-guestfs-internal-all-frontend-.h-to-EX.patch
-
 # Basic build requirements:
 BuildRequires: perl(Pod::Simple)
 BuildRequires: perl(Pod::Man)
@@ -679,10 +674,6 @@ if [ "$(getenforce | tr '[A-Z]' '[a-z]')" != "disabled" ]; then
     # tests must be labelled the same way as /tmp.
     chcon --reference=/tmp tmp
 fi
-
-# 1.21.7 missed out some files from EXTRA_DIST.
-cp %{SOURCE5} %{SOURCE6} src/
-%patch2 -p1
 
 %if 0%{?fedora} >= 17
 %patch1 -p1
