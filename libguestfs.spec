@@ -22,7 +22,7 @@ Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
 Version:       1.21.7
-Release:       2%{?dist}
+Release:       3%{?dist}
 License:       LGPLv2+
 Group:         Development/Libraries
 URL:           http://libguestfs.org/
@@ -767,6 +767,9 @@ export SKIP_TEST_VIRT_FORMAT_SH=1
 # has a patch to fix this which we're waiting for.
 export SKIP_TEST_BTRFS_SUBVOLUME_DEFAULT_PL=1
 
+# Disable set_label tests (RHBZ#906777).
+export SKIP_TEST_SET_LABEL=1
+
 %if %{runtests}
 make check -k
 %endif
@@ -1026,6 +1029,9 @@ mkdir -p $RPM_BUILD_ROOT%{_localstatedir}/run/libguestfs
 
 
 %changelog
+* Tue Feb  5 2013 Richard W.M. Jones <rjones@redhat.com> - 1:1.21.7-3
+- Skip set_label tests because of RHBZ#906777.
+
 * Mon Feb  4 2013 Richard W.M. Jones <rjones@redhat.com> - 1:1.21.7-2
 - New development version 1.21.7.
 - Re-enable btrfs tests, apparently fixed upstream.
