@@ -21,8 +21,8 @@
 Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
-Version:       1.21.7
-Release:       4%{?dist}
+Version:       1.21.8
+Release:       1%{?dist}
 License:       LGPLv2+
 Group:         Development/Libraries
 URL:           http://libguestfs.org/
@@ -37,7 +37,7 @@ BuildRequires: autoconf, automake, libtool, gettext-devel
 BuildRequires: perl(Pod::Simple)
 BuildRequires: perl(Pod::Man)
 BuildRequires: /usr/bin/pod2text
-BuildRequires: febootstrap >= 3.20
+BuildRequires: supermin >= 4.1.1
 BuildRequires: hivex-devel >= 1.2.7-7
 BuildRequires: perl(Win::Hivex)
 BuildRequires: perl(Win::Hivex::Regedit)
@@ -250,7 +250,7 @@ BuildRequires: /usr/bin/qemu-img
 BuildRequires: parted >= 3.0-2
 
 # For building the appliance.
-Requires:      febootstrap-supermin-helper >= 3.20
+Requires:      supermin-helper >= 4.1.1
 
 # For core inspection API.
 Requires:      libdb-utils
@@ -688,8 +688,8 @@ mv README README.orig
 sed 's/@VERSION@/%{version}/g' < %{SOURCE4} > README
 
 # Remove udev from the packagelist.  systemd now 'obsoletes' udev, but
-# febootstrap doesn't get this relationship right.  When udev
-# disappears from the repository we can stop doing this.
+# supermin doesn't get this relationship right.  When udev disappears
+# from the repository we can stop doing this.
 cp appliance/packagelist.in appliance/packagelist.in.orig
 grep -Ev '\budev\b' < appliance/packagelist.in.orig > appliance/packagelist.in
 
@@ -719,7 +719,7 @@ failovermethod=priority
 enabled=1
 gpgcheck=0
 EOF
-%define extra --with-febootstrap-packager-config=$(pwd)/yum.conf
+%define extra --with-supermin-packager-config=$(pwd)/yum.conf
 %endif
 
 %{configure} \
@@ -1032,6 +1032,13 @@ mkdir -p $RPM_BUILD_ROOT%{_localstatedir}/run/libguestfs
 
 
 %changelog
+* Tue Feb  5 2013 Richard W.M. Jones <rjones@redhat.com> - 1:1.21.8-1
+- New upstream version 1.21.8.
+- Remove patch which is now upstream.
+- 'febootstrap' with renamed to 'supermin' upstream.
+  . Depend on supermin >= 4.1.1.
+  . Use new --with-supermin-packager-config option.
+
 * Tue Feb  5 2013 Richard W.M. Jones <rjones@redhat.com> - 1:1.21.7-4
 - Skip set_label tests because of RHBZ#906777.
 - Disable btrfs tests again because RHBZ#863978 is not fixed.
