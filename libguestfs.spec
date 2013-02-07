@@ -283,6 +283,10 @@ Source4:       README-replacement.in
 # https://fedoraproject.org/wiki/Packaging:No_Bundled_Libraries#Packages_granted_exceptions
 Provides:      bundled(gnulib)
 
+# Someone managed to install libguestfs-winsupport (from RHEL!)  on
+# Fedora, which breaks everything.  Thus:
+Conflicts:     libguestfs-winsupport
+
 
 %description
 Libguestfs is a library for accessing and modifying guest disk images.
