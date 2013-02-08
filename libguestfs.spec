@@ -758,10 +758,6 @@ export SKIP_TEST_CHARSET_FIDELITY=1
 # Disable virt-format test (RHBZ#872831).
 export SKIP_TEST_VIRT_FORMAT_SH=1
 
-# The btrfs subvolume list command changed its output format.  Matt
-# has a patch to fix this which we're waiting for.
-export SKIP_TEST_BTRFS_SUBVOLUME_DEFAULT_PL=1
-
 # Disable set_label tests (RHBZ#906777).
 export SKIP_TEST_SET_LABEL=1
 
