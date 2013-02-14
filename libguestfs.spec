@@ -22,7 +22,7 @@ Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
 Version:       1.21.11
-Release:       1%{?dist}
+Release:       2%{?dist}
 License:       LGPLv2+
 Group:         Development/Libraries
 URL:           http://libguestfs.org/
@@ -32,6 +32,8 @@ Source0:       http://libguestfs.org/download/1.21-development/%{name}-%{version
 Patch1:        ruby-1.9-vendor-not-site.patch
 BuildRequires: autoconf, automake, libtool, gettext-devel
 %endif
+
+Patch2:        0001-appliance-Use-a-glibc-trick-to-try-to-display-a-stac.patch
 
 # Basic build requirements:
 BuildRequires: perl(Pod::Simple)
@@ -684,6 +686,8 @@ fi
 autoreconf -i
 %endif
 
+%patch2 -p1
+
 mkdir -p daemon/m4
 
 # Replace developer-centric README that ships with libguestfs, with
@@ -1032,8 +1036,9 @@ mkdir -p $RPM_BUILD_ROOT%{_localstatedir}/run/libguestfs
 
 
 %changelog
-* Thu Feb 14 2013 Richard W.M. Jones <rjones@redhat.com> - 1:1.21.11-1
+* Thu Feb 14 2013 Richard W.M. Jones <rjones@redhat.com> - 1:1.21.11-2
 - New upstream version 1.21.11.
+- Add experimental patch to capture stack trace of segfaults in the appliance.
 
 * Mon Feb 11 2013 Richard W.M. Jones <rjones@redhat.com> - 1:1.21.10-1
 - New upstream version 1.21.10.
