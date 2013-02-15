@@ -22,7 +22,7 @@ Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
 Version:       1.20.2
-Release:       2%{?dist}
+Release:       3%{?dist}
 License:       LGPLv2+
 Group:         Development/Libraries
 URL:           http://libguestfs.org/
@@ -754,9 +754,10 @@ export SKIP_TEST_MKFS_BTRFS=1
 export SKIP_TEST_BTRFS_DEVICES_SH=1
 export SKIP_TEST_BTRFS_SUBVOLUME_DEFAULT_PL=1
 export SKIP_TEST_CHARSET_FIDELITY=1
+export SKIP_TEST_VIRT_MAKE_FS_BTRFS=1
 
-# Disable virt-format test (RHBZ#872831).
-export SKIP_TEST_VIRT_FORMAT_SH=1
+# xfs_growfs is broken on F18 (RHBZ#909598, RHBZ#909602).
+export SKIP_TEST_XFS_GROWFS=1
 
 %if %{runtests}
 make check -k
@@ -1016,6 +1017,10 @@ mkdir -p $RPM_BUILD_ROOT%{_localstatedir}/run/libguestfs
 
 
 %changelog
+* Fri Feb 15 2013 Richard W.M. Jones <rjones@redhat.com> - 1:1.20.2-3
+- Disable xfs_growfs test because xfs is broken on F18 (see RHBZ#909602).
+- Disable virt-make-fs using btrfs (because of RHBZ#863978).
+
 * Thu Feb 14 2013 Richard W.M. Jones <rjones@redhat.com> - 1:1.20.2-2
 - New upstream stable branch version 1.20.2.
 
