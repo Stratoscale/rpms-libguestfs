@@ -21,8 +21,8 @@
 Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
-Version:       1.21.14
-Release:       2%{?dist}
+Version:       1.21.15
+Release:       1%{?dist}
 License:       LGPLv2+
 Group:         Development/Libraries
 URL:           http://libguestfs.org/
@@ -1035,6 +1035,9 @@ mkdir -p $RPM_BUILD_ROOT%{_localstatedir}/run/libguestfs
 
 
 %changelog
+* Tue Feb 26 2013 Richard W.M. Jones <rjones@redhat.com> - 1:1.21.15-1
+- New upstream version 1.21.15.
+
 * Mon Feb 25 2013 Richard W.M. Jones <rjones@redhat.com> - 1:1.21.14-2
 - New upstream version 1.21.14.
 - Disable tests because of Rawhide kernel bug that prevents booting.
