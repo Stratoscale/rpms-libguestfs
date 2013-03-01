@@ -21,7 +21,7 @@
 Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
-Version:       1.21.15
+Version:       1.21.16
 Release:       1%{?dist}
 License:       LGPLv2+
 Group:         Development/Libraries
@@ -774,10 +774,7 @@ export SKIP_TEST_CHARSET_FIDELITY=1
 export SKIP_TEST_VIRT_MAKE_FS_BTRFS=1
 
 %if %{runtests}
-# Disabled all tests because of Rawhide kernel bug RHBZ#915494.
-%if 0
 make check -k
-%endif
 %endif
 
 
@@ -1035,6 +1032,10 @@ mkdir -p $RPM_BUILD_ROOT%{_localstatedir}/run/libguestfs
 
 
 %changelog
+* Fri Mar  1 2013 Richard W.M. Jones <rjones@redhat.com> - 1:1.21.16-1
+- New upstream version 1.21.16.
+- Re-enable tests, since kernel patch is upstream.
+
 * Tue Feb 26 2013 Richard W.M. Jones <rjones@redhat.com> - 1:1.21.15-1
 - New upstream version 1.21.15.
 
