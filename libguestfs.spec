@@ -21,7 +21,7 @@
 Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
-Version:       1.21.16
+Version:       1.21.17
 Release:       1%{?dist}
 License:       LGPLv2+
 Group:         Development/Libraries
@@ -867,6 +867,8 @@ mkdir -p $RPM_BUILD_ROOT%{_localstatedir}/run/libguestfs
 %{_mandir}/man1/guestfish.1*
 %{_bindir}/guestmount
 %{_mandir}/man1/guestmount.1*
+%{_bindir}/guestunmount
+%{_mandir}/man1/guestunmount.1*
 %{_bindir}/virt-alignment-scan
 %{_mandir}/man1/virt-alignment-scan.1*
 %{_bindir}/virt-cat
@@ -1032,6 +1034,10 @@ mkdir -p $RPM_BUILD_ROOT%{_localstatedir}/run/libguestfs
 
 
 %changelog
+* Tue Mar  5 2013 Richard W.M. Jones <rjones@redhat.com> - 1:1.21.17-1
+- New upstream version 1.21.17.
+- New program 'guestunmount'.
+
 * Fri Mar  1 2013 Richard W.M. Jones <rjones@redhat.com> - 1:1.21.16-1
 - New upstream version 1.21.16.
 - Re-enable tests, since kernel patch is upstream.
