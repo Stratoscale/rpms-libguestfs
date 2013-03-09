@@ -1,0 +1,28 @@
+From e4ac2bc51e0ef216f57e961414f13a3be6c1fbdd Mon Sep 17 00:00:00 2001
+From: Richard W.M. Jones <rjones@redhat.com>
+Date: Fri, 8 Mar 2013 19:19:43 +0000
+Subject: [PATCH 33/36] EPEL 5: Disable valgrind.
+
+Ancient automake didn't have AM_SUBST_NOTMAKE.
+---
+ configure.ac |    4 ++--
+ 1 files changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/configure.ac b/configure.ac
+index d26b815..7978cad 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -848,8 +848,8 @@ AS_IF([test "x$VALGRIND" != "xno"],[
+     # No valgrind, so substitute VG with something that will break.
+     VG=VALGRIND_IS_NOT_INSTALLED
+ ])
+-AC_SUBST([VG])
+-AM_SUBST_NOTMAKE([VG])
++dnl AC_SUBST([VG])
++dnl AM_SUBST_NOTMAKE([VG])
+ 
+ dnl Enable profiling?
+ AC_ARG_ENABLE([code-profiling],
+-- 
+1.7.4.1
+

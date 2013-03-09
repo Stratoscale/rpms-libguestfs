@@ -1,0 +1,25 @@
+From f941916d6d765a1afae4c0d2e833c4d10fd5c39c Mon Sep 17 00:00:00 2001
+From: Richard W.M. Jones <rjones@redhat.com>
+Date: Fri, 8 Mar 2013 19:09:21 +0000
+Subject: [PATCH 32/36] EPEL 5: No libtoolize --install option.
+
+---
+ bootstrap |    2 +-
+ 1 files changed, 1 insertions(+), 1 deletions(-)
+
+diff --git a/bootstrap b/bootstrap
+index da650ca..4de0c0e 100755
+--- a/bootstrap
++++ b/bootstrap
+@@ -29,7 +29,7 @@ GNULIB_SRCDIR=.gnulib
+ # Autoreconf runs aclocal before libtoolize, which causes spurious
+ # warnings if the initial aclocal is confused by the libtoolized
+ # (or worse out-of-date) macro directory.
+-libtoolize --copy --install
++libtoolize --copy
+ 
+ gnulib_tool=$GNULIB_SRCDIR/gnulib-tool
+ <$gnulib_tool || exit
+-- 
+1.7.4.1
+

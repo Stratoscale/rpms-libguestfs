@@ -1,0 +1,67 @@
+From c7a9bdeeb7f3ae457c384cf62b664b978502932f Mon Sep 17 00:00:00 2001
+From: Richard W.M. Jones <rjones@redhat.com>
+Date: Sun, 17 Jun 2012 23:00:16 +0100
+Subject: [PATCH 13/36] EPEL 5: Old ocamlopt didn't support debugging (-g option).
+
+---
+ ocaml/Makefile.am    |    2 +-
+ resize/Makefile.am   |    2 +-
+ sparsify/Makefile.am |    2 +-
+ sysprep/Makefile.am  |    2 +-
+ 4 files changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/ocaml/Makefile.am b/ocaml/Makefile.am
+index 5e8cba5..48ddc2c 100644
+--- a/ocaml/Makefile.am
++++ b/ocaml/Makefile.am
+@@ -44,7 +44,7 @@ CLEANFILES += t/*.cmi t/*.cmo t/*.cmx t/*.o t/*.a t/*.so
+ if HAVE_OCAML
+ 
+ OCAMLCFLAGS = -g -warn-error CDEFLMPSUVYZX
+-OCAMLOPTFLAGS = $(OCAMLCFLAGS)
++OCAMLOPTFLAGS = -warn-error CDEFLMPSUVYZX
+ 
+ noinst_DATA = mlguestfs.cma mlguestfs.cmxa META
+ 
+diff --git a/resize/Makefile.am b/resize/Makefile.am
+index c69ab44..542ae9a 100644
+--- a/resize/Makefile.am
++++ b/resize/Makefile.am
+@@ -62,7 +62,7 @@ OCAMLPACKAGES += -package gettext-stub
+ endif
+ 
+ OCAMLCFLAGS = -g -warn-error CDEFLMPSUVYZX $(OCAMLPACKAGES)
+-OCAMLOPTFLAGS = $(OCAMLCFLAGS)
++OCAMLOPTFLAGS = -warn-error CDEFLMPSUVYZX $(OCAMLPACKAGES)
+ 
+ virt-resize: $(OBJECTS)
+ 	$(OCAMLFIND) ocamlopt $(OCAMLOPTFLAGS) \
+diff --git a/sparsify/Makefile.am b/sparsify/Makefile.am
+index b5eba63..329d801 100644
+--- a/sparsify/Makefile.am
++++ b/sparsify/Makefile.am
+@@ -58,7 +58,7 @@ OCAMLPACKAGES += -package gettext-stub
+ endif
+ 
+ OCAMLCFLAGS = -g -warn-error CDEFLMPSUVYZX $(OCAMLPACKAGES)
+-OCAMLOPTFLAGS = $(OCAMLCFLAGS)
++OCAMLOPTFLAGS = -warn-error CDEFLMPSUVYZX $(OCAMLPACKAGES)
+ 
+ virt-sparsify: $(OBJECTS)
+ 	$(OCAMLFIND) ocamlopt $(OCAMLOPTFLAGS) \
+diff --git a/sysprep/Makefile.am b/sysprep/Makefile.am
+index e16a19d..392dd91 100644
+--- a/sysprep/Makefile.am
++++ b/sysprep/Makefile.am
+@@ -108,7 +108,7 @@ OCAMLPACKAGES += -package gettext-stub
+ endif
+ 
+ OCAMLCFLAGS = -g -warn-error CDEFLMPSUVYZX $(OCAMLPACKAGES)
+-OCAMLOPTFLAGS = $(OCAMLCFLAGS)
++OCAMLOPTFLAGS = -warn-error CDEFLMPSUVYZX $(OCAMLPACKAGES)
+ 
+ virt-sysprep: $(OBJECTS)
+ 	$(OCAMLFIND) ocamlopt $(OCAMLOPTFLAGS) \
+-- 
+1.7.4.1
+

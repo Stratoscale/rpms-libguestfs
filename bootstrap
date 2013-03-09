@@ -47,6 +47,7 @@ connect
 dup3
 error
 filevercmp
+fstatat
 fsusage
 fts
 full-read
@@ -65,11 +66,13 @@ ignore-value
 lock
 maintainer-makefile
 manywarnings
+memmem
 mkdtemp
 netdb
 netinet_in
 openat
 perror
+pipe2
 pread
 progname
 read-file
@@ -78,6 +81,7 @@ select
 setenv
 sleep
 socket
+stat-time
 strchrnul
 strerror
 strndup
@@ -94,8 +98,12 @@ xstrtoll
 xvasprintf
 '
 
+# If any tests fail, avoid including them by adding them to
+# this list.
+avoid="--avoid=dummy --avoid=getlogin_r-tests"
+
 $gnulib_tool			\
-  --avoid=dummy			\
+  $avoid			\
   --with-tests			\
   --m4-base=m4			\
   --source-base=gnulib/lib	\
