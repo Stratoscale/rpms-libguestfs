@@ -1,0 +1,26 @@
+From 59d5706d06a71e624670c10c8286fad76c04c386 Mon Sep 17 00:00:00 2001
+From: Richard W.M. Jones <rjones@redhat.com>
+Date: Fri, 31 Aug 2012 22:12:59 +0100
+Subject: [PATCH 31/37] EPEL 5: Ignore sparsify error if qemu-img --help is killed by a signal.
+
+---
+ sparsify/sparsify.ml |    3 +--
+ 1 files changed, 1 insertions(+), 2 deletions(-)
+
+diff --git a/sparsify/sparsify.ml b/sparsify/sparsify.ml
+index 5ee2adb..0606ebe 100644
+--- a/sparsify/sparsify.ml
++++ b/sparsify/sparsify.ml
+@@ -168,8 +168,7 @@ let qemu_img_version =
+   let stat = close_process_in chan in
+   (match stat with
+   | WEXITED _ -> ()
+-  | WSIGNALED i ->
+-    error (f_"external command '%s' killed by signal %d") cmd i
++  | WSIGNALED i -> ()
+   | WSTOPPED i ->
+     error (f_"external command '%s' stopped by signal %d") cmd i
+   );
+-- 
+1.7.4.1
+

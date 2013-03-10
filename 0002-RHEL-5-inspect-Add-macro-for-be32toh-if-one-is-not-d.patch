@@ -1,7 +1,7 @@
 From 1fe7310e8564915508158f68e9d2f3187f7bdfbe Mon Sep 17 00:00:00 2001
 From: Richard W.M. Jones <rjones@redhat.com>
 Date: Fri, 8 Mar 2013 20:16:04 +0000
-Subject: [PATCH 02/36] RHEL 5: inspect: Add macro for be32toh if one is not defined in the header files.
+Subject: [PATCH 02/37] RHEL 5: inspect: Add macro for be32toh if one is not defined in the header files.
 
 ---
  configure.ac       |    1 +

@@ -1,7 +1,7 @@
 From d736ed25f446fdf5544b36f5139c69b2cbce961b Mon Sep 17 00:00:00 2001
 From: Hilko Bengen <bengen@hilluzination.de>
 Date: Thu, 7 Mar 2013 19:59:26 +0100
-Subject: [PATCH 03/36] Move Ruby-related checks from autoconf to extconf.rb; add extra check for rb_alloc_func_t
+Subject: [PATCH 03/37] Move Ruby-related checks from autoconf to extconf.rb; add extra check for rb_alloc_func_t
 
 Ruby ships its own config.h which may or may not define the same
 relevant constants as our autoconf-generated config.h. Instead of

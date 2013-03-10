@@ -1,0 +1,34 @@
+From bf562086eaee769c13cfe4673ede68b03cb03070 Mon Sep 17 00:00:00 2001
+From: Richard W.M. Jones <rjones@redhat.com>
+Date: Fri, 8 Mar 2013 20:20:23 +0000
+Subject: [PATCH 35/37] EPEL 5: Remove Linux capabilities.
+
+Linux file capabilities are not supported in RHEL 5, and the
+cap_*_file functions don't exist in the libcap library (although
+confusingly they are in the header file).
+---
+ configure.ac |    8 --------
+ 1 files changed, 0 insertions(+), 8 deletions(-)
+
+diff --git a/configure.ac b/configure.ac
+index 7978cad..0150d4e 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -731,14 +731,6 @@ AC_CHECK_LIB([acl],[acl_from_text],[
+     ], [])
+ ],[AC_MSG_WARN([POSIX acl library not found])])
+ 
+-dnl Linux capabilities library (libcap) (highly recommended)
+-AC_CHECK_LIB([cap],[cap_from_text],[
+-    AC_CHECK_HEADER([sys/capability.h],[
+-        AC_SUBST([CAP_LIBS], [-lcap])
+-        AC_DEFINE([HAVE_CAP], [1], [Define to 1 if the Linux capabilities library (libcap) is available.])
+-    ], [])
+-],[AC_MSG_WARN([Linux capabilities library (libcap) not found])])
+-
+ dnl libvirt (highly recommended)
+ AC_ARG_WITH([libvirt],[
+     AS_HELP_STRING([--without-libvirt],
+-- 
+1.7.4.1
+

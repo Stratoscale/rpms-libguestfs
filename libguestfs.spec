@@ -22,7 +22,7 @@ Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
 Version:       1.20.3
-Release:       2%{?dist}
+Release:       3%{?dist}
 License:       LGPLv2+
 Group:         Development/Libraries
 URL:           http://libguestfs.org/
@@ -44,41 +44,40 @@ BuildRequires: autoconf, automake, libtool
 Patch0001:     0001-gnulib-Use-module-mkstemps-for-RHEL-5-glibc-which-la.patch
 Patch0002:     0002-RHEL-5-inspect-Add-macro-for-be32toh-if-one-is-not-d.patch
 Patch0003:     0003-Move-Ruby-related-checks-from-autoconf-to-extconf.rb.patch
-Patch0004:     0004-EPEL-5-Remove-checks-which-fail-with-ancient-qemu.patch
-Patch0005:     0005-EPEL-5-Remove-AS_ECHO_N-for-ancient-autoconf.patch
-Patch0006:     0006-EPEL-5-Replace-macro-AC_STRUCT_DIRENT_D_TYPE-for-anc.patch
-Patch0007:     0007-EPEL-5-Don-t-use-C99-style-variable-decls-in-for-loo.patch
-Patch0008:     0008-EPEL-5-Remove-Erlang-bindings.patch
-Patch0009:     0009-EPEL-5-Remove-GObject-GObject-Introspection-GJS-bind.patch
-Patch0010:     0010-EPEL-5-Remove-PHP-bindings.patch
-Patch0011:     0011-EPEL-5-Define-le64toh-le32toh-if-not-defined.patch
-Patch0012:     0012-EPEL-5-Add-gnulib-utimensat-module.patch
-Patch0013:     0013-EPEL-5-Old-ocamlopt-didn-t-support-debugging-g-optio.patch
-Patch0014:     0014-EPEL-5-Replace-format6-with-format4-in-OCaml-gettext.patch
-Patch0015:     0015-EPEL-5-Pass-preserve-dup-deps-explicitly-to-libtool.patch
-Patch0016:     0016-EPEL-5-Remove-id-from-drive-parameter-on-qemu-comman.patch
-Patch0017:     0017-EPEL-5-Add-null-vmchannel-back-for-qemu-without-virt.patch
-Patch0018:     0018-EPEL-5-Disable-libvirt-attach-method.patch
-Patch0019:     0019-EPEL-5-Fix-blkid-to-return-LVM2_member-for-PVs.patch
-Patch0020:     0020-EPEL-5-sparsify-Fix-command-line-options-for-old-qem.patch
-Patch0021:     0021-EPEL-5-Remove-Fedora-MD-test-images.patch
-Patch0022:     0022-EPEL-5-Add-mkisofs-to-package-list.patch
-Patch0023:     0023-EPEL-5-Add-1-second-pause-after-unmounting-any-files.patch
-Patch0024:     0024-EPEL-5-podwrapper-Remove-HTML-output.patch
-Patch0025:     0025-EPEL-5-podwrapper-Don-t-use-Pod-Man.patch
-Patch0026:     0026-EPEL-5-Revert-Mac-OS-X-Use-libtool-mode-execute-inst.patch
-Patch0027:     0027-EPEL-5-Don-t-use-sgabios.patch
-Patch0028:     0028-EPEL-5-Revert-daemon-Remove-e2prog-hack-only-needed-.patch
-Patch0029:     0029-EPEL-5-Disable-tar-xz-test.patch
-Patch0030:     0030-EPEL-5-Ignore-sparsify-error-if-qemu-img-help-is-kil.patch
-Patch0031:     0031-EPEL-5-Revert-daemon-remove-call-to-obsolete-udevset.patch
-Patch0032:     0032-EPEL-5-No-libtoolize-install-option.patch
-Patch0033:     0033-EPEL-5-Disable-valgrind.patch
-Patch0034:     0034-EPEL-5-Remove-Linux-capabilities.patch
-Patch0035:     0035-EPEL-5-ruby-Use-old-rake-rdoctask-and-rake-gempackag.patch
-Patch0036:     0036-EPEL-5-Custom-replacement-for-Unix.isatty-stdout.patch
-
-Patch1001:     0001-RHEL-5-tests-Use-gnulib.patch
+Patch0004:     0004-RHEL-5-tests-Use-gnulib.patch
+Patch0005:     0005-EPEL-5-Remove-checks-which-fail-with-ancient-qemu.patch
+Patch0006:     0006-EPEL-5-Remove-AS_ECHO_N-for-ancient-autoconf.patch
+Patch0007:     0007-EPEL-5-Replace-macro-AC_STRUCT_DIRENT_D_TYPE-for-anc.patch
+Patch0008:     0008-EPEL-5-Don-t-use-C99-style-variable-decls-in-for-loo.patch
+Patch0009:     0009-EPEL-5-Remove-Erlang-bindings.patch
+Patch0010:     0010-EPEL-5-Remove-GObject-GObject-Introspection-GJS-bind.patch
+Patch0011:     0011-EPEL-5-Remove-PHP-bindings.patch
+Patch0012:     0012-EPEL-5-Define-le64toh-le32toh-if-not-defined.patch
+Patch0013:     0013-EPEL-5-Add-gnulib-utimensat-module.patch
+Patch0014:     0014-EPEL-5-Old-ocamlopt-didn-t-support-debugging-g-optio.patch
+Patch0015:     0015-EPEL-5-Replace-format6-with-format4-in-OCaml-gettext.patch
+Patch0016:     0016-EPEL-5-Pass-preserve-dup-deps-explicitly-to-libtool.patch
+Patch0017:     0017-EPEL-5-Remove-id-from-drive-parameter-on-qemu-comman.patch
+Patch0018:     0018-EPEL-5-Add-null-vmchannel-back-for-qemu-without-virt.patch
+Patch0019:     0019-EPEL-5-Disable-libvirt-attach-method.patch
+Patch0020:     0020-EPEL-5-Fix-blkid-to-return-LVM2_member-for-PVs.patch
+Patch0021:     0021-EPEL-5-sparsify-Fix-command-line-options-for-old-qem.patch
+Patch0022:     0022-EPEL-5-Remove-Fedora-MD-test-images.patch
+Patch0023:     0023-EPEL-5-Add-mkisofs-to-package-list.patch
+Patch0024:     0024-EPEL-5-Add-1-second-pause-after-unmounting-any-files.patch
+Patch0025:     0025-EPEL-5-podwrapper-Remove-HTML-output.patch
+Patch0026:     0026-EPEL-5-podwrapper-Don-t-use-Pod-Man.patch
+Patch0027:     0027-EPEL-5-Revert-Mac-OS-X-Use-libtool-mode-execute-inst.patch
+Patch0028:     0028-EPEL-5-Don-t-use-sgabios.patch
+Patch0029:     0029-EPEL-5-Revert-daemon-Remove-e2prog-hack-only-needed-.patch
+Patch0030:     0030-EPEL-5-Disable-tar-xz-test.patch
+Patch0031:     0031-EPEL-5-Ignore-sparsify-error-if-qemu-img-help-is-kil.patch
+Patch0032:     0032-EPEL-5-Revert-daemon-remove-call-to-obsolete-udevset.patch
+Patch0033:     0033-EPEL-5-No-libtoolize-install-option.patch
+Patch0034:     0034-EPEL-5-Disable-valgrind.patch
+Patch0035:     0035-EPEL-5-Remove-Linux-capabilities.patch
+Patch0036:     0036-EPEL-5-ruby-Use-old-rake-rdoctask-and-rake-gempackag.patch
+Patch0037:     0037-EPEL-5-Custom-replacement-for-Unix.isatty-stdout.patch
 
 # Basic build requirements:
 BuildRequires: /usr/bin/pod2man
@@ -904,8 +903,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
-* Sun Mar 10 2013 Richard W.M. Jones <rjones@redhat.com> - 1:1.20.3-2
+* Sun Mar 10 2013 Richard W.M. Jones <rjones@redhat.com> - 1:1.20.3-3
 - Add patch to define O_CLOEXEC in tests.
+- Fix double-free bug in EPEL5-specific patch.
 
 * Sat Mar  9 2013 Richard W.M. Jones <rjones@redhat.com> - 1:1.20.3-1
 - Rebase to upstream stable branch version 1.20.3.
