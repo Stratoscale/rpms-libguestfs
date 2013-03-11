@@ -1,4 +1,4 @@
-From ac0ae2bfb19668e8de48902e553ff318a8825f1b Mon Sep 17 00:00:00 2001
+From b530e72996ee0d5b677221f5abe213b2489570d1 Mon Sep 17 00:00:00 2001
 From: Richard W.M. Jones <rjones@redhat.com>
 Date: Fri, 8 Mar 2013 19:19:43 +0000
 Subject: [PATCH 34/37] EPEL 5: Disable valgrind.

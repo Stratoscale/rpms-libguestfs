@@ -1,4 +1,4 @@
-From b4c66073b348c95e01ef743ee8e15a891ba41725 Mon Sep 17 00:00:00 2001
+From 931e7f8f2bd62c12420f5603271aa260e1da94c5 Mon Sep 17 00:00:00 2001
 From: Richard W.M. Jones <rjones@redhat.com>
 Date: Fri, 31 Aug 2012 13:48:18 +0100
 Subject: [PATCH 29/37] EPEL 5: Revert "daemon: Remove e2prog hack (only needed for RHEL 5)."
@@ -6,10 +6,10 @@ Subject: [PATCH 29/37] EPEL 5: Revert "daemon: Remove e2prog hack (only needed f
 This reverts commit 163e030ee13644ad9efe1e078aff47b879657333.
 ---
  daemon/daemon.h |    2 +
- daemon/ext2.c   |  113 +++++++++++++++++++++++++++++++++++++++++++++++-------
+ daemon/ext2.c   |  117 +++++++++++++++++++++++++++++++++++++++++++++++-------
  daemon/labels.c |    6 ++-
  daemon/mkfs.c   |    8 +++-
- 4 files changed, 111 insertions(+), 18 deletions(-)
+ 4 files changed, 114 insertions(+), 19 deletions(-)
 
 diff --git a/daemon/daemon.h b/daemon/daemon.h
 index a7371ea..ec0fa3d 100644
@@ -25,18 +25,10 @@ index a7371ea..ec0fa3d 100644
  #define EXT2_LABEL_MAX 16
  
 diff --git a/daemon/ext2.c b/daemon/ext2.c
-index e4548d6..297c477 100644
+index e4548d6..72694f4 100644
 --- a/daemon/ext2.c
 +++ b/daemon/ext2.c
-@@ -31,6 +31,7 @@
- 
- #define MAX_ARGS 128
- 
-+
- GUESTFSD_EXT_CMD(str_tune2fs, tune2fs);
- GUESTFSD_EXT_CMD(str_e2fsck, e2fsck);
- GUESTFSD_EXT_CMD(str_resize2fs, resize2fs);
-@@ -38,6 +39,32 @@ GUESTFSD_EXT_CMD(str_mke2fs, mke2fs);
+@@ -38,6 +38,32 @@ GUESTFSD_EXT_CMD(str_mke2fs, mke2fs);
  GUESTFSD_EXT_CMD(str_lsattr, lsattr);
  GUESTFSD_EXT_CMD(str_chattr, chattr);
  
@@ -69,7 +61,7 @@ index e4548d6..297c477 100644
  char **
  do_tune2fs_l (const char *device)
  {
-@@ -46,7 +73,11 @@ do_tune2fs_l (const char *device)
+@@ -46,7 +72,11 @@ do_tune2fs_l (const char *device)
    char *p, *pend, *colon;
    DECLARE_STRINGSBUF (ret);
  
@@ -82,7 +74,7 @@ index e4548d6..297c477 100644
    if (r == -1) {
      reply_with_error ("%s", err);
      return NULL;
-@@ -131,7 +162,11 @@ do_set_e2uuid (const char *device, const char *uuid)
+@@ -131,7 +161,11 @@ do_set_e2uuid (const char *device, const char *uuid)
    int r;
    CLEANUP_FREE char *err = NULL;
  
@@ -95,7 +87,7 @@ index e4548d6..297c477 100644
    if (r == -1) {
      reply_with_error ("%s", err);
      return -1;
-@@ -152,6 +187,10 @@ if_not_mounted_run_e2fsck (const char *device)
+@@ -152,6 +186,10 @@ if_not_mounted_run_e2fsck (const char *device)
  {
    CLEANUP_FREE char *err = NULL;
    int r, mounted;
@@ -106,7 +98,7 @@ index e4548d6..297c477 100644
  
    mounted = is_device_mounted (device);
    if (mounted == -1)
-@@ -160,7 +199,7 @@ if_not_mounted_run_e2fsck (const char *device)
+@@ -160,7 +198,7 @@ if_not_mounted_run_e2fsck (const char *device)
    if (!mounted) {
      r = commandf (NULL, &err,
                    COMMAND_FLAG_FOLD_STDOUT_ON_STDERR,
@@ -115,7 +107,7 @@ index e4548d6..297c477 100644
      if (r == -1) {
        reply_with_error ("%s", err);
        return -1;
-@@ -176,10 +215,14 @@ do_resize2fs (const char *device)
+@@ -176,10 +214,14 @@ do_resize2fs (const char *device)
    CLEANUP_FREE char *err = NULL;
    int r;
  
@@ -131,7 +123,7 @@ index e4548d6..297c477 100644
    if (r == -1) {
      reply_with_error ("%s", err);
      return -1;
-@@ -194,6 +237,10 @@ do_resize2fs_size (const char *device, int64_t size)
+@@ -194,6 +236,10 @@ do_resize2fs_size (const char *device, int64_t size)
    CLEANUP_FREE char *err = NULL;
    int r;
  
@@ -142,7 +134,7 @@ index e4548d6..297c477 100644
    /* resize2fs itself may impose additional limits.  Since we are
     * going to use the 'K' suffix however we can only work with whole
     * kilobytes.
-@@ -211,7 +258,7 @@ do_resize2fs_size (const char *device, int64_t size)
+@@ -211,7 +257,7 @@ do_resize2fs_size (const char *device, int64_t size)
    char buf[32];
    snprintf (buf, sizeof buf, "%" PRIi64 "K", size);
  
@@ -151,7 +143,7 @@ index e4548d6..297c477 100644
    if (r == -1) {
      reply_with_error ("%s", err);
      return -1;
-@@ -226,10 +273,14 @@ do_resize2fs_M (const char *device)
+@@ -226,10 +272,14 @@ do_resize2fs_M (const char *device)
    CLEANUP_FREE char *err = NULL;
    int r;
  
@@ -167,7 +159,7 @@ index e4548d6..297c477 100644
    if (r == -1) {
      reply_with_error ("%s", err);
      return -1;
-@@ -248,6 +299,10 @@ do_e2fsck (const char *device,
+@@ -248,6 +298,10 @@ do_e2fsck (const char *device,
    CLEANUP_FREE char *err = NULL;
    size_t i = 0;
    int r;
@@ -178,7 +170,7 @@ index e4548d6..297c477 100644
  
    /* Default if not selected. */
    if (!(optargs_bitmask & GUESTFS_E2FSCK_CORRECT_BITMASK))
-@@ -260,7 +315,7 @@ do_e2fsck (const char *device,
+@@ -260,7 +314,7 @@ do_e2fsck (const char *device,
      return -1;
    }
  
@@ -187,7 +179,7 @@ index e4548d6..297c477 100644
    ADD_ARG (argv, i, "-f");
  
    if (correct)
-@@ -303,13 +358,17 @@ do_mke2journal (int blocksize, const char *device)
+@@ -303,13 +357,17 @@ do_mke2journal (int blocksize, const char *device)
    CLEANUP_FREE char *err = NULL;
    int r;
  
@@ -206,7 +198,7 @@ index e4548d6..297c477 100644
                 device, NULL);
    if (r == -1) {
      reply_with_error ("%s", err);
-@@ -325,6 +384,10 @@ do_mke2journal_L (int blocksize, const char *label, const char *device)
+@@ -325,6 +383,10 @@ do_mke2journal_L (int blocksize, const char *label, const char *device)
    CLEANUP_FREE char *err = NULL;
    int r;
  
@@ -217,7 +209,7 @@ index e4548d6..297c477 100644
    if (strlen (label) > EXT2_LABEL_MAX) {
      reply_with_error ("%s: ext2 labels are limited to %d bytes",
                        label, EXT2_LABEL_MAX);
-@@ -337,7 +400,7 @@ do_mke2journal_L (int blocksize, const char *label, const char *device)
+@@ -337,7 +399,7 @@ do_mke2journal_L (int blocksize, const char *label, const char *device)
    wipe_device_before_mkfs (device);
  
    r = command (NULL, &err,
@@ -226,7 +218,7 @@ index e4548d6..297c477 100644
                 "-L", label,
                 device, NULL);
    if (r == -1) {
-@@ -354,13 +417,17 @@ do_mke2journal_U (int blocksize, const char *uuid, const char *device)
+@@ -354,13 +416,17 @@ do_mke2journal_U (int blocksize, const char *uuid, const char *device)
    CLEANUP_FREE char *err = NULL;
    int r;
  
@@ -245,7 +237,7 @@ index e4548d6..297c477 100644
                 "-U", uuid,
                 device, NULL);
    if (r == -1) {
-@@ -378,6 +445,10 @@ do_mke2fs_J (const char *fstype, int blocksize, const char *device,
+@@ -378,6 +444,10 @@ do_mke2fs_J (const char *fstype, int blocksize, const char *device,
    CLEANUP_FREE char *err = NULL;
    int r;
  
@@ -256,7 +248,7 @@ index e4548d6..297c477 100644
    char blocksize_s[32];
    snprintf (blocksize_s, sizeof blocksize_s, "%d", blocksize);
  
-@@ -388,7 +459,7 @@ do_mke2fs_J (const char *fstype, int blocksize, const char *device,
+@@ -388,7 +458,7 @@ do_mke2fs_J (const char *fstype, int blocksize, const char *device,
    wipe_device_before_mkfs (device);
  
    r = command (NULL, &err,
@@ -265,7 +257,7 @@ index e4548d6..297c477 100644
                 device, NULL);
    if (r == -1) {
      reply_with_error ("%s", err);
-@@ -405,6 +476,10 @@ do_mke2fs_JL (const char *fstype, int blocksize, const char *device,
+@@ -405,6 +475,10 @@ do_mke2fs_JL (const char *fstype, int blocksize, const char *device,
    CLEANUP_FREE char *err = NULL;
    int r;
  
@@ -276,7 +268,7 @@ index e4548d6..297c477 100644
    if (strlen (label) > EXT2_LABEL_MAX) {
      reply_with_error ("%s: ext2 labels are limited to %d bytes",
                        label, EXT2_LABEL_MAX);
-@@ -421,7 +496,7 @@ do_mke2fs_JL (const char *fstype, int blocksize, const char *device,
+@@ -421,7 +495,7 @@ do_mke2fs_JL (const char *fstype, int blocksize, const char *device,
    wipe_device_before_mkfs (device);
  
    r = command (NULL, &err,
@@ -285,7 +277,7 @@ index e4548d6..297c477 100644
                 device, NULL);
    if (r == -1) {
      reply_with_error ("%s", err);
-@@ -438,6 +513,10 @@ do_mke2fs_JU (const char *fstype, int blocksize, const char *device,
+@@ -438,6 +512,10 @@ do_mke2fs_JU (const char *fstype, int blocksize, const char *device,
    CLEANUP_FREE char *err = NULL;
    int r;
  
@@ -296,7 +288,7 @@ index e4548d6..297c477 100644
    char blocksize_s[32];
    snprintf (blocksize_s, sizeof blocksize_s, "%d", blocksize);
  
-@@ -448,7 +527,7 @@ do_mke2fs_JU (const char *fstype, int blocksize, const char *device,
+@@ -448,7 +526,7 @@ do_mke2fs_JU (const char *fstype, int blocksize, const char *device,
    wipe_device_before_mkfs (device);
  
    r = command (NULL, &err,
@@ -305,7 +297,7 @@ index e4548d6..297c477 100644
                 device, NULL);
    if (r == -1) {
      reply_with_error ("%s", err);
-@@ -476,6 +555,7 @@ do_tune2fs (const char *device, /* only required parameter */
+@@ -476,6 +554,7 @@ do_tune2fs (const char *device, /* only required parameter */
    size_t i = 0;
    int r;
    CLEANUP_FREE char *err = NULL;
@@ -313,7 +305,7 @@ index e4548d6..297c477 100644
    char maxmountcount_s[64];
    char mountcount_s[64];
    char group_s[64];
-@@ -484,7 +564,10 @@ do_tune2fs (const char *device, /* only required parameter */
+@@ -484,7 +563,10 @@ do_tune2fs (const char *device, /* only required parameter */
    char reservedblockscount_s[64];
    char user_s[64];
  
@@ -325,7 +317,7 @@ index e4548d6..297c477 100644
  
    if (optargs_bitmask & GUESTFS_TUNE2FS_FORCE_BITMASK) {
      if (force)
-@@ -592,7 +675,7 @@ do_tune2fs (const char *device, /* only required parameter */
+@@ -592,7 +674,7 @@ do_tune2fs (const char *device, /* only required parameter */
  
    r = commandv (NULL, &err, argv);
    if (r == -1) {
@@ -334,6 +326,18 @@ index e4548d6..297c477 100644
      return -1;
    }
  
+@@ -836,7 +918,10 @@ do_mke2fs (const char *device,               /* 0 */
+   char maxonlineresize_s[74];
+   size_t i = 0;
+ 
+-  ADD_ARG (argv, i, str_mke2fs);
++  char prog[] = "mke2fs";
++  if (e2prog (prog) == -1)
++    return -1;
++  ADD_ARG (argv, i, prog);
+ 
+   if (optargs_bitmask & GUESTFS_MKE2FS_BLOCKSIZE_BITMASK) {
+     if (blocksize < 0) {
 diff --git a/daemon/labels.c b/daemon/labels.c
 index 2fda354..9f08a07 100644
 --- a/daemon/labels.c

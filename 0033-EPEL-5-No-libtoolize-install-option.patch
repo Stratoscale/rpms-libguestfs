@@ -1,4 +1,4 @@
-From 880785a2d52495c7ca010242e32cab5f5714e698 Mon Sep 17 00:00:00 2001
+From 9ca1ff60f311f0d794f53f7f539a488b51a24707 Mon Sep 17 00:00:00 2001
 From: Richard W.M. Jones <rjones@redhat.com>
 Date: Fri, 8 Mar 2013 19:09:21 +0000
 Subject: [PATCH 33/37] EPEL 5: No libtoolize --install option.

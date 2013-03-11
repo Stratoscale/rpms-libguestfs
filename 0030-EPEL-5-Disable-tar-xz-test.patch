@@ -1,4 +1,4 @@
-From 3c027d28c1de034ecdb5cc5837944dfebe5d769a Mon Sep 17 00:00:00 2001
+From e7e641033e38b9cb712568089005789721f06948 Mon Sep 17 00:00:00 2001
 From: Richard W.M. Jones <rjones@redhat.com>
 Date: Fri, 31 Aug 2012 14:59:25 +0100
 Subject: [PATCH 30/37] EPEL 5: Disable tar --xz test.

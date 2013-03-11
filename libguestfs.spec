@@ -22,7 +22,7 @@ Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
 Version:       1.20.3
-Release:       3%{?dist}
+Release:       4%{?dist}
 License:       LGPLv2+
 Group:         Development/Libraries
 URL:           http://libguestfs.org/
@@ -698,6 +698,13 @@ export SKIP_TEST_9P_SH=1
 # rsync doesn't work because of different IP addresses.
 export SKIP_TEST_RSYNC_SH=1
 
+# Disk labels not supported.
+export SKIP_TEST_DISK_LABELS_PL=1
+
+# acl_* operations not supported by RHEL 5 filesystems.
+export SKIP_TEST_ACL_SET_FILE=1
+export SKIP_TEST_ACL_DELETE_DEF_FILE=1
+
 %if %{runtests}
 make check
 %endif
@@ -903,6 +910,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Mon Mar 11 2013 Richard W.M. Jones <rjones@redhat.com> - 1:1.20.3-4
+- Fix various small bugs and tests.
+
 * Sun Mar 10 2013 Richard W.M. Jones <rjones@redhat.com> - 1:1.20.3-3
 - Add patch to define O_CLOEXEC in tests.
 - Fix double-free bug in EPEL5-specific patch.

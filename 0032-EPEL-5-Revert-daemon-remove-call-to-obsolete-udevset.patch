@@ -1,4 +1,4 @@
-From c5c98b399e2353c05253ab7a606fda74424243b4 Mon Sep 17 00:00:00 2001
+From 303f99313de2d5b267c394e3929a68ba86bd76db Mon Sep 17 00:00:00 2001
 From: Richard W.M. Jones <rjones@redhat.com>
 Date: Mon, 3 Sep 2012 11:04:39 +0100
 Subject: [PATCH 32/37] EPEL 5: Revert "daemon: remove call to obsolete udevsettle"
