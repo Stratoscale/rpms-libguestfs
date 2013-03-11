@@ -1,7 +1,7 @@
 From 40b7aaec13ed51f0876ab26ff264a8caba90f6ed Mon Sep 17 00:00:00 2001
 From: Richard W.M. Jones <rjones@redhat.com>
 Date: Sun, 17 Jun 2012 23:01:43 +0100
-Subject: [PATCH 11/37] EPEL 5: Remove PHP bindings.
+Subject: [PATCH 11/38] EPEL 5: Remove PHP bindings.
 
 ---
  Makefile.am  |    3 ---

@@ -1,7 +1,7 @@
 From 01d681c8be082b4d44845f34c51cc4f07e6ffa80 Mon Sep 17 00:00:00 2001
 From: Richard W.M. Jones <rjones@redhat.com>
 Date: Sat, 16 Jun 2012 14:35:06 +0100
-Subject: [PATCH 10/37] EPEL 5: Remove GObject / GObject Introspection / GJS bindings.
+Subject: [PATCH 10/38] EPEL 5: Remove GObject / GObject Introspection / GJS bindings.
 
 ---
  Makefile.am  |    3 --

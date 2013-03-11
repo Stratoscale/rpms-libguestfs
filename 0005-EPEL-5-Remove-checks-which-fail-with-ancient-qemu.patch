@@ -1,7 +1,7 @@
 From eab32a7781af5012b11face2eb675bebc65a5b41 Mon Sep 17 00:00:00 2001
 From: Richard W.M. Jones <rjones@redhat.com>
 Date: Sat, 16 Jun 2012 10:19:39 +0100
-Subject: [PATCH 05/37] EPEL 5: Remove checks which fail with ancient qemu.
+Subject: [PATCH 05/38] EPEL 5: Remove checks which fail with ancient qemu.
 
 Note that g->app.qemu_version and g->app.qemu_devices will both
 be empty strings.

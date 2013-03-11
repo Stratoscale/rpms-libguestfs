@@ -1,7 +1,7 @@
 From d4180d13c025f66f2b9b853b7a6277dfae52e2b9 Mon Sep 17 00:00:00 2001
 From: Richard W.M. Jones <rjones@redhat.com>
 Date: Fri, 31 Aug 2012 10:24:06 +0100
-Subject: [PATCH 28/37] EPEL 5: Don't use sgabios.
+Subject: [PATCH 28/38] EPEL 5: Don't use sgabios.
 
 Old qemu doesn't support '-device' parameter.
 ---

@@ -1,7 +1,7 @@
 From ec782cc14643e71bb5d7cc07647a369a95fb005b Mon Sep 17 00:00:00 2001
 From: Richard W.M. Jones <rjones@redhat.com>
 Date: Sat, 16 Jun 2012 14:34:25 +0100
-Subject: [PATCH 09/37] EPEL 5: Remove Erlang bindings.
+Subject: [PATCH 09/38] EPEL 5: Remove Erlang bindings.
 
 ---
  Makefile.am  |    3 ---

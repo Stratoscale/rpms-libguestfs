@@ -1,7 +1,7 @@
 From 120acb40d674957a3b4cfe8a88877430cdc50493 Mon Sep 17 00:00:00 2001
 From: Richard W.M. Jones <rjones@redhat.com>
 Date: Sat, 16 Jun 2012 10:23:19 +0100
-Subject: [PATCH 06/37] EPEL 5: Remove AS_ECHO_N for ancient autoconf.
+Subject: [PATCH 06/38] EPEL 5: Remove AS_ECHO_N for ancient autoconf.
 
 ---
  configure.ac |   28 ++++++++++++++--------------

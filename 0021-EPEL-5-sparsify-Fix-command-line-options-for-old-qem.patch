@@ -1,7 +1,7 @@
 From dbb535379a5d301954fd0363f4aa3cdccb2f6ea8 Mon Sep 17 00:00:00 2001
 From: Richard W.M. Jones <rjones@redhat.com>
 Date: Fri, 22 Jun 2012 10:24:48 +0100
-Subject: [PATCH 21/37] EPEL 5: sparsify: Fix command line options for old qemu-img.
+Subject: [PATCH 21/38] EPEL 5: sparsify: Fix command line options for old qemu-img.
 
 This didn't have -o backing_file etc.  Use old -b and -F options instead.
 ---

@@ -1,7 +1,7 @@
 From e3dea245858bb856930815ad52c9b2485bd60ab7 Mon Sep 17 00:00:00 2001
 From: Richard W.M. Jones <rjones@redhat.com>
 Date: Sun, 10 Mar 2013 20:08:06 +0000
-Subject: [PATCH 04/37] RHEL 5: tests: Use gnulib.
+Subject: [PATCH 04/38] RHEL 5: tests: Use gnulib.
 
 Gnulib defines O_CLOEXEC which is missing on RHEL 5.
 ---

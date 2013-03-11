@@ -1,7 +1,7 @@
 From 8f367f478a1219252ff2ed77d55f831f7b1a4889 Mon Sep 17 00:00:00 2001
 From: Richard W.M. Jones <rjones@redhat.com>
 Date: Sun, 17 Jun 2012 22:58:58 +0100
-Subject: [PATCH 13/37] EPEL 5: Add gnulib utimensat module.
+Subject: [PATCH 13/38] EPEL 5: Add gnulib utimensat module.
 
 This function is missing in RHEL 5-era kernels.
 ---

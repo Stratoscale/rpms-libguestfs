@@ -1,7 +1,7 @@
 From 50348e9098ca48e6b93dee54d1b1079fa13840bb Mon Sep 17 00:00:00 2001
 From: Richard W.M. Jones <rjones@redhat.com>
 Date: Sat, 9 Mar 2013 19:25:33 +0000
-Subject: [PATCH 37/37] EPEL 5: Custom replacement for 'Unix.isatty stdout'.
+Subject: [PATCH 37/38] EPEL 5: Custom replacement for 'Unix.isatty stdout'.
 
 Unix.isatty missing on RHEL 5-era OCaml.
 ---

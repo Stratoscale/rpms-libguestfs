@@ -1,7 +1,7 @@
 From 1290a348a79f104a4d00c2f8445db986e9ca467b Mon Sep 17 00:00:00 2001
 From: Richard W.M. Jones <rjones@redhat.com>
 Date: Fri, 8 Mar 2013 20:20:23 +0000
-Subject: [PATCH 35/37] EPEL 5: Remove Linux capabilities.
+Subject: [PATCH 35/38] EPEL 5: Remove Linux capabilities.
 
 Linux file capabilities are not supported in RHEL 5, and the
 cap_*_file functions don't exist in the libcap library (although

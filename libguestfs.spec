@@ -22,7 +22,7 @@ Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
 Version:       1.20.3
-Release:       4%{?dist}
+Release:       5%{?dist}
 License:       LGPLv2+
 Group:         Development/Libraries
 URL:           http://libguestfs.org/
@@ -78,6 +78,7 @@ Patch0034:     0034-EPEL-5-Disable-valgrind.patch
 Patch0035:     0035-EPEL-5-Remove-Linux-capabilities.patch
 Patch0036:     0036-EPEL-5-ruby-Use-old-rake-rdoctask-and-rake-gempackag.patch
 Patch0037:     0037-EPEL-5-Custom-replacement-for-Unix.isatty-stdout.patch
+Patch0038:     0038-RHEL-5-tests-xml-Define-O_CLOEXEC-in-LD_PRELOAD-libr.patch
 
 # Basic build requirements:
 BuildRequires: /usr/bin/pod2man
@@ -910,7 +911,7 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
-* Mon Mar 11 2013 Richard W.M. Jones <rjones@redhat.com> - 1:1.20.3-4
+* Mon Mar 11 2013 Richard W.M. Jones <rjones@redhat.com> - 1:1.20.3-5
 - Fix various small bugs and tests.
 
 * Sun Mar 10 2013 Richard W.M. Jones <rjones@redhat.com> - 1:1.20.3-3
