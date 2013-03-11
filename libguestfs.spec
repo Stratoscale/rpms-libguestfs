@@ -22,7 +22,7 @@ Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
 Version:       1.20.3
-Release:       5%{?dist}
+Release:       6%{?dist}
 License:       LGPLv2+
 Group:         Development/Libraries
 URL:           http://libguestfs.org/
@@ -563,6 +563,12 @@ mkdir -p daemon/m4
 mv README README.orig
 sed 's/@VERSION@/%{version}/g' < %{SOURCE4} > README
 
+# Remove RPM database files from the tarball which have a newer
+# version than RHEL 5's db_dump can handle.  These files will be
+# rebuilt during the build.
+rm tests/guests/guest-aux/fedora-name.db
+rm tests/guests/guest-aux/fedora-packages.db
+
 
 %build
 %if %{buildnet}
@@ -911,8 +917,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
-* Mon Mar 11 2013 Richard W.M. Jones <rjones@redhat.com> - 1:1.20.3-5
+* Mon Mar 11 2013 Richard W.M. Jones <rjones@redhat.com> - 1:1.20.3-6
 - Fix various small bugs and tests.
+- Remove Fedora RPM database files from the tarball.
 
 * Sun Mar 10 2013 Richard W.M. Jones <rjones@redhat.com> - 1:1.20.3-3
 - Add patch to define O_CLOEXEC in tests.
