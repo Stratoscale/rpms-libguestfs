@@ -22,7 +22,7 @@ Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
 Version:       1.20.4
-Release:       1%{?dist}
+Release:       2%{?dist}
 License:       LGPLv2+
 Group:         Development/Libraries
 URL:           http://libguestfs.org/
@@ -32,7 +32,10 @@ BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root
 # KVM is only available on x86-64.
 ExclusiveArch: x86_64
 
-# We have to update gnulib (in a patch) hence unfortunately ...
+# We have to add a gnulib module (in a patch below), so this means we
+# need to bundle the whole gnulib sources.  In theory the gnulib
+# utimensat module could go upstream, but the license is incompatible
+# (GPL, not LGPLv2+).
 Source10:      bootstrap
 Source11:      dot-gitmodules
 Source12:      gnulib-4a8c422f.tar.gz
@@ -911,7 +914,7 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
-* Wed Mar 13 2013 Richard W.M. Jones <rjones@redhat.com> - 1:1.20.4-1
+* Wed Mar 13 2013 Richard W.M. Jones <rjones@redhat.com> - 1:1.20.4-2
 - Rebase to upstream stable branch version 1.20.4.
 
 * Mon Mar 11 2013 Richard W.M. Jones <rjones@redhat.com> - 1:1.20.3-6
