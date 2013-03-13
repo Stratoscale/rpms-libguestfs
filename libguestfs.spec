@@ -21,7 +21,7 @@
 Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
-Version:       1.21.19
+Version:       1.21.20
 Release:       1%{?dist}
 License:       LGPLv2+
 Group:         Development/Libraries
@@ -549,7 +549,11 @@ python-%{name} contains Python bindings for %{name}.
 Summary:       Ruby bindings for %{name}
 Group:         Development/Libraries
 Requires:      %{name} = %{epoch}:%{version}-%{release}
+%if 0%{?fedora} >= 19
+Requires:      ruby(release) = 2.0.0
+%else
 Requires:      ruby(abi) = 1.9.1
+%endif
 Requires:      ruby
 Provides:      ruby(guestfs) = %{version}
 
@@ -1034,6 +1038,11 @@ mkdir -p $RPM_BUILD_ROOT%{_localstatedir}/run/libguestfs
 
 
 %changelog
+* Wed Mar 13 2013 Richard W.M. Jones <rjones@redhat.com> - 1:1.21.20-1
+- New upstream version 1.21.20.
+- In Fedora 19, 'ruby(abi)' has been replaced by 'ruby(release)'
+  and the version of the ruby ABI/release is now 2.0.0.
+
 * Mon Mar 11 2013 Richard W.M. Jones <rjones@redhat.com> - 1:1.21.19-1
 - New upstream version 1.21.19.
 
