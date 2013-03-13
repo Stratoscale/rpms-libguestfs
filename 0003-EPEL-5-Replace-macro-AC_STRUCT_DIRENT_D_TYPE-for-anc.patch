@@ -1,0 +1,25 @@
+From af2d0e35b55a2dbe95da71b7238b20fcf3c5caaa Mon Sep 17 00:00:00 2001
+From: Richard W.M. Jones <rjones@redhat.com>
+Date: Sat, 16 Jun 2012 10:46:20 +0100
+Subject: [PATCH 03/32] EPEL 5: Replace macro AC_STRUCT_DIRENT_D_TYPE for ancient autoconf.
+
+---
+ configure.ac |    2 +-
+ 1 files changed, 1 insertions(+), 1 deletions(-)
+
+diff --git a/configure.ac b/configure.ac
+index 7269f84..7cdcc2b 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -251,7 +251,7 @@ The code will still compile, but is likely to leak memory and other
+ resources when it runs.])])
+ 
+ dnl Check if dirent (readdir) supports d_type member.
+-AC_STRUCT_DIRENT_D_TYPE
++AC_DEFINE([HAVE_STRUCT_DIRENT_D_TYPE],[1],[Define to 1 if 'struct dirent' has member 'd_type'])
+ 
+ dnl Check if stat has the required fields.
+ AC_STRUCT_ST_BLOCKS
+-- 
+1.7.4.1
+

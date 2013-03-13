@@ -1,0 +1,39 @@
+From 656dba3cb40825a78867f8564562383776f7c3df Mon Sep 17 00:00:00 2001
+From: Richard W.M. Jones <rjones@redhat.com>
+Date: Sun, 17 Jun 2012 22:17:06 +0100
+Subject: [PATCH 08/32] EPEL 5: Define le64toh, le32toh if not defined.
+
+---
+ src/inspect-fs-windows.c |   16 ++++++++++++++++
+ 1 files changed, 16 insertions(+), 0 deletions(-)
+
+diff --git a/src/inspect-fs-windows.c b/src/inspect-fs-windows.c
+index a979775..1afaf26 100644
+--- a/src/inspect-fs-windows.c
++++ b/src/inspect-fs-windows.c
+@@ -44,6 +44,22 @@
+ #include "guestfs-internal-actions.h"
+ #include "guestfs_protocol.h"
+ 
++#if __BYTE_ORDER == __LITTLE_ENDIAN
++#ifndef le64toh
++#define le64toh(x) (x)
++#endif
++#ifndef le32toh
++#define le32toh(x) (x)
++#endif
++#else /* __BYTE_ORDER == __BIG_ENDIAN */
++#ifndef le64toh
++#define le64toh(x) bswap_64 (x)
++#endif
++#ifndef le32toh
++#define le32toh(x) bswap_32 (x)
++#endif
++#endif
++
+ /* Compile all the regular expressions once when the shared library is
+  * loaded.  PCRE is thread safe so we're supposedly OK here if
+  * multiple threads call into the libguestfs API functions below
+-- 
+1.7.4.1
+

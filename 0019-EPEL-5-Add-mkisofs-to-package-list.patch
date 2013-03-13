@@ -1,0 +1,26 @@
+From b20759c481f057d80f8b4651b9801e63cfdd4a09 Mon Sep 17 00:00:00 2001
+From: Richard W.M. Jones <rjones@redhat.com>
+Date: Fri, 22 Jun 2012 14:46:43 +0100
+Subject: [PATCH 19/32] EPEL 5: Add mkisofs to package list.
+
+This package contains the 'isoinfo' program which is required
+to implement the corresponding API and for tests to pass.
+---
+ appliance/packagelist.in |    1 +
+ 1 files changed, 1 insertions(+), 0 deletions(-)
+
+diff --git a/appliance/packagelist.in b/appliance/packagelist.in
+index d7c2639..803a694 100644
+--- a/appliance/packagelist.in
++++ b/appliance/packagelist.in
+@@ -129,6 +129,7 @@ lsscsi
+ lvm2
+ lzop
+ mdadm
++mkisofs
+ module-init-tools
+ /*
+ Enabling this pulls out 140 extra packages
+-- 
+1.7.4.1
+

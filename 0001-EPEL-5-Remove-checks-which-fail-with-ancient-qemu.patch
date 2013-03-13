@@ -1,0 +1,120 @@
+From 2766fa2cfff351a8db92432912f1457909868a36 Mon Sep 17 00:00:00 2001
+From: Richard W.M. Jones <rjones@redhat.com>
+Date: Sat, 16 Jun 2012 10:19:39 +0100
+Subject: [PATCH 01/32] EPEL 5: Remove checks which fail with ancient qemu.
+
+Note that g->app.qemu_version and g->app.qemu_devices will both
+be empty strings.
+---
+ configure.ac           |   57 ------------------------------------------------
+ src/launch-appliance.c |   23 +-----------------
+ 2 files changed, 2 insertions(+), 78 deletions(-)
+
+diff --git a/configure.ac b/configure.ac
+index 488937c..bd6c45b 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -677,63 +677,6 @@ This could be a very old version of qemu, or qemu might not be
+ working.
+ ])
+     fi
+-
+-    AC_MSG_CHECKING([that $QEMU -version works])
+-    if $QEMU -version >&AS_MESSAGE_LOG_FD 2>&1; then
+-        AC_MSG_RESULT([yes])
+-    else
+-        AC_MSG_RESULT([no])
+-        AC_MSG_FAILURE(
+-[$QEMU -version: command failed.
+-
+-This could be a very old version of qemu, or qemu might not be
+-working.
+-])
+-    fi
+-
+-    AC_MSG_CHECKING([for $QEMU version >= 1])
+-    if $QEMU -version | grep -sq 'version @<:@1-@:>@'; then
+-        AC_MSG_RESULT([yes])
+-    else
+-        AC_MSG_RESULT([no])
+-        AC_MSG_FAILURE([$QEMU version must be >= 1.0.])
+-    fi
+-
+-    AC_MSG_CHECKING([that $QEMU -nographic -machine accel=kvm:tcg -device ? works])
+-    if $QEMU -nographic -machine accel=kvm:tcg -device \? >&AS_MESSAGE_LOG_FD 2>&1; then
+-        AC_MSG_RESULT([yes])
+-    else
+-        AC_MSG_RESULT([no])
+-        AC_MSG_FAILURE([$QEMU -nographic -machine accel=kvm:tcg -device ? doesn't work.])
+-    fi
+-
+-    AC_MSG_CHECKING([for virtio-serial support in $QEMU])
+-    if $QEMU $QEMU_OPTIONS -nographic -machine accel=kvm:tcg -device \? 2>&1 | grep -sq virtio-serial; then
+-        AC_MSG_RESULT([yes])
+-    else
+-        AC_MSG_RESULT([no])
+-        AC_MSG_FAILURE(
+-[I did not find virtio-serial support in
+-$QEMU.
+-
+-virtio-serial support in qemu or KVM is essential for libguestfs
+-to operate.
+-
+-Usually this means that you have to install a newer version of qemu
+-and/or KVM.  Please read the relevant section in the README file for
+-more information about this.
+-
+-You can override this test by setting the environment variable
+-vmchannel_test=no
+-
+-However if you don't have the right support in your qemu, then this
+-just delays the pain.
+-
+-If I am using the wrong qemu or you want to compile qemu from source
+-and install it in another location, then you should configure with
+-the --with-qemu option.
+-])
+-    fi
+ fi
+ 
+ dnl Enable packet dumps when in verbose mode.  This generates lots
+diff --git a/src/launch-appliance.c b/src/launch-appliance.c
+index d1fe326..3498787 100644
+--- a/src/launch-appliance.c
++++ b/src/launch-appliance.c
+@@ -770,30 +770,11 @@ test_qemu (guestfs_h *g)
+   if (r == -1 || !WIFEXITED (r) || WEXITSTATUS (r) != 0)
+     goto error;
+ 
+-  guestfs___cmd_add_arg (cmd2, g->qemu);
+-  guestfs___cmd_add_arg (cmd2, "-nographic");
+-  guestfs___cmd_add_arg (cmd2, "-version");
+-  guestfs___cmd_set_stdout_callback (cmd2, read_all, &g->app.qemu_version,
+-                                     CMD_STDOUT_FLAG_WHOLE_BUFFER);
+-  r = guestfs___cmd_run (cmd2);
+-  if (r == -1 || !WIFEXITED (r) || WEXITSTATUS (r) != 0)
+-    goto error;
++  g->app.qemu_version = safe_strdup (g, "");
+ 
+   parse_qemu_version (g);
+ 
+-  guestfs___cmd_add_arg (cmd3, g->qemu);
+-  guestfs___cmd_add_arg (cmd3, "-nographic");
+-  guestfs___cmd_add_arg (cmd3, "-machine");
+-  guestfs___cmd_add_arg (cmd3, "accel=kvm:tcg");
+-  guestfs___cmd_add_arg (cmd3, "-device");
+-  guestfs___cmd_add_arg (cmd3, "?");
+-  guestfs___cmd_clear_capture_errors (cmd3);
+-  guestfs___cmd_set_stderr_to_stdout (cmd3);
+-  guestfs___cmd_set_stdout_callback (cmd3, read_all, &g->app.qemu_devices,
+-                                     CMD_STDOUT_FLAG_WHOLE_BUFFER);
+-  r = guestfs___cmd_run (cmd3);
+-  if (r == -1 || !WIFEXITED (r) || WEXITSTATUS (r) != 0)
+-    goto error;
++  g->app.qemu_devices = safe_strdup (g, "");
+ 
+   return 0;
+ 
+-- 
+1.7.4.1
+

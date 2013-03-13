@@ -1,0 +1,25 @@
+From e763e1518eb05376a3a0a31226b608bcbdfc8992 Mon Sep 17 00:00:00 2001
+From: Richard W.M. Jones <rjones@redhat.com>
+Date: Thu, 30 Aug 2012 17:57:46 +0100
+Subject: [PATCH 15/32] EPEL 5: Disable libvirt attach method.
+
+---
+ src/launch-libvirt.c |    2 +-
+ 1 files changed, 1 insertions(+), 1 deletions(-)
+
+diff --git a/src/launch-libvirt.c b/src/launch-libvirt.c
+index 03c2744..d2d63f7 100644
+--- a/src/launch-libvirt.c
++++ b/src/launch-libvirt.c
+@@ -72,7 +72,7 @@
+                              MIN_LIBVIRT_MINOR * 1000 + \
+                              MIN_LIBVIRT_MICRO)
+ 
+-#if defined(HAVE_LIBVIRT) && \
++#if 0 && defined(HAVE_LIBVIRT) && \
+   LIBVIR_VERSION_NUMBER >= MIN_LIBVIRT_VERSION && \
+   defined(HAVE_LIBXML2)
+ 
+-- 
+1.7.4.1
+
