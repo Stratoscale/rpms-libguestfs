@@ -28,11 +28,6 @@ Group:         Development/Libraries
 URL:           http://libguestfs.org/
 Source0:       http://libguestfs.org/download/1.21-development/%{name}-%{version}.tar.gz
 
-%if 0%{?fedora} >= 17
-Patch1:        ruby-1.9-vendor-not-site.patch
-BuildRequires: autoconf, automake, libtool, gettext-devel
-%endif
-
 # Basic build requirements:
 BuildRequires: perl(Pod::Simple)
 BuildRequires: perl(Pod::Man)
@@ -683,11 +678,6 @@ if [ "$(getenforce | tr '[A-Z]' '[a-z]')" != "disabled" ]; then
     chcon --reference=/tmp tmp
 fi
 
-%if 0%{?fedora} >= 17
-%patch1 -p1
-autoreconf -i
-%endif
-
 mkdir -p daemon/m4
 
 # Replace developer-centric README that ships with libguestfs, with
@@ -737,8 +727,8 @@ EOF
   --enable-install-daemon \
   %{extra}
 
-# 'INSTALLDIRS' ensures that perl libs are installed in the vendor dir
-# not the site dir.
+# 'INSTALLDIRS' ensures that Perl and Ruby libs are installed in the
+# vendor dir not the site dir.
 make V=1 INSTALLDIRS=vendor %{?_smp_mflags}
 
 
