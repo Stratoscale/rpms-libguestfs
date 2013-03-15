@@ -21,7 +21,7 @@
 Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
-Version:       1.21.20
+Version:       1.21.21
 Release:       1%{?dist}
 License:       LGPLv2+
 Group:         Development/Libraries
@@ -1028,6 +1028,10 @@ mkdir -p $RPM_BUILD_ROOT%{_localstatedir}/run/libguestfs
 
 
 %changelog
+* Fri Mar 15 2013 Richard W.M. Jones <rjones@redhat.com> - 1:1.21.21-1
+- New upstream version 1.21.21.
+- Remove ruby vendor patch.
+
 * Wed Mar 13 2013 Richard W.M. Jones <rjones@redhat.com> - 1:1.21.20-1
 - New upstream version 1.21.20.
 - In Fedora 19, 'ruby(abi)' has been replaced by 'ruby(release)'
