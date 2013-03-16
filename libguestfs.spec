@@ -757,7 +757,9 @@ make check -k
 
 
 %install
-make DESTDIR=$RPM_BUILD_ROOT install
+# 'INSTALLDIRS' ensures that Perl and Ruby libs are installed in the
+# vendor dir not the site dir.
+make DESTDIR=$RPM_BUILD_ROOT INSTALLDIRS=vendor install
 
 # Delete static libraries, libtool files.
 rm $RPM_BUILD_ROOT%{_libdir}/libguestfs.a
