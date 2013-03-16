@@ -22,7 +22,7 @@ Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
 Version:       1.21.21
-Release:       1%{?dist}
+Release:       2%{?dist}
 License:       LGPLv2+
 Group:         Development/Libraries
 URL:           http://libguestfs.org/
@@ -773,7 +773,9 @@ make check -k
 
 
 %install
-make DESTDIR=$RPM_BUILD_ROOT install
+# 'INSTALLDIRS' ensures that Perl and Ruby libs are installed in the
+# vendor dir not the site dir.
+make DESTDIR=$RPM_BUILD_ROOT INSTALLDIRS=vendor install
 
 # Delete static libraries, libtool files.
 rm $RPM_BUILD_ROOT%{_libdir}/libguestfs.a
@@ -1028,6 +1030,9 @@ mkdir -p $RPM_BUILD_ROOT%{_localstatedir}/run/libguestfs
 
 
 %changelog
+* Sat Mar 16 2013 Richard W.M. Jones <rjones@redhat.com> - 1:1.21.21-2
+- Set INSTALLDIRS on both make and make install rules.
+
 * Fri Mar 15 2013 Richard W.M. Jones <rjones@redhat.com> - 1:1.21.21-1
 - New upstream version 1.21.21.
 - Remove ruby vendor patch.
