@@ -21,8 +21,8 @@
 Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
-Version:       1.21.21
-Release:       2%{?dist}
+Version:       1.21.22
+Release:       1%{?dist}
 License:       LGPLv2+
 Group:         Development/Libraries
 URL:           http://libguestfs.org/
@@ -1030,6 +1030,9 @@ mkdir -p $RPM_BUILD_ROOT%{_localstatedir}/run/libguestfs
 
 
 %changelog
+* Mon Mar 18 2013 Richard W.M. Jones <rjones@redhat.com> - 1:1.21.22-1
+- New upstream version 1.21.22.
+
 * Sat Mar 16 2013 Richard W.M. Jones <rjones@redhat.com> - 1:1.21.21-2
 - Set INSTALLDIRS on both make and make install rules.
 
