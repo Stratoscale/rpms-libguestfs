@@ -22,11 +22,15 @@ Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
 Version:       1.21.23
-Release:       1%{?dist}
+Release:       2%{?dist}
 License:       LGPLv2+
-Group:         Development/Libraries
+
+# Source and patches.
 URL:           http://libguestfs.org/
 Source0:       http://libguestfs.org/download/1.21-development/%{name}-%{version}.tar.gz
+
+Patch0001:     0001-Use-new-style-demand-loaded-bash-completion-scripts.patch
+BuildRequires: autoconf, automake, libtool, gettext-devel
 
 # Basic build requirements:
 BuildRequires: perl(Pod::Simple)
@@ -69,6 +73,7 @@ BuildRequires: libacl-devel
 BuildRequires: libcap-devel
 BuildRequires: libldm-devel
 BuildRequires: yajl-devel
+BuildRequires: bash-completion
 
 # This is only needed for RHEL 5 because readline-devel doesn't
 # properly depend on it, but doesn't do any harm on other platforms:
@@ -335,7 +340,6 @@ For Ruby bindings, install 'ruby-libguestfs'.
 
 %package devel
 Summary:       Development tools and libraries for %{name}
-Group:         Development/Libraries
 Requires:      %{name} = %{epoch}:%{version}-%{release}
 Requires:      pkgconfig
 
@@ -351,7 +355,6 @@ for %{name}.
 
 %package tools-c
 Summary:       System administration tools for virtual machines
-Group:         Development/Tools
 License:       GPLv2+
 Requires:      %{name} = %{epoch}:%{version}-%{release}
 
@@ -383,7 +386,6 @@ to avoid dependencies on Perl.
 
 %package tools
 Summary:       System administration tools for virtual machines
-Group:         Development/Tools
 License:       GPLv2+
 Requires:      %{name} = %{epoch}:%{version}-%{release}
 Requires:      %{name}-tools-c = %{epoch}:%{version}-%{release}
@@ -463,9 +465,19 @@ Virt-win-reg lets you look at and modify the Windows Registry of
 Windows virtual machines.
 
 
+%package bash-completion
+Summary:       Bash tab-completion scripts for %{name} tools
+Requires:      bash-completion >= 2.0
+Requires:      %{name}-tools-c = %{epoch}:%{version}-%{release}
+
+
+%description bash-completion
+Install this package if you want intelligent bash tab-completion
+for guestfish, guestmount and various virt-* tools.
+
+
 %package live-service
 Summary:       %{name} live service
-Group:         Development/Libraries
 Requires(post): systemd-units
 Requires(preun): systemd-units
 Requires(postun): systemd-units
@@ -490,7 +502,6 @@ This daemon is *not* required by %{name}.
 
 %package -n ocaml-%{name}
 Summary:       OCaml bindings for %{name}
-Group:         Development/Libraries
 Requires:      %{name} = %{epoch}:%{version}-%{release}
 
 
@@ -503,7 +514,6 @@ programs which use %{name} you will also need ocaml-%{name}-devel.
 
 %package -n ocaml-%{name}-devel
 Summary:       OCaml bindings for %{name}
-Group:         Development/Libraries
 Requires:      ocaml-%{name} = %{epoch}:%{version}-%{release}
 
 
@@ -514,7 +524,6 @@ required to use the OCaml bindings for %{name}.
 
 %package -n perl-Sys-Guestfs
 Summary:       Perl bindings for %{name} (Sys::Guestfs)
-Group:         Development/Libraries
 Requires:      %{name} = %{epoch}:%{version}-%{release}
 Requires:      perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $version))
 # RHBZ#523547
@@ -530,7 +539,6 @@ perl-Sys-Guestfs contains Perl bindings for %{name} (Sys::Guestfs).
 
 %package -n python-%{name}
 Summary:       Python bindings for %{name}
-Group:         Development/Libraries
 Requires:      %{name} = %{epoch}:%{version}-%{release}
 
 %{!?python_sitelib: %global python_sitelib %(%{__python} -c "from distutils.sysconfig import get_python_lib; print get_python_lib()")}
@@ -542,7 +550,6 @@ python-%{name} contains Python bindings for %{name}.
 
 %package -n ruby-%{name}
 Summary:       Ruby bindings for %{name}
-Group:         Development/Libraries
 Requires:      %{name} = %{epoch}:%{version}-%{release}
 %if 0%{?fedora} >= 19
 Requires:      ruby(release) = 2.0.0
@@ -558,7 +565,6 @@ ruby-%{name} contains Ruby bindings for %{name}.
 
 %package java
 Summary:       Java bindings for %{name}
-Group:         Development/Libraries
 Requires:      %{name} = %{epoch}:%{version}-%{release}
 Requires:      java >= 1.5.0
 Requires:      jpackage-utils
@@ -572,7 +578,6 @@ you will also need %{name}-java-devel.
 
 %package java-devel
 Summary:       Java development package for %{name}
-Group:         Development/Libraries
 Requires:      %{name} = %{epoch}:%{version}-%{release}
 Requires:      %{name}-java = %{epoch}:%{version}-%{release}
 
@@ -585,7 +590,6 @@ See also %{name}-javadoc.
 
 %package javadoc
 Summary:       Java documentation for %{name}
-Group:         Development/Libraries
 Requires:      %{name} = %{epoch}:%{version}-%{release}
 Requires:      %{name}-java = %{epoch}:%{version}-%{release}
 Requires:      jpackage-utils
@@ -596,7 +600,6 @@ Requires:      jpackage-utils
 
 %package -n php-%{name}
 Summary:       PHP bindings for %{name}
-Group:         Development/Libraries
 Requires:      %{name} = %{epoch}:%{version}-%{release}
 Requires:      php
 
@@ -606,7 +609,6 @@ php-%{name} contains PHP bindings for %{name}.
 
 %package -n erlang-%{name}
 Summary:       Erlang bindings for %{name}
-Group:         Development/Libraries
 Requires:      %{name} = %{epoch}:%{version}-%{release}
 Requires:      erlang-erts
 
@@ -616,7 +618,6 @@ erlang-%{name} contains Erlang bindings for %{name}.
 
 %package -n lua-guestfs
 Summary:       Lua bindings for %{name}
-Group:         Development/Libraries
 Requires:      %{name} = %{epoch}:%{version}-%{release}
 Requires:      lua
 
@@ -626,7 +627,6 @@ lua-guestfs contains Lua bindings for %{name}.
 
 %package gobject
 Summary:       GObject bindings for %{name}
-Group:         Development/Libraries
 Requires:      %{name} = %{epoch}:%{version}-%{release}
 
 %description gobject
@@ -638,7 +638,6 @@ To develop software against these bindings, you need to install
 
 %package gobject-devel
 Summary:       GObject bindings for %{name}
-Group:         Development/Libraries
 Requires:      %{name}-gobject = %{epoch}:%{version}-%{release}
 Requires:      gtk-doc
 
@@ -651,7 +650,6 @@ GObject bindings.  It also contains GObject Introspection information.
 
 %package man-pages-ja
 Summary:       Japanese (ja) man pages for %{name}
-Group:         Development/Libraries
 Requires:      %{name} = %{epoch}:%{version}-%{release}
 
 %description man-pages-ja
@@ -661,7 +659,6 @@ for %{name}.
 
 %package man-pages-uk
 Summary:       Ukrainian (uk) man pages for %{name}
-Group:         Development/Libraries
 Requires:      %{name} = %{epoch}:%{version}-%{release}
 
 %description man-pages-uk
@@ -671,6 +668,9 @@ for %{name}.
 
 %prep
 %setup -q
+
+%patch0001 -p1
+autoreconf -i
 
 if [ "$(getenforce | tr '[A-Z]' '[a-z]')" != "disabled" ]; then
     # For sVirt to work, the local temporary directory we use in the
@@ -857,8 +857,6 @@ mkdir -p $RPM_BUILD_ROOT%{_localstatedir}/run/libguestfs
 %files tools-c
 %doc README
 %config(noreplace) %{_sysconfdir}/libguestfs-tools.conf
-%dir %{_sysconfdir}/bash_completion.d
-%{_sysconfdir}/bash_completion.d/libguestfs-bash-completion.sh
 %{_bindir}/guestfish
 %{_mandir}/man1/guestfish.1*
 %{_bindir}/guestmount
@@ -911,6 +909,13 @@ mkdir -p $RPM_BUILD_ROOT%{_localstatedir}/run/libguestfs
 %{_mandir}/man1/virt-tar.1*
 %{_bindir}/virt-win-reg
 %{_mandir}/man1/virt-win-reg.1*
+
+
+%files bash-completion
+%dir %{_datadir}/bash-completion/completions
+%{_datadir}/bash-completion/completions/guestfish
+%{_datadir}/bash-completion/completions/guestmount
+%{_datadir}/bash-completion/completions/virt-*
 
 
 %files live-service
@@ -1030,9 +1035,11 @@ mkdir -p $RPM_BUILD_ROOT%{_localstatedir}/run/libguestfs
 
 
 %changelog
-* Thu Mar 28 2013 Richard W.M. Jones <rjones@redhat.com> - 1:1.21.23-1
+* Thu Mar 28 2013 Richard W.M. Jones <rjones@redhat.com> - 1:1.21.23-2
 - New upstream version 1.21.23.
-- Rename guestfish-bash-completion.sh -> libguestfs-bash-completion.sh
+- Remove 'Group' which is not required by modern RPM.
+- Add patch to use new-style demand-loaded bash-completion scripts.
+- Spin bash-completion scripts into a new libguestfs-bash-completion package.
 
 * Mon Mar 18 2013 Richard W.M. Jones <rjones@redhat.com> - 1:1.21.22-1
 - New upstream version 1.21.22.
