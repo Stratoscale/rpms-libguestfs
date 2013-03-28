@@ -21,7 +21,7 @@
 Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
-Version:       1.21.22
+Version:       1.21.23
 Release:       1%{?dist}
 License:       LGPLv2+
 Group:         Development/Libraries
@@ -858,7 +858,7 @@ mkdir -p $RPM_BUILD_ROOT%{_localstatedir}/run/libguestfs
 %doc README
 %config(noreplace) %{_sysconfdir}/libguestfs-tools.conf
 %dir %{_sysconfdir}/bash_completion.d
-%{_sysconfdir}/bash_completion.d/guestfish-bash-completion.sh
+%{_sysconfdir}/bash_completion.d/libguestfs-bash-completion.sh
 %{_bindir}/guestfish
 %{_mandir}/man1/guestfish.1*
 %{_bindir}/guestmount
@@ -1030,6 +1030,10 @@ mkdir -p $RPM_BUILD_ROOT%{_localstatedir}/run/libguestfs
 
 
 %changelog
+* Thu Mar 28 2013 Richard W.M. Jones <rjones@redhat.com> - 1:1.21.23-1
+- New upstream version 1.21.23.
+- Rename guestfish-bash-completion.sh -> libguestfs-bash-completion.sh
+
 * Mon Mar 18 2013 Richard W.M. Jones <rjones@redhat.com> - 1:1.21.22-1
 - New upstream version 1.21.22.
 
