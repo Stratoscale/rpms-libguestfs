@@ -29,12 +29,6 @@ License:       LGPLv2+
 URL:           http://libguestfs.org/
 Source0:       http://libguestfs.org/download/1.21-development/%{name}-%{version}.tar.gz
 
-Patch0001:     0001-Use-new-style-demand-loaded-bash-completion-scripts.patch
-BuildRequires: autoconf, automake, libtool, gettext-devel
-
-# Workaround for broken file (RHBZ#928995).
-Patch2:        file-bz928995.patch
-
 # Basic build requirements:
 BuildRequires: perl(Pod::Simple)
 BuildRequires: perl(Pod::Man)
@@ -672,10 +666,6 @@ for %{name}.
 %prep
 %setup -q
 
-%patch0001 -p1
-autoreconf -i
-%patch2 -p1
-
 if [ "$(getenforce | tr '[A-Z]' '[a-z]')" != "disabled" ]; then
     # For sVirt to work, the local temporary directory we use in the
     # tests must be labelled the same way as /tmp.
@@ -1039,6 +1029,10 @@ mkdir -p $RPM_BUILD_ROOT%{_localstatedir}/run/libguestfs
 
 
 %changelog
+* Fri Mar 29 2013 Richard W.M. Jones <rjones@redhat.com> - 1:1.21.24-1
+- New upstream version 1.21.24.
+- Remove patches, now upstream.
+
 * Fri Mar 29 2013 Richard W.M. Jones <rjones@redhat.com> - 1:1.21.23-3
 - Add patch for broken 'file' command in Rawhide (RHBZ#928995).
 
