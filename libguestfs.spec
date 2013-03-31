@@ -21,7 +21,7 @@
 Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
-Version:       1.20.4
+Version:       1.20.5
 Release:       1%{?dist}
 License:       LGPLv2+
 Group:         Development/Libraries
@@ -1012,6 +1012,11 @@ mkdir -p $RPM_BUILD_ROOT%{_localstatedir}/run/libguestfs
 
 
 %changelog
+* Sun Mar 31 2013 Richard W.M. Jones <rjones@redhat.com> - 1:1.20.5-1
+- New upstream stable branch version 1.20.5.
+- Remove ruby vendor patch.
+- Set INSTALLDIRS=vendor on both make and make install rules.
+
 * Wed Mar 13 2013 Richard W.M. Jones <rjones@redhat.com> - 1:1.20.4-1
 - New upstream stable branch version 1.20.4.
 
