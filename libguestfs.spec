@@ -796,7 +796,6 @@ mkdir -p $RPM_BUILD_ROOT%{_localstatedir}/run/libguestfs
 %doc perl/examples/*.pl
 %{perl_vendorarch}/*
 %{_mandir}/man3/Sys::Guestfs.3pm*
-%{_mandir}/man3/Sys::Guestfs::Lib.3pm*
 %{_mandir}/man3/guestfs-perl.3*
 
 
