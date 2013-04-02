@@ -12,7 +12,7 @@ Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
 Version:       1.21.26
-Release:       3%{?dist}
+Release:       4%{?dist}
 License:       LGPLv2+
 
 # Source and patches.
@@ -550,22 +550,22 @@ else
   find /var/cache/yum -type f -name '*.rpm' -print0 | xargs -0 cp -t repo
   createrepo repo
   cat > yum.conf <<EOF
-    [main]
-    cachedir=/var/cache/yum
-    debuglevel=1
-    logfile=/var/log/yum.log
-    retries=20
-    obsoletes=1
-    gpgcheck=0
-    assumeyes=1
-    reposdir=/dev/null
+[main]
+cachedir=/var/cache/yum
+debuglevel=1
+logfile=/var/log/yum.log
+retries=20
+obsoletes=1
+gpgcheck=0
+assumeyes=1
+reposdir=/dev/null
 
-    [local]
-    name=local
-    baseurl=file://$(pwd)/repo
-    failovermethod=priority
-    enabled=1
-    gpgcheck=0
+[local]
+name=local
+baseurl=file://$(pwd)/repo
+failovermethod=priority
+enabled=1
+gpgcheck=0
 EOF
   extra=--with-supermin-packager-config=$(pwd)/yum.conf
 fi
@@ -884,7 +884,7 @@ mkdir -p $RPM_BUILD_ROOT%{_localstatedir}/run/libguestfs
 
 
 %changelog
-* Tue Apr  2 2013 Richard W.M. Jones <rjones@redhat.com> - 1:1.21.26-3
+* Tue Apr  2 2013 Richard W.M. Jones <rjones@redhat.com> - 1:1.21.26-4
 - New upstream version 1.21.26.
 - Use ./configure --with-default-backend=.. instead of attach-method.
 - Remove Sys::Guestfs::Lib (removed upstream).
