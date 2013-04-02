@@ -12,7 +12,7 @@ Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
 Version:       1.21.26
-Release:       1%{?dist}
+Release:       2%{?dist}
 License:       LGPLv2+
 
 # Source and patches.
@@ -62,6 +62,7 @@ BuildRequires: libldm-devel
 BuildRequires: yajl-devel
 BuildRequires: bash-completion
 BuildRequires: /usr/bin/ping
+BuildRequires: /usr/bin/wget
 BuildRequires: perl(Sys::Virt)
 BuildRequires: /usr/bin/qemu-img
 BuildRequires: perl-devel
@@ -542,7 +543,7 @@ grep -Ev '\budev\b' < appliance/packagelist.in.orig > appliance/packagelist.in
 
 %build
 # Test if network is available.
-if ping -c 3 -w 20 8.8.8.8; then
+if ping -c 3 -w 20 8.8.8.8 && wget http://libguestfs.org -O /dev/null; then
   extra=
 else
   mkdir repo
@@ -882,7 +883,7 @@ mkdir -p $RPM_BUILD_ROOT%{_localstatedir}/run/libguestfs
 
 
 %changelog
-* Tue Apr  2 2013 Richard W.M. Jones <rjones@redhat.com> - 1:1.21.26-1
+* Tue Apr  2 2013 Richard W.M. Jones <rjones@redhat.com> - 1:1.21.26-2
 - New upstream version 1.21.26.
 - Use ./configure --with-default-backend=.. instead of attach-method.
 - Remove Sys::Guestfs::Lib (removed upstream).
