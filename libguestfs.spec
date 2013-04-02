@@ -11,7 +11,7 @@
 Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
-Version:       1.21.25
+Version:       1.21.26
 Release:       1%{?dist}
 License:       LGPLv2+
 
@@ -882,6 +882,15 @@ mkdir -p $RPM_BUILD_ROOT%{_localstatedir}/run/libguestfs
 
 
 %changelog
+* Tue Apr  2 2013 Richard W.M. Jones <rjones@redhat.com> - 1:1.21.26-1
+- New upstream version 1.21.26.
+- Use ./configure --with-default-backend=.. instead of attach-method.
+- Remove Sys::Guestfs::Lib (removed upstream).
+- Detect if network is available.
+  libguestfs_buildnet macro no longer needed.
+- Enable hardened build (-fPIE, RELRO).
+- Remove BRs: ncurses-devel and versioned parted.
+
 * Sat Mar 30 2013 Richard W.M. Jones <rjones@redhat.com> - 1:1.21.25-1
 - New upstream version 1.21.25.
 
