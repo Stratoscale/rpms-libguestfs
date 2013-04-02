@@ -6,6 +6,8 @@
 %global runtests 1
 %endif
 
+%global _hardened_build 1
+
 Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
