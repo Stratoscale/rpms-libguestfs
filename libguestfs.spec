@@ -84,13 +84,6 @@ BuildRequires: glib2-devel
 BuildRequires: gobject-introspection-devel
 BuildRequires: gjs
 
-# This is only needed for RHEL 5 because readline-devel doesn't
-# properly depend on it, but doesn't do any harm on other platforms:
-BuildRequires: ncurses-devel
-
-# Force new parted for Linux 3.0 (RHBZ#710882).
-BuildRequires: parted >= 3.0-2
-
 # Build requirements for the appliance.
 # sed 's/^ *//' < appliance/packagelist | sort
 %global appliance_buildreqs0 acl attr augeas-libs bash binutils btrfs-progs bzip2 coreutils cpio cryptsetup diffutils dosfstools e2fsprogs file findutils gawk gdisk gfs2-utils grep gzip hivex iproute iputils jfsutils kernel kmod less libcap libldm libselinux libxml2 lsof lsscsi lvm2 lzop mdadm nilfs-utils ntfs-3g openssh-clients parted pcre procps psmisc reiserfs-utils rsync scrub sed strace systemd tar udev util-linux vim-minimal xfsprogs xz yajl zerofree
