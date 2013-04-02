@@ -59,153 +59,9 @@ BuildRequires: libcap-devel
 BuildRequires: libldm-devel
 BuildRequires: yajl-devel
 BuildRequires: bash-completion
-
-# This is only needed for RHEL 5 because readline-devel doesn't
-# properly depend on it, but doesn't do any harm on other platforms:
-BuildRequires: ncurses-devel
-
-# Build requirements for the appliance.
-# sed 's/^ *//' < appliance/packagelist | sort
-BuildRequires: acl
-BuildRequires: attr
-BuildRequires: augeas-libs
-BuildRequires: bash
-BuildRequires: binutils
-BuildRequires: btrfs-progs
-BuildRequires: bzip2
-BuildRequires: coreutils
-BuildRequires: cpio
-BuildRequires: cryptsetup
-BuildRequires: diffutils
-BuildRequires: dosfstools
-BuildRequires: e2fsprogs
-BuildRequires: file
-BuildRequires: findutils
-BuildRequires: gawk
-BuildRequires: gdisk
-BuildRequires: gfs2-utils
-#BuildRequires: gfs-utils
-BuildRequires: grep
-#%ifarch %{ix86} x86_64
-#BuildRequires: grub
-#%endif
-BuildRequires: gzip
-%ifnarch %{arm}
-BuildRequires: hfsplus-tools
-%endif
-BuildRequires: iproute
-BuildRequires: iputils
-BuildRequires: jfsutils
-BuildRequires: kernel
-BuildRequires: kmod
-BuildRequires: libcap
-BuildRequires: libldm
-BuildRequires: libselinux
-BuildRequires: libxml2
-BuildRequires: lsof
-BuildRequires: lsscsi
-BuildRequires: lvm2
-BuildRequires: lzop
-BuildRequires: mdadm
-BuildRequires: nilfs-utils
-BuildRequires: ntfs-3g
-%ifarch %{ix86} x86_64
-BuildRequires: ntfsprogs
-%endif
-BuildRequires: openssh-clients
-BuildRequires: parted
-BuildRequires: procps
-BuildRequires: psmisc
-BuildRequires: reiserfs-utils
-BuildRequires: rsync
-BuildRequires: scrub
-BuildRequires: strace
-BuildRequires: systemd
-BuildRequires: tar
-BuildRequires: udev
-BuildRequires: util-linux
-BuildRequires: vim-minimal
-BuildRequires: xfsprogs
-BuildRequires: xz
-BuildRequires: yajl
-BuildRequires: zerofree
-# Not supported on ARM http://zfs-fuse.net/issues/94
-%ifnarch %{arm}
-BuildRequires: zfs-fuse
-%endif
-
-# Must match the above set of BuildRequires exactly!
-Requires:      acl
-Requires:      attr
-Requires:      augeas-libs
-Requires:      bash
-Requires:      binutils
-Requires:      btrfs-progs
-Requires:      bzip2
-Requires:      coreutils
-Requires:      cpio
-Requires:      cryptsetup
-Requires:      diffutils
-Requires:      dosfstools
-Requires:      e2fsprogs
-Requires:      file
-Requires:      findutils
-Requires:      gawk
-Requires:      gdisk
-Requires:      gfs2-utils
-#Requires:      gfs-utils
-Requires:      grep
-#%ifarch %{ix86} x86_64
-#Requires:      grub
-#%endif
-Requires:      gzip
-%ifnarch %{arm}
-Requires:      hfsplus-tools
-%endif
-Requires:      iproute
-Requires:      iputils
-Requires:      jfsutils
-Requires:      kernel
-Requires:      kmod
-Requires:      libcap
-Requires:      libldm
-Requires:      libselinux
-Requires:      libxml2
-Requires:      lsof
-Requires:      lsscsi
-Requires:      lvm2
-Requires:      lzop
-Requires:      mdadm
-Requires:      nilfs-utils
-Requires:      ntfs-3g
-%ifarch %{ix86} x86_64
-Requires:      ntfsprogs
-%endif
-Requires:      openssh-clients
-Requires:      parted
-Requires:      procps
-Requires:      psmisc
-Requires:      reiserfs-utils
-Requires:      rsync
-Requires:      scrub
-Requires:      strace
-Requires:      systemd
-Requires:      tar
-Requires:      udev
-Requires:      util-linux
-Requires:      vim-minimal
-Requires:      xfsprogs
-Requires:      xz
-Requires:      yajl
-Requires:      zerofree
-# Not supported on ARM http://zfs-fuse.net/issues/94
-%ifnarch %{arm}
-Requires:      zfs-fuse
-%endif
-
-# These are only required if you want to build the bindings for
-# different languages:
 BuildRequires: /usr/bin/ping
+BuildRequires: perl(Sys::Virt)
+BuildRequires: /usr/bin/qemu-img
 BuildRequires: perl-devel
 BuildRequires: perl(Test::More)
 BuildRequires: perl(Test::Pod) >= 1.00
@@ -228,12 +84,26 @@ BuildRequires: glib2-devel
 BuildRequires: gobject-introspection-devel
 BuildRequires: gjs
 
-# For libguestfs-tools:
-BuildRequires: perl(Sys::Virt)
-BuildRequires: /usr/bin/qemu-img
+# This is only needed for RHEL 5 because readline-devel doesn't
+# properly depend on it, but doesn't do any harm on other platforms:
+BuildRequires: ncurses-devel
 
 # Force new parted for Linux 3.0 (RHBZ#710882).
 BuildRequires: parted >= 3.0-2
+
+# Build requirements for the appliance.
+# sed 's/^ *//' < appliance/packagelist | sort
+%global appliance_buildreqs0 acl attr augeas-libs bash binutils btrfs-progs bzip2 coreutils cpio cryptsetup diffutils dosfstools e2fsprogs file findutils gawk gdisk gfs2-utils grep gzip hivex iproute iputils jfsutils kernel kmod less libcap libldm libselinux libxml2 lsof lsscsi lvm2 lzop mdadm nilfs-utils ntfs-3g openssh-clients parted pcre procps psmisc reiserfs-utils rsync scrub sed strace systemd tar udev util-linux vim-minimal xfsprogs xz yajl zerofree
+%ifnarch %{arm}
+# http://zfs-fuse.net/issues/94
+%global appliance_buildreqs1 hfsplus-tools zfs-fuse
+%endif
+%ifarch %{ix86} x86_64 \
+%global appliance_buildreqs2 ntfsprogs
+%endif
+%global appliance_buildreqs %{appliance_buildreqs0} %{?appliance_buildreqs1} %{?appliance_buildreqs2}
+BuildRequires: %{appliance_buildreqs}
+Requires:      %{appliance_buildreqs}
 
 # For building the appliance.
 Requires:      supermin-helper >= 4.1.1
