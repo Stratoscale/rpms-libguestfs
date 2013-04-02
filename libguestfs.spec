@@ -704,7 +704,7 @@ EOF
 fi
 
 %{configure} \
-  --with-default-attach-method=libvirt \
+  --with-default-backend=libvirt \
   --with-extra="fedora=%{fedora},release=%{release},libvirt" \
   --with-qemu="qemu-kvm qemu-system-%{_build_arch} qemu" \
   --enable-install-daemon \
