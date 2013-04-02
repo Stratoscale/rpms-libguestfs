@@ -1,15 +1,3 @@
-# If you have trouble building locally ('make local') try adding
-#   %libguestfs_buildnet 1
-# to your ~/.rpmmacros file.
-
-# Enable to build using a network repo
-# Default is disabled
-%if %{defined libguestfs_buildnet}
-%global buildnet %{libguestfs_buildnet}
-%else
-%global buildnet 0
-%endif 
-
 # Enable to run tests during check
 # Default is enabled
 %if %{defined libguestfs_runtests}
@@ -217,6 +205,7 @@ Requires:      zfs-fuse
 
 # These are only required if you want to build the bindings for
 # different languages:
+BuildRequires: /usr/bin/ping
 BuildRequires: perl-devel
 BuildRequires: perl(Test::More)
 BuildRequires: perl(Test::Pod) >= 1.00
@@ -687,39 +676,39 @@ grep -Ev '\budev\b' < appliance/packagelist.in.orig > appliance/packagelist.in
 
 
 %build
-%if %{buildnet}
-%define extra %{nil}
-%else
-mkdir repo
-find /var/cache/yum -type f -name '*.rpm' -print0 | xargs -0 cp -t repo
-createrepo repo
-cat > yum.conf <<EOF
-[main]
-cachedir=/var/cache/yum
-debuglevel=1
-logfile=/var/log/yum.log
-retries=20
-obsoletes=1
-gpgcheck=0
-assumeyes=1
-reposdir=/dev/null
-
-[local]
-name=local
-baseurl=file://$(pwd)/repo
-failovermethod=priority
-enabled=1
-gpgcheck=0
+# Test if network is available.
+if ping -c 3 -w 20 8.8.8.8; then
+  extra=
+else
+  mkdir repo
+  find /var/cache/yum -type f -name '*.rpm' -print0 | xargs -0 cp -t repo
+  createrepo repo
+  cat > yum.conf <<EOF
+    [main]
+    cachedir=/var/cache/yum
+    debuglevel=1
+    logfile=/var/log/yum.log
+    retries=20
+    obsoletes=1
+    gpgcheck=0
+    assumeyes=1
+    reposdir=/dev/null
+    [local]
+    name=local
+    baseurl=file://$(pwd)/repo
+    failovermethod=priority
+    enabled=1
+    gpgcheck=0
 EOF
-%define extra --with-supermin-packager-config=$(pwd)/yum.conf
-%endif
+  extra=--with-supermin-packager-config=$(pwd)/yum.conf
+fi
 
 %{configure} \
   --with-default-attach-method=libvirt \
   --with-extra="fedora=%{fedora},release=%{release},libvirt" \
   --with-qemu="qemu-kvm qemu-system-%{_build_arch} qemu" \
   --enable-install-daemon \
-  %{extra}
+  $extra
 
 # 'INSTALLDIRS' ensures that Perl and Ruby libs are installed in the
 # vendor dir not the site dir.
