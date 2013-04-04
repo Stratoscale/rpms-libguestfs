@@ -11,8 +11,8 @@
 Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
-Version:       1.21.26
-Release:       4%{?dist}
+Version:       1.21.27
+Release:       1%{?dist}
 License:       LGPLv2+
 
 # Source and patches.
@@ -89,7 +89,7 @@ BuildRequires: gjs
 
 # Build requirements for the appliance.
 # sed 's/^ *//' < appliance/packagelist | sort
-%global appliance_buildreqs0 acl attr augeas-libs bash binutils btrfs-progs bzip2 coreutils cpio cryptsetup diffutils dosfstools e2fsprogs file findutils gawk gdisk gfs2-utils grep gzip hivex iproute iputils jfsutils kernel kmod less libcap libldm libselinux libxml2 lsof lsscsi lvm2 lzop mdadm nilfs-utils ntfs-3g openssh-clients parted pcre procps psmisc reiserfs-utils rsync scrub sed strace systemd tar udev util-linux vim-minimal xfsprogs xz yajl zerofree
+%global appliance_buildreqs0 acl attr augeas-libs bash binutils btrfs-progs bzip2 coreutils cpio cryptsetup diffutils dosfstools e2fsprogs file findutils gawk gdisk gfs2-utils grep gzip hivex iproute iputils jfsutils kernel kmod less libcap libldm libselinux libxml2 lsof lsscsi lvm2 lzop mdadm nilfs-utils ntfs-3g openssh-clients parted pcre procps psmisc reiserfs-utils rsync scrub sed strace syslinux syslinux-extlinux systemd tar udev util-linux vim-minimal xfsprogs xz yajl zerofree
 %ifnarch %{arm}
 # http://zfs-fuse.net/issues/94
 %global appliance_buildreqs1 hfsplus-tools zfs-fuse
@@ -108,6 +108,7 @@ Requires:      supermin-helper >= 4.1.1
 Requires:      libdb-utils
 Requires:      netpbm-progs
 Requires:      icoutils
+Requires:      libosinfo
 
 # For core mount-local (FUSE) API.
 Requires:      fuse
@@ -884,6 +885,11 @@ mkdir -p $RPM_BUILD_ROOT%{_localstatedir}/run/libguestfs
 
 
 %changelog
+* Thu Apr  4 2013 Richard W.M. Jones <rjones@redhat.com> - 1:1.21.27-1
+- New upstream version 1.21.27.
+- Add new appliance BRs: syslinux, syslinux-extlinux.
+- Add a dependency on libosinfo (partial fix for RHBZ#948324).
+
 * Tue Apr  2 2013 Richard W.M. Jones <rjones@redhat.com> - 1:1.21.26-4
 - New upstream version 1.21.26.
 - Use ./configure --with-default-backend=.. instead of attach-method.
