@@ -11,7 +11,7 @@
 Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
-Version:       1.21.27
+Version:       1.21.28
 Release:       1%{?dist}
 License:       LGPLv2+
 
@@ -879,6 +879,11 @@ mkdir -p $RPM_BUILD_ROOT%{_localstatedir}/run/libguestfs
 
 
 %changelog
+* Tue Apr  9 2013 Richard W.M. Jones <rjones@redhat.com> - 1:1.21.28-1
+- New upstream version 1.21.28.
+- Change attach-method -> backend in a few places.
+- Simplify make install section so it fits on a single page.
+
 * Thu Apr  4 2013 Richard W.M. Jones <rjones@redhat.com> - 1:1.21.27-1
 - New upstream version 1.21.27.
 - Add new appliance BRs: syslinux, syslinux-extlinux.
