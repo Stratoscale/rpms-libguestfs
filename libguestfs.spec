@@ -113,7 +113,7 @@ Requires:      libosinfo
 # For core mount-local (FUSE) API.
 Requires:      fuse
 
-# For libvirt attach method.
+# For libvirt backend.
 Requires:      libvirt-daemon-qemu >= 0.10.2-3
 %ifarch %{ix86} x86_64
 Requires:      libvirt-daemon-kvm >= 0.10.2-3
@@ -629,27 +629,21 @@ make check -k
 make DESTDIR=$RPM_BUILD_ROOT INSTALLDIRS=vendor install
 
 # Delete static libraries, libtool files.
-rm $RPM_BUILD_ROOT%{_libdir}/libguestfs.a
-rm $RPM_BUILD_ROOT%{_libdir}/libguestfs.la
-rm $RPM_BUILD_ROOT%{_libdir}/libguestfs-gobject-1.0.a
-rm $RPM_BUILD_ROOT%{_libdir}/libguestfs-gobject-1.0.la
-rm $RPM_BUILD_ROOT%{_libdir}/lua/*/libluaguestfs.la
+find $RPM_BUILD_ROOT -name '*.a' -delete
+find $RPM_BUILD_ROOT -name '*.la' -delete
 
+# Delete some bogus Perl files.
 find $RPM_BUILD_ROOT -name perllocal.pod -delete
 find $RPM_BUILD_ROOT -name .packlist -delete
 find $RPM_BUILD_ROOT -name '*.bs' -delete
 find $RPM_BUILD_ROOT -name 'bindtests.pl' -delete
 
-rm $RPM_BUILD_ROOT%{python_sitearch}/libguestfsmod.la
-
+# Move Python libraries to sitelib.
 if [ "$RPM_BUILD_ROOT%{python_sitearch}" != "$RPM_BUILD_ROOT%{python_sitelib}" ]; then
    mkdir -p $RPM_BUILD_ROOT%{python_sitelib}
    mv $RPM_BUILD_ROOT%{python_sitearch}/guestfs.py* \
      $RPM_BUILD_ROOT%{python_sitelib}/
 fi
-
-# Remove static-linked Java bindings.
-rm $RPM_BUILD_ROOT%{_libdir}/libguestfs_jni.la
 
 # Move installed documentation back to the source directory so
 # we can install it using a %%doc rule.
@@ -665,7 +659,7 @@ install -m 0644 %{SOURCE3} $RPM_BUILD_ROOT%{_prefix}/lib/udev/rules.d
 mv $RPM_BUILD_ROOT/lib/udev/rules.d/99-guestfs-serial.rules \
   $RPM_BUILD_ROOT%{_prefix}/lib/udev/rules.d
 
-# For SELinux to work with the libvirt attach method.
+# For SELinux to work with the libvirt backend.
 mkdir -p $RPM_BUILD_ROOT%{_localstatedir}/run/libguestfs
 
 # Find locale files.
