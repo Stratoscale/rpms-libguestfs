@@ -12,7 +12,7 @@ Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
 Version:       1.21.28
-Release:       2%{?dist}
+Release:       3%{?dist}
 License:       LGPLv2+
 
 # Source and patches.
@@ -89,13 +89,13 @@ BuildRequires: gjs
 
 # Build requirements for the appliance.
 # sed 's/^ *//' < appliance/packagelist | sort
-%global appliance_buildreqs0 acl attr augeas-libs bash binutils btrfs-progs bzip2 coreutils cpio cryptsetup diffutils dosfstools e2fsprogs file findutils gawk gdisk gfs2-utils grep gzip hivex iproute iputils jfsutils kernel kmod less libcap libldm libselinux libxml2 lsof lsscsi lvm2 lzop mdadm nilfs-utils ntfs-3g openssh-clients parted pcre procps psmisc reiserfs-utils rsync scrub sed strace syslinux syslinux-extlinux systemd tar udev util-linux vim-minimal xfsprogs xz yajl zerofree
+%global appliance_buildreqs0 acl attr augeas-libs bash binutils btrfs-progs bzip2 coreutils cpio cryptsetup diffutils dosfstools e2fsprogs file findutils gawk gdisk gfs2-utils grep gzip hivex iproute iputils jfsutils kernel kmod less libcap libldm libselinux libxml2 lsof lsscsi lvm2 lzop mdadm nilfs-utils ntfs-3g openssh-clients parted pcre procps psmisc reiserfs-utils rsync scrub sed strace systemd tar udev util-linux vim-minimal xfsprogs xz yajl zerofree
 %ifnarch %{arm}
 # http://zfs-fuse.net/issues/94
 %global appliance_buildreqs1 hfsplus-tools zfs-fuse
 %endif
 %ifarch %{ix86} x86_64 \
-%global appliance_buildreqs2 ntfsprogs
+%global appliance_buildreqs2 ntfsprogs syslinux syslinux-extlinux
 %endif
 %global appliance_buildreqs %{appliance_buildreqs0} %{?appliance_buildreqs1} %{?appliance_buildreqs2}
 BuildRequires: %{appliance_buildreqs}
@@ -881,6 +881,10 @@ mkdir -p $RPM_BUILD_ROOT%{_localstatedir}/run/libguestfs
 
 
 %changelog
+* Thu Apr 11 2013 Richard W.M. Jones <rjones@redhat.com> - 1:1.21.28-3
+- SYSLINUX only exists on x86 arches so make that dependency conditional
+  (thanks Dennis Gilmore).
+
 * Tue Apr  9 2013 Richard W.M. Jones <rjones@redhat.com> - 1:1.21.28-2
 - New upstream version 1.21.28.
 - Change attach-method -> backend in a few places.
