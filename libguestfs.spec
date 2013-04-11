@@ -21,8 +21,8 @@
 Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
-Version:       1.20.5
-Release:       2%{?dist}
+Version:       1.20.6
+Release:       1%{?dist}
 License:       LGPLv2+
 Group:         Development/Libraries
 URL:           http://libguestfs.org/
@@ -1013,6 +1013,10 @@ mkdir -p $RPM_BUILD_ROOT%{_localstatedir}/run/libguestfs
 
 
 %changelog
+* Thu Apr 11 2013 Richard W.M. Jones <rjones@redhat.com> - 1:1.20.6-1
+- New upstream stable branch version 1.20.6.
+- This includes a full fix for RHBZ#948324.
+
 * Tue Apr  9 2013 Richard W.M. Jones <rjones@redhat.com> - 1:1.20.5-2
 - Add a dependency on libosinfo (partial fix for RHBZ#948324).
 
