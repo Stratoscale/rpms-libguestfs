@@ -11,8 +11,8 @@
 Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
-Version:       1.21.28
-Release:       3%{?dist}
+Version:       1.21.29
+Release:       1%{?dist}
 License:       LGPLv2+
 
 # Source and patches.
@@ -881,6 +881,9 @@ mkdir -p $RPM_BUILD_ROOT%{_localstatedir}/run/libguestfs
 
 
 %changelog
+* Sat Apr 13 2013 Richard W.M. Jones <rjones@redhat.com> - 1:1.21.29-1
+- New upstream version 1.21.29.
+
 * Thu Apr 11 2013 Richard W.M. Jones <rjones@redhat.com> - 1:1.21.28-3
 - SYSLINUX only exists on x86 arches so make that dependency conditional
   (thanks Dennis Gilmore).
