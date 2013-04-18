@@ -22,7 +22,7 @@ Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
 Version:       1.18.12
-Release:       1%{?dist}
+Release:       2%{?dist}
 License:       LGPLv2+
 Group:         Development/Libraries
 URL:           http://libguestfs.org/
@@ -34,6 +34,9 @@ Patch1:        ruby-1.9-vendor-not-site.patch
 BuildRequires: autoconf, automake, libtool, gettext-devel
 %endif
 
+# Use supermin instead of febootstrap.
+Patch2:        0001-Use-supermin-and-supermin-helper-in-preference-to-fe.patch
+
 %if 0%{?rhel} >= 7
 ExclusiveArch: x86_64
 %endif
@@ -41,7 +44,7 @@ ExclusiveArch: x86_64
 # Basic build requirements:
 BuildRequires: /usr/bin/pod2man
 BuildRequires: /usr/bin/pod2text
-BuildRequires: febootstrap >= 3.7
+BuildRequires: supermin >= 4.1.1
 BuildRequires: hivex-devel >= 1.2.7-7
 BuildRequires: perl-hivex
 BuildRequires: augeas-devel >= 0.5.0
@@ -255,7 +258,7 @@ BuildRequires: parted >= 3.0-2
 
 # Runtime requires:
 Requires:      qemu-kvm >= 0.12
-Requires:      febootstrap-supermin-helper >= 3.3
+Requires:      supermin-helper >= 4.1.1
 
 # For libguestfs-test-tool.
 Requires:      genisoimage
@@ -673,8 +676,11 @@ for %{name}.
 
 %if 0%{?fedora} >= 17 || 0%{?rhel} >= 7
 %patch1 -p1
-autoreconf -i
 %endif
+
+%patch2 -p1
+
+autoreconf -i
 
 mkdir -p daemon/m4
 
@@ -709,7 +715,7 @@ failovermethod=priority
 enabled=1
 gpgcheck=0
 EOF
-%define extra --with-febootstrap-yum-config=$(pwd)/yum.conf
+%define extra --with-supermin-packager-config=$(pwd)/yum.conf
 echo "==== /etc/yum.conf ===="
 cat /etc/yum.conf
 echo "==== our yum.conf ===="
@@ -1075,6 +1081,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Thu Apr 18 2013 Richard W.M. Jones <rjones@redhat.com> - 1:1.18.12-2
+- Use supermin instead of febootstrap (RHBZ#953456).
+
 * Thu Apr 11 2013 Richard W.M. Jones <rjones@redhat.com> - 1:1.18.12-1
 - New upstream stable version 1.18.12.
 

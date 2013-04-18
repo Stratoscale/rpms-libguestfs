@@ -1,0 +1,574 @@
+From 6dabf8fbee2417d1c6918190ff9f19badbe8fa3e Mon Sep 17 00:00:00 2001
+From: "Richard W.M. Jones" <rjones@redhat.com>
+Date: Tue, 5 Feb 2013 15:31:05 +0000
+Subject: [PATCH] Use 'supermin' and 'supermin-helper' in preference to
+ febootstrap.
+
+Febootstrap has been renamed upstream to 'supermin':
+https://www.redhat.com/archives/libguestfs/2013-February/msg00004.html
+
+This commit changes libguestfs so it can use either program to build
+the supermin appliance.
+
+(cherry picked from commit a0a4ee5245afdb7961d39b243439b902229dd599)
+---
+ TODO                                          |  2 +-
+ appliance/libguestfs-make-fixed-appliance.pod | 16 ++++----
+ appliance/make.sh.in                          | 12 +++---
+ configure.ac                                  | 55 ++++++++++++++++++++-------
+ examples/guestfs-faq.pod                      |  6 +--
+ examples/guestfs-performance.pod              | 10 ++---
+ fish/guestfish.pod                            | 19 ++++++---
+ podwrapper.pl.in                              |  1 +
+ src/appliance.c                               | 18 ++++-----
+ src/guestfs.pod                               | 43 ++++++++++++---------
+ test-tool/libguestfs-test-tool.pod            | 10 +++--
+ test-tool/test-tool.c                         |  2 +
+ tests/qemu/qemu-liveness.sh                   |  4 +-
+ tests/regressions/rhbz789960.sh               |  2 +-
+ 14 files changed, 124 insertions(+), 76 deletions(-)
+
+diff --git a/TODO b/TODO
+index 93f8787..14b270f 100644
+--- a/TODO
++++ b/TODO
+@@ -415,7 +415,7 @@ Launch remote sessions over ssh
+ -------------------------------
+ 
+ We had an idea you could add a launch method that uses ssh, ie.  all
+-febootstrap and qemu commands happen the same as now, but prefixed by
++supermin and qemu commands happen the same as now, but prefixed by
+ ssh so it happens on a remote machine.
+ 
+ Note that proper remote support and integration with libvirt is
+diff --git a/appliance/libguestfs-make-fixed-appliance.pod b/appliance/libguestfs-make-fixed-appliance.pod
+index b1817f7..79651dc 100644
+--- a/appliance/libguestfs-make-fixed-appliance.pod
++++ b/appliance/libguestfs-make-fixed-appliance.pod
+@@ -18,7 +18,7 @@ appliance for libguestfs.
+ B<Note that ordinary users should not need to run this tool>.  The
+ only reason to use it is if you want to make a self-contained
+ libguestfs appliance that can be copied to another machine or platform
+-that doesn't support L<febootstrap(8)>.  To understand why you might
++that doesn't support L<supermin(8)>.  To understand why you might
+ need to use this tool, read the section L</FIXED APPLIANCE> below.
+ 
+ Instead of running this tool, you can download fixed appliances from
+@@ -107,21 +107,21 @@ looking for an appliance.  The path is built into libguestfs, or can
+ be set using the C<LIBGUESTFS_PATH> environment variable.
+ 
+ Normally a supermin appliance is located on this path (see
+-L<febootstrap(8)/SUPERMIN APPLIANCE>).  libguestfs reconstructs this
+-into a full appliance by running L<febootstrap-supermin-helper(8)>.
++L<supermin(8)/SUPERMIN APPLIANCE>).  libguestfs reconstructs this
++into a full appliance by running L<supermin-helper(8)>.
+ 
+ However, a simpler "fixed appliance" can also be used.  libguestfs
+ detects this by looking for a directory on the path containing four
+ files called C<kernel>, C<initrd>, C<root> and C<README.fixed> (note
+ the C<README.fixed> file must be present as well).
+ 
+-If the fixed appliance is found, libguestfs skips febootstrap entirely
++If the fixed appliance is found, libguestfs skips supermin entirely
+ and just runs qemu with the kernel, initrd and root disk from the
+ fixed appliance.
+ 
+ Thus the fixed appliance can be used when a platform or Linux distro
+-does not support febootstrap.  You build the fixed appliance on a
+-platform that does support febootstrap, and copy it over, and use that
++does not support supermin.  You build the fixed appliance on a
++platform that does support supermin, and copy it over, and use that
+ to run libguestfs.
+ 
+ =head1 LICENSING
+@@ -144,8 +144,8 @@ libguestfs, please see the L<guestfs(3)> manual page.
+ =head1 SEE ALSO
+ 
+ L<guestfs(3)>,
+-L<febootstrap(8)>,
+-L<febootstrap-supermin-helper(8)>,
++L<supermin(8)>,
++L<supermin-helper(8)>,
+ L<xz(1)>,
+ L<http://libguestfs.org/>,
+ L<http://qemu.org/>.
+diff --git a/appliance/make.sh.in b/appliance/make.sh.in
+index 0335f6e..3b7194e 100755
+--- a/appliance/make.sh.in
++++ b/appliance/make.sh.in
+@@ -27,13 +27,15 @@ while read regexp <&5; do
+ done
+ exec 5<&-
+ 
+-# Run febootstrap on the package list.
+-if [ "x@FEBOOTSTRAP_YUM_CONFIG@" != "xno" ]; then
+-    extra="--yum-config @FEBOOTSTRAP_YUM_CONFIG@"
++# Run supermin on the package list.
++# NB: Keep using --yum-config (deprecated alias) here since both old
++# and new supermin still support it.
++if [ "x@SUPERMIN_PACKAGER_CONFIG@" != "xno" ]; then
++    extra="--yum-config @SUPERMIN_PACKAGER_CONFIG@"
+ fi
+ 
+-echo @FEBOOTSTRAP@ -v -o supermin.d --names $(< packagelist ) $excludes $extra
+-@FEBOOTSTRAP@ -v -o supermin.d --names $(< packagelist ) $excludes $extra
++echo @SUPERMIN@ -v -o supermin.d --names $(< packagelist ) $excludes $extra
++@SUPERMIN@ -v -o supermin.d --names $(< packagelist ) $excludes $extra
+ 
+ # Remove some things that we don't want in the appliance.  This is
+ # copied from the old febootstrap-minimize.  However minimization is
+diff --git a/configure.ac b/configure.ac
+index 32f84cc..b54c6b6 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -348,28 +348,55 @@ AC_ARG_ENABLE([appliance],
+ AM_CONDITIONAL([ENABLE_APPLIANCE],[test "x$enable_appliance" = "xyes"])
+ AC_MSG_RESULT([$enable_appliance])
+ 
+-dnl Check for febootstrap >= 3.0
+-AC_CHECK_PROG([FEBOOTSTRAP],
+-              [febootstrap],[febootstrap],[no])
++dnl Check for supermin >= 4.1.0 or febootstrap >= 3.20.
++AC_CHECK_PROGS([SUPERMIN],
++               [supermin febootstrap],[no])
++AC_CHECK_PROGS([SUPERMIN_HELPER],
++               [supermin-helper febootstrap-supermin-helper],[no])
+ 
+-dnl Pass a febootstrap --yum-config option.
+-AC_MSG_CHECKING([if user requested febootstrap --yum-config option])
++dnl Pass supermin --packager-config option.
++dnl
++dnl Note that in febootstrap >= 3.21 / supermin >= 4.1.0, this option
++dnl is now called --packager-config, although --yum-config can still
++dnl be used as a deprecated alias.
++SUPERMIN_PACKAGER_CONFIG=no
++
++AC_MSG_CHECKING([for --with-supermin-packager-config option])
++AC_ARG_WITH([supermin-packager-config],
++    [AS_HELP_STRING([--with-supermin-packager-config=FILE],
++        [pass supermin --packager-config option @<:@default=no@:>@])],
++    [SUPERMIN_PACKAGER_CONFIG="$withval"
++     AC_MSG_RESULT([$SUPERMIN_PACKAGER_CONFIG"])],
++    [AC_MSG_RESULT([not set])])
++
++AC_MSG_CHECKING([for --with-febootstrap-yum-config option (deprecated)])
+ AC_ARG_WITH([febootstrap-yum-config],
+     [AS_HELP_STRING([--with-febootstrap-yum-config=FILE],
+-      [pass febootstrap --yum-config option @<:@default=no@:>@])],
+-    [FEBOOTSTRAP_YUM_CONFIG="$withval"],
+-    [FEBOOTSTRAP_YUM_CONFIG=no])
+-AC_MSG_RESULT([$FEBOOTSTRAP_YUM_CONFIG])
+-AC_SUBST([FEBOOTSTRAP_YUM_CONFIG])
++        [pass supermin --packager-config option @<:@default=no@:>@])],
++    [SUPERMIN_PACKAGER_CONFIG="$withval"
++     AC_MSG_RESULT([$SUPERMIN_PACKAGER_CONFIG"])],
++    [AC_MSG_RESULT([not set])])
++
++AC_MSG_CHECKING([for --with-febootstrap-packager-config option (deprecated)])
++AC_ARG_WITH([febootstrap-packager-config],
++    [AS_HELP_STRING([--with-febootstrap-packager-config=FILE],
++        [pass supermin --packager-config option @<:@default=no@:>@])],
++    [SUPERMIN_PACKAGER_CONFIG="$withval"
++     AC_MSG_RESULT([$SUPERMIN_PACKAGER_CONFIG"])],
++    [AC_MSG_RESULT([not set])])
++
++AC_SUBST([SUPERMIN_PACKAGER_CONFIG])
+ 
+ if test "x$enable_appliance" = "xyes"; then
+-    test "x$FEBOOTSTRAP" = "xno" &&
+-        AC_MSG_ERROR([febootstrap must be installed])
++    test "x$SUPERMIN" = "xno" &&
++        AC_MSG_ERROR([supermin (formerly called febootstrap) must be installed])
+     dnl febootstrap 2.x did not support the --version parameter
+-    $FEBOOTSTRAP --version >&AS_MESSAGE_LOG_FD 2>&1 ||
+-        AC_MSG_ERROR([febootstrap >= 3.0 must be installed, your version is too old])
++    $SUPERMIN --version >&AS_MESSAGE_LOG_FD 2>&1 ||
++        AC_MSG_ERROR([supermin (formerly called febootstrap) >= 3.20 must be installed, your version is too old])
+ fi
+ 
++AC_DEFINE_UNQUOTED([SUPERMIN_HELPER],["$SUPERMIN_HELPER"],[Name of supermin-helper program.])
++
+ dnl Which distro?
+ dnl
+ dnl This used to be Very Important but is now just used to select
+diff --git a/examples/guestfs-faq.pod b/examples/guestfs-faq.pod
+index 7d4a316..9aeec33 100644
+--- a/examples/guestfs-faq.pod
++++ b/examples/guestfs-faq.pod
+@@ -335,17 +335,17 @@ You'll have to compile from source, and port it.
+ 
+ =head2 How can I compile and install libguestfs from source?
+ 
+-If your Linux distro has a working port of febootstrap (that is,
++If your Linux distro has a working port of supermin (that is,
+ Fedora, S<Red Hat Enterprise Linux E<ge> 6.3>, Debian, Ubuntu and ArchLinux)
+ then you should just be able to compile from source in the usual way.
+ Download the latest tarball from L<http://libguestfs.org/download>,
+ unpack it, and start by reading the README file.
+ 
+-If you I<don't> have febootstrap, you will need to use the "fixed
++If you I<don't> have supermin, you will need to use the "fixed
+ appliance method".  See:
+ L<http://libguestfs.org/download/binaries/appliance/>
+ 
+-Patches to port febootstrap to more Linux distros are welcome.
++Patches to port supermin to more Linux distros are welcome.
+ 
+ =head2 Why do I get an error when I try to rebuild from the source
+ RPMs supplied by Red Hat / Fedora?
+diff --git a/examples/guestfs-performance.pod b/examples/guestfs-performance.pod
+index b3301c8..04842e8 100644
+--- a/examples/guestfs-performance.pod
++++ b/examples/guestfs-performance.pod
+@@ -90,7 +90,7 @@ set C<$TMPDIR> in which case it will be under that temporary
+ directory.
+ 
+ For more information about how the appliance is constructed, see
+-L<febootstrap(8)/SUPERMIN APPLIANCES>.
++L<supermin(8)/SUPERMIN APPLIANCES>.
+ 
+ Every time libguestfs runs it will check that no host files used by
+ the appliance have changed.  If any have, then the appliance is
+@@ -167,7 +167,7 @@ times.
+ 
+ =item 2.
+ 
+-By default libguestfs (or rather, L<febootstrap-supermin-helper(8)>)
++By default libguestfs (or rather, L<supermin-helper(8)>)
+ searches over the root filesystem to find out if any host files have
+ changed and if it needs to rebuild the appliance.  If these files are
+ not cached and the root filesystem is on an HDD, then this generates
+@@ -302,7 +302,7 @@ timings:
+ 
+  $ annotate-output +'%T.%N' guestfish -a /dev/null run -v
+  22:17:53.215784625 I: Started guestfish -a /dev/null run -v
+- 22:17:53.240335409 E: libguestfs: [00000ms] febootstrap-supermin-helper --verbose -f checksum '/usr/lib64/guestfs/supermin.d' x86_64
++ 22:17:53.240335409 E: libguestfs: [00000ms] supermin-helper --verbose -f checksum '/usr/lib64/guestfs/supermin.d' x86_64
+  22:17:53.266857866 E: supermin helper [00000ms] whitelist = (not specified), host_cpu = x86_64, kernel = (null), initrd = (null), appliance = (null)
+  22:17:53.272704072 E: supermin helper [00000ms] inputs[0] = /usr/lib64/guestfs/supermin.d
+  22:17:53.276528651 E: checking modpath /lib/modules/3.4.0-1.fc17.x86_64.debug is a directory
+@@ -428,8 +428,8 @@ bit.
+ 
+ =head1 SEE ALSO
+ 
+-L<febootstrap(8)>,
+-L<febootstrap-supermin-helper(8)>,
++L<supermin(8)>,
++L<supermin-helper(8)>,
+ L<guestfish(1)>,
+ L<guestfs(3)>,
+ L<guestfs-examples(3)>,
+diff --git a/fish/guestfish.pod b/fish/guestfish.pod
+index 62bad2b..07f08b9 100644
+--- a/fish/guestfish.pod
++++ b/fish/guestfish.pod
+@@ -1141,11 +1141,8 @@ set, it uses C<vi>.
+ 
+ =item FEBOOTSTRAP_MODULES
+ 
+-These two environment variables allow the kernel that libguestfs uses
+-in the appliance to be selected.  If C<$FEBOOTSTRAP_KERNEL> is not
+-set, then the most recent host kernel is chosen.  For more information
+-about kernel selection, see L<febootstrap-supermin-helper(8)>.  This
+-feature is only available in febootstrap E<ge> 3.8.
++When using supermin E<ge> 4.1.0, these have been renamed
++L</SUPERMIN_KERNEL> and L</SUPERMIN_MODULES>.
+ 
+ =item GUESTFISH_DISPLAY_IMAGE
+ 
+@@ -1205,6 +1202,16 @@ Set C<LIBGUESTFS_TRACE=1> to enable command traces.
+ The C<more> command uses C<$PAGER> as the pager.  If not
+ set, it uses C<more>.
+ 
++=item SUPERMIN_KERNEL
++
++=item SUPERMIN_MODULES
++
++These two environment variables allow the kernel that libguestfs uses
++in the appliance to be selected.  If C<$SUPERMIN_KERNEL> is not
++set, then the most recent host kernel is chosen.  For more information
++about kernel selection, see L<supermin-helper(8)>.  This
++feature is only available in supermin / febootstrap E<ge> 3.8.
++
+ =item TMPDIR
+ 
+ Location of temporary directory, defaults to C</tmp> except for the
+@@ -1303,7 +1310,7 @@ L<virt-tar-out(1)>,
+ L<virt-win-reg(1)>,
+ L<display(1)>,
+ L<hexedit(1)>,
+-L<febootstrap-supermin-helper(8)>.
++L<supermin-helper(8)>.
+ 
+ =head1 AUTHORS
+ 
+diff --git a/podwrapper.pl.in b/podwrapper.pl.in
+index 46c71f2..fc427e8 100755
+--- a/podwrapper.pl.in
++++ b/podwrapper.pl.in
+@@ -432,6 +432,7 @@ SUBHTML: {
+         return 1 if /^guestmount/;
+         return 1 if /^hivex/;
+         return 1 if /^febootstrap/;
++        return 1 if /^supermin/;
+         return 0;
+     }
+ 
+diff --git a/src/appliance.c b/src/appliance.c
+index a7387af..37a3dc1 100644
+--- a/src/appliance.c
++++ b/src/appliance.c
+@@ -95,7 +95,7 @@ static void print_febootstrap_command_line (guestfs_h *g, const char *argv[]);
+  *
+  *   $TMPDIR/.guestfs-$UID/checksum       - the checksum
+  *   $TMPDIR/.guestfs-$UID/kernel         - symlink to the kernel
+- *   $TMPDIR/.guestfs-$UID/initrd         - the febootstrap initrd
++ *   $TMPDIR/.guestfs-$UID/initrd         - the supermin initrd
+  *   $TMPDIR/.guestfs-$UID/root           - the appliance
+  *
+  * Since multiple instances of libguestfs with the same UID may be
+@@ -224,7 +224,7 @@ contains_supermin_appliance (guestfs_h *g, const char *path, void *data)
+ }
+ 
+ /* supermin_path is a path which is known to contain a supermin
+- * appliance.  Using febootstrap-supermin-helper -f checksum calculate
++ * appliance.  Using supermin-helper -f checksum calculate
+  * the checksum so we can see if it is cached.
+  */
+ static char *
+@@ -236,7 +236,7 @@ calculate_supermin_checksum (guestfs_h *g, const char *supermin_path)
+ 
+   if (!pass_u_g_args)
+     snprintf (cmd, len,
+-              "febootstrap-supermin-helper%s "
++              "supermin-helper%s "
+               "-f checksum "
+               "'%s/supermin.d' "
+               host_cpu,
+@@ -244,7 +244,7 @@ calculate_supermin_checksum (guestfs_h *g, const char *supermin_path)
+               supermin_path);
+   else
+     snprintf (cmd, len,
+-              "febootstrap-supermin-helper%s "
++              "supermin-helper%s "
+               "-u %i "
+               "-g %i "
+               "-f checksum "
+@@ -276,7 +276,7 @@ calculate_supermin_checksum (guestfs_h *g, const char *supermin_path)
+   len = strlen (checksum);
+ 
+   if (len < 16) {               /* sanity check */
+-    warning (g, "febootstrap-supermin-helper -f checksum returned a short string");
++    warning (g, "supermin-helper -f checksum returned a short string");
+     return NULL;
+   }
+ 
+@@ -474,7 +474,7 @@ build_supermin_appliance (guestfs_h *g,
+   }
+ 
+   if (g->verbose)
+-    guestfs___print_timestamped_message (g, "run febootstrap-supermin-helper");
++    guestfs___print_timestamped_message (g, "run supermin-helper");
+ 
+   int r = run_supermin_helper (g, supermin_path, tmpcd, len);
+   if (r == -1) {
+@@ -645,7 +645,7 @@ hard_link_to_cached_appliance (guestfs_h *g,
+   return -1;
+ }
+ 
+-/* Run febootstrap-supermin-helper and tell it to generate the
++/* Run supermin-helper and tell it to generate the
+  * appliance.
+  */
+ static int
+@@ -672,7 +672,7 @@ run_supermin_helper (guestfs_h *g, const char *supermin_path,
+ 
+   int pass_u_g_args = getuid () != geteuid () || getgid () != getegid ();
+ 
+-  argv[i++] = "febootstrap-supermin-helper";
++  argv[i++] = "supermin-helper";
+   if (g->verbose)
+     argv[i++] = "--verbose";
+   if (pass_u_g_args) {
+@@ -719,7 +719,7 @@ run_supermin_helper (guestfs_h *g, const char *supermin_path,
+    */
+   umask (0022);
+ 
+-  execvp ("febootstrap-supermin-helper", (char * const *) argv);
++  execvp ("supermin-helper", (char * const *) argv);
+   perror ("execvp");
+   _exit (EXIT_FAILURE);
+ }
+diff --git a/src/guestfs.pod b/src/guestfs.pod
+index a6f80e6..b384a58 100644
+--- a/src/guestfs.pod
++++ b/src/guestfs.pod
+@@ -2572,14 +2572,14 @@ debugging (set the environment variable C<LIBGUESTFS_DEBUG=1>).
+ 
+ =item Create the appliance
+ 
+-C<febootstrap-supermin-helper> is invoked to create the kernel, a
++C<supermin-helper> is invoked to create the kernel, a
+ small initrd and the appliance.
+ 
+ The appliance is cached in C</var/tmp/.guestfs-E<lt>UIDE<gt>> (or in
+ another directory if C<TMPDIR> is set).
+ 
+ For a complete description of how the appliance is created and cached,
+-read the L<febootstrap(8)> and L<febootstrap-supermin-helper(8)> man
++read the L<supermin(8)> and L<supermin-helper(8)> man
+ pages.
+ 
+ =item Start qemu and boot the kernel
+@@ -2588,7 +2588,7 @@ qemu is invoked to boot the kernel.
+ 
+ =item Run the initrd
+ 
+-C<febootstrap-supermin-helper> builds a small initrd.  The initrd is
++C<supermin-helper> builds a small initrd.  The initrd is
+ not the appliance.  The purpose of the initrd is to load enough kernel
+ modules in order that the appliance itself can be mounted and started.
+ 
+@@ -2598,10 +2598,10 @@ C</var/tmp/.guestfs-E<lt>UIDE<gt>/initrd>.
+ When the initrd has started you will see messages showing that kernel
+ modules are being loaded, similar to this:
+ 
+- febootstrap: ext2 mini initrd starting up
+- febootstrap: mounting /sys
+- febootstrap: internal insmod libcrc32c.ko
+- febootstrap: internal insmod crc32c-intel.ko
++ supermin: ext2 mini initrd starting up
++ supermin: mounting /sys
++ supermin: internal insmod libcrc32c.ko
++ supermin: internal insmod crc32c-intel.ko
+ 
+ =item Find and mount the appliance device
+ 
+@@ -2621,10 +2621,10 @@ the appliance.
+ 
+ If this works successfully you will see messages such as:
+ 
+- febootstrap: picked /sys/block/vdb/dev as root device
+- febootstrap: creating /dev/root as block special 252:16
+- febootstrap: mounting new root on /root
+- febootstrap: chroot
++ supermin: picked /sys/block/vdb/dev as root device
++ supermin: creating /dev/root as block special 252:16
++ supermin: mounting new root on /root
++ supermin: chroot
+  Starting /init script ...
+ 
+ Note that C<Starting /init script ...> indicates that the appliance's
+@@ -3493,11 +3493,8 @@ be reached in practice.  See the source code for more information.
+ 
+ =item FEBOOTSTRAP_MODULES
+ 
+-These two environment variables allow the kernel that libguestfs uses
+-in the appliance to be selected.  If C<$FEBOOTSTRAP_KERNEL> is not
+-set, then the most recent host kernel is chosen.  For more information
+-about kernel selection, see L<febootstrap-supermin-helper(8)>.  This
+-feature is only available in febootstrap E<ge> 3.8.
++When using supermin E<ge> 4.1.0, these have been renamed
++L</SUPERMIN_KERNEL> and L</SUPERMIN_MODULES>.
+ 
+ =item LIBGUESTFS_APPEND
+ 
+@@ -3533,6 +3530,16 @@ See also L</QEMU WRAPPERS> above.
+ Set C<LIBGUESTFS_TRACE=1> to enable command traces.  This
+ has the same effect as calling C<guestfs_set_trace (g, 1)>.
+ 
++=item SUPERMIN_KERNEL
++
++=item SUPERMIN_MODULES
++
++These two environment variables allow the kernel that libguestfs uses
++in the appliance to be selected.  If C<$SUPERMIN_KERNEL> is not
++set, then the most recent host kernel is chosen.  For more information
++about kernel selection, see L<supermin-helper(8)>.  This
++feature is only available in supermin / febootstrap E<ge> 3.8.
++
+ =item TMPDIR
+ 
+ Location of temporary directory, defaults to C</tmp> except for the
+@@ -3583,8 +3590,8 @@ L<guestfs-performance(1)>,
+ L<guestfs-testing(1)>,
+ L<libguestfs-test-tool(1)>,
+ L<libguestfs-make-fixed-appliance(1)>,
+-L<febootstrap(8)>,
+-L<febootstrap-supermin-helper(8)>,
++L<supermin(8)>,
++L<supermin-helper(8)>,
+ L<qemu(1)>,
+ L<hivex(3)>,
+ L<stap(1)>,
+diff --git a/test-tool/libguestfs-test-tool.pod b/test-tool/libguestfs-test-tool.pod
+index ca8ed28..29910a3 100644
+--- a/test-tool/libguestfs-test-tool.pod
++++ b/test-tool/libguestfs-test-tool.pod
+@@ -81,11 +81,13 @@ libguestfs-test-tool writes a wrapper script for you if one is needed.
+ 
+ =head1 TRYING OUT A DIFFERENT KERNEL
+ 
+-If you are using febootstrap E<ge> 3.8 then you can select which
+-kernel libguestfs tries.  You do this by setting the environment
+-variables C<FEBOOTSTRAP_KERNEL> and/or C<FEBOOTSTRAP_MODULES>.
++If you are using supermin / febootstrap E<ge> 3.8 then you can select
++which kernel libguestfs tries.  You do this by setting the environment
++variables C<SUPERMIN_KERNEL> and/or C<SUPERMIN_MODULES>
++(C<FEBOOTSTRAP_KERNEL> and C<FEBOOTSTRAP_MODULES> if still using the
++old febootstrap 3.21 program).
+ 
+-Refer to L<febootstrap-supermin-helper(8)/ENVIRONMENT VARIABLES>
++Refer to L<supermin-helper(8)/ENVIRONMENT VARIABLES>
+ for further information.
+ 
+ =head1 SELF-DIAGNOSIS
+diff --git a/test-tool/test-tool.c b/test-tool/test-tool.c
+index fe8bac5..4e0894f 100644
+--- a/test-tool/test-tool.c
++++ b/test-tool/test-tool.c
+@@ -185,6 +185,8 @@ main (int argc, char *argv[])
+       printf ("%s\n", environ[i]);
+     if (STRPREFIX (environ[i], "FEBOOTSTRAP_"))
+       printf ("%s\n", environ[i]);
++    if (STRPREFIX (environ[i], "SUPERMIN_"))
++      printf ("%s\n", environ[i]);
+     if (STRPREFIX (environ[i], "LIBVIRT_"))
+       printf ("%s\n", environ[i]);
+     if (STRPREFIX (environ[i], "LIBVIRTD_"))
+diff --git a/tests/qemu/qemu-liveness.sh b/tests/qemu/qemu-liveness.sh
+index d95321c..5f1dd7f 100755
+--- a/tests/qemu/qemu-liveness.sh
++++ b/tests/qemu/qemu-liveness.sh
+@@ -18,7 +18,7 @@
+ 
+ # Boot and check that writes work.
+ # Note this is the first boot test that we run, so it's looking for
+-# all sorts of qemu/kernel/febootstrap problems.
++# all sorts of qemu/kernel/supermin problems.
+ 
+ set -e
+ 
+@@ -49,4 +49,4 @@ if [ "$(md5sum test1.img | awk '{print $1}')" = "$test1_md5sum" ]; then
+     exit 1
+ fi
+ 
+-rm test1.img
+\ No newline at end of file
++rm test1.img
+diff --git a/tests/regressions/rhbz789960.sh b/tests/regressions/rhbz789960.sh
+index b1d5934..ac66c4a 100755
+--- a/tests/regressions/rhbz789960.sh
++++ b/tests/regressions/rhbz789960.sh
+@@ -36,7 +36,7 @@ run
+ # Should fail even though the device exists.
+ -mount /dev/sda /
+ 
+-# In some configurations, this is the febootstrap appliance.  This
++# In some configurations, this is the supermin appliance.  This
+ # should fail.
+ -mount /dev/vdb /
+ 
+-- 
+1.8.1.4
+
