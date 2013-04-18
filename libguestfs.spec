@@ -22,7 +22,7 @@ Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
 Version:       1.18.12
-Release:       2%{?dist}
+Release:       3%{?dist}
 License:       LGPLv2+
 Group:         Development/Libraries
 URL:           http://libguestfs.org/
@@ -816,7 +816,18 @@ popd
 %endif
 
 %if %{runtests}
-make check
+# Disabled because Nested Virt in Koji is not stable on F17.
+# You'll see random hangs around the following messages on x86_64:
+#
+# ACPI Exception: AE_BAD_PARAMETER, Thread 491034464 could not acquire Mutex [0x1] (20121018/utmutex-278)
+# piix4_smbus 0000:00:01.3: SMBus Host Controller at 0xb100, revision 0
+# microcode: AMD CPU family 0x6 not supported
+# kvm: Nested Virtualization enabled
+# Clocksource tsc unstable (delta = 89626594 ns)
+# Switching to clocksource refined-jiffies
+#
+#make check
+make quickcheck
 %endif
 
 
@@ -1081,8 +1092,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
-* Thu Apr 18 2013 Richard W.M. Jones <rjones@redhat.com> - 1:1.18.12-2
+* Thu Apr 18 2013 Richard W.M. Jones <rjones@redhat.com> - 1:1.18.12-3
 - Use supermin instead of febootstrap (RHBZ#953456).
+- Longer tests disabled because Nested Virt in Koji is not stable.
 
 * Thu Apr 11 2013 Richard W.M. Jones <rjones@redhat.com> - 1:1.18.12-1
 - New upstream stable version 1.18.12.
