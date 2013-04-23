@@ -605,6 +605,7 @@ export SKIP_TEST_SET_LABEL=1
 
 # Skip gnulib tests which fail (probably these are kernel/glibc bugs).
 pushd gnulib/tests
+make -k check ||:
 for f in test-getaddrinfo test-utimens ; do
   rm -f $f $f.o
   touch $f.o
