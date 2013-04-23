@@ -597,26 +597,11 @@ export LIBGUESTFS_TRACE=1
 # checksum at runtime.
 export SKIP_TEST_CHECKSUM_DEVICE=1
 
-# This triggers a bug in btrfs (RHBZ#907554).
-export SKIP_TEST_CHARSET_FIDELITY=1
-
 # Disable virt-format test (RHBZ#872831).
 export SKIP_TEST_VIRT_FORMAT_SH=1
 
 # Disable set_label tests (RHBZ#906777).
 export SKIP_TEST_SET_LABEL=1
-
-# Disable all btrfs tests (RHBZ#863978).
-export SKIP_TEST_BTRFS_FSCK=1
-export SKIP_TEST_BTRFS_SET_SEEDING=1
-export SKIP_TEST_BTRFS_FILESYSTEM_SYNC=1
-export SKIP_TEST_BTRFS_SUBVOLUME_DELETE=1
-export SKIP_TEST_BTRFS_SUBVOLUME_SNAPSHOT=1
-export SKIP_TEST_MKFS_BTRFS=1
-export SKIP_TEST_BTRFS_DEVICES_SH=1
-export SKIP_TEST_BTRFS_SUBVOLUME_DEFAULT_PL=1
-export SKIP_TEST_CHARSET_FIDELITY=1
-export SKIP_TEST_VIRT_MAKE_FS_BTRFS=1
 
 %if %{runtests}
 make check -k
