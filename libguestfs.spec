@@ -94,7 +94,7 @@ BuildRequires: gjs
 # http://zfs-fuse.net/issues/94
 %global appliance_buildreqs1 hfsplus-tools zfs-fuse
 %endif
-%ifarch %{ix86} x86_64 \
+%ifarch %{ix86} x86_64
 %global appliance_buildreqs2 ntfsprogs syslinux syslinux-extlinux
 %endif
 %global appliance_buildreqs %{appliance_buildreqs0} %{?appliance_buildreqs1} %{?appliance_buildreqs2}
