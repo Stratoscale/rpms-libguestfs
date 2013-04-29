@@ -22,11 +22,14 @@ Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
 Version:       1.20.6
-Release:       1%{?dist}
+Release:       2%{?dist}
 License:       LGPLv2+
 Group:         Development/Libraries
 URL:           http://libguestfs.org/
 Source0:       http://libguestfs.org/download/1.20-stable/%{name}-%{version}.tar.gz
+
+Patch0001:     0001-daemon-Properly-quote-arguments-for-tar-out-base64-o.patch
+Patch0002:     0002-tests-Add-a-regression-test-for-RHBZ-957772.patch
 
 # Basic build requirements:
 BuildRequires: perl(Pod::Simple)
@@ -663,6 +666,9 @@ for %{name}.
 %prep
 %setup -q
 
+%patch0001 -p1
+%patch0002 -p1
+
 if [ "$(getenforce | tr '[A-Z]' '[a-z]')" != "disabled" ]; then
     # For sVirt to work, the local temporary directory we use in the
     # tests must be labelled the same way as /tmp.
@@ -1013,6 +1019,9 @@ mkdir -p $RPM_BUILD_ROOT%{_localstatedir}/run/libguestfs
 
 
 %changelog
+* Mon Apr 29 2013 Richard W.M. Jones <rjones@redhat.com> - 1:1.20.6-2
+- Fix broken quoting in tar-out and base64-out commands (RHBZ#957797).
+
 * Thu Apr 11 2013 Richard W.M. Jones <rjones@redhat.com> - 1:1.20.6-1
 - New upstream stable branch version 1.20.6.
 - This includes a full fix for RHBZ#948324.

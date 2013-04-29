@@ -1,0 +1,43 @@
+From 3b2ff4132d1f4325985b9ea56b1ec27f609a1872 Mon Sep 17 00:00:00 2001
+From: "Richard W.M. Jones" <rjones@redhat.com>
+Date: Mon, 29 Apr 2013 15:23:27 +0100
+Subject: [PATCH 1/2] daemon: Properly quote arguments for tar-out, base64-out
+ commands (RHBZ#957772).
+
+This fixes commit c78ec7e085e99bfddd0509dece72bf6a8d0188ce
+which was an attempt to fix RHBZ#908322.
+(cherry picked from commit c5f356a60351dd51cbd3a9aabcac2cd40562f36a)
+---
+ daemon/base64.c | 2 +-
+ daemon/tar.c    | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/daemon/base64.c b/daemon/base64.c
+index 263c87a..04b29fd 100644
+--- a/daemon/base64.c
++++ b/daemon/base64.c
+@@ -125,7 +125,7 @@ do_base64_out (const char *file)
+   }
+ 
+   /* Construct the command. */
+-  if (asprintf_nowarn (&cmd, "%s %s", str_base64, buf) == -1) {
++  if (asprintf_nowarn (&cmd, "%s %Q", str_base64, buf) == -1) {
+     reply_with_perror ("asprintf");
+     return -1;
+   }
+diff --git a/daemon/tar.c b/daemon/tar.c
+index 9bf85f5..461e529 100644
+--- a/daemon/tar.c
++++ b/daemon/tar.c
+@@ -342,7 +342,7 @@ do_tar_out (const char *dir, const char *compress, int numericowner,
+   }
+ 
+   /* "tar -C /sysroot%s -cf - ." but we have to quote the dir. */
+-  if (asprintf_nowarn (&cmd, "%s -C %s%s%s%s -cf - .",
++  if (asprintf_nowarn (&cmd, "%s -C %Q%s%s%s -cf - .",
+                        str_tar,
+                        buf, filter,
+                        numericowner ? " --numeric-owner" : "",
+-- 
+1.8.1.4
+
