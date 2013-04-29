@@ -668,6 +668,8 @@ for %{name}.
 
 %patch0001 -p1
 %patch0002 -p1
+# patch command does not set the mode correctly on this new file, so:
+chmod +x tests/regressions/rhbz957772.sh
 
 if [ "$(getenforce | tr '[A-Z]' '[a-z]')" != "disabled" ]; then
     # For sVirt to work, the local temporary directory we use in the
