@@ -603,6 +603,14 @@ export SKIP_TEST_VIRT_FORMAT_SH=1
 # Disable set_label tests (RHBZ#906777).
 export SKIP_TEST_SET_LABEL=1
 
+# Disable test-btrfs-devices on ix86 only.  It fails on Fedora 19 (but not
+# Fedora 18 nor Fedora 20) with:
+# guestfsd: error: tar subcommand failed on directory: /data3: tar: ./10/q/4: Cannot open: No space left on device
+# This seems to be a transient kernel problem, fixed in F20.
+%ifarch %{ix86}
+export SKIP_TEST_BTRFS_DEVICES_SH=1
+%endif
+
 # Skip gnulib tests which fail (probably these are kernel/glibc bugs).
 pushd gnulib/tests
 make -k check ||:
