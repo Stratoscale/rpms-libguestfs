@@ -611,6 +611,9 @@ export SKIP_TEST_SET_LABEL=1
 export SKIP_TEST_BTRFS_DEVICES_SH=1
 %endif
 
+# mdadm causes kernel panics (RHBZ#962079).
+export SKIP_TEST_MDADM_SH=1
+
 # Skip gnulib tests which fail (probably these are kernel/glibc bugs).
 pushd gnulib/tests
 make -k check ||:
