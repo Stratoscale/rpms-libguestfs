@@ -21,16 +21,12 @@
 Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
-Version:       1.20.6
-Release:       3%{?dist}
+Version:       1.20.7
+Release:       1%{?dist}
 License:       LGPLv2+
 Group:         Development/Libraries
 URL:           http://libguestfs.org/
 Source0:       http://libguestfs.org/download/1.20-stable/%{name}-%{version}.tar.gz
-
-Patch1:        0001-daemon-Properly-quote-arguments-for-tar-out-base64-o.patch
-Patch2:        0002-tests-Add-a-regression-test-for-RHBZ-957772.patch
-Patch3:        0001-inspection-Fix-double-free-when-certain-guest-files-.patch
 
 # Basic build requirements:
 BuildRequires: perl(Pod::Simple)
@@ -667,12 +663,6 @@ for %{name}.
 %prep
 %setup -q
 
-%patch1 -p1
-%patch2 -p1
-# patch command does not set the mode correctly on this new file, so:
-chmod +x tests/regressions/rhbz957772.sh
-%patch3 -p1
-
 if [ "$(getenforce | tr '[A-Z]' '[a-z]')" != "disabled" ]; then
     # For sVirt to work, the local temporary directory we use in the
     # tests must be labelled the same way as /tmp.
@@ -1023,6 +1013,10 @@ mkdir -p $RPM_BUILD_ROOT%{_localstatedir}/run/libguestfs
 
 
 %changelog
+* Tue May 28 2013 Richard W.M. Jones <rjones@redhat.com> - 1:1.20.7-1
+- New upstream stable branch version 1.20.7.
+- Remove 3x patches which are now upstream.
+
 * Tue May 28 2013 Richard W.M. Jones <rjones@redhat.com> - 1:1.20.6-3
 - Fix a denial-of-service (double-free) which can be forced by guests.
   https://www.redhat.com/archives/libguestfs/2013-May/msg00079.html
