@@ -1,7 +1,7 @@
 From 6c13992cc7e40319eed96365f04e2873516ba19f Mon Sep 17 00:00:00 2001
 From: Richard W.M. Jones <rjones@redhat.com>
 Date: Fri, 31 Aug 2012 14:59:25 +0100
-Subject: [PATCH 26/35] EPEL 5: Disable tar --xz test.
+Subject: [PATCH 26/36] EPEL 5: Disable tar --xz test.
 
 Although xz is available, ancient tar didn't have the --xz option.
 ---

@@ -1,7 +1,7 @@
 From 4d9ace3f868e4cb32f79b597910c5904cb522ea6 Mon Sep 17 00:00:00 2001
 From: Richard W.M. Jones <rjones@redhat.com>
 Date: Wed, 29 May 2013 16:22:02 +0100
-Subject: [PATCH 35/35] generator: Set builddir for old RHEL 5 which didn't have this.
+Subject: [PATCH 35/36] generator: Set builddir for old RHEL 5 which didn't have this.
 
 ---
  generator/Makefile.am |    3 +++

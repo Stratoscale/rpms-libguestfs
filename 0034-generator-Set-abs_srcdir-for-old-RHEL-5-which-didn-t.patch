@@ -1,7 +1,7 @@
 From 9fbceb6949778b8daace7610e35991fadac087b5 Mon Sep 17 00:00:00 2001
 From: Richard W.M. Jones <rjones@redhat.com>
 Date: Wed, 29 May 2013 16:15:24 +0100
-Subject: [PATCH 34/35] generator: Set abs_srcdir for old RHEL 5 which didn't have this.
+Subject: [PATCH 34/36] generator: Set abs_srcdir for old RHEL 5 which didn't have this.
 
 ---
  generator/Makefile.am |    3 +++

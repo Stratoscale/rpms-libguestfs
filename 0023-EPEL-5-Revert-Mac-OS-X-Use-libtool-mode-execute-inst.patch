@@ -1,7 +1,7 @@
 From 9f4d530ca5e1cba66039ae25e2472fcebb3bb916 Mon Sep 17 00:00:00 2001
 From: Richard W.M. Jones <rjones@redhat.com>
 Date: Thu, 30 Aug 2012 18:19:28 +0100
-Subject: [PATCH 23/35] EPEL 5: Revert "Mac OS X: Use libtool --mode=execute instead of LD_LIBRARY_PATH"
+Subject: [PATCH 23/36] EPEL 5: Revert "Mac OS X: Use libtool --mode=execute instead of LD_LIBRARY_PATH"
 
 This reverts commit 61c9ea496e0579bb7d1bcf496595d66c3f08cfec.
 ---

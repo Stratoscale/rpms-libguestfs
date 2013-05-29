@@ -1,7 +1,7 @@
 From 32705d2e9a13cfb248b4db1ad8b7349ed465f914 Mon Sep 17 00:00:00 2001
 From: Richard W.M. Jones <rjones@redhat.com>
 Date: Thu, 30 Aug 2012 18:16:18 +0100
-Subject: [PATCH 22/35] EPEL 5: podwrapper: Don't use Pod::Man.
+Subject: [PATCH 22/36] EPEL 5: podwrapper: Don't use Pod::Man.
 
 This unfortunately means the man pages are generated as plain text.
 However that's necessary as Pod::Man does not have an output_string

@@ -1,7 +1,7 @@
 From fdc5c9eeaccf9c3f25d3a5d943fbbf08ef936233 Mon Sep 17 00:00:00 2001
 From: Richard W.M. Jones <rjones@redhat.com>
 Date: Mon, 18 Jun 2012 08:35:14 +0100
-Subject: [PATCH 11/35] EPEL 5: Replace format6 with format4 in OCaml gettext routines.
+Subject: [PATCH 11/36] EPEL 5: Replace format6 with format4 in OCaml gettext routines.
 
 ---
  configure.ac |   10 +++++-----

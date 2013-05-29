@@ -1,7 +1,7 @@
 From 9871e1d5255c6d15cea3832767bf90e3f47c4d18 Mon Sep 17 00:00:00 2001
 From: Richard W.M. Jones <rjones@redhat.com>
 Date: Sat, 16 Jun 2012 10:46:20 +0100
-Subject: [PATCH 03/35] EPEL 5: Replace macro AC_STRUCT_DIRENT_D_TYPE for ancient autoconf.
+Subject: [PATCH 03/36] EPEL 5: Replace macro AC_STRUCT_DIRENT_D_TYPE for ancient autoconf.
 
 ---
  configure.ac |    2 +-

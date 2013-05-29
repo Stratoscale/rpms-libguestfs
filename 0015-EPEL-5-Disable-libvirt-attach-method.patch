@@ -1,7 +1,7 @@
 From a447dcd5b5131cde034d6a2a9e26e3a27eca9689 Mon Sep 17 00:00:00 2001
 From: Richard W.M. Jones <rjones@redhat.com>
 Date: Thu, 30 Aug 2012 17:57:46 +0100
-Subject: [PATCH 15/35] EPEL 5: Disable libvirt attach method.
+Subject: [PATCH 15/36] EPEL 5: Disable libvirt attach method.
 
 ---
  src/launch-libvirt.c |    2 +-

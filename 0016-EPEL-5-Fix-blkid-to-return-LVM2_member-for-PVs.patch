@@ -1,7 +1,7 @@
 From ebb923ed81316ba931ec74cd81a4b23e739e5e92 Mon Sep 17 00:00:00 2001
 From: Richard W.M. Jones <rjones@redhat.com>
 Date: Fri, 22 Jun 2012 10:06:47 +0100
-Subject: [PATCH 16/35] EPEL 5: Fix blkid to return "LVM2_member" for PVs.
+Subject: [PATCH 16/36] EPEL 5: Fix blkid to return "LVM2_member" for PVs.
 
 Old blkid in RHEL 5 didn't return the right thing for PVs.
 ---

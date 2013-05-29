@@ -1,7 +1,7 @@
 From a46b654e1052506abb81bc1678ed55bfc0175202 Mon Sep 17 00:00:00 2001
 From: Richard W.M. Jones <rjones@redhat.com>
 Date: Fri, 31 Aug 2012 13:48:18 +0100
-Subject: [PATCH 25/35] EPEL 5: Revert "daemon: Remove e2prog hack (only needed for RHEL 5)."
+Subject: [PATCH 25/36] EPEL 5: Revert "daemon: Remove e2prog hack (only needed for RHEL 5)."
 
 This reverts commit 163e030ee13644ad9efe1e078aff47b879657333.
 ---

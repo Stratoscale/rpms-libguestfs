@@ -1,7 +1,7 @@
 From 98d5a48143b0d409ac76fc6c6e15fdef2cc33b65 Mon Sep 17 00:00:00 2001
 From: Richard W.M. Jones <rjones@redhat.com>
 Date: Fri, 22 Jun 2012 13:15:49 +0100
-Subject: [PATCH 18/35] EPEL 5: Remove Fedora MD test images.
+Subject: [PATCH 18/36] EPEL 5: Remove Fedora MD test images.
 
 On RHEL 5, mdadm is not able to create md devices with aliases,
 eg. '/dev/md/boot'.
