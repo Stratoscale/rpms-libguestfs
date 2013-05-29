@@ -1,7 +1,7 @@
 From f3dd167b8801d5eb05958205556b1092a196368b Mon Sep 17 00:00:00 2001
 From: Richard W.M. Jones <rjones@redhat.com>
 Date: Fri, 22 Jun 2012 21:58:32 +0100
-Subject: [PATCH 20/33] EPEL 5: Add 1 second pause after unmounting any filesystem.
+Subject: [PATCH 20/35] EPEL 5: Add 1 second pause after unmounting any filesystem.
 
 This fixes the test-charset-fidelity test case.  A simpler example
 which fails without this is:

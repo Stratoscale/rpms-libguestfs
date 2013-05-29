@@ -1,7 +1,7 @@
 From 4ef4ff4158c0a7672ee784b1ff2df1ac5380ed2b Mon Sep 17 00:00:00 2001
 From: Richard W.M. Jones <rjones@redhat.com>
 Date: Wed, 29 May 2013 14:35:54 +0100
-Subject: [PATCH 33/33] generator: Set abs_builddir for old RHEL 5 which didn't have this.
+Subject: [PATCH 33/35] generator: Set abs_builddir for old RHEL 5 which didn't have this.
 
 ---
  generator/Makefile.am |    3 +++

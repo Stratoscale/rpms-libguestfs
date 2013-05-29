@@ -1,7 +1,7 @@
 From 10a6018ca0a019920629591d82d60a433b882b17 Mon Sep 17 00:00:00 2001
 From: Richard W.M. Jones <rjones@redhat.com>
 Date: Mon, 18 Jun 2012 17:21:30 +0100
-Subject: [PATCH 13/33] EPEL 5: Remove id= from -drive parameter on qemu command line.
+Subject: [PATCH 13/35] EPEL 5: Remove id= from -drive parameter on qemu command line.
 
 ---
  src/launch-appliance.c |    5 ++---

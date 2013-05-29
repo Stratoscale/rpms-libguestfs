@@ -1,7 +1,7 @@
 From 6edc5f2cda3c08345e8a31d2dc25a67d0c219b2e Mon Sep 17 00:00:00 2001
 From: Richard W.M. Jones <rjones@redhat.com>
 Date: Fri, 8 Mar 2013 19:19:43 +0000
-Subject: [PATCH 30/33] EPEL 5: Disable valgrind.
+Subject: [PATCH 30/35] EPEL 5: Disable valgrind.
 
 Ancient automake didn't have AM_SUBST_NOTMAKE.
 ---
