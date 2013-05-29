@@ -77,6 +77,8 @@ Patch0030:     0030-EPEL-5-Disable-valgrind.patch
 Patch0031:     0031-EPEL-5-Remove-Linux-capabilities.patch
 Patch0032:     0032-EPEL-5-ruby-Use-old-rake-rdoctask-and-rake-gempackag.patch
 Patch0033:     0033-generator-Set-abs_builddir-for-old-RHEL-5-which-didn.patch
+Patch0034:     0034-generator-Set-abs_srcdir-for-old-RHEL-5-which-didn-t.patch
+Patch0035:     0035-generator-Set-builddir-for-old-RHEL-5-which-didn-t-h.patch
 
 # Basic build requirements:
 BuildRequires: /usr/bin/pod2man
@@ -552,7 +554,6 @@ git commit -a -q -m "%{version} baseline."
 #git am %{patches}
 git am %{_sourcedir}/00*.patch
 
-autoreconf -i
 ./bootstrap
 
 mkdir -p daemon/m4
