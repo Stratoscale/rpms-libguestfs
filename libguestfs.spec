@@ -552,6 +552,7 @@ git commit -a -q -m "%{version} baseline."
 #git am %{patches}
 git am %{_sourcedir}/00*.patch
 
+autoreconf -i
 ./bootstrap
 
 mkdir -p daemon/m4
