@@ -1,7 +1,7 @@
-From 2766fa2cfff351a8db92432912f1457909868a36 Mon Sep 17 00:00:00 2001
+From 0ac56223f3bdda38007ec11b15992e16f29915b2 Mon Sep 17 00:00:00 2001
 From: Richard W.M. Jones <rjones@redhat.com>
 Date: Sat, 16 Jun 2012 10:19:39 +0100
-Subject: [PATCH 01/32] EPEL 5: Remove checks which fail with ancient qemu.
+Subject: [PATCH 01/33] EPEL 5: Remove checks which fail with ancient qemu.
 
 Note that g->app.qemu_version and g->app.qemu_devices will both
 be empty strings.
@@ -11,10 +11,10 @@ be empty strings.
  2 files changed, 2 insertions(+), 78 deletions(-)
 
 diff --git a/configure.ac b/configure.ac
-index 488937c..bd6c45b 100644
+index ef07d31..796b0c5 100644
 --- a/configure.ac
 +++ b/configure.ac
-@@ -677,63 +677,6 @@ This could be a very old version of qemu, or qemu might not be
+@@ -697,63 +697,6 @@ This could be a very old version of qemu, or qemu might not be
  working.
  ])
      fi
@@ -79,7 +79,7 @@ index 488937c..bd6c45b 100644
  
  dnl Enable packet dumps when in verbose mode.  This generates lots
 diff --git a/src/launch-appliance.c b/src/launch-appliance.c
-index d1fe326..3498787 100644
+index 86f8ad8..9fb0bbd 100644
 --- a/src/launch-appliance.c
 +++ b/src/launch-appliance.c
 @@ -770,30 +770,11 @@ test_qemu (guestfs_h *g)

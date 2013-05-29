@@ -1,7 +1,7 @@
-From 9fcd3ae0199933e52bad4c83b487f9895d4766f3 Mon Sep 17 00:00:00 2001
+From 257c8f7a07fc0b5fcbc19260e643bf753a49ce76 Mon Sep 17 00:00:00 2001
 From: Richard W.M. Jones <rjones@redhat.com>
 Date: Thu, 30 Aug 2012 18:01:00 +0100
-Subject: [PATCH 21/32] EPEL 5: podwrapper: Remove HTML output.
+Subject: [PATCH 21/33] EPEL 5: podwrapper: Remove HTML output.
 
 It requires perl Pod::Simple::XHTML which did not exist in
 RHEL 5 era.
@@ -10,7 +10,7 @@ RHEL 5 era.
  1 files changed, 0 insertions(+), 92 deletions(-)
 
 diff --git a/podwrapper.pl.in b/podwrapper.pl.in
-index cb6e9b2..53a13cd 100755
+index bbc0b7c..a40655a 100755
 --- a/podwrapper.pl.in
 +++ b/podwrapper.pl.in
 @@ -25,7 +25,6 @@ use Getopt::Long;

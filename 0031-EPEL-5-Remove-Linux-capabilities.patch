@@ -1,7 +1,7 @@
-From 980f48fec16fcac31c895b206031b9615b45f081 Mon Sep 17 00:00:00 2001
+From c32692da782d5febcbda9b449550873697977f81 Mon Sep 17 00:00:00 2001
 From: Richard W.M. Jones <rjones@redhat.com>
 Date: Fri, 8 Mar 2013 20:20:23 +0000
-Subject: [PATCH 31/32] EPEL 5: Remove Linux capabilities.
+Subject: [PATCH 31/33] EPEL 5: Remove Linux capabilities.
 
 Linux file capabilities are not supported in RHEL 5, and the
 cap_*_file functions don't exist in the libcap library (although
@@ -11,10 +11,10 @@ confusingly they are in the header file).
  1 files changed, 0 insertions(+), 8 deletions(-)
 
 diff --git a/configure.ac b/configure.ac
-index 435d1b5..2ca6736 100644
+index c27cad1..0fd6bf0 100644
 --- a/configure.ac
 +++ b/configure.ac
-@@ -731,14 +731,6 @@ AC_CHECK_LIB([acl],[acl_from_text],[
+@@ -751,14 +751,6 @@ AC_CHECK_LIB([acl],[acl_from_text],[
      ], [])
  ],[AC_MSG_WARN([POSIX acl library not found])])
  

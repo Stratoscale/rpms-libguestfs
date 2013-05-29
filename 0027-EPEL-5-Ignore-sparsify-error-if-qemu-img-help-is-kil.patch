@@ -1,14 +1,14 @@
-From 90afed5463f5fb56d2859ea6598738da80218d29 Mon Sep 17 00:00:00 2001
+From 997e1c72b40609777e5ea166a6b8ac5837c355f4 Mon Sep 17 00:00:00 2001
 From: Richard W.M. Jones <rjones@redhat.com>
 Date: Fri, 31 Aug 2012 22:12:59 +0100
-Subject: [PATCH 27/32] EPEL 5: Ignore sparsify error if qemu-img --help is killed by a signal.
+Subject: [PATCH 27/33] EPEL 5: Ignore sparsify error if qemu-img --help is killed by a signal.
 
 ---
  sparsify/sparsify.ml |    3 +--
  1 files changed, 1 insertions(+), 2 deletions(-)
 
 diff --git a/sparsify/sparsify.ml b/sparsify/sparsify.ml
-index 5ee2adb..0606ebe 100644
+index 8554bc6..6226330 100644
 --- a/sparsify/sparsify.ml
 +++ b/sparsify/sparsify.ml
 @@ -168,8 +168,7 @@ let qemu_img_version =

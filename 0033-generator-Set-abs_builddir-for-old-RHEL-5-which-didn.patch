@@ -1,0 +1,26 @@
+From 4ef4ff4158c0a7672ee784b1ff2df1ac5380ed2b Mon Sep 17 00:00:00 2001
+From: Richard W.M. Jones <rjones@redhat.com>
+Date: Wed, 29 May 2013 14:35:54 +0100
+Subject: [PATCH 33/33] generator: Set abs_builddir for old RHEL 5 which didn't have this.
+
+---
+ generator/Makefile.am |    3 +++
+ 1 files changed, 3 insertions(+), 0 deletions(-)
+
+diff --git a/generator/Makefile.am b/generator/Makefile.am
+index 3797876..fcf3a9e 100644
+--- a/generator/Makefile.am
++++ b/generator/Makefile.am
+@@ -15,6 +15,9 @@
+ # along with this program; if not, write to the Free Software
+ # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+ 
++# Old RHEL 5 autoconf doesn't have abs_builddir.
++abs_builddir ?= $(shell pwd)
++
+ # In alphabetical order.
+ sources = \
+ 	actions.ml \
+-- 
+1.7.4.1
+

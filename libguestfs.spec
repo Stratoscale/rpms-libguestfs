@@ -21,8 +21,8 @@
 Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
-Version:       1.20.4
-Release:       2%{?dist}
+Version:       1.20.7
+Release:       1%{?dist}
 License:       LGPLv2+
 Group:         Development/Libraries
 URL:           http://libguestfs.org/
@@ -76,6 +76,7 @@ Patch0029:     0029-EPEL-5-No-libtoolize-install-option.patch
 Patch0030:     0030-EPEL-5-Disable-valgrind.patch
 Patch0031:     0031-EPEL-5-Remove-Linux-capabilities.patch
 Patch0032:     0032-EPEL-5-ruby-Use-old-rake-rdoctask-and-rake-gempackag.patch
+Patch0033:     0033-generator-Set-abs_builddir-for-old-RHEL-5-which-didn.patch
 
 # Basic build requirements:
 BuildRequires: /usr/bin/pod2man
@@ -914,6 +915,10 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Wed May 29 2013 Richard W.M. Jones <rjones@redhat.com> - 1:1.20.7-1
+- Rebase to upstream stable branch version 1.20.7.
+- Includes fix for inspection vulnerability (RHBZ#968315).
+
 * Wed Mar 13 2013 Richard W.M. Jones <rjones@redhat.com> - 1:1.20.4-2
 - Rebase to upstream stable branch version 1.20.4.
 

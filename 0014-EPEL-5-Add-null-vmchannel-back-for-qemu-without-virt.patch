@@ -1,7 +1,7 @@
-From af0e598258c74a3df824499cfaa16af7fc7482d8 Mon Sep 17 00:00:00 2001
+From 52af6f30a0efc4990ea2302e2467851af3ffd61d Mon Sep 17 00:00:00 2001
 From: Richard W.M. Jones <rjones@redhat.com>
 Date: Mon, 18 Jun 2012 16:06:34 +0100
-Subject: [PATCH 14/32] EPEL 5: Add "null vmchannel" back for qemu without virtio-serial support.
+Subject: [PATCH 14/33] EPEL 5: Add "null vmchannel" back for qemu without virtio-serial support.
 
 ---
  appliance/init         |    4 +-
@@ -12,10 +12,10 @@ Subject: [PATCH 14/32] EPEL 5: Add "null vmchannel" back for qemu without virtio
  5 files changed, 236 insertions(+), 69 deletions(-)
 
 diff --git a/appliance/init b/appliance/init
-index dee4efc..813cd20 100755
+index 290d6ac..20c8870 100755
 --- a/appliance/init
 +++ b/appliance/init
-@@ -77,10 +77,10 @@ hwclock -u -s
+@@ -80,10 +80,10 @@ hwclock -u -s
  ip addr add 127.0.0.1/8 brd + dev lo scope host
  ip link set dev lo up
  
@@ -175,20 +175,20 @@ index 254e0ea..bcb836a 100644
    main_loop (sock);
  
 diff --git a/src/guestfs-internal.h b/src/guestfs-internal.h
-index a048a83..6369e87 100644
+index aaa9d41..cb812ed 100644
 --- a/src/guestfs-internal.h
 +++ b/src/guestfs-internal.h
-@@ -512,7 +512,7 @@ extern void guestfs___rollback_drives (guestfs_h *g, size_t);
+@@ -516,7 +516,7 @@ extern int64_t guestfs___timeval_diff (const struct timeval *x, const struct tim
+ extern void guestfs___print_timestamped_message (guestfs_h *g, const char *fs, ...) __attribute__((format (printf,2,3)));
+ extern void guestfs___launch_send_progress (guestfs_h *g, int perdozen);
  extern void guestfs___launch_failed_error (guestfs_h *g);
- extern void guestfs___add_dummy_appliance_drive (guestfs_h *g);
- extern void guestfs___free_drives (guestfs_h *g);
 -extern char *guestfs___appliance_command_line (guestfs_h *g, const char *appliance_dev, int flags);
 +extern char *guestfs___appliance_command_line (guestfs_h *g, const char *appliance_dev, int flags, const char *vmchannel);
  #define APPLIANCE_COMMAND_LINE_IS_TCG 1
  
  /* launch-appliance.c */
 diff --git a/src/launch-appliance.c b/src/launch-appliance.c
-index 3fb967e..57a8bbc 100644
+index 5de3b0a..71d7aa6 100644
 --- a/src/launch-appliance.c
 +++ b/src/launch-appliance.c
 @@ -74,12 +74,16 @@ free_regexps (void)
@@ -392,7 +392,7 @@ index 3fb967e..57a8bbc 100644
  
    /* Close the listening socket. */
    if (close (g->sock) != 0) {
-@@ -984,6 +989,83 @@ guestfs___drive_name (size_t index, char *ret)
+@@ -987,6 +992,83 @@ guestfs___drive_name (size_t index, char *ret)
    return ret;
  }
  
@@ -477,10 +477,10 @@ index 3fb967e..57a8bbc 100644
  shutdown_appliance (guestfs_h *g, int check_for_errors)
  {
 diff --git a/src/launch.c b/src/launch.c
-index 7c37667..b634b32 100644
+index 4333821..c77c229 100644
 --- a/src/launch.c
 +++ b/src/launch.c
-@@ -809,7 +809,7 @@ guestfs__get_state (guestfs_h *g)
+@@ -316,7 +316,7 @@ guestfs__config (guestfs_h *g,
  
  char *
  guestfs___appliance_command_line (guestfs_h *g, const char *appliance_dev,
@@ -489,7 +489,7 @@ index 7c37667..b634b32 100644
  {
    char *term = getenv ("TERM");
    char *ret;
-@@ -837,12 +837,14 @@ guestfs___appliance_command_line (guestfs_h *g, const char *appliance_dev,
+@@ -344,12 +344,14 @@ guestfs___appliance_command_line (guestfs_h *g, const char *appliance_dev,
       " cgroup_disable=memory"   /* saves us about 5 MB of RAM */
       " root=%s"                 /* root (appliance_dev) */
       " %s"                      /* selinux */

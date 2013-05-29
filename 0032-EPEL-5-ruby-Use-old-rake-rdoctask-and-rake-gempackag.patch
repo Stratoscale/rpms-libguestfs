@@ -1,7 +1,7 @@
-From 8c2ebd5ba8e7d272eb6d91a8da1c0fa1bc5c4c40 Mon Sep 17 00:00:00 2001
+From 3a79e5714a38873aed9ad1847f77c4e2710c458b Mon Sep 17 00:00:00 2001
 From: Richard W.M. Jones <rjones@redhat.com>
 Date: Sat, 9 Mar 2013 19:24:29 +0000
-Subject: [PATCH 32/32] EPEL 5: ruby: Use old rake/rdoctask and rake/gempackagetask.
+Subject: [PATCH 32/33] EPEL 5: ruby: Use old rake/rdoctask and rake/gempackagetask.
 
 The 'begin ... rescue' code is supposed to ensure these old packages
 are required, but for reasons not understood this doesn't work on

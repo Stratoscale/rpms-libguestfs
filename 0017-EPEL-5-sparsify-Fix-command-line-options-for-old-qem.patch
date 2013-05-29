@@ -1,7 +1,7 @@
-From 67f0bcc28d7612546e254e6eb9074dbf1a124ef7 Mon Sep 17 00:00:00 2001
+From 962689dedb6356c0f04a9eaaf1d23835ed8a2283 Mon Sep 17 00:00:00 2001
 From: Richard W.M. Jones <rjones@redhat.com>
 Date: Fri, 22 Jun 2012 10:24:48 +0100
-Subject: [PATCH 17/32] EPEL 5: sparsify: Fix command line options for old qemu-img.
+Subject: [PATCH 17/33] EPEL 5: sparsify: Fix command line options for old qemu-img.
 
 This didn't have -o backing_file etc.  Use old -b and -F options instead.
 ---
@@ -9,7 +9,7 @@ This didn't have -o backing_file etc.  Use old -b and -F options instead.
  1 files changed, 6 insertions(+), 12 deletions(-)
 
 diff --git a/sparsify/sparsify.ml b/sparsify/sparsify.ml
-index f77f4eb..5ee2adb 100644
+index 6ea34ee..8554bc6 100644
 --- a/sparsify/sparsify.ml
 +++ b/sparsify/sparsify.ml
 @@ -228,18 +228,12 @@ let overlaydisk =
