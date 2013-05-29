@@ -743,9 +743,6 @@ fi
 # Remove static-linked Java bindings.
 rm $RPM_BUILD_ROOT%{_libdir}/libguestfs_jni.la
 
-# Remove guestfsd man page.
-rm $RPM_BUILD_ROOT%{_mandir}/man8/guestfsd.8*
-
 # Move installed documentation back to the source directory so
 # we can install it using a %%doc rule.
 mv $RPM_BUILD_ROOT%{_docdir}/libguestfs installed-docs
