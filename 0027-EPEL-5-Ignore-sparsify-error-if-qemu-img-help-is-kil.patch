@@ -1,7 +1,7 @@
-From 997e1c72b40609777e5ea166a6b8ac5837c355f4 Mon Sep 17 00:00:00 2001
+From abdd04f42ccd7e07d665fb7e9549d5c33704ed55 Mon Sep 17 00:00:00 2001
 From: Richard W.M. Jones <rjones@redhat.com>
 Date: Fri, 31 Aug 2012 22:12:59 +0100
-Subject: [PATCH 27/36] EPEL 5: Ignore sparsify error if qemu-img --help is killed by a signal.
+Subject: [PATCH 27/33] EPEL 5: Ignore sparsify error if qemu-img --help is killed by a signal.
 
 ---
  sparsify/sparsify.ml |    3 +--

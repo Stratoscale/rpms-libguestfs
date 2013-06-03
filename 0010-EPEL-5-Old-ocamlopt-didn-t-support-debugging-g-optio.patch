@@ -1,7 +1,7 @@
-From 5d03f944054585f0117af4c85584e0f15f1ff4cc Mon Sep 17 00:00:00 2001
+From 547f896280150d56f902308dd320417c5de938a5 Mon Sep 17 00:00:00 2001
 From: Richard W.M. Jones <rjones@redhat.com>
 Date: Sun, 17 Jun 2012 23:00:16 +0100
-Subject: [PATCH 10/36] EPEL 5: Old ocamlopt didn't support debugging (-g option).
+Subject: [PATCH 10/33] EPEL 5: Old ocamlopt didn't support debugging (-g option).
 
 ---
  ocaml/Makefile.am    |    2 +-

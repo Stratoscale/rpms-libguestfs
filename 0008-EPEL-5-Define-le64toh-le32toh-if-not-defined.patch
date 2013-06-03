@@ -1,7 +1,7 @@
-From 8bf1fe18c7c28e6d8a31be83be4d553956a6628f Mon Sep 17 00:00:00 2001
+From 2559e63836a7f87acba0e3c2d37b81b78b1de323 Mon Sep 17 00:00:00 2001
 From: Richard W.M. Jones <rjones@redhat.com>
 Date: Sun, 17 Jun 2012 22:17:06 +0100
-Subject: [PATCH 08/36] EPEL 5: Define le64toh, le32toh if not defined.
+Subject: [PATCH 08/33] EPEL 5: Define le64toh, le32toh if not defined.
 
 ---
  src/inspect-fs-windows.c |   16 ++++++++++++++++

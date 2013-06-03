@@ -1,7 +1,7 @@
-From aff69dc6e3b4161cd538fb3d100a7fed9f91c9ac Mon Sep 17 00:00:00 2001
+From 5f7acbb95e055efa840d2108e207e3ef8106761a Mon Sep 17 00:00:00 2001
 From: Richard W.M. Jones <rjones@redhat.com>
 Date: Wed, 29 May 2013 17:27:06 +0100
-Subject: [PATCH 36/36] EPEL 5: Revert "Use pkg-config for Python"
+Subject: [PATCH 33/33] EPEL 5: Revert "Use pkg-config for Python"
 
 In RHEL 5, python doesn't have pkg-config configuration.
 
@@ -12,7 +12,7 @@ This reverts commit ba2e4f1794dabdb251823c86ee843a0fe3186a74.
  2 files changed, 16 insertions(+), 21 deletions(-)
 
 diff --git a/configure.ac b/configure.ac
-index 0fd6bf0..b077c44 100644
+index 25e15e2..e4f768d 100644
 --- a/configure.ac
 +++ b/configure.ac
 @@ -1020,6 +1020,7 @@ AM_CONDITIONAL([HAVE_PERL],

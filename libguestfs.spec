@@ -21,8 +21,8 @@
 Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
-Version:       1.20.7
-Release:       3%{?dist}
+Version:       1.20.8
+Release:       1%{?dist}
 License:       LGPLv2+
 Group:         Development/Libraries
 URL:           http://libguestfs.org/
@@ -76,10 +76,7 @@ Patch0029:     0029-EPEL-5-No-libtoolize-install-option.patch
 Patch0030:     0030-EPEL-5-Disable-valgrind.patch
 Patch0031:     0031-EPEL-5-Remove-Linux-capabilities.patch
 Patch0032:     0032-EPEL-5-ruby-Use-old-rake-rdoctask-and-rake-gempackag.patch
-Patch0033:     0033-generator-Set-abs_builddir-for-old-RHEL-5-which-didn.patch
-Patch0034:     0034-generator-Set-abs_srcdir-for-old-RHEL-5-which-didn-t.patch
-Patch0035:     0035-generator-Set-builddir-for-old-RHEL-5-which-didn-t-h.patch
-Patch0036:     0036-EPEL-5-Revert-Use-pkg-config-for-Python.patch
+Patch0033:     0033-EPEL-5-Revert-Use-pkg-config-for-Python.patch
 
 # Basic build requirements:
 BuildRequires: /usr/bin/pod2man
@@ -915,6 +912,10 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Mon Jun  3 2013 Richard W.M. Jones <rjones@redhat.com> - 1:1.20.8-1
+- Rebase to upstream stable branch version 1.20.8.
+  This contains a complete fix for CVE-2013-2124.
+
 * Wed May 29 2013 Richard W.M. Jones <rjones@redhat.com> - 1:1.20.7-3
 - Rebase to upstream stable branch version 1.20.7.
 - Includes fix for inspection vulnerability (RHBZ#968315).

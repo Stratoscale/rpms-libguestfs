@@ -1,7 +1,7 @@
-From 21943f8c165ce6a971d063fe7bed474a3271aed9 Mon Sep 17 00:00:00 2001
+From 56819cbece86d6051acc64ea70f6dda6dfe0cbd2 Mon Sep 17 00:00:00 2001
 From: Richard W.M. Jones <rjones@redhat.com>
 Date: Sun, 17 Jun 2012 23:01:43 +0100
-Subject: [PATCH 07/36] EPEL 5: Remove PHP bindings.
+Subject: [PATCH 07/33] EPEL 5: Remove PHP bindings.
 
 ---
  Makefile.am  |    3 ---
@@ -10,7 +10,7 @@ Subject: [PATCH 07/36] EPEL 5: Remove PHP bindings.
  3 files changed, 0 insertions(+), 20 deletions(-)
 
 diff --git a/Makefile.am b/Makefile.am
-index 04a6565..327e0c4 100644
+index 9a8062e..a8154d3 100644
 --- a/Makefile.am
 +++ b/Makefile.am
 @@ -86,9 +86,6 @@ endif
@@ -24,7 +24,7 @@ index 04a6565..327e0c4 100644
  SUBDIRS += lua lua/examples
  endif
 diff --git a/configure.ac b/configure.ac
-index 07c360e..0e49b34 100644
+index 582ca44..9d1544e 100644
 --- a/configure.ac
 +++ b/configure.ac
 @@ -1298,19 +1298,6 @@ AS_IF([test "x$enable_haskell" != "xno"],[

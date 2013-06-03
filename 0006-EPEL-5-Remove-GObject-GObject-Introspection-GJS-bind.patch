@@ -1,7 +1,7 @@
-From 3772113b6a431974abaed1cabc1b055881193938 Mon Sep 17 00:00:00 2001
+From 08b2008ccd16d2a2f0b041100187607d5193f170 Mon Sep 17 00:00:00 2001
 From: Richard W.M. Jones <rjones@redhat.com>
 Date: Sat, 16 Jun 2012 14:35:06 +0100
-Subject: [PATCH 06/36] EPEL 5: Remove GObject / GObject Introspection / GJS bindings.
+Subject: [PATCH 06/33] EPEL 5: Remove GObject / GObject Introspection / GJS bindings.
 
 ---
  Makefile.am  |    3 --
@@ -10,7 +10,7 @@ Subject: [PATCH 06/36] EPEL 5: Remove GObject / GObject Introspection / GJS bind
  3 files changed, 0 insertions(+), 126 deletions(-)
 
 diff --git a/Makefile.am b/Makefile.am
-index 7f53159..04a6565 100644
+index baf7b9f..9a8062e 100644
 --- a/Makefile.am
 +++ b/Makefile.am
 @@ -92,9 +92,6 @@ endif
@@ -24,7 +24,7 @@ index 7f53159..04a6565 100644
  # Unconditional because nothing is built yet.
  SUBDIRS += csharp
 diff --git a/configure.ac b/configure.ac
-index 2ba6a80..07c360e 100644
+index b78e98b..582ca44 100644
 --- a/configure.ac
 +++ b/configure.ac
 @@ -1362,58 +1362,6 @@ AS_IF([test "x$PERL" != "xno"],[

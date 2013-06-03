@@ -1,7 +1,7 @@
-From 0ac56223f3bdda38007ec11b15992e16f29915b2 Mon Sep 17 00:00:00 2001
+From 8f5ea9ebe047912e1850180926c1baa25830d3f0 Mon Sep 17 00:00:00 2001
 From: Richard W.M. Jones <rjones@redhat.com>
 Date: Sat, 16 Jun 2012 10:19:39 +0100
-Subject: [PATCH 01/36] EPEL 5: Remove checks which fail with ancient qemu.
+Subject: [PATCH 01/33] EPEL 5: Remove checks which fail with ancient qemu.
 
 Note that g->app.qemu_version and g->app.qemu_devices will both
 be empty strings.
@@ -11,7 +11,7 @@ be empty strings.
  2 files changed, 2 insertions(+), 78 deletions(-)
 
 diff --git a/configure.ac b/configure.ac
-index ef07d31..796b0c5 100644
+index cf505e4..9f5371b 100644
 --- a/configure.ac
 +++ b/configure.ac
 @@ -697,63 +697,6 @@ This could be a very old version of qemu, or qemu might not be

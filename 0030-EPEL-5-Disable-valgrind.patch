@@ -1,7 +1,7 @@
-From 6edc5f2cda3c08345e8a31d2dc25a67d0c219b2e Mon Sep 17 00:00:00 2001
+From a1f128cb4bbb231fba61e493c3825fbb538163f7 Mon Sep 17 00:00:00 2001
 From: Richard W.M. Jones <rjones@redhat.com>
 Date: Fri, 8 Mar 2013 19:19:43 +0000
-Subject: [PATCH 30/36] EPEL 5: Disable valgrind.
+Subject: [PATCH 30/33] EPEL 5: Disable valgrind.
 
 Ancient automake didn't have AM_SUBST_NOTMAKE.
 ---
@@ -9,7 +9,7 @@ Ancient automake didn't have AM_SUBST_NOTMAKE.
  1 files changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/configure.ac b/configure.ac
-index 6d04e90..c27cad1 100644
+index 0d5c655..3b28b49 100644
 --- a/configure.ac
 +++ b/configure.ac
 @@ -868,8 +868,8 @@ AS_IF([test "x$VALGRIND" != "xno"],[
