@@ -12,7 +12,7 @@ Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
 Version:       1.23.2
-Release:       1%{?dist}
+Release:       2%{?dist}
 License:       LGPLv2+
 
 # Source and patches.
@@ -198,7 +198,7 @@ Requires:      pkgconfig
 
 # For libguestfs-make-fixed-appliance.
 Requires:      xz
-Requires:      libguestfs-tools-c
+Requires:      %{name}-tools-c = %{epoch}:%{version}-%{release}
 
 
 %description devel
@@ -892,6 +892,10 @@ mkdir -p $RPM_BUILD_ROOT%{_localstatedir}/run/libguestfs
 
 
 %changelog
+* Wed Jun  5 2013 Richard W.M. Jones <rjones@redhat.com> - 1:1.23.2-2
+- libguestfs-devel should depend on an explicit version of
+  libguestfs-tools-c, in order that the latest package is pulled in.
+
 * Mon Jun  3 2013 Richard W.M. Jones <rjones@redhat.com> - 1:1.23.2-1
 - New upstream version 1.23.2.
 
