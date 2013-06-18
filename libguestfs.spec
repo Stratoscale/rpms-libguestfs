@@ -11,7 +11,7 @@
 Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
-Version:       1.23.4
+Version:       1.23.5
 Release:       1%{?dist}
 License:       LGPLv2+
 
@@ -27,7 +27,7 @@ BuildRequires: supermin >= 4.1.1
 BuildRequires: hivex-devel >= 1.2.7-7
 BuildRequires: perl(Win::Hivex)
 BuildRequires: perl(Win::Hivex::Regedit)
-BuildRequires: augeas-devel >= 0.5.0
+BuildRequires: augeas-devel >= 1.0.0-4
 BuildRequires: readline-devel
 BuildRequires: genisoimage
 BuildRequires: libxml2-devel
@@ -611,9 +611,6 @@ export SKIP_TEST_SET_LABEL=1
 export SKIP_TEST_BTRFS_DEVICES_SH=1
 %endif
 
-# mdadm causes kernel panics (RHBZ#962079).
-export SKIP_TEST_MDADM_SH=1
-
 # Skip gnulib tests which fail (probably these are kernel/glibc bugs).
 pushd gnulib/tests
 make -k check ||:
@@ -892,6 +889,12 @@ mkdir -p $RPM_BUILD_ROOT%{_localstatedir}/run/libguestfs
 
 
 %changelog
+* Tue Jun 18 2013 Richard W.M. Jones <rjones@redhat.com> - 1:1.23.5-1
+- New upstream version 1.23.5.
+- Fix hostname inspection because of change in Augeas (RHBZ#975412).
+- Upstream libguestfs now requires Augeas >= 1.0.0.
+- Kernel bug which affected mdadm is fixed (RHBZ#962079).
+
 * Fri Jun 14 2013 Richard W.M. Jones <rjones@redhat.com> - 1:1.23.4-1
 - New upstream version 1.23.4.
 
