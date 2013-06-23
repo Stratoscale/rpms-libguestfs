@@ -744,6 +744,8 @@ mkdir -p $RPM_BUILD_ROOT%{_localstatedir}/run/libguestfs
 %{_mandir}/man1/virt-resize.1*
 %{_bindir}/virt-sparsify
 %{_mandir}/man1/virt-sparsify.1*
+%{_bindir}/virt-sysprep
+%{_mandir}/man1/virt-sysprep.1*
 %{_bindir}/virt-tar-in
 %{_mandir}/man1/virt-tar-in.1*
 %{_bindir}/virt-tar-out
@@ -758,8 +760,6 @@ mkdir -p $RPM_BUILD_ROOT%{_localstatedir}/run/libguestfs
 %{_mandir}/man1/virt-list-partitions.1*
 %{_bindir}/virt-make-fs
 %{_mandir}/man1/virt-make-fs.1*
-%{_bindir}/virt-sysprep
-%{_mandir}/man1/virt-sysprep.1*
 %{_bindir}/virt-tar
 %{_mandir}/man1/virt-tar.1*
 %{_bindir}/virt-win-reg
