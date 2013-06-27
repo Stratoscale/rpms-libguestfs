@@ -12,7 +12,7 @@ Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
 Version:       1.23.6
-Release:       1%{?dist}
+Release:       2%{?dist}
 License:       LGPLv2+
 
 # Source and patches.
@@ -623,11 +623,7 @@ done
 popd
 
 %if %{runtests}
-# Don't test on i686 because qemu TCG emulation (in 1.4.1-1.fc20)
-# is not very stable.
-%ifnarch %{ix86}
 make check -k
-%endif
 %endif
 
 
@@ -889,6 +885,10 @@ mkdir -p $RPM_BUILD_ROOT%{_localstatedir}/run/libguestfs
 
 
 %changelog
+* Thu Jun 27 2013 Richard W.M. Jones <rjones@redhat.com> - 1:1.23.6-2
+- Re-enable tests on i686, supposedly TCG problems are fixed
+  (RHBZ#857026 etc.).
+
 * Wed Jun 26 2013 Richard W.M. Jones <rjones@redhat.com> - 1:1.23.6-1
 - New upstream version 1.23.6.
 
