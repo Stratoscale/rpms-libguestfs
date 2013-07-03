@@ -11,8 +11,8 @@
 Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
-Version:       1.23.6
-Release:       2%{?dist}
+Version:       1.23.7
+Release:       1%{?dist}
 License:       LGPLv2+
 
 # Source and patches.
@@ -571,11 +571,13 @@ EOF
   extra=--with-supermin-packager-config=$(pwd)/yum.conf
 fi
 
+# golang disabled because of RHBZ#973842.
 %{configure} \
   --with-default-backend=libvirt \
   --with-extra="fedora=%{fedora},release=%{release},libvirt" \
   --with-qemu="qemu-kvm qemu-system-%{_build_arch} qemu" \
   --enable-install-daemon \
+  --disable-golang \
   $extra
 
 # 'INSTALLDIRS' ensures that Perl and Ruby libs are installed in the
@@ -885,6 +887,10 @@ mkdir -p $RPM_BUILD_ROOT%{_localstatedir}/run/libguestfs
 
 
 %changelog
+* Wed Jul  3 2013 Richard W.M. Jones <rjones@redhat.com> - 1:1.23.7-1
+- New upstream version 1.23.7.
+- Disable golang bindings.
+
 * Thu Jun 27 2013 Richard W.M. Jones <rjones@redhat.com> - 1:1.23.6-2
 - Re-enable tests on i686, supposedly TCG problems are fixed
   (RHBZ#857026 etc.).
