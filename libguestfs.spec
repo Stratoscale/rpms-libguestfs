@@ -11,7 +11,7 @@
 Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
-Version:       1.23.7
+Version:       1.23.8
 Release:       1%{?dist}
 License:       LGPLv2+
 
@@ -86,6 +86,7 @@ BuildRequires: erlang-erl_interface
 BuildRequires: glib2-devel
 BuildRequires: gobject-introspection-devel
 BuildRequires: gjs
+BuildRequires: golang
 
 # Build requirements for the appliance.
 # sed 's/^ *//' < appliance/packagelist | sort
@@ -175,6 +176,8 @@ For Erlang bindings, install 'erlang-libguestfs'.
 
 For GObject bindings and GObject Introspection, install
 'libguestfs-gobject-devel'.
+
+For Golang bindings, install 'golang-guestfs'.
 
 For Java bindings, install 'libguestfs-java-devel'.
 
@@ -501,6 +504,15 @@ This package is needed if you want to write software using the
 GObject bindings.  It also contains GObject Introspection information.
 
 
+%package -n golang-guestfs
+Summary:       Golang bindings for %{name}
+Requires:      %{name} = %{epoch}:%{version}-%{release}
+Requires:      golang
+
+%description -n golang-guestfs
+golang-%{name} contains Go language bindings for %{name}.
+
+
 %package man-pages-ja
 Summary:       Japanese (ja) man pages for %{name}
 Requires:      %{name} = %{epoch}:%{version}-%{release}
@@ -572,13 +584,11 @@ EOF
   extra=--with-supermin-packager-config=$(pwd)/yum.conf
 fi
 
-# golang disabled because of RHBZ#973842.
 %{configure} \
   --with-default-backend=libvirt \
   --with-extra="fedora=%{fedora},release=%{release},libvirt" \
   --with-qemu="qemu-kvm qemu-system-%{_build_arch} qemu" \
   --enable-install-daemon \
-  --disable-golang \
   $extra
 
 # 'INSTALLDIRS' ensures that Perl and Ruby libs are installed in the
@@ -877,6 +887,14 @@ mkdir -p $RPM_BUILD_ROOT%{_localstatedir}/run/libguestfs
 %{_libdir}/pkgconfig/libguestfs-gobject-1.0.pc
 
 
+%files -n golang-guestfs
+%doc golang/examples/*.go
+%doc golang/examples/LICENSE
+%{_libdir}/golang/pkg/linux_*/libguestfs.org
+%{_libdir}/golang/src/pkg/libguestfs.org
+%{_mandir}/man3/guestfs-golang.3*
+
+
 %files man-pages-ja
 %lang(ja) %{_mandir}/ja/man1/*.1*
 %lang(ja) %{_mandir}/ja/man3/*.3*
@@ -888,6 +906,10 @@ mkdir -p $RPM_BUILD_ROOT%{_localstatedir}/run/libguestfs
 
 
 %changelog
+* Tue Jul  9 2013 Richard W.M. Jones <rjones@redhat.com> - 1:1.23.8-1
+- New upstream version 1.23.8.
+- Try enabling golang bindings.
+
 * Wed Jul  3 2013 Richard W.M. Jones <rjones@redhat.com> - 1:1.23.7-1
 - New upstream version 1.23.7.
 - Disable golang bindings.
