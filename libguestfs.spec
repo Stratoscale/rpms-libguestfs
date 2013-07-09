@@ -12,12 +12,14 @@ Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
 Version:       1.23.8
-Release:       1%{?dist}
+Release:       2%{?dist}
 License:       LGPLv2+
 
 # Source and patches.
 URL:           http://libguestfs.org/
 Source0:       http://libguestfs.org/download/1.23-development/%{name}-%{version}.tar.gz
+
+Patch1:        0001-golang-Fix-it-so-it-builds-if-libguestfs-is-not-inst.patch
 
 # Basic build requirements:
 BuildRequires: perl(Pod::Simple)
@@ -534,6 +536,8 @@ for %{name}.
 %prep
 %setup -q
 
+%patch1 -p1
+
 if [ "$(getenforce | tr '[A-Z]' '[a-z]')" != "disabled" ]; then
     # For sVirt to work, the local temporary directory we use in the
     # tests must be labelled the same way as /tmp.
@@ -906,9 +910,10 @@ mkdir -p $RPM_BUILD_ROOT%{_localstatedir}/run/libguestfs
 
 
 %changelog
-* Tue Jul  9 2013 Richard W.M. Jones <rjones@redhat.com> - 1:1.23.8-1
+* Tue Jul  9 2013 Richard W.M. Jones <rjones@redhat.com> - 1:1.23.8-2
 - New upstream version 1.23.8.
 - Try enabling golang bindings.
+- Add upstream patch to fix golang bindings.
 
 * Wed Jul  3 2013 Richard W.M. Jones <rjones@redhat.com> - 1:1.23.7-1
 - New upstream version 1.23.7.
