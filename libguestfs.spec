@@ -12,7 +12,7 @@ Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
 Version:       1.23.8
-Release:       2%{?dist}
+Release:       3%{?dist}
 License:       LGPLv2+
 
 # Source and patches.
@@ -20,6 +20,8 @@ URL:           http://libguestfs.org/
 Source0:       http://libguestfs.org/download/1.23-development/%{name}-%{version}.tar.gz
 
 Patch1:        0001-golang-Fix-it-so-it-builds-if-libguestfs-is-not-inst.patch
+Patch2:        0001-.-run-Add-a-better-comment-describing-test-mode.patch
+Patch3:        0002-.-run-Timeout-tests-after-1-hour.patch
 
 # Basic build requirements:
 BuildRequires: perl(Pod::Simple)
@@ -537,6 +539,8 @@ for %{name}.
 %setup -q
 
 %patch1 -p1
+%patch2 -p1
+%patch3 -p1
 
 if [ "$(getenforce | tr '[A-Z]' '[a-z]')" != "disabled" ]; then
     # For sVirt to work, the local temporary directory we use in the
@@ -910,6 +914,9 @@ mkdir -p $RPM_BUILD_ROOT%{_localstatedir}/run/libguestfs
 
 
 %changelog
+* Thu Jul 11 2013 Richard W.M. Jones <rjones@redhat.com> - 1:1.23.8-3
+- Add patches to ./run so we capture errors when i686 tests time out.
+
 * Tue Jul  9 2013 Richard W.M. Jones <rjones@redhat.com> - 1:1.23.8-2
 - New upstream version 1.23.8.
 - Try enabling golang bindings.
