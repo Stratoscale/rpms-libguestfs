@@ -12,12 +12,14 @@ Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
 Version:       1.22.4
-Release:       1%{?dist}
+Release:       2%{?dist}
 License:       LGPLv2+
 
 # Source and patches.
 URL:           http://libguestfs.org/
 Source0:       http://libguestfs.org/download/1.22-stable/%{name}-%{version}.tar.gz
+
+Patch1:        0001-launch-appliance-Fix-a-double-free-if-kernel-linking.patch
 
 # Basic build requirements:
 BuildRequires: perl(Pod::Simple)
@@ -522,6 +524,8 @@ for %{name}.
 %prep
 %setup -q
 
+%patch1 -p1
+
 if [ "$(getenforce | tr '[A-Z]' '[a-z]')" != "disabled" ]; then
     # For sVirt to work, the local temporary directory we use in the
     # tests must be labelled the same way as /tmp.
@@ -892,6 +896,10 @@ mkdir -p $RPM_BUILD_ROOT%{_localstatedir}/run/libguestfs
 
 
 %changelog
+* Thu Jul 11 2013 Richard W.M. Jones <rjones@redhat.com> - 1:1.22.4-2
+- Include upstream patch to fix double-free if appliance
+  building fails (RHBZ#983218).
+
 * Tue Jul  9 2013 Richard W.M. Jones <rjones@redhat.com> - 1:1.22.4-1
 - New upstream stable branch version 1.22.4.
 
