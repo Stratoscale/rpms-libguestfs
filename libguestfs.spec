@@ -225,7 +225,7 @@ Requires:      %{name} = %{epoch}:%{version}-%{release}
 Requires:      /usr/bin/hexedit
 Requires:      /usr/bin/less
 Requires:      /usr/bin/man
-Requires:      /bin/vi
+Requires:      /usr/bin/vi
 
 # for virt-sparsify:
 Requires:      /usr/bin/qemu-img
