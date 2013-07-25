@@ -115,9 +115,10 @@ Requires:      libosinfo
 Requires:      fuse
 
 # For libvirt backend.
-Requires:      libvirt-daemon-qemu >= 0.10.2-3
 %ifarch %{ix86} x86_64
 Requires:      libvirt-daemon-kvm >= 0.10.2-3
+%else
+Requires:      libvirt-daemon-qemu >= 0.10.2-3
 %endif
 Requires:      selinux-policy >= 3.11.1-63
 
