@@ -15,6 +15,10 @@ Version:       1.23.11
 Release:       1%{?dist}
 License:       LGPLv2+
 
+# Don't compile on armv7hl yet.
+# Missing prerequisites: libvirt-devel, libvirt-daemon-qemu.
+ExcludeArch:   armv7hl
+
 # Source and patches.
 URL:           http://libguestfs.org/
 Source0:       http://libguestfs.org/download/1.23-development/%{name}-%{version}.tar.gz
@@ -60,6 +64,7 @@ BuildRequires: libacl-devel
 BuildRequires: libcap-devel
 BuildRequires: libldm-devel
 BuildRequires: yajl-devel
+BuildRequires: systemd-devel
 BuildRequires: bash-completion
 BuildRequires: /usr/bin/ping
 BuildRequires: /usr/bin/wget
@@ -909,6 +914,8 @@ mkdir -p $RPM_BUILD_ROOT%{_localstatedir}/run/libguestfs
 %changelog
 * Mon Jul 29 2013 Richard W.M. Jones <rjones@redhat.com> - 1:1.23.11-1
 - New upstream version 1.23.11.
+- +BR systemd-devel (for systemd journal processing).
+- Disable ARM builds for now.
 
 * Tue Jul 23 2013 Richard W.M. Jones <rjones@redhat.com> - 1:1.23.10-1
 - New upstream version 1.23.10.
