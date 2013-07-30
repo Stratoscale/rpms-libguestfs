@@ -11,8 +11,8 @@
 Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
-Version:       1.23.11
-Release:       2%{?dist}
+Version:       1.23.12
+Release:       1%{?dist}
 License:       LGPLv2+
 
 # Source and patches.
@@ -637,8 +637,11 @@ for f in test-getaddrinfo test-utimens ; do
 done
 popd
 
+# Disabled on ARM because of RHBZ#990258.
+%ifnarch armv7hl
 %if %{runtests}
 make check -k
+%endif
 %endif
 
 
@@ -908,6 +911,11 @@ mkdir -p $RPM_BUILD_ROOT%{_localstatedir}/run/libguestfs
 
 
 %changelog
+* Tue Jul 30 2013 Richard W.M. Jones <rjones@redhat.com> - 1:1.23.12-1
+- New upstream version 1.23.12.
+- Disable ARM tests because of libvirt error:
+  XML error: No PCI buses available [code=27 domain=10] (RHBZ#990258).
+
 * Tue Jul 30 2013 Richard W.M. Jones <rjones@redhat.com> - 1:1.23.11-2
 - Enable ARM builds (thanks Dan Berrange).
 
