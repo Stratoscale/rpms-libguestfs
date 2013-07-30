@@ -12,12 +12,8 @@ Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
 Version:       1.23.11
-Release:       1%{?dist}
+Release:       2%{?dist}
 License:       LGPLv2+
-
-# Don't compile on armv7hl yet.
-# Missing prerequisites: libvirt-devel, libvirt-daemon-qemu.
-ExcludeArch:   armv7hl
 
 # Source and patches.
 URL:           http://libguestfs.org/
@@ -912,6 +908,9 @@ mkdir -p $RPM_BUILD_ROOT%{_localstatedir}/run/libguestfs
 
 
 %changelog
+* Tue Jul 30 2013 Richard W.M. Jones <rjones@redhat.com> - 1:1.23.11-2
+- Enable ARM builds (thanks Dan Berrange).
+
 * Mon Jul 29 2013 Richard W.M. Jones <rjones@redhat.com> - 1:1.23.11-1
 - New upstream version 1.23.11.
 - +BR systemd-devel (for systemd journal processing).
