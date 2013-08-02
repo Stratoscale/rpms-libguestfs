@@ -12,7 +12,7 @@ Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
 Version:       1.23.12
-Release:       1%{?dist}
+Release:       2%{?dist}
 License:       LGPLv2+
 
 # Source and patches.
@@ -911,6 +911,9 @@ mkdir -p $RPM_BUILD_ROOT%{_localstatedir}/run/libguestfs
 
 
 %changelog
+* Fri Aug 02 2013 Petr Pisar <ppisar@redhat.com> - 1:1.23.12-2
+- Perl 5.18 rebuild
+
 * Tue Jul 30 2013 Richard W.M. Jones <rjones@redhat.com> - 1:1.23.12-1
 - New upstream version 1.23.12.
 - Disable ARM tests because of libvirt error:
