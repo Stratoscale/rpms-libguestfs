@@ -12,7 +12,7 @@ Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
 Version:       1.23.13
-Release:       1%{?dist}
+Release:       2%{?dist}
 License:       LGPLv2+
 
 # Source and patches.
@@ -637,10 +637,13 @@ for f in test-getaddrinfo test-utimens ; do
 done
 popd
 
+# Completely disabled because Rawhide kernel is broken (RHBZ#991808).
+%if 0
 # Disabled on ARM because of RHBZ#990258.
 %ifnarch armv7hl
 %if %{runtests}
 make check -k
+%endif
 %endif
 %endif
 
@@ -911,6 +914,9 @@ mkdir -p $RPM_BUILD_ROOT%{_localstatedir}/run/libguestfs
 
 
 %changelog
+* Sun Aug  4 2013 Richard W.M. Jones <rjones@redhat.com> - 1:1.23.13-2
+- Disable all tests because Rawhide kernel is broken (RHBZ#991808).
+
 * Sat Aug  3 2013 Richard W.M. Jones <rjones@redhat.com> - 1:1.23.13-1
 - New upstream version 1.23.13.
 
