@@ -642,13 +642,10 @@ for f in test-getaddrinfo test-utimens ; do
 done
 popd
 
-# Completely disabled because Rawhide kernel is broken (RHBZ#991808).
-%if 0
 # Disabled on ARM because of RHBZ#990258.
 %ifnarch armv7hl
 %if %{runtests}
 make check -k
-%endif
 %endif
 %endif
 
