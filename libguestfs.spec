@@ -11,7 +11,7 @@
 Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
-Version:       1.23.14
+Version:       1.23.15
 Release:       1%{?dist}
 License:       LGPLv2+
 
@@ -122,6 +122,11 @@ Requires:      libvirt-daemon-kvm >= 0.10.2-3
 Requires:      libvirt-daemon-qemu >= 0.10.2-3
 %endif
 Requires:      selinux-policy >= 3.11.1-63
+
+# For UML backend (this backend only works on x86).
+%ifarch %{ix86} x86_64
+Requires:      uml_utilities
+%endif
 
 # Provide our own custom requires for the supermin appliance.
 Source1:       libguestfs-find-requires.sh
@@ -914,6 +919,9 @@ mkdir -p $RPM_BUILD_ROOT%{_localstatedir}/run/libguestfs
 
 
 %changelog
+* Sun Aug 11 2013 Richard W.M. Jones <rjones@redhat.com> - 1:1.23.15-1
+- New upstream version 1.23.15.
+
 * Tue Aug  6 2013 Richard W.M. Jones <rjones@redhat.com> - 1:1.23.14-1
 - New upstream version 1.23.14.
 
