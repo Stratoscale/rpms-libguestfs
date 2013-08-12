@@ -642,10 +642,13 @@ for f in test-getaddrinfo test-utimens ; do
 done
 popd
 
+# Disabled because libvirt is broken (RHBZ#996007).
+%if 0
 # Disabled on ARM because of RHBZ#990258.
 %ifnarch armv7hl
 %if %{runtests}
 make check -k
+%endif
 %endif
 %endif
 
