@@ -11,7 +11,7 @@
 Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
-Version:       1.23.16
+Version:       1.23.17
 Release:       1%{?dist}
 License:       LGPLv2+
 
@@ -642,13 +642,10 @@ for f in test-getaddrinfo test-utimens ; do
 done
 popd
 
-# Disabled because libvirt is broken (RHBZ#996007).
-%if 0
 # Disabled on ARM because of RHBZ#990258.
 %ifnarch armv7hl
 %if %{runtests}
 make check -k
-%endif
 %endif
 %endif
 
@@ -919,6 +916,10 @@ mkdir -p $RPM_BUILD_ROOT%{_localstatedir}/run/libguestfs
 
 
 %changelog
+* Thu Aug 15 2013 Richard W.M. Jones <rjones@redhat.com> - 1:1.23.17-1
+- New upstream version 1.23.17.
+- Enable tests as cpu host-model is no longer used on TCG.
+
 * Tue Aug 13 2013 Richard W.M. Jones <rjones@redhat.com> - 1:1.23.16-1
 - New upstream version 1.23.16.
 
