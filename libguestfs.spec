@@ -11,7 +11,7 @@
 Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
-Version:       1.23.17
+Version:       1.23.18
 Release:       1%{?dist}
 License:       LGPLv2+
 
@@ -916,6 +916,9 @@ mkdir -p $RPM_BUILD_ROOT%{_localstatedir}/run/libguestfs
 
 
 %changelog
+* Mon Aug 19 2013 Richard W.M. Jones <rjones@redhat.com> - 1:1.23.18-1
+- New upstream version 1.23.18.
+
 * Thu Aug 15 2013 Richard W.M. Jones <rjones@redhat.com> - 1:1.23.17-1
 - New upstream version 1.23.17.
 - Enable tests as cpu host-model is no longer used on TCG.
