@@ -12,7 +12,7 @@ Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
 Version:       1.23.18
-Release:       1%{?dist}
+Release:       2%{?dist}
 License:       LGPLv2+
 
 # Source and patches.
@@ -643,7 +643,8 @@ done
 popd
 
 # Disabled on ARM because of RHBZ#990258.
-%ifnarch armv7hl
+# Disabled on 32 bit x86 because of RHBZ#998722 & RHBZ#998692.
+%ifnarch armv7hl %{ix86}
 %if %{runtests}
 make check -k
 %endif
@@ -916,8 +917,9 @@ mkdir -p $RPM_BUILD_ROOT%{_localstatedir}/run/libguestfs
 
 
 %changelog
-* Mon Aug 19 2013 Richard W.M. Jones <rjones@redhat.com> - 1:1.23.18-1
+* Mon Aug 19 2013 Richard W.M. Jones <rjones@redhat.com> - 1:1.23.18-2
 - New upstream version 1.23.18.
+- Disable 32 bit x86 tests because of RHBZ#998722 & RHBZ#998692.
 
 * Thu Aug 15 2013 Richard W.M. Jones <rjones@redhat.com> - 1:1.23.17-1
 - New upstream version 1.23.17.
