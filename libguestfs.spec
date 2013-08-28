@@ -12,12 +12,16 @@ Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
 Version:       1.23.18
-Release:       2%{?dist}
+Release:       3%{?dist}
 License:       LGPLv2+
 
 # Source and patches.
 URL:           http://libguestfs.org/
 Source0:       http://libguestfs.org/download/1.23-development/%{name}-%{version}.tar.gz
+
+# Upstream since 2013-08-28.
+Patch1:        0001-javadoc-Install-javadoc-in-datadir-javadoc-libguestf.patch
+BuildRequires: automake, autoconf, libtool, gettext-devel
 
 # Basic build requirements:
 BuildRequires: perl(Pod::Simple)
@@ -66,7 +70,6 @@ BuildRequires: /usr/bin/ping
 BuildRequires: /usr/bin/wget
 BuildRequires: perl(Sys::Virt)
 BuildRequires: /usr/bin/qemu-img
-BuildRequires: perl-devel
 BuildRequires: perl(Test::More)
 BuildRequires: perl(Test::Pod) >= 1.00
 BuildRequires: perl(Test::Pod::Coverage) >= 1.00
@@ -253,6 +256,7 @@ to avoid dependencies on Perl.
 %package tools
 Summary:       System administration tools for virtual machines
 License:       GPLv2+
+BuildArch:     noarch
 Requires:      %{name} = %{epoch}:%{version}-%{release}
 Requires:      %{name}-tools-c = %{epoch}:%{version}-%{release}
 
@@ -333,6 +337,7 @@ Windows virtual machines.
 
 %package bash-completion
 Summary:       Bash tab-completion scripts for %{name} tools
+BuildArch:     noarch
 Requires:      bash-completion >= 2.0
 Requires:      %{name}-tools-c = %{epoch}:%{version}-%{release}
 
@@ -456,6 +461,7 @@ See also %{name}-javadoc.
 
 %package javadoc
 Summary:       Java documentation for %{name}
+BuildArch:     noarch
 Requires:      %{name} = %{epoch}:%{version}-%{release}
 Requires:      %{name}-java = %{epoch}:%{version}-%{release}
 Requires:      jpackage-utils
@@ -514,6 +520,16 @@ This package is needed if you want to write software using the
 GObject bindings.  It also contains GObject Introspection information.
 
 
+%package gobject-doc
+Summary:       Documentation for %{name} GObject bindings
+BuildArch:     noarch
+Requires:      %{name}-gobject-devel = %{epoch}:%{version}-%{release}
+
+%description gobject-doc
+%{name}-gobject-doc contains documentation for
+%{name} GObject bindings.
+
+
 %package -n golang-guestfs
 Summary:       Golang bindings for %{name}
 Requires:      %{name} = %{epoch}:%{version}-%{release}
@@ -525,6 +541,7 @@ golang-%{name} contains Go language bindings for %{name}.
 
 %package man-pages-ja
 Summary:       Japanese (ja) man pages for %{name}
+BuildArch:     noarch
 Requires:      %{name} = %{epoch}:%{version}-%{release}
 
 %description man-pages-ja
@@ -534,6 +551,7 @@ for %{name}.
 
 %package man-pages-uk
 Summary:       Ukrainian (uk) man pages for %{name}
+BuildArch:     noarch
 Requires:      %{name} = %{epoch}:%{version}-%{release}
 
 %description man-pages-uk
@@ -543,6 +561,9 @@ for %{name}.
 
 %prep
 %setup -q
+
+%patch1 -p1
+autoreconf -i
 
 if [ "$(getenforce | tr '[A-Z]' '[a-z]')" != "disabled" ]; then
     # For sVirt to work, the local temporary directory we use in the
@@ -604,6 +625,11 @@ fi
 # 'INSTALLDIRS' ensures that Perl and Ruby libs are installed in the
 # vendor dir not the site dir.
 make V=1 INSTALLDIRS=vendor %{?_smp_mflags}
+
+# This file is creeping over 1 MB uncompressed, and since it is
+# included in the -devel subpackage, compress it to reduce
+# installation size.
+gzip -9 ChangeLog
 
 
 %check
@@ -681,6 +707,7 @@ fi
 # Move installed documentation back to the source directory so
 # we can install it using a %%doc rule.
 mv $RPM_BUILD_ROOT%{_docdir}/libguestfs installed-docs
+gzip --best installed-docs/*.xml
 
 # For the libguestfs-live-service subpackage install the systemd
 # service and udev rules.
@@ -703,6 +730,10 @@ mkdir -p $RPM_BUILD_ROOT%{_localstatedir}/run/libguestfs
 
 %postun -p /sbin/ldconfig
 
+%post java -p /sbin/ldconfig
+
+%postun java -p /sbin/ldconfig
+
 
 %files -f %{name}.lang
 %doc COPYING README
@@ -719,7 +750,7 @@ mkdir -p $RPM_BUILD_ROOT%{_localstatedir}/run/libguestfs
 
 
 %files devel
-%doc AUTHORS BUGS ChangeLog HACKING TODO README ROADMAP
+%doc AUTHORS BUGS ChangeLog.gz HACKING TODO README ROADMAP
 %doc examples/*.c
 %doc installed-docs/*
 %{_libdir}/libguestfs.so
@@ -860,7 +891,7 @@ mkdir -p $RPM_BUILD_ROOT%{_localstatedir}/run/libguestfs
 
 
 %files javadoc
-%{_datadir}/javadoc/%{name}-java-%{version}
+%{_javadocdir}/%{name}
 
 
 %files -n php-%{name}
@@ -897,8 +928,11 @@ mkdir -p $RPM_BUILD_ROOT%{_localstatedir}/run/libguestfs
 %dir %{_includedir}/guestfs-gobject
 %{_includedir}/guestfs-gobject/*.h
 %{_datadir}/gir-1.0/Guestfs-1.0.gir
-%{_datadir}/gtk-doc/html/guestfs
 %{_libdir}/pkgconfig/libguestfs-gobject-1.0.pc
+
+
+%files gobject-doc
+%{_datadir}/gtk-doc/html/guestfs
 
 
 %files -n golang-guestfs
@@ -920,6 +954,15 @@ mkdir -p $RPM_BUILD_ROOT%{_localstatedir}/run/libguestfs
 
 
 %changelog
+* Wed Aug 28 2013 Richard W.M. Jones <rjones@redhat.com> - 1:1.23.18-3
+- Fix javadoc location to use _javadocdir macro.
+- Call ldconfig in java post and postun scripts.
+- Do not explicitly depend on perl-devel.
+- Compress the ChangeLog and *.xml files in devel package.
+- Create new subpackage gobject-doc for the huge HTML documentation.
+- Make javadoc, gobject-doc, bash-completion, man-pages-*, tools packages
+  'noarch'.
+
 * Mon Aug 19 2013 Richard W.M. Jones <rjones@redhat.com> - 1:1.23.18-2
 - New upstream version 1.23.18.
 - Disable 32 bit x86 tests because of RHBZ#998722 & RHBZ#998692.
