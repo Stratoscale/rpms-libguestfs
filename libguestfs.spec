@@ -11,18 +11,13 @@
 Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
-Version:       1.23.18
-Release:       4%{?dist}
+Version:       1.23.19
+Release:       1%{?dist}
 License:       LGPLv2+
 
 # Source and patches.
 URL:           http://libguestfs.org/
 Source0:       http://libguestfs.org/download/1.23-development/%{name}-%{version}.tar.gz
-
-# Upstream since 2013-08-28.
-Patch1:        0001-javadoc-Install-javadoc-in-datadir-javadoc-libguestf.patch
-Patch2:        0001-appliance-Use-gzip-compressed-cpio-files-if-supermin.patch
-BuildRequires: automake, autoconf, libtool, gettext-devel
 
 # Basic build requirements:
 BuildRequires: perl(Pod::Simple)
@@ -563,10 +558,6 @@ for %{name}.
 %prep
 %setup -q
 
-%patch1 -p1
-%patch2 -p1
-autoreconf -i
-
 if [ "$(getenforce | tr '[A-Z]' '[a-z]')" != "disabled" ]; then
     # For sVirt to work, the local temporary directory we use in the
     # tests must be labelled the same way as /tmp.
@@ -956,6 +947,10 @@ mkdir -p $RPM_BUILD_ROOT%{_localstatedir}/run/libguestfs
 
 
 %changelog
+* Thu Aug 29 2013 Richard W.M. Jones <rjones@redhat.com> - 1:1.23.19-1
+- New upstream version 1.23.19.
+- Remove 2 x patches which are upstream.
+
 * Thu Aug 29 2013 Richard W.M. Jones <rjones@redhat.com> - 1:1.23.18-4
 - Enable gzip-compressed appliance.
 - Note this requires supermin >= 4.1.4.
