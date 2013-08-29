@@ -12,7 +12,7 @@ Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
 Version:       1.23.18
-Release:       3%{?dist}
+Release:       4%{?dist}
 License:       LGPLv2+
 
 # Source and patches.
@@ -21,13 +21,14 @@ Source0:       http://libguestfs.org/download/1.23-development/%{name}-%{version
 
 # Upstream since 2013-08-28.
 Patch1:        0001-javadoc-Install-javadoc-in-datadir-javadoc-libguestf.patch
+Patch2:        0001-appliance-Use-gzip-compressed-cpio-files-if-supermin.patch
 BuildRequires: automake, autoconf, libtool, gettext-devel
 
 # Basic build requirements:
 BuildRequires: perl(Pod::Simple)
 BuildRequires: perl(Pod::Man)
 BuildRequires: /usr/bin/pod2text
-BuildRequires: supermin >= 4.1.1
+BuildRequires: supermin >= 4.1.4
 BuildRequires: hivex-devel >= 1.2.7-7
 BuildRequires: perl(Win::Hivex)
 BuildRequires: perl(Win::Hivex::Regedit)
@@ -110,7 +111,7 @@ BuildRequires: %{appliance_buildreqs}
 Requires:      %{appliance_buildreqs}
 
 # For building the appliance.
-Requires:      supermin-helper >= 4.1.1
+Requires:      supermin-helper >= 4.1.4
 
 # For core inspection API.
 Requires:      libdb-utils
@@ -563,6 +564,7 @@ for %{name}.
 %setup -q
 
 %patch1 -p1
+%patch2 -p1
 autoreconf -i
 
 if [ "$(getenforce | tr '[A-Z]' '[a-z]')" != "disabled" ]; then
@@ -954,6 +956,10 @@ mkdir -p $RPM_BUILD_ROOT%{_localstatedir}/run/libguestfs
 
 
 %changelog
+* Thu Aug 29 2013 Richard W.M. Jones <rjones@redhat.com> - 1:1.23.18-4
+- Enable gzip-compressed appliance.
+- Note this requires supermin >= 4.1.4.
+
 * Wed Aug 28 2013 Richard W.M. Jones <rjones@redhat.com> - 1:1.23.18-3
 - Fix javadoc location to use _javadocdir macro.
 - Call ldconfig in java post and postun scripts.
