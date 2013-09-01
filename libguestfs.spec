@@ -636,6 +636,7 @@ export LIBGUESTFS_TRACE=1
 
 # Enable libvirt debugging.
 export LIBVIRT_DEBUG=1
+strace -f -s 1024 make quickcheck
 
 # This test fails because we build the ISO after encoding the checksum
 # of the ISO in the test itself.  Need to fix the test to work out the
