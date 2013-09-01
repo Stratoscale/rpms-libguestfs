@@ -12,7 +12,7 @@ Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
 Version:       1.23.20
-Release:       1%{?dist}
+Release:       2%{?dist}
 License:       LGPLv2+
 
 # Source and patches.
@@ -634,6 +634,9 @@ export LIBGUESTFS_DEBUG=1
 # output even when combined with trace (see RHBZ#673477).
 export LIBGUESTFS_TRACE=1
 
+# Enable libvirt debugging.
+export LIBVIRT_DEBUG=1
+
 # This test fails because we build the ISO after encoding the checksum
 # of the ISO in the test itself.  Need to fix the test to work out the
 # checksum at runtime.
@@ -947,8 +950,9 @@ mkdir -p $RPM_BUILD_ROOT%{_localstatedir}/run/libguestfs
 
 
 %changelog
-* Sun Sep  1 2013 Richard W.M. Jones <rjones@redhat.com> - 1:1.23.20-1
+* Sun Sep  1 2013 Richard W.M. Jones <rjones@redhat.com> - 1:1.23.20-2
 - New upstream version 1.23.20.
+- Enable libvirt debugging.
 
 * Thu Aug 29 2013 Richard W.M. Jones <rjones@redhat.com> - 1:1.23.19-1
 - New upstream version 1.23.19.
