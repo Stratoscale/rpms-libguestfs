@@ -635,6 +635,11 @@ export LIBGUESTFS_DEBUG=1
 export LIBGUESTFS_TRACE=1
 
 # Enable libvirt debugging.
+echo HOME=$HOME
+ls -al $HOME ||:
+ls -al /builddir ||:
+ls -al /builddir/.cache ||:
+ls -al /builddir/.config ||:
 export LIBVIRT_DEBUG=1
 strace -f -s 1024 make quickcheck
 
