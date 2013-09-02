@@ -12,7 +12,7 @@ Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
 Version:       1.23.20
-Release:       2%{?dist}
+Release:       3%{?dist}
 License:       LGPLv2+
 
 # Source and patches.
@@ -664,6 +664,11 @@ for f in test-getaddrinfo test-utimens ; do
 done
 popd
 
+# Work around buggy fontconfig which creates $HOME/.config file owned
+# by root, preventing libvirt from running (RHBZ#1003495).
+export XDG_CONFIG_HOME=$HOME/.config-BZ1003495
+mkdir $XDG_CONFIG_HOME
+
 # Disabled on ARM because of RHBZ#990258.
 # Disabled on 32 bit x86 because of RHBZ#998722 & RHBZ#998692.
 %ifnarch armv7hl %{ix86}
@@ -947,6 +952,9 @@ mkdir -p $RPM_BUILD_ROOT%{_localstatedir}/run/libguestfs
 
 
 %changelog
+* Mon Sep  2 2013 Richard W.M. Jones <rjones@redhat.com> - 1:1.23.20-3
+- Work around buggy fontconfig (RHBZ#1003495).
+
 * Sun Sep  1 2013 Richard W.M. Jones <rjones@redhat.com> - 1:1.23.20-2
 - New upstream version 1.23.20.
 
