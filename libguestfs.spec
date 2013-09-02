@@ -634,15 +634,6 @@ export LIBGUESTFS_DEBUG=1
 # output even when combined with trace (see RHBZ#673477).
 export LIBGUESTFS_TRACE=1
 
-# Enable libvirt debugging.
-echo HOME=$HOME
-ls -al $HOME ||:
-ls -al /builddir ||:
-ls -al /builddir/.cache ||:
-ls -al /builddir/.config ||:
-export LIBVIRT_DEBUG=1
-strace -f -s 1024 make quickcheck
-
 # This test fails because we build the ISO after encoding the checksum
 # of the ISO in the test itself.  Need to fix the test to work out the
 # checksum at runtime.
@@ -958,7 +949,6 @@ mkdir -p $RPM_BUILD_ROOT%{_localstatedir}/run/libguestfs
 %changelog
 * Sun Sep  1 2013 Richard W.M. Jones <rjones@redhat.com> - 1:1.23.20-2
 - New upstream version 1.23.20.
-- Enable libvirt debugging.
 
 * Thu Aug 29 2013 Richard W.M. Jones <rjones@redhat.com> - 1:1.23.19-1
 - New upstream version 1.23.19.
