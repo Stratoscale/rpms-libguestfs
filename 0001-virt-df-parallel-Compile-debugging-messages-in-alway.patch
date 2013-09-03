@@ -1,4 +1,4 @@
-From d512fb4a1a98be294d11d5de88eabcfc2be8e964 Mon Sep 17 00:00:00 2001
+From 67b9469754684bc0c79fffab7bbca9f6ffee84f0 Mon Sep 17 00:00:00 2001
 From: "Richard W.M. Jones" <rjones@redhat.com>
 Date: Tue, 3 Sep 2013 12:44:25 +0100
 Subject: [PATCH] virt-df: parallel: Compile debugging messages in always.
@@ -6,11 +6,11 @@ Subject: [PATCH] virt-df: parallel: Compile debugging messages in always.
 Enable debugging messages whenever LIBGUESTFS_DEBUG=1 / -v option, so
 that we can track down possible race condition seen in Koji.
 ---
- df/parallel.c | 26 ++++++++++++++++++--------
- 1 file changed, 18 insertions(+), 8 deletions(-)
+ df/parallel.c | 27 +++++++++++++++++++--------
+ 1 file changed, 19 insertions(+), 8 deletions(-)
 
 diff --git a/df/parallel.c b/df/parallel.c
-index a06e370..1a47b34 100644
+index a06e370..1f56beb 100644
 --- a/df/parallel.c
 +++ b/df/parallel.c
 @@ -42,8 +42,6 @@
@@ -91,14 +91,15 @@ index a06e370..1a47b34 100644
  
      /* Retire domain. */
      printf ("%s", output);
-@@ -227,8 +237,8 @@ worker_thread (void *thread_data_vp)
+@@ -227,8 +237,9 @@ worker_thread (void *thread_data_vp)
      }
    }
  
 -  if (DEBUG_PARALLEL)
 -    printf ("thread exiting\n");
 +  if (thread_data->verbose)
-+    printf ("thread %zu exiting\n", thread_data->thread_num);
++    printf ("thread %zu exiting (r = %d)\n",
++            thread_data->thread_num, thread_data->r);
  
    return &thread_data->r;
  }
