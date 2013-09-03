@@ -12,12 +12,14 @@ Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
 Version:       1.23.20
-Release:       4%{?dist}
+Release:       5%{?dist}
 License:       LGPLv2+
 
 # Source and patches.
 URL:           http://libguestfs.org/
 Source0:       http://libguestfs.org/download/1.23-development/%{name}-%{version}.tar.gz
+
+Patch1:        0001-virt-df-parallel-Compile-debugging-messages-in-alway.patch
 
 # Basic build requirements:
 BuildRequires: perl(Pod::Simple)
@@ -558,6 +560,8 @@ for %{name}.
 %prep
 %setup -q
 
+%patch1 -p1
+
 if [ "$(getenforce | tr '[A-Z]' '[a-z]')" != "disabled" ]; then
     # For sVirt to work, the local temporary directory we use in the
     # tests must be labelled the same way as /tmp.
@@ -947,6 +951,10 @@ mkdir -p $RPM_BUILD_ROOT%{_localstatedir}/run/libguestfs
 
 
 %changelog
+* Tue Sep  3 2013 Richard W.M. Jones <rjones@redhat.com> - 1:1.23.20-5
+- Enable debugging messages in parallel virt-alignment-scan, virt-df
+  in order to debug possible race condition seen in Koji.
+
 * Mon Sep  2 2013 Richard W.M. Jones <rjones@redhat.com> - 1:1.23.20-4
 - Rebuild now that RHBZ#1003495 is supposed to be fixed.
 
