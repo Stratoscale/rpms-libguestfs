@@ -23,7 +23,7 @@ Source0:       http://libguestfs.org/download/1.23-development/%{name}-%{version
 BuildRequires: perl(Pod::Simple)
 BuildRequires: perl(Pod::Man)
 BuildRequires: /usr/bin/pod2text
-BuildRequires: supermin >= 4.1.4
+BuildRequires: supermin >= 4.1.5
 BuildRequires: hivex-devel >= 1.2.7-7
 BuildRequires: perl(Win::Hivex)
 BuildRequires: perl(Win::Hivex::Regedit)
@@ -106,7 +106,7 @@ BuildRequires: %{appliance_buildreqs}
 Requires:      %{appliance_buildreqs}
 
 # For building the appliance.
-Requires:      supermin-helper >= 4.1.4
+Requires:      supermin-helper >= 4.1.5
 
 # For core inspection API.
 Requires:      libdb-utils
@@ -950,6 +950,8 @@ mkdir -p $RPM_BUILD_ROOT%{_localstatedir}/run/libguestfs
 * Sat Sep  7 2013 Richard W.M. Jones <rjones@redhat.com> - 1:1.23.21-1
 - New upstream version 1.23.21.
 - Remove patches which are now upstream.
+- Requires supermin >= 4.1.5 (technically only on ARM for device tree
+  support, but might as well have it everywhere).
 
 * Tue Sep  3 2013 Richard W.M. Jones <rjones@redhat.com> - 1:1.23.20-5
 - Enable debugging messages in parallel virt-alignment-scan, virt-df
