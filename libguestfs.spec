@@ -12,7 +12,7 @@ Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
 Version:       1.23.21
-Release:       1%{?dist}
+Release:       2%{?dist}
 License:       LGPLv2+
 
 # Source and patches.
@@ -86,7 +86,9 @@ BuildRequires: erlang-erl_interface
 BuildRequires: glib2-devel
 BuildRequires: gobject-introspection-devel
 BuildRequires: gjs
+%ifnarch ppc64
 BuildRequires: golang
+%endif
 
 # Build requirements for the appliance.
 # sed 's/^ *//' < appliance/packagelist | sort
@@ -526,6 +528,7 @@ Requires:      %{name}-gobject-devel = %{epoch}:%{version}-%{release}
 %{name} GObject bindings.
 
 
+%ifnarch ppc64
 %package -n golang-guestfs
 Summary:       Golang bindings for %{name}
 Requires:      %{name} = %{epoch}:%{version}-%{release}
@@ -533,6 +536,7 @@ Requires:      golang
 
 %description -n golang-guestfs
 golang-%{name} contains Go language bindings for %{name}.
+%endif
 
 
 %package man-pages-ja
@@ -928,12 +932,14 @@ mkdir -p $RPM_BUILD_ROOT%{_localstatedir}/run/libguestfs
 %{_datadir}/gtk-doc/html/guestfs
 
 
+%ifnarch ppc64
 %files -n golang-guestfs
 %doc golang/examples/*.go
 %doc golang/examples/LICENSE
 %{_libdir}/golang/pkg/linux_*/libguestfs.org
 %{_libdir}/golang/src/pkg/libguestfs.org
 %{_mandir}/man3/guestfs-golang.3*
+%endif
 
 
 %files man-pages-ja
@@ -947,6 +953,9 @@ mkdir -p $RPM_BUILD_ROOT%{_localstatedir}/run/libguestfs
 
 
 %changelog
+* Mon Sep  9 2013 Richard W.M. Jones <rjones@redhat.com> - 1:1.23.21-2
+- Disable golang bindings on ppc64 (no golang package available).
+
 * Sat Sep  7 2013 Richard W.M. Jones <rjones@redhat.com> - 1:1.23.21-1
 - New upstream version 1.23.21.
 - Remove patches which are now upstream.
