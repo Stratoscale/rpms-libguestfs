@@ -967,6 +967,7 @@ mkdir -p $RPM_BUILD_ROOT%{_localstatedir}/run/libguestfs
 
 %changelog
 * Fri Oct  4 2013 Richard W.M. Jones <rjones@redhat.com> - 1:1.23.25-1
+- New upstream version 1.23.25.
 - Add virt-builder and its dependencies.
 
 * Mon Sep 30 2013 Richard W.M. Jones <rjones@redhat.com> - 1:1.23.23-2
