@@ -11,8 +11,8 @@
 Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
-Version:       1.23.23
-Release:       2%{?dist}
+Version:       1.23.25
+Release:       1%{?dist}
 License:       LGPLv2+
 
 # Source and patches.
@@ -64,6 +64,8 @@ BuildRequires: systemd-devel
 BuildRequires: bash-completion
 BuildRequires: /usr/bin/ping
 BuildRequires: /usr/bin/wget
+BuildRequires: curl
+BuildRequires: xz
 BuildRequires: perl(Sys::Virt)
 BuildRequires: /usr/bin/qemu-img
 BuildRequires: perl(Test::More)
@@ -235,6 +237,12 @@ Requires:      /usr/bin/vi
 # for virt-sparsify:
 Requires:      /usr/bin/qemu-img
 
+# for virt-builder:
+Requires:      curl
+Requires:      gnupg
+Requires:      xz
+#Requires:     nbdkit, nbdkit-plugin-xz
+
 # Obsolete and replace earlier packages.
 Provides:      guestfish = %{epoch}:%{version}-%{release}
 Obsoletes:     guestfish < %{epoch}:%{version}-%{release}
@@ -281,6 +289,9 @@ using FUSE and %{name}.
 
 Virt-alignment-scan scans virtual machines looking for partition
 alignment problems.
+
+Virt-builder is a command line tool for rapidly making disk images
+of popular free operating systems.
 
 Virt-cat is a command line tool to display the contents of a file in a
 virtual machine.
@@ -771,6 +782,8 @@ mkdir -p $RPM_BUILD_ROOT%{_localstatedir}/run/libguestfs
 %{_mandir}/man1/guestunmount.1*
 %{_bindir}/virt-alignment-scan
 %{_mandir}/man1/virt-alignment-scan.1*
+%{_bindir}/virt-builder
+%{_mandir}/man1/virt-builder.1*
 %{_bindir}/virt-cat
 %{_mandir}/man1/virt-cat.1*
 %{_bindir}/virt-copy-in
@@ -953,6 +966,9 @@ mkdir -p $RPM_BUILD_ROOT%{_localstatedir}/run/libguestfs
 
 
 %changelog
+* Fri Oct  4 2013 Richard W.M. Jones <rjones@redhat.com> - 1:1.23.25-1
+- Add virt-builder and its dependencies.
+
 * Mon Sep 30 2013 Richard W.M. Jones <rjones@redhat.com> - 1:1.23.23-2
 - New upstream version 1.23.23.
 - Remove patch which is now upstream.
