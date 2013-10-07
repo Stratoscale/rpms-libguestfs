@@ -11,7 +11,7 @@
 Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
-Version:       1.23.25
+Version:       1.23.27
 Release:       1%{?dist}
 License:       LGPLv2+
 
@@ -966,6 +966,9 @@ mkdir -p $RPM_BUILD_ROOT%{_localstatedir}/run/libguestfs
 
 
 %changelog
+* Mon Oct 07 2013 Richard W.M. Jones <rjones@redhat.com> - 1:1.23.27-1
+- New upstream version 1.23.27.
+
 * Fri Oct  4 2013 Richard W.M. Jones <rjones@redhat.com> - 1:1.23.25-1
 - New upstream version 1.23.25.
 - Add virt-builder and its dependencies.
