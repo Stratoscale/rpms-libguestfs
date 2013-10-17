@@ -11,7 +11,7 @@
 Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
-Version:       1.22.6
+Version:       1.22.7
 Release:       1%{?dist}
 License:       LGPLv2+
 
@@ -892,6 +892,9 @@ mkdir -p $RPM_BUILD_ROOT%{_localstatedir}/run/libguestfs
 
 
 %changelog
+* Thu Oct 17 2013 Richard W.M. Jones <rjones@redhat.com> - 1:1.22.7-1
+- New upstream version 1.22.7.
+
 * Tue Aug 27 2013 Richard W.M. Jones <rjones@redhat.com> - 1:1.22.6-1
 - New stable branch version 1.22.6.
 
