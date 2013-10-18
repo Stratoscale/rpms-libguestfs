@@ -1,7 +1,7 @@
-From 1a696970d8e6bf2a969c06cdf764cec16d419073 Mon Sep 17 00:00:00 2001
+From 9a77f3071faa3fd396a8b49d8210f83c1319f1c7 Mon Sep 17 00:00:00 2001
 From: Richard W.M. Jones <rjones@redhat.com>
 Date: Thu, 30 Aug 2012 18:19:28 +0100
-Subject: [PATCH 23/33] EPEL 5: Revert "Mac OS X: Use libtool --mode=execute instead of LD_LIBRARY_PATH"
+Subject: [PATCH 23/35] EPEL 5: Revert "Mac OS X: Use libtool --mode=execute instead of LD_LIBRARY_PATH"
 
 This reverts commit 61c9ea496e0579bb7d1bcf496595d66c3f08cfec.
 ---
@@ -9,10 +9,10 @@ This reverts commit 61c9ea496e0579bb7d1bcf496595d66c3f08cfec.
  1 files changed, 16 insertions(+), 8 deletions(-)
 
 diff --git a/ocaml/Makefile.am b/ocaml/Makefile.am
-index 46acde5..9e07fbc 100644
+index 171193f..67bb7fc 100644
 --- a/ocaml/Makefile.am
 +++ b/ocaml/Makefile.am
-@@ -112,56 +112,64 @@ noinst_DATA += \
+@@ -107,56 +107,64 @@ noinst_DATA += \
  	$(test_progs:%=%.opt)
  
  bindtests.bc: bindtests.cmo mlguestfs.cma

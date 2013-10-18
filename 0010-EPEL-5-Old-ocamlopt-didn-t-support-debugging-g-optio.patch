@@ -1,7 +1,7 @@
-From 547f896280150d56f902308dd320417c5de938a5 Mon Sep 17 00:00:00 2001
+From 6f8097c9fb00708bd8ea0c4d30a40455d99cb796 Mon Sep 17 00:00:00 2001
 From: Richard W.M. Jones <rjones@redhat.com>
 Date: Sun, 17 Jun 2012 23:00:16 +0100
-Subject: [PATCH 10/33] EPEL 5: Old ocamlopt didn't support debugging (-g option).
+Subject: [PATCH 10/35] EPEL 5: Old ocamlopt didn't support debugging (-g option).
 
 ---
  ocaml/Makefile.am    |    2 +-
@@ -11,10 +11,10 @@ Subject: [PATCH 10/33] EPEL 5: Old ocamlopt didn't support debugging (-g option)
  4 files changed, 4 insertions(+), 4 deletions(-)
 
 diff --git a/ocaml/Makefile.am b/ocaml/Makefile.am
-index 520cce9..46acde5 100644
+index e8bed4b..171193f 100644
 --- a/ocaml/Makefile.am
 +++ b/ocaml/Makefile.am
-@@ -44,7 +44,7 @@ CLEANFILES += t/*.cmi t/*.cmo t/*.cmx t/*.o t/*.a t/*.so
+@@ -38,7 +38,7 @@ CLEANFILES += t/*.cmi t/*.cmo t/*.cmx t/*.o t/*.a t/*.so
  if HAVE_OCAML
  
  OCAMLCFLAGS = -g -warn-error CDEFLMPSUVYZX
@@ -24,10 +24,10 @@ index 520cce9..46acde5 100644
  noinst_DATA = mlguestfs.cma mlguestfs.cmxa META
  
 diff --git a/resize/Makefile.am b/resize/Makefile.am
-index 9ce473e..e19693c 100644
+index 2431e34..55ecb24 100644
 --- a/resize/Makefile.am
 +++ b/resize/Makefile.am
-@@ -62,7 +62,7 @@ OCAMLPACKAGES += -package gettext-stub
+@@ -61,7 +61,7 @@ OCAMLPACKAGES += -package gettext-stub
  endif
  
  OCAMLCFLAGS = -g -warn-error CDEFLMPSUVYZX $(OCAMLPACKAGES)
@@ -37,10 +37,10 @@ index 9ce473e..e19693c 100644
  virt-resize: $(OBJECTS)
  	$(OCAMLFIND) ocamlopt $(OCAMLOPTFLAGS) \
 diff --git a/sparsify/Makefile.am b/sparsify/Makefile.am
-index f5428d7..93f2c32 100644
+index 3bc1d0e..536c7ef 100644
 --- a/sparsify/Makefile.am
 +++ b/sparsify/Makefile.am
-@@ -56,7 +56,7 @@ OCAMLPACKAGES += -package gettext-stub
+@@ -52,7 +52,7 @@ OCAMLPACKAGES += -package gettext-stub
  endif
  
  OCAMLCFLAGS = -g -warn-error CDEFLMPSUVYZX $(OCAMLPACKAGES)
@@ -50,10 +50,10 @@ index f5428d7..93f2c32 100644
  virt-sparsify: $(OBJECTS)
  	$(OCAMLFIND) ocamlopt $(OCAMLOPTFLAGS) \
 diff --git a/sysprep/Makefile.am b/sysprep/Makefile.am
-index b663143..179713a 100644
+index 6145264..bd45d9d 100644
 --- a/sysprep/Makefile.am
 +++ b/sysprep/Makefile.am
-@@ -105,7 +105,7 @@ OCAMLPACKAGES += -package gettext-stub
+@@ -96,7 +96,7 @@ OCAMLPACKAGES += -package gettext-stub
  endif
  
  OCAMLCFLAGS = -g -warn-error CDEFLMPSUVYZX $(OCAMLPACKAGES)

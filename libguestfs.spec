@@ -21,7 +21,7 @@
 Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
-Version:       1.20.8
+Version:       1.20.12
 Release:       1%{?dist}
 License:       LGPLv2+
 Group:         Development/Libraries
@@ -77,6 +77,8 @@ Patch0030:     0030-EPEL-5-Disable-valgrind.patch
 Patch0031:     0031-EPEL-5-Remove-Linux-capabilities.patch
 Patch0032:     0032-EPEL-5-ruby-Use-old-rake-rdoctask-and-rake-gempackag.patch
 Patch0033:     0033-EPEL-5-Revert-Use-pkg-config-for-Python.patch
+Patch0034:     0034-RHEL-5-Don-t-use-truncate-command-in-tests.patch
+Patch0035:     0035-EPEL-5-qemu-img-in-RHEL-5-doesn-t-let-you-create-512.patch
 
 # Basic build requirements:
 BuildRequires: /usr/bin/pod2man
@@ -710,6 +712,9 @@ export SKIP_TEST_DISK_LABELS_PL=1
 export SKIP_TEST_ACL_SET_FILE=1
 export SKIP_TEST_ACL_DELETE_DEF_FILE=1
 
+# grub-install doesn't work.
+export SKIP_TEST_GRUB_INSTALL=1
+
 %if %{runtests}
 make check
 %endif
@@ -912,6 +917,10 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Fri Oct 18 2013 Richard W.M. Jones <rjones@redhat.com> - 1:1.20.12-1
+- Rebase to upstream stable branch version 1.20.12.
+- This contains a complete fix for CVE-2013-4419 (RHBZ#1020950).
+
 * Mon Jun  3 2013 Richard W.M. Jones <rjones@redhat.com> - 1:1.20.8-1
 - Rebase to upstream stable branch version 1.20.8.
   This contains a complete fix for CVE-2013-2124.

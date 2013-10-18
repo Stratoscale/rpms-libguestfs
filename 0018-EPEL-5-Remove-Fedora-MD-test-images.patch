@@ -1,7 +1,7 @@
-From b80cc1f8013dc4e4a52db0cb3db67d37b7801382 Mon Sep 17 00:00:00 2001
+From 2a5114201501d9b6a7090b113b674c8263f1c82d Mon Sep 17 00:00:00 2001
 From: Richard W.M. Jones <rjones@redhat.com>
 Date: Fri, 22 Jun 2012 13:15:49 +0100
-Subject: [PATCH 18/33] EPEL 5: Remove Fedora MD test images.
+Subject: [PATCH 18/35] EPEL 5: Remove Fedora MD test images.
 
 On RHEL 5, mdadm is not able to create md devices with aliases,
 eg. '/dev/md/boot'.
@@ -10,10 +10,10 @@ eg. '/dev/md/boot'.
  1 files changed, 0 insertions(+), 14 deletions(-)
 
 diff --git a/tests/guests/Makefile.am b/tests/guests/Makefile.am
-index b55259f..669296b 100644
+index 765b2c2..1ef7bf2 100644
 --- a/tests/guests/Makefile.am
 +++ b/tests/guests/Makefile.am
-@@ -46,8 +46,6 @@ disk_images = \
+@@ -43,8 +43,6 @@ disk_images = \
  	blank-bootrootlv.img \
  	debian.img \
  	fedora.img \
@@ -22,7 +22,7 @@ index b55259f..669296b 100644
  	ubuntu.img \
  	windows.img
  
-@@ -85,18 +83,6 @@ fedora.img: guest-aux/make-fedora-img.pl \
+@@ -82,18 +80,6 @@ fedora.img: guest-aux/make-fedora-img.pl \
  	SRCDIR=$(srcdir) LAYOUT=partitions $(top_builddir)/run --test $<
  	$(call display,$@)
  

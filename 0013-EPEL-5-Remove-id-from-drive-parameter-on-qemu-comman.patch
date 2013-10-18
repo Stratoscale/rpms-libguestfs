@@ -1,17 +1,17 @@
-From 85db50303c7701b7ba4dea73ce937a0a456437d5 Mon Sep 17 00:00:00 2001
+From cb25d3c32fdd7fabffd125960cc5f5c3bb8fb691 Mon Sep 17 00:00:00 2001
 From: Richard W.M. Jones <rjones@redhat.com>
 Date: Mon, 18 Jun 2012 17:21:30 +0100
-Subject: [PATCH 13/33] EPEL 5: Remove id= from -drive parameter on qemu command line.
+Subject: [PATCH 13/35] EPEL 5: Remove id= from -drive parameter on qemu command line.
 
 ---
  src/launch-appliance.c |    5 ++---
  1 files changed, 2 insertions(+), 3 deletions(-)
 
 diff --git a/src/launch-appliance.c b/src/launch-appliance.c
-index 9fb0bbd..5de3b0a 100644
+index c769ae0..e32c2e5 100644
 --- a/src/launch-appliance.c
 +++ b/src/launch-appliance.c
-@@ -332,7 +332,7 @@ launch_appliance (guestfs_h *g, const char *arg)
+@@ -390,7 +390,7 @@ launch_appliance (guestfs_h *g, const char *arg)
        size_t buf2_len = strlen (appliance) + 64;
        char buf2[buf2_len];
        add_cmdline (g, "-drive");
@@ -20,7 +20,7 @@ index 9fb0bbd..5de3b0a 100644
                  appliance, virtio_scsi ? "none" : "virtio", cachemode);
        add_cmdline (g, buf2);
  
-@@ -963,14 +963,13 @@ qemu_drive_param (guestfs_h *g, const struct drive *drv, size_t index)
+@@ -998,14 +998,13 @@ qemu_drive_param (guestfs_h *g, const struct drive *drv, size_t index)
    else
      iface = "virtio";
  

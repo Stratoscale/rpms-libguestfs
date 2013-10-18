@@ -1,0 +1,67 @@
+From 9e582f9cf4818cc67c46b5408e36cb313c9c58f1 Mon Sep 17 00:00:00 2001
+From: Richard W.M. Jones <rjones@redhat.com>
+Date: Fri, 18 Oct 2013 19:43:53 +0100
+Subject: [PATCH 35/35] EPEL 5: qemu-img in RHEL 5 doesn't let you create 512 byte qcow2 image.
+
+I checked the source of qemu-img and this is not possible to create.
+---
+ generator/actions.ml   |    6 ------
+ tests/data/Makefile.am |    4 ----
+ 2 files changed, 0 insertions(+), 10 deletions(-)
+
+diff --git a/generator/actions.ml b/generator/actions.ml
+index cabf2f0..cd0d49b 100644
+--- a/generator/actions.ml
++++ b/generator/actions.ml
+@@ -2428,8 +2428,6 @@ data." };
+       InitEmpty, Always, TestOutput (
+         [["disk_format"; "../data/blank-disk-1s.raw"]], "raw");
+       InitEmpty, Always, TestOutput (
+-        [["disk_format"; "../data/blank-disk-1s.qcow2"]], "qcow2");
+-      InitEmpty, Always, TestOutput (
+         [["disk_format"; "../data/blank-disk-1K.raw"]], "raw");
+       InitEmpty, Always, TestOutput (
+         [["disk_format"; "../data/blank-disk-1K.qcow2"]], "qcow2");
+@@ -2458,8 +2456,6 @@ See also: L<guestfs(3)/DISK IMAGE FORMATS>" };
+       InitEmpty, Always, TestOutputInt (
+         [["disk_virtual_size"; "../data/blank-disk-1s.raw"]], 512);
+       InitEmpty, Always, TestOutputInt (
+-        [["disk_virtual_size"; "../data/blank-disk-1s.qcow2"]], 512);
+-      InitEmpty, Always, TestOutputInt (
+         [["disk_virtual_size"; "../data/blank-disk-1K.raw"]], 1024);
+       InitEmpty, Always, TestOutputInt (
+         [["disk_virtual_size"; "../data/blank-disk-1K.qcow2"]], 1024);
+@@ -2485,8 +2481,6 @@ circumstances.  See L<guestfs(3)/CVE-2010-3851>." };
+       InitEmpty, Always, TestOutputFalse (
+         [["disk_has_backing_file"; "../data/blank-disk-1s.raw"]]);
+       InitEmpty, Always, TestOutputFalse (
+-        [["disk_has_backing_file"; "../data/blank-disk-1s.qcow2"]]);
+-      InitEmpty, Always, TestOutputFalse (
+         [["disk_has_backing_file"; "../data/blank-disk-1K.raw"]]);
+       InitEmpty, Always, TestOutputFalse (
+         [["disk_has_backing_file"; "../data/blank-disk-1K.qcow2"]]);
+diff --git a/tests/data/Makefile.am b/tests/data/Makefile.am
+index 586e7ec..9c78881 100644
+--- a/tests/data/Makefile.am
++++ b/tests/data/Makefile.am
+@@ -75,7 +75,6 @@ images_files_build = \
+ 	$(builddir)/10klines \
+ 	$(builddir)/abssymlink \
+ 	$(builddir)/blank-disk-1s.raw \
+-	$(builddir)/blank-disk-1s.qcow2 \
+ 	$(builddir)/blank-disk-1K.raw \
+ 	$(builddir)/blank-disk-1K.qcow2 \
+ 	$(builddir)/blank-disk-1M.raw \
+@@ -137,9 +136,6 @@ $(builddir)/blank-disk-1s.raw:
+ 	rm -f $@
+ 	../../fish/guestfish sparse $@ 512
+ 
+-$(builddir)/blank-disk-1s.qcow2:
+-	qemu-img create -f qcow2 $@ 512
+-
+ $(builddir)/blank-disk-1K.raw:
+ 	rm -f $@
+ 	../../fish/guestfish sparse $@ 1K
+-- 
+1.7.4.1
+

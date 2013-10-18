@@ -1,16 +1,16 @@
-From b3a067100238c12aae33d48abcaefe01e5ad8a2d Mon Sep 17 00:00:00 2001
+From 42da2432bfd7ef92768786fe1ef5085a66ad7763 Mon Sep 17 00:00:00 2001
 From: Richard W.M. Jones <rjones@redhat.com>
 Date: Thu, 30 Aug 2012 18:01:00 +0100
-Subject: [PATCH 21/33] EPEL 5: podwrapper: Remove HTML output.
+Subject: [PATCH 21/35] EPEL 5: podwrapper: Remove HTML output.
 
 It requires perl Pod::Simple::XHTML which did not exist in
 RHEL 5 era.
 ---
- podwrapper.pl.in |   92 ------------------------------------------------------
- 1 files changed, 0 insertions(+), 92 deletions(-)
+ podwrapper.pl.in |   93 ------------------------------------------------------
+ 1 files changed, 0 insertions(+), 93 deletions(-)
 
 diff --git a/podwrapper.pl.in b/podwrapper.pl.in
-index af21ef0..e7e1de2 100755
+index c14044c..e7e1de2 100755
 --- a/podwrapper.pl.in
 +++ b/podwrapper.pl.in
 @@ -25,7 +25,6 @@ use Getopt::Long;
@@ -21,7 +21,7 @@ index af21ef0..e7e1de2 100755
  use File::Basename;
  
  # https://www.redhat.com/archives/libguestfs/2013-May/thread.html#00088
-@@ -420,97 +419,6 @@ if ($man) {
+@@ -420,98 +419,6 @@ if ($man) {
      print "$progname: wrote $man\n";
  }
  
@@ -52,6 +52,7 @@ index af21ef0..e7e1de2 100755
 -        return 1 if /^libguestf/;
 -        return 1 if /^guestf/;
 -        return 1 if /^guestmount/;
+-        return 1 if /^guestunmount/;
 -        return 1 if /^hivex/;
 -        return 1 if /^febootstrap/;
 -        return 1 if /^supermin/;

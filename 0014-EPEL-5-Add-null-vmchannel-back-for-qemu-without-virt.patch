@@ -1,18 +1,19 @@
-From c661a2588c92d2607e0b97c84db37844a45daf5c Mon Sep 17 00:00:00 2001
+From 2d836027a0a273dbcafa4216f8ab554063d71bf3 Mon Sep 17 00:00:00 2001
 From: Richard W.M. Jones <rjones@redhat.com>
 Date: Mon, 18 Jun 2012 16:06:34 +0100
-Subject: [PATCH 14/33] EPEL 5: Add "null vmchannel" back for qemu without virtio-serial support.
+Subject: [PATCH 14/35] EPEL 5: Add "null vmchannel" back for qemu without virtio-serial support.
 
 ---
  appliance/init         |    4 +-
- daemon/guestfsd.c      |   99 ++++++++++++++++++++++--
+ daemon/guestfsd.c      |   98 ++++++++++++++++++++++--
  src/guestfs-internal.h |    2 +-
- src/launch-appliance.c |  196 ++++++++++++++++++++++++++++++++++--------------
+ src/launch-appliance.c |  199 ++++++++++++++++++++++++++++++++++--------------
+ src/launch-libvirt.c   |    2 +-
  src/launch.c           |    4 +-
- 5 files changed, 236 insertions(+), 69 deletions(-)
+ 6 files changed, 238 insertions(+), 71 deletions(-)
 
 diff --git a/appliance/init b/appliance/init
-index 30d4f60..4cd3861 100755
+index cfeb3a9..c12d2f4 100755
 --- a/appliance/init
 +++ b/appliance/init
 @@ -80,10 +80,10 @@ hwclock -u -s
@@ -29,7 +30,7 @@ index 30d4f60..4cd3861 100755
  # Scan for MDs.
  mdadm -As --auto=yes --run
 diff --git a/daemon/guestfsd.c b/daemon/guestfsd.c
-index 254e0ea..bcb836a 100644
+index bba13f8..d17d8bc 100644
 --- a/daemon/guestfsd.c
 +++ b/daemon/guestfsd.c
 @@ -118,9 +118,6 @@ int autosync_umount = 1;
@@ -42,15 +43,16 @@ index 254e0ea..bcb836a 100644
  static void
  usage (void)
  {
-@@ -139,6 +136,7 @@ main (int argc, char *argv[])
+@@ -139,6 +136,8 @@ main (int argc, char *argv[])
    };
    int c;
    char *cmdline;
 +  char *vmchannel = NULL;
++  int sock = -1;
  
    ignore_value (chdir ("/"));
  
-@@ -210,8 +208,6 @@ main (int argc, char *argv[])
+@@ -210,8 +209,6 @@ main (int argc, char *argv[])
        printf ("could not read linux command line\n");
    }
  
@@ -59,7 +61,7 @@ index 254e0ea..bcb836a 100644
  #ifndef WIN32
    /* Make sure SIGPIPE doesn't kill us. */
    struct sigaction sa;
-@@ -253,9 +249,94 @@ main (int argc, char *argv[])
+@@ -253,9 +250,92 @@ main (int argc, char *argv[])
     */
    copy_lvm ();
  
@@ -100,8 +102,6 @@ index 254e0ea..bcb836a 100644
 +    printf ("vmchannel: %s\n", vmchannel);
 +
 +  /* Connect to vmchannel. */
-+  int sock = -1;
-+
 +  if (STREQLEN (vmchannel, "tcp:", 4)) {
 +    /* Resolve the hostname. */
 +    struct addrinfo *res, *rr;
@@ -156,7 +156,7 @@ index 254e0ea..bcb836a 100644
      fprintf (stderr,
               "\n"
               "Failed to connect to virtio-serial channel.\n"
-@@ -269,7 +350,7 @@ main (int argc, char *argv[])
+@@ -269,7 +349,7 @@ main (int argc, char *argv[])
               "output to the libguestfs developers, either in a bug report\n"
               "or on the libguestfs redhat com mailing list.\n"
               "\n");
@@ -165,7 +165,7 @@ index 254e0ea..bcb836a 100644
      exit (EXIT_FAILURE);
    }
  
-@@ -300,6 +381,8 @@ main (int argc, char *argv[])
+@@ -300,6 +380,8 @@ main (int argc, char *argv[])
  
    xdr_destroy (&xdr);
  
@@ -175,10 +175,10 @@ index 254e0ea..bcb836a 100644
    main_loop (sock);
  
 diff --git a/src/guestfs-internal.h b/src/guestfs-internal.h
-index aaa9d41..cb812ed 100644
+index 0675123..c275029 100644
 --- a/src/guestfs-internal.h
 +++ b/src/guestfs-internal.h
-@@ -516,7 +516,7 @@ extern int64_t guestfs___timeval_diff (const struct timeval *x, const struct tim
+@@ -542,7 +542,7 @@ extern int64_t guestfs___timeval_diff (const struct timeval *x, const struct tim
  extern void guestfs___print_timestamped_message (guestfs_h *g, const char *fs, ...) __attribute__((format (printf,2,3)));
  extern void guestfs___launch_send_progress (guestfs_h *g, int perdozen);
  extern void guestfs___launch_failed_error (guestfs_h *g);
@@ -186,12 +186,21 @@ index aaa9d41..cb812ed 100644
 +extern char *guestfs___appliance_command_line (guestfs_h *g, const char *appliance_dev, int flags, const char *vmchannel);
  #define APPLIANCE_COMMAND_LINE_IS_TCG 1
  
- /* launch-appliance.c */
+ /* inspect.c */
 diff --git a/src/launch-appliance.c b/src/launch-appliance.c
-index 5de3b0a..71d7aa6 100644
+index e32c2e5..66c130c 100644
 --- a/src/launch-appliance.c
 +++ b/src/launch-appliance.c
-@@ -74,12 +74,16 @@ free_regexps (void)
+@@ -29,6 +29,8 @@
+ #include <sys/wait.h>
+ #include <signal.h>
+ #include <sys/socket.h>
++#include <netinet/in.h>
++#include <arpa/inet.h>
+ #include <sys/un.h>
+ 
+ #include <pcre.h>
+@@ -74,6 +76,9 @@ free_regexps (void)
    pcre_free (re_major_minor);
  }
  
@@ -199,8 +208,9 @@ index 5de3b0a..71d7aa6 100644
 +#define ROUTER "10.0.2.2"
 +
  static int is_openable (guestfs_h *g, const char *path, int flags);
+ static char *make_appliance_dev (guestfs_h *g, int virtio_scsi);
  static void print_qemu_command_line (guestfs_h *g, char **argv);
- static int qemu_supports (guestfs_h *g, const char *option);
+@@ -81,6 +86,7 @@ static int qemu_supports (guestfs_h *g, const char *option);
  static int qemu_supports_device (guestfs_h *g, const char *device_name);
  static int qemu_supports_virtio_scsi (guestfs_h *g);
  static char *qemu_drive_param (guestfs_h *g, const struct drive *drv, size_t index);
@@ -208,18 +218,19 @@ index 5de3b0a..71d7aa6 100644
  
  /* Functions to build up the qemu command line.  These are only run
   * in the child process so no clean-up is required.
-@@ -169,7 +173,9 @@ launch_appliance (guestfs_h *g, const char *arg)
+@@ -169,8 +175,9 @@ launch_appliance (guestfs_h *g, const char *arg)
+ {
    int r;
    int wfd[2], rfd[2];
-   char guestfsd_sock[256];
+-  char guestfsd_sock[256];
 -  struct sockaddr_un addr;
 +  struct sockaddr_in addr;
 +  socklen_t addrlen = sizeof addr;
 +  int null_vmchannel_port;
    CLEANUP_FREE char *kernel = NULL, *initrd = NULL, *appliance = NULL;
    int has_appliance_drive;
-   uint32_t size;
-@@ -203,37 +209,43 @@ launch_appliance (guestfs_h *g, const char *arg)
+   CLEANUP_FREE char *appliance_dev = NULL;
+@@ -205,37 +212,43 @@ launch_appliance (guestfs_h *g, const char *arg)
    if (qemu_supports (g, NULL) == -1)
      goto cleanup0;
  
@@ -278,9 +289,9 @@ index 5de3b0a..71d7aa6 100644
    if (!g->direct) {
      if (pipe (wfd) == -1 || pipe (rfd) == -1) {
        perrorf (g, "pipe");
-@@ -398,23 +410,9 @@ launch_appliance (guestfs_h *g, const char *arg)
-     if (qemu_supports (g, "-rtc-td-hack"))
-       add_cmdline (g, "-rtc-td-hack");
+@@ -402,23 +415,9 @@ launch_appliance (guestfs_h *g, const char *arg)
+       appliance_dev = make_appliance_dev (g, virtio_scsi);
+     }
  
 -    /* Create the virtio serial bus. */
 -    add_cmdline (g, "-device");
@@ -303,7 +314,7 @@ index 5de3b0a..71d7aa6 100644
  
      if (qemu_supports_device (g, "Serial Graphics Adapter")) {
        /* Use sgabios instead of vgabios.  This means we'll see BIOS
-@@ -427,12 +425,16 @@ launch_appliance (guestfs_h *g, const char *arg)
+@@ -431,12 +430,16 @@ launch_appliance (guestfs_h *g, const char *arg)
        add_cmdline (g, "sga");
      }
  
@@ -326,7 +337,7 @@ index 5de3b0a..71d7aa6 100644
  
  #ifdef VALGRIND_DAEMON
      /* Set up virtio-serial channel for valgrind messages. */
-@@ -444,14 +446,6 @@ launch_appliance (guestfs_h *g, const char *arg)
+@@ -448,17 +451,9 @@ launch_appliance (guestfs_h *g, const char *arg)
      add_cmdline (g, "virtserialport,chardev=valgrind,name=org.libguestfs.valgrind");
  #endif
  
@@ -338,11 +349,6 @@ index 5de3b0a..71d7aa6 100644
 -      add_cmdline (g, "virtio-net-pci,netdev=usernet");
 -    }
 -
-     add_cmdline (g, "-kernel");
-     add_cmdline (g, kernel);
-     add_cmdline (g, "-initrd");
-@@ -459,7 +453,7 @@ launch_appliance (guestfs_h *g, const char *arg)
- 
      add_cmdline (g, "-append");
      CLEANUP_FREE char *cmdline =
 -      guestfs___appliance_command_line (g, appliance_dev, 0);
@@ -350,7 +356,7 @@ index 5de3b0a..71d7aa6 100644
      add_cmdline (g, cmdline);
  
      /* Note: custom command line parameters must come last so that
-@@ -620,19 +614,30 @@ launch_appliance (guestfs_h *g, const char *arg)
+@@ -619,19 +614,30 @@ launch_appliance (guestfs_h *g, const char *arg)
  
    g->state = LAUNCHING;
  
@@ -392,8 +398,8 @@ index 5de3b0a..71d7aa6 100644
  
    /* Close the listening socket. */
    if (close (g->sock) != 0) {
-@@ -987,6 +992,83 @@ guestfs___drive_name (size_t index, char *ret)
-   return ret;
+@@ -1010,6 +1016,83 @@ qemu_drive_param (guestfs_h *g, const struct drive *drv, size_t index)
+   return r;                     /* caller frees */
  }
  
 +/* Check the peer effective UID for a TCP socket.  Ideally we'd like
@@ -476,8 +482,21 @@ index 5de3b0a..71d7aa6 100644
  static int
  shutdown_appliance (guestfs_h *g, int check_for_errors)
  {
+diff --git a/src/launch-libvirt.c b/src/launch-libvirt.c
+index 6188671..27580a3 100644
+--- a/src/launch-libvirt.c
++++ b/src/launch-libvirt.c
+@@ -873,7 +873,7 @@ construct_libvirt_xml_boot (guestfs_h *g,
+   flags = 0;
+   if (!params->is_kvm)
+     flags |= APPLIANCE_COMMAND_LINE_IS_TCG;
+-  cmdline = guestfs___appliance_command_line (g, params->appliance_dev, flags);
++  cmdline = guestfs___appliance_command_line (g, params->appliance_dev, flags, "");
+ 
+   XMLERROR (-1, xmlTextWriterStartElement (xo, BAD_CAST "os"));
+ 
 diff --git a/src/launch.c b/src/launch.c
-index 4333821..c77c229 100644
+index 1583075..09fa73c 100644
 --- a/src/launch.c
 +++ b/src/launch.c
 @@ -316,7 +316,7 @@ guestfs__config (guestfs_h *g,
@@ -487,18 +506,18 @@ index 4333821..c77c229 100644
 -                                  int flags)
 +                                  int flags, const char *vmchannel)
  {
+   char root[64] = "";
    char *term = getenv ("TERM");
-   char *ret;
-@@ -344,12 +344,14 @@ guestfs___appliance_command_line (guestfs_h *g, const char *appliance_dev,
+@@ -348,12 +348,14 @@ guestfs___appliance_command_line (guestfs_h *g, const char *appliance_dev,
       " cgroup_disable=memory"   /* saves us about 5 MB of RAM */
-      " root=%s"                 /* root (appliance_dev) */
+      "%s"                       /* root=appliance_dev */
       " %s"                      /* selinux */
 +     " %s"                      /* vmchannel */
       "%s"                       /* verbose */
       " TERM=%s"                 /* TERM environment variable */
       "%s%s",                    /* append */
       lpj_s,
-      appliance_dev,
+      root,
       g->selinux ? "selinux=1 enforcing=0" : "selinux=0",
 +     vmchannel,
       g->verbose ? " guestfs_verbose=1" : "",

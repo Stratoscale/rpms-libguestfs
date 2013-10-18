@@ -1,14 +1,15 @@
-From 14afa058957a45100e87f391423d4d953ce50108 Mon Sep 17 00:00:00 2001
+From 7ad71f29ce0310526e8622abcf9857a102054025 Mon Sep 17 00:00:00 2001
 From: Richard W.M. Jones <rjones@redhat.com>
 Date: Sat, 16 Jun 2012 13:55:44 +0100
-Subject: [PATCH 04/33] EPEL 5: Don't use C99-style variable decls in for-loop.
+Subject: [PATCH 04/35] EPEL 5: Don't use C99-style variable decls in for-loop.
 
 ---
- daemon/btrfs.c         |    3 ++-
- daemon/md.c            |    6 ++++--
- generator/bindtests.ml |    3 ++-
- src/inspect-fs-unix.c  |   17 +++++++++++------
- 4 files changed, 19 insertions(+), 10 deletions(-)
+ daemon/btrfs.c           |    3 ++-
+ daemon/md.c              |    6 ++++--
+ generator/bindtests.ml   |    3 ++-
+ src/inspect-fs-unix.c    |   17 +++++++++++------
+ src/inspect-fs-windows.c |    9 ++++++---
+ 5 files changed, 25 insertions(+), 13 deletions(-)
 
 diff --git a/daemon/btrfs.c b/daemon/btrfs.c
 index 81ce5f5..7053642 100644
@@ -25,7 +26,7 @@ index 81ce5f5..7053642 100644
       * path.  Thus we don't need to free 'line', since it will be
       * freed by the calling (XDR) code.
 diff --git a/daemon/md.c b/daemon/md.c
-index b302a8c..d106783 100644
+index e9a3f09..93380b1 100644
 --- a/daemon/md.c
 +++ b/daemon/md.c
 @@ -201,7 +201,8 @@ do_list_md_devices (void)
@@ -35,10 +36,10 @@ index b302a8c..d106783 100644
 -  for (size_t i = 0; i < mds.gl_pathc; i++) {
 +  size_t i;
 +  for (i = 0; i < mds.gl_pathc; i++) {
-     size_t len = strlen (mds.gl_pathv[i]) - strlen (PREFIX) - strlen (SUFFIX);
+     size_t len;
+     char *dev, *n;
  
- #define DEV "/dev/md"
-@@ -277,7 +278,8 @@ do_md_detail(const char *md)
+@@ -280,7 +281,8 @@ do_md_detail(const char *md)
         * case */
        if (STRPREFIX (line, "MD_")) {
          line += 3;
@@ -125,6 +126,40 @@ index c2f8dba..7127162 100644
      size_t orig_buflen = buflen;
      conflen = strlen(*i);
      buflen += EXCL_LEN + conflen + 1 /* Closing " */;
+diff --git a/src/inspect-fs-windows.c b/src/inspect-fs-windows.c
+index ba062eb..3d4ac08 100644
+--- a/src/inspect-fs-windows.c
++++ b/src/inspect-fs-windows.c
+@@ -135,7 +135,8 @@ guestfs___get_windows_systemroot (guestfs_h *g)
+   static const char *systemroots[] =
+     { "/windows", "/winnt", "/win32", "/win", NULL };
+ 
+-  for (size_t i = 0; i < sizeof systemroots / sizeof systemroots[0]; ++i) {
++  size_t i;
++  for (i = 0; i < sizeof systemroots / sizeof systemroots[0]; ++i) {
+     char *systemroot =
+       guestfs___case_sensitive_path_silently (g, systemroots[i]);
+     if (!systemroot)
+@@ -163,7 +164,8 @@ guestfs___get_windows_systemroot (guestfs_h *g)
+     }
+ 
+     int found_os = 0;
+-    for (char **i = boot_ini; *i != NULL; i++) {
++    char **i;
++    for (i = boot_ini; *i != NULL; i++) {
+       CLEANUP_FREE char *controller_type = NULL;
+       CLEANUP_FREE char *controller = NULL;
+       CLEANUP_FREE char *disk = NULL;
+@@ -214,7 +216,8 @@ guestfs___get_windows_systemroot (guestfs_h *g)
+ 
+         /* Swap backslashes for forward slashes in the system root
+          * path */
+-        for (char *j = path; *j != '\0'; j++) {
++        char *j;
++        for (j = path; *j != '\0'; j++) {
+           if (*j == '\\') *j = '/';
+         }
+ 
 -- 
 1.7.4.1
 

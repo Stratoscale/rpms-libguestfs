@@ -1,7 +1,7 @@
-From 9f157857641bd3797f545748392a3356a9a47c5c Mon Sep 17 00:00:00 2001
+From 74a3698379bc7d69833670d5185436f8c9918229 Mon Sep 17 00:00:00 2001
 From: Richard W.M. Jones <rjones@redhat.com>
 Date: Fri, 31 Aug 2012 10:24:06 +0100
-Subject: [PATCH 24/33] EPEL 5: Don't use sgabios.
+Subject: [PATCH 24/35] EPEL 5: Don't use sgabios.
 
 Old qemu doesn't support '-device' parameter.
 ---
@@ -9,10 +9,10 @@ Old qemu doesn't support '-device' parameter.
  1 files changed, 0 insertions(+), 11 deletions(-)
 
 diff --git a/src/launch-appliance.c b/src/launch-appliance.c
-index 71d7aa6..8e17793 100644
+index 66c130c..4395768 100644
 --- a/src/launch-appliance.c
 +++ b/src/launch-appliance.c
-@@ -414,17 +414,6 @@ launch_appliance (guestfs_h *g, const char *arg)
+@@ -419,17 +419,6 @@ launch_appliance (guestfs_h *g, const char *arg)
      add_cmdline (g, "-serial");
      add_cmdline (g, "stdio");
  

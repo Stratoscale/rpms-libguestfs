@@ -1,0 +1,46 @@
+From d35729d68445dd8f5183cc9e6fb438ce61e037a2 Mon Sep 17 00:00:00 2001
+From: Richard W.M. Jones <rjones@redhat.com>
+Date: Fri, 18 Oct 2013 09:12:40 +0100
+Subject: [PATCH 34/35] RHEL 5: Don't use 'truncate' command in tests.
+
+Use 'guestfish sparse' instead, which is roughly equivalent.
+
+See commit ef1514aa1e0a099d71cbb7d2c5f24f9f32e1939d
+and commit 39df80dcc0e485e69048bddbf33c259ce532e50d.
+(cherry picked from commit 18c93ac61f8f5a0059d8ceda37f963ad4c06d19d)
+---
+ tests/data/Makefile.am |    6 +++---
+ 1 files changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/tests/data/Makefile.am b/tests/data/Makefile.am
+index b8f76b2..586e7ec 100644
+--- a/tests/data/Makefile.am
++++ b/tests/data/Makefile.am
+@@ -135,21 +135,21 @@ $(builddir)/abssymlink:
+ # Blank disk images in various sizes and formats.
+ $(builddir)/blank-disk-1s.raw:
+ 	rm -f $@
+-	truncate -s 512 $@
++	../../fish/guestfish sparse $@ 512
+ 
+ $(builddir)/blank-disk-1s.qcow2:
+ 	qemu-img create -f qcow2 $@ 512
+ 
+ $(builddir)/blank-disk-1K.raw:
+ 	rm -f $@
+-	truncate -s 1K $@
++	../../fish/guestfish sparse $@ 1K
+ 
+ $(builddir)/blank-disk-1K.qcow2:
+ 	qemu-img create -f qcow2 $@ 1K
+ 
+ $(builddir)/blank-disk-1M.raw:
+ 	rm -f $@
+-	truncate -s 1M $@
++	../../fish/guestfish sparse $@ 1M
+ 
+ $(builddir)/blank-disk-1M.qcow2:
+ 	qemu-img create -f qcow2 $@ 1M
+-- 
+1.7.4.1
+

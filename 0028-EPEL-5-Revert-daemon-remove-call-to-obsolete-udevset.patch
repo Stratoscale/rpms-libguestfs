@@ -1,7 +1,7 @@
-From a184fc93a2f7e1763ec135154f2442aa55a4605b Mon Sep 17 00:00:00 2001
+From d0136bc8aaabdf91051fcc2f0b839f8b927e0469 Mon Sep 17 00:00:00 2001
 From: Richard W.M. Jones <rjones@redhat.com>
 Date: Mon, 3 Sep 2012 11:04:39 +0100
-Subject: [PATCH 28/33] EPEL 5: Revert "daemon: remove call to obsolete udevsettle"
+Subject: [PATCH 28/35] EPEL 5: Revert "daemon: remove call to obsolete udevsettle"
 
 This reverts commit b6413f8dbef92c46c4baf9499366716a166f2163.
 ---
@@ -9,7 +9,7 @@ This reverts commit b6413f8dbef92c46c4baf9499366716a166f2163.
  1 files changed, 8 insertions(+), 0 deletions(-)
 
 diff --git a/daemon/guestfsd.c b/daemon/guestfsd.c
-index bcb836a..44d7f77 100644
+index d17d8bc..4916c73 100644
 --- a/daemon/guestfsd.c
 +++ b/daemon/guestfsd.c
 @@ -54,6 +54,7 @@
@@ -20,7 +20,7 @@ index bcb836a..44d7f77 100644
  
  static char *read_cmdline (void);
  
-@@ -1392,11 +1393,18 @@ random_name (char *template)
+@@ -1401,11 +1402,18 @@ random_name (char *template)
   *
   * Use 'udevadm settle' after certain commands, but don't be too
   * fussed if it fails.

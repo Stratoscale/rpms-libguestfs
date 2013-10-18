@@ -1,7 +1,7 @@
-From ce5760a6a6660aed36592958b21edc5bcb7616b5 Mon Sep 17 00:00:00 2001
+From 0e29c1ea90cf42421a945592c0c0847d13dfdef2 Mon Sep 17 00:00:00 2001
 From: Richard W.M. Jones <rjones@redhat.com>
 Date: Fri, 31 Aug 2012 14:59:25 +0100
-Subject: [PATCH 26/33] EPEL 5: Disable tar --xz test.
+Subject: [PATCH 26/35] EPEL 5: Disable tar --xz test.
 
 Although xz is available, ancient tar didn't have the --xz option.
 ---
@@ -9,10 +9,10 @@ Although xz is available, ancient tar didn't have the --xz option.
  1 files changed, 1 insertions(+), 1 deletions(-)
 
 diff --git a/generator/actions.ml b/generator/actions.ml
-index ba380cf..7231f05 100644
+index b0f93d2..cabf2f0 100644
 --- a/generator/actions.ml
 +++ b/generator/actions.ml
-@@ -4105,7 +4105,7 @@ To get the checksums for many files, use C<guestfs_checksums_out>." };
+@@ -4129,7 +4129,7 @@ To get the checksums for many files, use C<guestfs_checksums_out>." };
          [["mkdir"; "/tar_in_gz"];
           ["tar_in"; "../data/helloworld.tar.gz"; "/tar_in_gz"; "gzip"];
           ["cat"; "/tar_in_gz/hello"]], "hello\n");

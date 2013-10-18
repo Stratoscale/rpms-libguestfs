@@ -1,14 +1,14 @@
-From 66035f3e05e6cd9a87f8b59605d38bc5cd7b97fa Mon Sep 17 00:00:00 2001
+From 4adfd0f6653ed10e33b38e63f58ec9a51eebf349 Mon Sep 17 00:00:00 2001
 From: Richard W.M. Jones <rjones@redhat.com>
 Date: Sat, 16 Jun 2012 10:46:20 +0100
-Subject: [PATCH 03/33] EPEL 5: Replace macro AC_STRUCT_DIRENT_D_TYPE for ancient autoconf.
+Subject: [PATCH 03/35] EPEL 5: Replace macro AC_STRUCT_DIRENT_D_TYPE for ancient autoconf.
 
 ---
  configure.ac |    2 +-
  1 files changed, 1 insertions(+), 1 deletions(-)
 
 diff --git a/configure.ac b/configure.ac
-index a0d8007..81f5466 100644
+index 380d2ec..7c3dff6 100644
 --- a/configure.ac
 +++ b/configure.ac
 @@ -258,7 +258,7 @@ The code will still compile, but is likely to leak memory and other

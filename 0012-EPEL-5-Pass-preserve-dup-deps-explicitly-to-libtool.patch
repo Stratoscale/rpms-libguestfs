@@ -1,7 +1,7 @@
-From ba288405498c6e648cb3a043bc6941c49b69a3b8 Mon Sep 17 00:00:00 2001
+From 20674c5467fe29fe702ffd4050c7b46e22a968cd Mon Sep 17 00:00:00 2001
 From: Richard W.M. Jones <rjones@redhat.com>
 Date: Mon, 18 Jun 2012 12:18:35 +0100
-Subject: [PATCH 12/33] EPEL 5: Pass --preserve-dup-deps explicitly to libtool.
+Subject: [PATCH 12/35] EPEL 5: Pass --preserve-dup-deps explicitly to libtool.
 
 See this thread:
 https://lists.gnu.org/archive/html/bug-gnulib/2012-06/msg00162.html
@@ -10,10 +10,10 @@ https://lists.gnu.org/archive/html/bug-gnulib/2012-06/msg00162.html
  1 files changed, 1 insertions(+), 1 deletions(-)
 
 diff --git a/configure.ac b/configure.ac
-index 3d099a8..0d5c655 100644
+index b38acc2..2680acf 100644
 --- a/configure.ac
 +++ b/configure.ac
-@@ -1355,7 +1355,7 @@ AC_SUBST(MAX_PROC_NR)
+@@ -1364,7 +1364,7 @@ AC_SUBST(MAX_PROC_NR)
  
  dnl Replace libtool with a wrapper that clobbers dependency_libs in *.la files
  dnl http://lists.fedoraproject.org/pipermail/devel/2010-November/146343.html
