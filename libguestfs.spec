@@ -774,6 +774,7 @@ mkdir -p $RPM_BUILD_ROOT%{_localstatedir}/run/libguestfs
 %files tools-c
 %doc README
 %config(noreplace) %{_sysconfdir}/libguestfs-tools.conf
+%{_mandir}/man5/libguestfs-tools.conf.5*
 %{_bindir}/guestfish
 %{_mandir}/man1/guestfish.1*
 %{_bindir}/guestmount
@@ -958,11 +959,13 @@ mkdir -p $RPM_BUILD_ROOT%{_localstatedir}/run/libguestfs
 %files man-pages-ja
 %lang(ja) %{_mandir}/ja/man1/*.1*
 %lang(ja) %{_mandir}/ja/man3/*.3*
+%lang(ja) %{_mandir}/ja/man5/*.5*
 
 
 %files man-pages-uk
 %lang(uk) %{_mandir}/uk/man1/*.1*
 %lang(uk) %{_mandir}/uk/man3/*.3*
+%lang(uk) %{_mandir}/uk/man5/*.5*
 
 
 %changelog
