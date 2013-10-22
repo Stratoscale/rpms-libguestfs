@@ -12,7 +12,7 @@ Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
 Version:       1.22.7
-Release:       1%{?dist}
+Release:       2%{?dist}
 License:       LGPLv2+
 
 # Source and patches.
@@ -658,6 +658,11 @@ if [ "$RPM_BUILD_ROOT%{python_sitearch}" != "$RPM_BUILD_ROOT%{python_sitelib}" ]
      $RPM_BUILD_ROOT%{python_sitelib}/
 fi
 
+# Don't use versioned jar file (RHBZ#1022133).
+# See: https://bugzilla.redhat.com/show_bug.cgi?id=1022184#c4
+mv $RPM_BUILD_ROOT%{_datadir}/java/%{name}-%{version}.jar \
+  $RPM_BUILD_ROOT%{_datadir}/java/%{name}.jar
+
 # Move installed documentation back to the source directory so
 # we can install it using a %%doc rule.
 mv $RPM_BUILD_ROOT%{_docdir}/libguestfs installed-docs
@@ -892,6 +897,9 @@ mkdir -p $RPM_BUILD_ROOT%{_localstatedir}/run/libguestfs
 
 
 %changelog
+* Tue Oct 22 2013 Richard W.M. Jones <rjones@redhat.com> - 1:1.22.7-2
+- Don't use versioned jar file (RHBZ#1022133).
+
 * Thu Oct 17 2013 Richard W.M. Jones <rjones@redhat.com> - 1:1.22.7-1
 - New upstream version 1.22.7.
 
