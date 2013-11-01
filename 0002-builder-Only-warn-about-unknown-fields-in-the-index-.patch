@@ -1,0 +1,31 @@
+From 5280e3031be9d1f72d03510483fa22634b5d9af5 Mon Sep 17 00:00:00 2001
+From: "Richard W.M. Jones" <rjones@redhat.com>
+Date: Fri, 1 Nov 2013 16:47:20 +0000
+Subject: [PATCH 2/2] builder: Only warn about unknown fields in the index if
+ -v option is used.
+
+Allows us to add new fields in future without having pointless
+warnings from old versions of virt-builder.
+---
+ builder/index_parser.ml | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/builder/index_parser.ml b/builder/index_parser.ml
+index a8c427c..dc039fe 100644
+--- a/builder/index_parser.ml
++++ b/builder/index_parser.ml
+@@ -225,8 +225,9 @@ let get_index ~debug ~downloader ~sigchecker source =
+               | "notes" -> true
+               | "hidden" -> false
+               | _ ->
+-                eprintf "warning: unknown field '%s' in index (ignored)\n%!"
+-                  field;
++                if debug then
++                  eprintf "warning: unknown field '%s' in index (ignored)\n%!"
++                    field;
+                 true in
+             let value =
+               if not allow_multiline then (
+-- 
+1.8.3.1
+
