@@ -685,6 +685,10 @@ for f in test-getaddrinfo test-utimens ; do
 done
 popd
 
+# Disable parallel virt-alignment-scan & virt-df tests (RHBZ#1025942).
+export SKIP_TEST_VIRT_ALIGNMENT_SCAN_GUESTS_SH=1
+export SKIP_TEST_VIRT_DF_GUESTS_SH=1
+
 # Disabled on ARM because of RHBZ#990258.
 # Disabled on 32 bit x86 because of RHBZ#998722 & RHBZ#998692.
 %ifnarch armv7hl %{ix86}
