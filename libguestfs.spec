@@ -89,6 +89,7 @@ BuildRequires: bison
 BuildRequires: libdb-utils
 BuildRequires: cpio
 BuildRequires: libconfig-devel
+BuildRequires: xz-devel
 BuildRequires: ocaml
 BuildRequires: ocaml-findlib-devel
 BuildRequires: ocaml-gettext-devel
@@ -1047,6 +1048,7 @@ mkdir -p $RPM_BUILD_ROOT%{_localstatedir}/run/libguestfs
 - Backport virt-builder features from upstream at users [multiple] requests.
 - Use git to manage patches, add copy-patches.sh script.
 - +BR flex & bison.
+- +BR xz-devel (for liblzma) to accelerate virt-builder.
 
 * Fri Nov 01 2013 Richard W.M. Jones <rjones@redhat.com> - 1:1.24.1-1
 - New upstream version 1.24.1.
