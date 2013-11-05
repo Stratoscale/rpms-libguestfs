@@ -12,12 +12,55 @@ Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
 Version:       1.24.1
-Release:       1%{?dist}
+Release:       2%{?dist}
 License:       LGPLv2+
 
 # Source and patches.
 URL:           http://libguestfs.org/
 Source0:       http://libguestfs.org/download/1.23-development/%{name}-%{version}.tar.gz
+
+# Note we use the fedora-20 branch from the upstream repo which
+# contains only upstream, backported patches, but conveniently manages
+# them in git.  In order to update this list, run the
+# 'copy-patches.sh' script.
+
+# Git-managed patches.
+Patch0001:     0001-builder-Don-t-run-virt-resize-when-not-necessary.patch
+Patch0002:     0002-builder-Make-xzcat-binary-configurable-and-use-AC_PA.patch
+Patch0003:     0003-builder-Use-pxzcat-optionally-to-speed-up-xzcat-step.patch
+Patch0004:     0004-builder-Add-no-sync-option-to-avoid-sync-on-exit.patch
+Patch0005:     0005-builder-Add-mkdir-option-to-create-directories.patch
+Patch0006:     0006-builder-Allow-upload-to-a-directory.patch
+Patch0007:     0007-builder-Add-write-option-to-write-a-literal-file.patch
+Patch0008:     0008-builder-Document-how-to-boot-VMs-directly-in-qemu-or.patch
+Patch0009:     0009-firstboot-Send-the-output-to-the-console-as-well-as-.patch
+Patch0010:     0010-builder-Add-a-section-on-performance-to-the-manual.patch
+Patch0011:     0011-builder-Add-m-memsize-and-smp-command-line-options.patch
+Patch0012:     0012-builder-Allow-multiple-source-paths-to-be-specified.patch
+Patch0013:     0013-builder-Don-t-use-git-tree-libguestfs.git-to-refer-t.patch
+Patch0014:     0014-builder-Add-a-real-scanner-parser-for-index-files.patch
+Patch0015:     0015-builder-Fix-check-valgrind-so-it-does-something-in-t.patch
+Patch0016:     0016-builder-Fix-missing-files-in-EXTRA_DIST.patch
+Patch0017:     0017-builder-Add-an-extra-Makefile.am-to-builder-website.patch
+Patch0018:     0018-builder-website-Add-index-validation-test-script.patch
+Patch0019:     0019-builder-Internal-implementation-of-parallel-xzcat-px.patch
+Patch0020:     0020-builder-Replace-fedora-NN-shell-kickstart-with-a-sin.patch
+Patch0021:     0021-builder-Replace-ubuntu-NN-.sh-with-a-single-script.patch
+Patch0022:     0022-builder-Replace-debian-NN-.sh-with-a-single-script.patch
+Patch0023:     0023-builder-Replace-centos-6.sh-with-a-single-script.patch
+Patch0024:     0024-builder-website-Add-validate.sh-test-script-to-EXTRA.patch
+Patch0025:     0025-builder-Add-missing-dependency.patch
+Patch0026:     0026-builder-Add-some-generated-files-to-CLEANFILES.patch
+Patch0027:     0027-builder-Add-dependency-from-index-parse.h-to-index-v.patch
+Patch0028:     0028-builder-Fix-centos-script-output-filename-was-wrong.patch
+Patch0029:     0029-builder-Add-dependencies-which-automake-doesn-t-gene.patch
+# Add any non-git patches here.
+
+# Use git for patch management.
+BuildRequires: git
+
+# Run autotools after applying the patches.
+BuildRequires: autoconf, automake, libtool, gettext-devel
 
 # Basic build requirements:
 BuildRequires: perl(Pod::Simple)
@@ -146,6 +189,8 @@ Source3:       99-guestfsd.rules
 
 # Replacement README file for Fedora users.
 Source4:       README-replacement.in
+
+Source5:       copy-patches.sh
 
 # https://fedoraproject.org/wiki/Packaging:No_Bundled_Libraries#Packages_granted_exceptions
 Provides:      bundled(gnulib)
@@ -573,6 +618,19 @@ for %{name}.
 %prep
 %setup -q
 
+# Use git to manage patches.
+# http://rwmj.wordpress.com/2011/08/09/nice-rpm-git-patch-management-trick/
+git init
+git config user.email "libguestfs@redhat.com"
+git config user.name "libguestfs"
+git add .
+git commit -a -q -m "%{version} baseline"
+git am %{patches}
+
+# Patches affect Makefile.am and configure.ac, so rerun autotools.
+autoreconf -i
+autoconf
+
 if [ "$(getenforce | tr '[A-Z]' '[a-z]')" != "disabled" ]; then
     # For sVirt to work, the local temporary directory we use in the
     # tests must be labelled the same way as /tmp.
@@ -629,6 +687,9 @@ fi
   --with-qemu="qemu-kvm qemu-system-%{_build_arch} qemu" \
   --enable-install-daemon \
   $extra
+
+# Patches above add man pages, so this is needed.
+make -C po-docs update-po
 
 # 'INSTALLDIRS' ensures that Perl and Ruby libs are installed in the
 # vendor dir not the site dir.
@@ -980,6 +1041,10 @@ mkdir -p $RPM_BUILD_ROOT%{_localstatedir}/run/libguestfs
 
 
 %changelog
+* Tue Nov 05 2013 Richard W.M. Jones <rjones@redhat.com> - 1:1.24.1-2
+- Backport virt-builder features from upstream at users [multiple] requests.
+- Use git to manage patches, add copy-patches.sh script.
+
 * Fri Nov 01 2013 Richard W.M. Jones <rjones@redhat.com> - 1:1.24.1-1
 - New upstream version 1.24.1.
 

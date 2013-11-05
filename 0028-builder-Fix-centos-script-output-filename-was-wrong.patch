@@ -1,0 +1,28 @@
+From 1f8d51695861b76edc23aca82f39ef816a20061d Mon Sep 17 00:00:00 2001
+From: "Richard W.M. Jones" <rjones@redhat.com>
+Date: Tue, 5 Nov 2013 16:51:08 +0000
+Subject: [PATCH] builder: Fix centos script - output filename was wrong.
+
+This fixes commit 2f3fb2420e7f2ccc19fdc863ecc7b7ce29dd6aa1.
+
+(cherry picked from commit 663012c5ffecc6f89ad164d292fc0f970338f824)
+---
+ builder/website/centos.sh | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/builder/website/centos.sh b/builder/website/centos.sh
+index ce7abb6..d9f2645 100755
+--- a/builder/website/centos.sh
++++ b/builder/website/centos.sh
+@@ -27,7 +27,7 @@ if [ $# -ne 1 ]; then
+ fi
+ 
+ version=$1
+-output=fedora-$version
++output=centos-$version
+ tmpname=tmp-$(tr -cd 'a-f0-9' < /dev/urandom | head -c 8)
+ 
+ # We rebuild this every time there is a new 6.x release, and bump
+-- 
+1.8.3.1
+

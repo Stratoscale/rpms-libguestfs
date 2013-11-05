@@ -1,0 +1,33 @@
+From 7ae728b1a5db0290ca2ed488ae3e67c968d2f477 Mon Sep 17 00:00:00 2001
+From: "Richard W.M. Jones" <rjones@redhat.com>
+Date: Tue, 5 Nov 2013 15:42:05 +0000
+Subject: [PATCH] builder: Add missing dependency.
+
+index-parser-c.c depends on index-parse.h being created first.
+However without an explicit dependency, this is not done (and implicit
+deps don't work because automake doesn't sufficiently understand OCaml
+programs).
+
+This fixes commit a4800e2d4fc50f372a8b626333c4fbb9b8ca9633.
+
+(cherry picked from commit dfe97b352d6b398c3cb3ddb1c9984767722e514b)
+---
+ builder/Makefile.am | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/builder/Makefile.am b/builder/Makefile.am
+index 2027203..a44f820 100644
+--- a/builder/Makefile.am
++++ b/builder/Makefile.am
+@@ -120,6 +120,8 @@ virt-builder: $(OBJECTS)
+ .ml.cmx:
+ 	$(OCAMLFIND) ocamlopt $(OCAMLOPTFLAGS) -c $< -o $@
+ 
++index-parser-c.o: index-parse.h
++
+ # Manual pages and HTML files for the website.
+ 
+ man_MANS += virt-builder.1
+-- 
+1.8.3.1
+

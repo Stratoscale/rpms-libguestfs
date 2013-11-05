@@ -1,0 +1,73 @@
+From 6c92d98723e72d3e47066c53ea9fae0e95e4e7b1 Mon Sep 17 00:00:00 2001
+From: "Richard W.M. Jones" <rjones@redhat.com>
+Date: Tue, 22 Oct 2013 14:09:20 +0100
+Subject: [PATCH] builder: Make xzcat binary configurable and use AC_PATH_PROG.
+
+(cherry picked from commit 0e18bccb648f8c96366ae53746d83bd009f924f7)
+---
+ builder/builder.ml | 9 +++++++--
+ configure.ac       | 4 ++++
+ mllib/config.ml.in | 2 ++
+ 3 files changed, 13 insertions(+), 2 deletions(-)
+
+diff --git a/builder/builder.ml b/builder/builder.ml
+index 6750deb..ae642d0 100644
+--- a/builder/builder.ml
++++ b/builder/builder.ml
+@@ -323,13 +323,18 @@ let main () =
+ 
+       output, Some size, format, delete_output_file, do_resize, true in
+ 
++  (* Create xzcat command to uncompress from input to output. *)
++  let xzcat_command input output =
++    sprintf "%s %s > %s" Config.xzcat input output
++  in
++
+   if not do_resize then (
+     (* If the user did not specify --size and the output is a regular
+      * file and the format is raw, then we just uncompress the template
+      * directly to the output file.  This is fast but less flexible.
+      *)
+     let { Index_parser.file_uri = file_uri } = entry in
+-    let cmd = sprintf "xzcat %s > %s" (quote template) (quote output) in
++    let cmd = xzcat_command template output in
+     if debug then eprintf "%s\n%!" cmd;
+     msg (f_"Uncompressing: %s") file_uri;
+     let r = Sys.command cmd in
+@@ -345,7 +350,7 @@ let main () =
+       (* Uncompress it to a temporary file. *)
+       let { Index_parser.file_uri = file_uri } = entry in
+       let tmpfile = Filename.temp_file "vbsrc" ".img" in
+-      let cmd = sprintf "xzcat %s > %s" (quote template) (quote tmpfile) in
++      let cmd = xzcat_command template tmpfile in
+       if debug then eprintf "%s\n%!" cmd;
+       msg (f_"Uncompressing: %s") file_uri;
+       let r = Sys.command cmd in
+diff --git a/configure.ac b/configure.ac
+index 8dc4e7f..b31abbc 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -698,6 +698,10 @@ if test "x$WRESTOOL" != "xno"; then
+     AC_DEFINE_UNQUOTED([WRESTOOL],["$WRESTOOL"],[Name of wrestool program.])
+ fi
+ 
++dnl Check for xzcat (required).
++AC_PATH_PROGS([XZCAT],[xzcat],[no])
++test "x$XZCAT" = "xno" && AC_MSG_ERROR([xzcat must be installed])
++
+ dnl Check for QEMU for running binaries on this $host_cpu, fall
+ dnl back to basic 'qemu'.  Allow the user to override it.
+ qemu_system="$(
+diff --git a/mllib/config.ml.in b/mllib/config.ml.in
+index d18bf7b..129741d 100644
+--- a/mllib/config.ml.in
++++ b/mllib/config.ml.in
+@@ -18,3 +18,5 @@
+ 
+ let package_name = "@PACKAGE_NAME@"
+ let package_version = "@PACKAGE_VERSION@"
++
++let xzcat = "@XZCAT@"
+-- 
+1.8.3.1
+

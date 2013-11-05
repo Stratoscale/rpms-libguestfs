@@ -1,0 +1,41 @@
+From a6f859302b6d7781ccb698ee8592bd16a4a28857 Mon Sep 17 00:00:00 2001
+From: "Richard W.M. Jones" <rjones@redhat.com>
+Date: Mon, 4 Nov 2013 22:13:23 +0000
+Subject: [PATCH] builder: Fix 'check-valgrind' so it does something in this
+ directory.
+
+(cherry picked from commit 2dca9d719434f6783e11976699e45a98128ca913)
+---
+ builder/test-virt-builder-list.sh | 2 +-
+ builder/test-virt-builder.sh      | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/builder/test-virt-builder-list.sh b/builder/test-virt-builder-list.sh
+index 0a7c0d4..11305a9 100755
+--- a/builder/test-virt-builder-list.sh
++++ b/builder/test-virt-builder-list.sh
+@@ -25,7 +25,7 @@ abs_srcdir=$(cd $srcdir && pwd)
+ 
+ export VIRT_BUILDER_SOURCE=file://$abs_srcdir/test-index
+ 
+-short_list=$(./virt-builder --no-check-signature --no-cache --list)
++short_list=$($VG ./virt-builder --no-check-signature --no-cache --list)
+ 
+ if [ "$short_list" != "phony-debian             Phony Debian
+ phony-fedora             Phony Fedora
+diff --git a/builder/test-virt-builder.sh b/builder/test-virt-builder.sh
+index 159f013..6296d16 100755
+--- a/builder/test-virt-builder.sh
++++ b/builder/test-virt-builder.sh
+@@ -49,7 +49,7 @@ rm -f $output
+ # Note we cannot test --install, --run since the phony Fedora doesn't
+ # have a real OS inside just some configuration files.  Just about
+ # every other option is fair game.
+-./virt-builder phony-fedora \
++$VG ./virt-builder phony-fedora \
+     -v --no-cache --no-check-signature $no_network \
+     -o $output --size 2G --format $format \
+     --hostname test.example.com \
+-- 
+1.8.3.1
+

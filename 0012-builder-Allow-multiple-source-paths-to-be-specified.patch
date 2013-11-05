@@ -1,0 +1,450 @@
+From 2c081f7d45a250220860a3a21938a3f2d7d39a9b Mon Sep 17 00:00:00 2001
+From: "Richard W.M. Jones" <rjones@redhat.com>
+Date: Fri, 1 Nov 2013 14:16:34 +0000
+Subject: [PATCH] builder: Allow multiple source paths to be specified.
+
+Users can now specify multiple source paths, eg:
+
+  virt-builder --source http://example.com/foo \
+    --source http://example.com/bar
+
+to get templates from multiple places.
+
+There is still only one built-in path, but we can add more later.
+
+(cherry picked from commit bb4e882d61b49045aabd35912ae7e3a18cd6028b)
+---
+ builder/builder.ml                | 32 +++++++++++-------
+ builder/cmdline.ml                | 69 ++++++++++++++++++++++++++++++---------
+ builder/index_parser.ml           |  5 ++-
+ builder/index_parser.mli          |  2 ++
+ builder/list_entries.ml           | 10 ++++--
+ builder/list_entries.mli          |  2 +-
+ builder/sigchecker.ml             |  7 ++--
+ builder/sigchecker.mli            |  4 ++-
+ builder/test-virt-builder-list.sh |  1 +
+ builder/virt-builder.pod          | 57 ++++++++++++++++++++++++++------
+ 10 files changed, 143 insertions(+), 46 deletions(-)
+
+diff --git a/builder/builder.ml b/builder/builder.ml
+index c9fd291..fc6078c 100644
+--- a/builder/builder.ml
++++ b/builder/builder.ml
+@@ -35,22 +35,27 @@ let prog = Filename.basename Sys.executable_name
+ let main () =
+   (* Command line argument parsing - see cmdline.ml. *)
+   let mode, arg,
+-    attach, cache, check_signature, curl, debug, delete, edit, fingerprint,
++    attach, cache, check_signature, curl, debug, delete, edit,
+     firstboot, run, format, gpg, hostname, install, list_long, memsize, mkdirs,
+     network, output, password_crypto, quiet, root_password, scrub,
+-    scrub_logfile, size, smp, source, sync, upload, writes =
++    scrub_logfile, size, smp, sources, sync, upload, writes =
+     parse_cmdline () in
+ 
+   (* Timestamped messages in ordinary, non-debug non-quiet mode. *)
+   let msg fs = make_message_function ~quiet fs in
+ 
+-  (* If debugging, echo the command line arguments. *)
++  (* If debugging, echo the command line arguments and the sources. *)
+   if debug then (
+     eprintf "command line:";
+     List.iter (eprintf " %s") (Array.to_list Sys.argv);
+-    prerr_newline ()
++    prerr_newline ();
++    List.iteri (
++      fun i (source, fingerprint) ->
++        eprintf "source[%d] = (%S, %S)\n" i source fingerprint
++    ) sources
+   );
+ 
++
+   (* Handle some modes here, some later on. *)
+   let mode =
+     match mode with
+@@ -125,19 +130,23 @@ let main () =
+       )
+   in
+ 
+-  (* Make the downloader and signature checker abstract data types. *)
++  (* Download the sources. *)
+   let downloader = Downloader.create ~debug ~curl ~cache in
+-  let sigchecker =
+-    Sigchecker.create ~debug ~gpg ?fingerprint ~check_signature in
+-
+-  (* Download the source (index) file. *)
+-  let index = Index_parser.get_index ~debug ~downloader ~sigchecker source in
++  let index : Index_parser.index =
++    List.concat (
++      List.map (
++        fun (source, fingerprint) ->
++          let sigchecker =
++            Sigchecker.create ~debug ~gpg ~fingerprint ~check_signature in
++          Index_parser.get_index ~debug ~downloader ~sigchecker source
++      ) sources
++    ) in
+ 
+   (* Now handle the remaining modes. *)
+   let mode =
+     match mode with
+     | `List ->                          (* --list *)
+-      List_entries.list_entries ~list_long ~source index;
++      List_entries.list_entries ~list_long ~sources index;
+       exit 0
+ 
+     | `Print_cache ->                   (* --print-cache *)
+@@ -184,6 +193,7 @@ let main () =
+       eprintf (f_"%s: cannot find os-version '%s'.\nUse --list to list available guest types.\n")
+         prog arg;
+       exit 1 in
++  let sigchecker = entry.Index_parser.sigchecker in
+ 
+   (match mode with
+   | `Notes ->                           (* --notes *)
+diff --git a/builder/cmdline.ml b/builder/cmdline.ml
+index f8e604e..5256390 100644
+--- a/builder/cmdline.ml
++++ b/builder/cmdline.ml
+@@ -37,6 +37,8 @@ let default_cachedir =
+     with Not_found ->
+       None (* no cache directory *)
+ 
++let default_source = "http://libguestfs.org/download/builder/index.asc"
++
+ let parse_cmdline () =
+   let display_version () =
+     printf "virt-builder %s\n" Config.package_version;
+@@ -83,11 +85,8 @@ let parse_cmdline () =
+     edit := (file, expr) :: !edit
+   in
+ 
+-  let fingerprint =
+-    try Some (Sys.getenv "VIRT_BUILDER_FINGERPRINT")
+-    with Not_found -> None in
+-  let fingerprint = ref fingerprint in
+-  let set_fingerprint fp = fingerprint := Some fp in
++  let fingerprints = ref [] in
++  let add_fingerprint arg = fingerprints := arg :: !fingerprints in
+ 
+   let firstboot = ref [] in
+   let add_firstboot s =
+@@ -166,10 +165,8 @@ let parse_cmdline () =
+   let smp = ref None in
+   let set_smp arg = smp := Some arg in
+ 
+-  let source =
+-    try Sys.getenv "VIRT_BUILDER_SOURCE"
+-    with Not_found -> "http://libguestfs.org/download/builder/index.asc" in
+-  let source = ref source in
++  let sources = ref [] in
++  let add_source arg = sources := arg :: !sources in
+ 
+   let sync = ref true in
+ 
+@@ -223,7 +220,7 @@ let parse_cmdline () =
+     "--delete-cache", Arg.Unit delete_cache_mode,
+                                             " " ^ s_"Delete the template cache";
+     "--edit",    Arg.String add_edit,       "file:expr" ^ " " ^ s_"Edit file with Perl expr";
+-    "--fingerprint", Arg.String set_fingerprint,
++    "--fingerprint", Arg.String add_fingerprint,
+                                             "AAAA.." ^ " " ^ s_"Fingerprint of valid signing key";
+     "--firstboot", Arg.String add_firstboot, "script" ^ " " ^ s_"Run script at first guest boot";
+     "--firstboot-command", Arg.String add_firstboot_cmd, "cmd+args" ^ " " ^ s_"Run command at first guest boot";
+@@ -260,7 +257,7 @@ let parse_cmdline () =
+     "--scrub",   Arg.String add_scrub,      "name" ^ " " ^ s_"Scrub a file";
+     "--size",    Arg.String set_size,       "size" ^ " " ^ s_"Set output disk size";
+     "--smp",     Arg.Int set_smp,           "vcpus" ^ " " ^ s_"Set number of vCPUs";
+-    "--source",  Arg.Set_string source,     "URL" ^ " " ^ s_"Set source URL";
++    "--source",  Arg.String add_source,     "URL" ^ " " ^ s_"Set source URL";
+     "--no-sync", Arg.Clear sync,            " " ^ s_"Do not fsync output file on exit";
+     "--upload",  Arg.String add_upload,     "file:dest" ^ " " ^ s_"Upload file to dest";
+     "-v",        Arg.Set debug,             " " ^ s_"Enable debugging messages";
+@@ -301,7 +298,7 @@ read the man page virt-builder(1).
+   let debug = !debug in
+   let delete = List.rev !delete in
+   let edit = List.rev !edit in
+-  let fingerprint = !fingerprint in
++  let fingerprints = List.rev !fingerprints in
+   let firstboot = List.rev !firstboot in
+   let run = List.rev !run in
+   let format = match !format with "" -> None | s -> Some s in
+@@ -320,7 +317,7 @@ read the man page virt-builder(1).
+   let scrub_logfile = !scrub_logfile in
+   let size = !size in
+   let smp = !smp in
+-  let source = !source in
++  let sources = List.rev !sources in
+   let sync = !sync in
+   let upload = List.rev !upload in
+   let writes = List.rev !writes in
+@@ -375,8 +372,50 @@ read the man page virt-builder(1).
+         exit 1
+       ) in
+ 
++  (* Check source(s) and fingerprint(s), or use environment or default. *)
++  let sources =
++    let list_split = function "" -> [] | str -> string_nsplit "," str in
++    let rec repeat x = function
++      | 0 -> [] | 1 -> [x]
++      | n -> x :: repeat x (n-1)
++    in
++
++    let sources =
++      if sources <> [] then sources
++      else (
++        try list_split (Sys.getenv "VIRT_BUILDER_SOURCE")
++        with Not_found -> [ default_source ]
++      ) in
++    let fingerprints =
++      if fingerprints <> [] then fingerprints
++      else (
++        try list_split (Sys.getenv "VIRT_BUILDER_FINGERPRINT")
++        with Not_found -> [ Sigchecker.default_fingerprint ]
++      ) in
++
++    let nr_sources = List.length sources in
++    let fingerprints =
++      match fingerprints with
++      | [fingerprint] ->
++        (* You're allowed to have multiple sources and one fingerprint: it
++         * means that the same fingerprint is used for all sources.
++         *)
++        repeat fingerprint nr_sources
++      | xs -> xs in
++
++    if List.length fingerprints <> nr_sources then (
++      eprintf (f_"%s: source and fingerprint lists are not the same length\n")
++        prog;
++      exit 1
++    );
++
++    assert (nr_sources > 0);
++
++    (* Combine the sources and fingerprints into a single list of pairs. *)
++    List.combine sources fingerprints in
++
+   mode, arg,
+-  attach, cache, check_signature, curl, debug, delete, edit, fingerprint,
++  attach, cache, check_signature, curl, debug, delete, edit,
+   firstboot, run, format, gpg, hostname, install, list_long, memsize, mkdirs,
+   network, output, password_crypto, quiet, root_password, scrub,
+-  scrub_logfile, size, smp, source, sync, upload, writes
++  scrub_logfile, size, smp, sources, sync, upload, writes
+diff --git a/builder/index_parser.ml b/builder/index_parser.ml
+index b5a0cf0..dc039fe 100644
+--- a/builder/index_parser.ml
++++ b/builder/index_parser.ml
+@@ -37,6 +37,8 @@ and entry = {
+   lvexpand : string option;
+   notes : string option;
+   hidden : bool;
++
++  sigchecker : Sigchecker.t;
+ }
+ 
+ let print_entry chan (name, { printable_name = printable_name;
+@@ -348,7 +350,8 @@ let get_index ~debug ~downloader ~sigchecker source =
+                         expand = expand;
+                         lvexpand = lvexpand;
+                         notes = notes;
+-                        hidden = hidden } in
++                        hidden = hidden;
++                        sigchecker = sigchecker } in
+           n, entry
+       ) sections in
+ 
+diff --git a/builder/index_parser.mli b/builder/index_parser.mli
+index 79df5ef..0b6317d 100644
+--- a/builder/index_parser.mli
++++ b/builder/index_parser.mli
+@@ -31,6 +31,8 @@ and entry = {
+   lvexpand : string option;
+   notes : string option;
+   hidden : bool;
++
++  sigchecker : Sigchecker.t;
+ }
+ 
+ val get_index : debug:bool -> downloader:Downloader.t -> sigchecker:Sigchecker.t -> string -> index
+diff --git a/builder/list_entries.ml b/builder/list_entries.ml
+index b233f0e..04a65ca 100644
+--- a/builder/list_entries.ml
++++ b/builder/list_entries.ml
+@@ -21,10 +21,14 @@ open Common_utils
+ 
+ open Printf
+ 
+-let list_entries ?(list_long = false) ~source index =
++let list_entries ?(list_long = false) ~sources index =
+   if list_long then (
+-    printf (f_"Source URI: %s\n") source;
+-    printf "\n"
++    List.iter (
++      fun (source, fingerprint) ->
++        printf (f_"Source URI: %s\n") source;
++        printf (f_"Fingerprint: %s\n") fingerprint;
++        printf "\n"
++    ) sources
+   );
+ 
+   List.iter (
+diff --git a/builder/list_entries.mli b/builder/list_entries.mli
+index e1d5c06..d9486b0 100644
+--- a/builder/list_entries.mli
++++ b/builder/list_entries.mli
+@@ -16,4 +16,4 @@
+  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+  *)
+ 
+-val list_entries : ?list_long:bool -> source:string -> Index_parser.index -> unit
++val list_entries : ?list_long:bool -> sources:(string * string) list -> Index_parser.index -> unit
+diff --git a/builder/sigchecker.ml b/builder/sigchecker.ml
+index 2bd3c11..b20a186 100644
+--- a/builder/sigchecker.ml
++++ b/builder/sigchecker.ml
+@@ -104,7 +104,7 @@ type t = {
+   check_signature : bool;
+ }
+ 
+-let create ~debug ~gpg ?(fingerprint = default_fingerprint) ~check_signature =
++let create ~debug ~gpg ~fingerprint ~check_signature =
+   {
+     debug = debug;
+     gpg = gpg;
+@@ -188,10 +188,9 @@ and do_verify t args =
+     exit 1
+   )
+ 
+-(* Import the default public key, if it's the default fingerprint. *)
++(* Import the default public key. *)
+ and import_key t =
+-  if not !key_imported && equal_fingerprints t.fingerprint default_fingerprint
+-  then (
++  if not !key_imported then (
+     let filename, chan = Filename.open_temp_file "vbpubkey" ".asc" in
+     unlink_on_exit filename;
+     output_string chan default_pubkey;
+diff --git a/builder/sigchecker.mli b/builder/sigchecker.mli
+index 4d89129..cdd800e 100644
+--- a/builder/sigchecker.mli
++++ b/builder/sigchecker.mli
+@@ -16,9 +16,11 @@
+  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+  *)
+ 
++val default_fingerprint : string
++
+ type t
+ 
+-val create : debug:bool -> gpg:string -> ?fingerprint:string -> check_signature:bool -> t
++val create : debug:bool -> gpg:string -> fingerprint:string -> check_signature:bool -> t
+ 
+ val verify : t -> string -> unit
+ (** Verify the file is signed (if check_signature is true). *)
+diff --git a/builder/test-virt-builder-list.sh b/builder/test-virt-builder-list.sh
+index 01e4d1b..823f774 100755
+--- a/builder/test-virt-builder-list.sh
++++ b/builder/test-virt-builder-list.sh
+@@ -39,6 +39,7 @@ fi
+ long_list=$(./virt-builder --no-check-signature --no-cache --list --long)
+ 
+ if [ "$long_list" != "Source URI: $VIRT_BUILDER_SOURCE
++Fingerprint: F777 4FB1 AD07 4A7E 8C87 67EA 9173 8F73 E1B7 68A0
+ 
+ os-version:              phony-debian
+ Full name:               Phony Debian
+diff --git a/builder/virt-builder.pod b/builder/virt-builder.pod
+index 70e19c3..4e33bc8 100644
+--- a/builder/virt-builder.pod
++++ b/builder/virt-builder.pod
+@@ -264,10 +264,14 @@ Check that the index and templates are signed by the key with the
+ given fingerprint.  (The fingerprint is a long string, usually written
+ as 10 groups of 4 hexadecimal digits).
+ 
+-If signature checking is enabled and the I<--fingerprint> option is
+-not given, then this checks the download was signed by
+-S<F777 4FB1 AD07 4A7E 8C87 67EA 9173 8F73 E1B7 68A0> (which is
+-S<Richard W.M. Jones's> key).
++You can give this option multiple times.  If you have multiple source
++URLs, then you can have either no fingerprint, one fingerprint or
++multiple fingerprints.  If you have multiple, then each must
++correspond 1-1 with a source URL.
++
++The default fingerprint (if none are supplied) is
++S<F777 4FB1 AD07 4A7E 8C87 67EA 9173 8F73 E1B7 68A0>
++(which is S<Richard W.M. Jones's> key).
+ 
+ You can also set the C<VIRT_BUILDER_FINGERPRINT> environment variable.
+ 
+@@ -559,8 +563,11 @@ Enable N E<ge> 2 virtual CPUs for I<--run> scripts to use.
+ 
+ =item B<--source> URL
+ 
+-Set the source URL to look for templates.  If not specified it
+-defaults to L<http://libguestfs.org/download/builder/index.asc>
++Set the source URL to look for indexes.
++
++You can give this option multiple times to specify multiple sources.
++If not specified it defaults to
++L<http://libguestfs.org/download/builder/index.asc>
+ 
+ See also L</CREATING YOUR OWN TEMPLATES> below.
+ 
+@@ -1202,6 +1209,36 @@ Now run virt-builder commands as normal, eg:
+ 
+ To debug problems, add the C<-v> option to these commands.
+ 
++=head3 Running virt-builder against multiple sources
++
++It is possible to use multiple sources with virt-builder.  Use either
++multiple I<--source> and/or I<--fingerprint> options, or a
++comma-separated list in the C<VIRT_BUILDER_SOURCE> /
++C<VIRT_BUILDER_FINGERPRINT> environment variables:
++
++ virt-builder \
++   --source http://example.com/s1/index.asc \
++   --source http://example.com/s2/index.asc
++
++or equivalently:
++
++ export VIRT_BUILDER_SOURCE=http://example.com/s1/index.asc,http://example.com/s2/index.asc
++ virt-builder [...]
++
++You can provide N, 1 or 0 fingerprints.  In the case where you
++provide N fingerprints, N = number of sources and there is a 1-1
++correspondence between each source and each fingerprint:
++
++ virt-builder \
++   --source http://example.com/s1/index.asc --fingerprint '0123 ...' \
++   --source http://example.com/s2/index.asc --fingerprint '9876 ...'
++
++In the case where you provide 1 fingerprint, the same fingerprint
++is used for all sources.
++
++In the case where you provide no fingerprints, the default fingerprint
++built into virt-builder is used for all sources.
++
+ =head3 Licensing of templates
+ 
+ You should be aware of the licensing of images that you distribute.
+@@ -1386,13 +1423,13 @@ Used to determine the location of the template cache.  See L</CACHING>.
+ 
+ =item C<VIRT_BUILDER_FINGERPRINT>
+ 
+-Set the default value for the GPG signature fingerprint (see
+-I<--fingerprint> option).
++Set the default value for the GPG signature fingerprint or
++comma-separated list of fingerprints (see I<--fingerprint> option).
+ 
+ =item C<VIRT_BUILDER_SOURCE>
+ 
+-Set the default value for the source URL for the template repository
+-(see I<--source> option).
++Set the default value for the source URL (or comma-separated list of
++URLs) for the template repository (see I<--source> option).
+ 
+ =item C<XDG_CACHE_HOME>
+ 
+-- 
+1.8.3.1
+

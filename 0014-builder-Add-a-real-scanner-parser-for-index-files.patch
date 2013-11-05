@@ -1,0 +1,1232 @@
+From 4785b527ce69d0aa1c7983f81a70f30d9837ee88 Mon Sep 17 00:00:00 2001
+From: "Richard W.M. Jones" <rjones@redhat.com>
+Date: Mon, 4 Nov 2013 14:53:41 +0000
+Subject: [PATCH] builder: Add a real scanner/parser for index files.
+
+This adds a tool called virt-index-validate to validate index files.
+
+(cherry picked from commit a4800e2d4fc50f372a8b626333c4fbb9b8ca9633)
+---
+ .gitignore                        |   7 ++
+ README                            |   4 +
+ builder/Makefile.am               |  56 +++++++++----
+ builder/index-parse.y             | 123 +++++++++++++++++++++++++++++
+ builder/index-parser-c.c          | 105 +++++++++++++++++++++++++
+ builder/index-scan.l              | 103 ++++++++++++++++++++++++
+ builder/index-struct.c            |  58 ++++++++++++++
+ builder/index-struct.h            |  48 ++++++++++++
+ builder/index-validate.c          | 161 ++++++++++++++++++++++++++++++++++++++
+ builder/index_parser.ml           | 143 ++++-----------------------------
+ builder/list_entries.ml           |   2 +-
+ builder/test-virt-builder-list.sh |  12 ++-
+ builder/virt-builder.pod          |  17 ++++
+ builder/virt-index-validate.pod   |  92 ++++++++++++++++++++++
+ configure.ac                      |   4 +
+ po-docs/ja/Makefile.am            |   1 +
+ po-docs/podfiles                  |   1 +
+ po-docs/uk/Makefile.am            |   1 +
+ po/POTFILES                       |   5 ++
+ 19 files changed, 793 insertions(+), 150 deletions(-)
+ create mode 100644 builder/index-parse.y
+ create mode 100644 builder/index-parser-c.c
+ create mode 100644 builder/index-scan.l
+ create mode 100644 builder/index-struct.c
+ create mode 100644 builder/index-struct.h
+ create mode 100644 builder/index-validate.c
+ create mode 100644 builder/virt-index-validate.pod
+
+diff --git a/.gitignore b/.gitignore
+index 8a1ffef..e2ea9ce 100644
+--- a/.gitignore
++++ b/.gitignore
+@@ -58,10 +58,16 @@ Makefile.in
+ /bash/virt-sparsify
+ /build-aux
+ /builder/.depend
++/builder/index-parse.c
++/builder/index-parse.h
++/builder/index-scan.c
+ /builder/stamp-virt-builder.pod
++/builder/stamp-virt-index-validate.pod
+ /builder/test-index
+ /builder/virt-builder
+ /builder/virt-builder.1
++/builder/virt-index-validate
++/builder/virt-index-validate.1
+ /builder/*.xz
+ /cat/stamp-virt-*.pod
+ /cat/virt-cat
+@@ -224,6 +230,7 @@ Makefile.in
+ /html/virt-edit.1.html
+ /html/virt-filesystems.1.html
+ /html/virt-format.1.html
++/html/virt-index-validate.1.html
+ /html/virt-inspector.1.html
+ /html/virt-list-filesystems.1.html
+ /html/virt-list-partitions.1.html
+diff --git a/README b/README
+index cdf492e..461915d 100644
+--- a/README
++++ b/README
+@@ -94,6 +94,10 @@ The full requirements are described below.
+ +--------------+-------------+---+-----------------------------------------+
+ | gperf        |             | R |                                         |
+ +--------------+-------------+---+-----------------------------------------+
++| flex         |             | R | flex & bison are required for virt-     |
+++--------------+-------------+---| builder.  We could make these           |
++| bison        |             | R | optional but automakes makes it hard.   |
+++--------------+-------------+---+-----------------------------------------+
+ | PCRE         |             | R | Perl-compatible Regular Expression lib. |
+ +--------------+-------------+---+-----------------------------------------+
+ | genisoimage  |             | R | mkisofs may work.                       |
+diff --git a/builder/Makefile.am b/builder/Makefile.am
+index b995c90..cb490e1 100644
+--- a/builder/Makefile.am
++++ b/builder/Makefile.am
+@@ -17,6 +17,12 @@
+ 
+ include $(top_srcdir)/subdir-rules.mk
+ 
++AM_YFLAGS = -d
++AM_CFLAGS = \
++	-I$(shell $(OCAMLC) -where) \
++	-I$(top_srcdir)/src \
++	-I$(top_srcdir)/fish
++
+ EXTRA_DIST = \
+ 	$(SOURCES) \
+ 	virt-builder.pod \
+@@ -71,6 +77,9 @@ SOURCES = \
+ 	sigchecker.mli \
+ 	sigchecker.ml
+ 
++man_MANS =
++noinst_DATA =
++
+ if HAVE_OCAML
+ 
+ # Note this list must be in dependency order.
+@@ -87,6 +96,10 @@ OBJECTS = \
+ 	$(top_builddir)/mllib/fsync.cmx \
+ 	$(top_builddir)/mllib/password.cmx \
+ 	$(top_builddir)/mllib/config.cmx \
++	index-scan.o \
++	index-struct.o \
++	index-parse.o \
++	index-parser-c.o \
+ 	get_kernel.cmx \
+ 	downloader.cmx \
+ 	sigchecker.cmx \
+@@ -127,24 +140,10 @@ virt-builder: $(OBJECTS)
+ .ml.cmx:
+ 	$(OCAMLFIND) ocamlopt $(OCAMLOPTFLAGS) -c $< -o $@
+ 
+-# automake will decide we don't need C support in this file.  Really
+-# we do, so we have to provide it ourselves.
+-
+-DEFAULT_INCLUDES = \
+-	-I. \
+-	-I$(top_builddir) \
+-	-I$(shell $(OCAMLC) -where) \
+-	-I$(top_srcdir)/src \
+-	-I$(top_srcdir)/fish
+-
+-.c.o:
+-	$(CC) $(CFLAGS) $(PROF_CFLAGS) $(DEFAULT_INCLUDES) -c $< -o $@
+-
+ # Manual pages and HTML files for the website.
+ 
+-man_MANS = virt-builder.1
+-
+-noinst_DATA = $(top_builddir)/html/virt-builder.1.html
++man_MANS += virt-builder.1
++noinst_DATA += $(top_builddir)/html/virt-builder.1.html
+ 
+ virt-builder.1 $(top_builddir)/html/virt-builder.1.html: stamp-virt-builder.pod
+ 
+@@ -200,3 +199,28 @@ endif
+ DISTCLEANFILES = .depend
+ 
+ .PHONY: depend docs
++
++# Build a small C index validator program.
++bin_PROGRAMS = virt-index-validate
++
++virt_index_validate_SOURCES = \
++	index-parse.y \
++	index-scan.l \
++	index-struct.h \
++	index-struct.c \
++	index-validate.c
++
++man_MANS += virt-index-validate.1
++noinst_DATA += $(top_builddir)/html/virt-index-validate.1.html
++
++virt-index-validate.1 $(top_builddir)/html/virt-index-validate.1.html: stamp-virt-index-validate.pod
++
++stamp-virt-index-validate.pod: virt-index-validate.pod
++	$(PODWRAPPER) \
++	  --man virt-index-validate.1 \
++	  --html $(top_builddir)/html/virt-index-validate.1.html \
++	  --license GPLv2+ \
++	  $<
++	touch $@
++
++CLEANFILES += stamp-virt-index-validate.pod
+diff --git a/builder/index-parse.y b/builder/index-parse.y
+new file mode 100644
+index 0000000..f5e551b
+--- /dev/null
++++ b/builder/index-parse.y
+@@ -0,0 +1,123 @@
++/* libguestfs virt-builder tool -*- fundamental -*-
++ * Copyright (C) 2013 Red Hat Inc.
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License as published by
++ * the Free Software Foundation; either version 2 of the License, or
++ * (at your option) any later version.
++ *
++ * This program is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * GNU General Public License for more details.
++ *
++ * You should have received a copy of the GNU General Public License
++ * along with this program; if not, write to the Free Software
++ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
++ */
++
++%{
++#include <config.h>
++
++#include <stdio.h>
++#include <stdlib.h>
++#include <string.h>
++
++#include "index-struct.h"
++
++extern void yyerror (const char *);
++extern int yylex (void);
++
++/* Join two strings with \n */
++static char *
++concat_newline (const char *str1, const char *str2)
++{
++  size_t len1, len2, len;
++  char *ret;
++
++  if (str2 == NULL)
++    return strdup (str1);
++
++  len1 = strlen (str1);
++  len2 = strlen (str2);
++  len = len1 + 1 /* \n */ + len2 + 1 /* \0 */;
++  ret = malloc (len);
++  memcpy (ret, str1, len1);
++  ret[len1] = '\n';
++  memcpy (ret + len1 + 1, str2, len2);
++  ret[len-1] = '\0';
++
++  return ret;
++}
++
++%}
++
++%locations
++
++%union {
++  struct section *section;
++  struct field *field;
++  char *str;
++}
++
++%token <str>   SECTION_HEADER
++%token <field> FIELD
++%token <str>   VALUE_CONT
++%token         EMPTY_LINE
++%token         PGP_PROLOGUE
++%token         PGP_EPILOGUE
++
++%type <section> sections section
++%type <field>   fields field
++%type <str>     continuations
++
++%%
++
++index:
++      sections
++        { parsed_index = $1; }
++    | PGP_PROLOGUE sections PGP_EPILOGUE
++        { parsed_index = $2; }
++
++sections:
++      section
++        { $$ = $1; }
++    | section EMPTY_LINE sections
++        { $$ = $1; $$->next = $3; }
++
++section:
++      SECTION_HEADER fields
++        { $$ = malloc (sizeof (struct section));
++          $$->next = NULL;
++          $$->name = $1;
++          $$->fields = $2; }
++
++fields:
++      /* empty */
++        { $$ = NULL; }
++    | field fields
++        { $$ = $1; $$->next = $2; }
++
++field: FIELD continuations
++        { $$ = $1;
++          char *old_value = $$->value;
++          $$->value = concat_newline (old_value, $2);
++          free (old_value);
++          free ($2); }
++
++continuations:
++      /* empty */
++        { $$ = NULL; }
++    | VALUE_CONT continuations
++        { $$ = concat_newline ($1, $2);
++          free ($1);
++          free ($2); }
++
++%%
++
++void
++yyerror (const char *msg)
++{
++  fprintf (stderr, "syntax error at line %d: %s\n",
++           yylloc.first_line, msg);
++}
+diff --git a/builder/index-parser-c.c b/builder/index-parser-c.c
+new file mode 100644
+index 0000000..17e680b
+--- /dev/null
++++ b/builder/index-parser-c.c
+@@ -0,0 +1,105 @@
++/* virt-builder
++ * Copyright (C) 2013 Red Hat Inc.
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License as published by
++ * the Free Software Foundation; either version 2 of the License, or
++ * (at your option) any later version.
++ *
++ * This program is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * GNU General Public License for more details.
++ *
++ * You should have received a copy of the GNU General Public License
++ * along with this program; if not, write to the Free Software
++ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
++ */
++
++/* This file handles the interface between the C/lex/yacc index file
++ * parser, and the OCaml world.  See index_parser.ml for the OCaml
++ * type definition.
++ */
++
++#include <config.h>
++
++#include <stdio.h>
++#include <stdlib.h>
++#include <errno.h>
++#include <unistd.h>
++
++#include <caml/alloc.h>
++#include <caml/fail.h>
++#include <caml/memory.h>
++#include <caml/mlvalues.h>
++
++#ifdef HAVE_CAML_UNIXSUPPORT_H
++#include <caml/unixsupport.h>
++#else
++#define Nothing ((value) 0)
++extern void unix_error (int errcode, char * cmdname, value arg) Noreturn;
++#endif
++
++#include "index-struct.h"
++#include "index-parse.h"
++
++extern FILE *yyin;
++
++value
++virt_builder_parse_index (value filenamev)
++{
++  CAMLparam1 (filenamev);
++  CAMLlocal4 (rv, v, sv, fv);
++  struct section *sections;
++  size_t i, nr_sections;
++
++  yyin = fopen (String_val (filenamev), "r");
++  if (yyin == NULL)
++    unix_error (errno, (char *) "fopen", filenamev);
++
++  if (yyparse () != 0) {
++    fclose (yyin);
++    caml_invalid_argument ("parse error");
++  }
++
++  if (fclose (yyin) == EOF)
++    unix_error (errno, (char *) "fclose", filenamev);
++
++  /* Convert the parsed data to OCaml structures. */
++  nr_sections = 0;
++  for (sections = parsed_index; sections != NULL; sections = sections->next)
++    nr_sections++;
++  rv = caml_alloc (nr_sections, 0);
++
++  for (i = 0, sections = parsed_index; sections != NULL;
++       i++, sections = sections->next) {
++    struct field *fields;
++    size_t j, nr_fields;
++
++    nr_fields = 0;
++    for (fields = sections->fields; fields != NULL; fields = fields->next)
++      nr_fields++;
++    fv = caml_alloc (nr_fields, 0);
++
++    for (j = 0, fields = sections->fields; fields != NULL;
++         j++, fields = fields->next) {
++      v = caml_alloc_tuple (2);
++      sv = caml_copy_string (fields->key);
++      Store_field (v, 0, sv);   /* (key, value) */
++      sv = caml_copy_string (fields->value);
++      Store_field (v, 1, sv);
++      Store_field (fv, j, v);   /* assign to return array of fields */
++    }
++
++    v = caml_alloc_tuple (2);
++    sv = caml_copy_string (sections->name);
++    Store_field (v, 0, sv);     /* (name, fields) */
++    Store_field (v, 1, fv);
++    Store_field (rv, i, v);     /* assign to return array of sections */
++  }
++
++  /* Free parsed global data. */
++  free_index ();
++
++  CAMLreturn (rv);
++}
+diff --git a/builder/index-scan.l b/builder/index-scan.l
+new file mode 100644
+index 0000000..9a6a0e3
+--- /dev/null
++++ b/builder/index-scan.l
+@@ -0,0 +1,103 @@
++/* libguestfs virt-builder tool -*- fundamental -*-
++ * Copyright (C) 2013 Red Hat Inc.
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License as published by
++ * the Free Software Foundation; either version 2 of the License, or
++ * (at your option) any later version.
++ *
++ * This program is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * GNU General Public License for more details.
++ *
++ * You should have received a copy of the GNU General Public License
++ * along with this program; if not, write to the Free Software
++ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
++ */
++
++%{
++#include <config.h>
++
++#include <stdio.h>
++#include <stdlib.h>
++#include <string.h>
++
++#include "index-parse.h"
++#include "index-struct.h"
++
++#define YY_USER_ACTION yylloc.first_line = yylloc.last_line = yylineno;
++
++extern void yyerror (const char *);
++
++%}
++
++%option noyywrap
++%option yylineno
++
++%%
++
++ /* Apart from the PGP prologue/epilogue which is a hack, the
++  * scanning strategy is to deal with the file strictly line by
++  * line, and pass those lines up to the parser which deals with
++  * whether they appear in the right order to be meaningful.
++  * Note that flex does longest-match.
++  */
++
++  /* Ignore comments - '#' MUST appear at the start of a line. */
++^"#".*\n                { seen_comments++; }
++
++  /* An empty line is significant. */
++^\n                                     { return EMPTY_LINE; }
++
++  /* [...] marks beginning of a section. */
++^"["[-A-Za-z0-9.]+"]"\n {
++                      yylval.str = strndup (yytext+1, yyleng-3);
++                      return SECTION_HEADER;
++                    }
++
++  /* field=value or field[subfield]=value */
++^[A-Za-z0-9_.]+("["[A-Za-z0-9_,.]+"]")?"=".*\n {
++                      size_t i = strcspn (yytext, "=");
++                      yylval.field = malloc (sizeof (struct field));
++                      yylval.field->next = NULL;
++                      yylval.field->key = strndup (yytext, i);
++                      /* Note we chop the final \n off here. */
++                      yylval.field->value = strndup (yytext+i+1, yyleng-(i+2));
++                      return FIELD;
++                    }
++
++  /* Continuation line for multi-line values. */
++^[[:blank:]].*\n        {
++                      yylval.str = strndup (yytext+1, yyleng-2);
++                      return VALUE_CONT;
++                    }
++
++ /* Hack to eat the PGP prologue. */
++^"-----BEGIN PGP SIGNED MESSAGE-----\n"  {
++  int c, prevnl = 0;
++
++  /* Eat everything to the first blank line. */
++  while ((c = input ()) != EOF) {
++    if (c == '\n' && prevnl)
++      break;
++    prevnl = c == '\n';
++  }
++
++  return PGP_PROLOGUE;
++}
++
++ /* Hack to eat the PGP epilogue. */
++^"-----BEGIN PGP SIGNATURE-----\n"  {
++  /* Eat everything to the end of the file. */
++  while (input () != EOF)
++    ;
++
++  return PGP_EPILOGUE;
++}
++
++ /* anything else is an error */
++. {
++  yyerror ("unexpected character in input");
++  exit (EXIT_FAILURE);
++}
+diff --git a/builder/index-struct.c b/builder/index-struct.c
+new file mode 100644
+index 0000000..26bed24
+--- /dev/null
++++ b/builder/index-struct.c
+@@ -0,0 +1,58 @@
++/* libguestfs virt-builder tool
++ * Copyright (C) 2013 Red Hat Inc.
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License as published by
++ * the Free Software Foundation; either version 2 of the License, or
++ * (at your option) any later version.
++ *
++ * This program is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * GNU General Public License for more details.
++ *
++ * You should have received a copy of the GNU General Public License
++ * along with this program; if not, write to the Free Software
++ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
++ */
++
++#include <config.h>
++
++#include <stdio.h>
++#include <stdlib.h>
++
++#include "index-struct.h"
++
++struct section *parsed_index = NULL;
++int seen_comments = 0;
++
++static void free_section (struct section *section);
++static void free_field (struct field *field);
++
++void
++free_index (void)
++{
++  free_section (parsed_index);
++}
++
++static void
++free_section (struct section *section)
++{
++  if (section) {
++    free_section (section->next);
++    free (section->name);
++    free_field (section->fields);
++    free (section);
++  }
++}
++
++static void
++free_field (struct field *field)
++{
++  if (field) {
++    free_field (field->next);
++    free (field->key);
++    free (field->value);
++    free (field);
++  }
++}
+diff --git a/builder/index-struct.h b/builder/index-struct.h
+new file mode 100644
+index 0000000..ac8a3dd
+--- /dev/null
++++ b/builder/index-struct.h
+@@ -0,0 +1,48 @@
++/* libguestfs virt-builder tool
++ * Copyright (C) 2013 Red Hat Inc.
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License as published by
++ * the Free Software Foundation; either version 2 of the License, or
++ * (at your option) any later version.
++ *
++ * This program is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * GNU General Public License for more details.
++ *
++ * You should have received a copy of the GNU General Public License
++ * along with this program; if not, write to the Free Software
++ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
++ */
++
++/* The data structures produced when parsing the index file. */
++
++#ifndef INDEX_STRUCT_H
++#define INDEX_STRUCT_H
++
++/* A section or list of sections. */
++struct section {
++  struct section *next;
++  char *name;
++  struct field *fields;
++};
++
++/* A field or list of fields. */
++struct field {
++  struct field *next;
++  char *key;
++  char *value;
++};
++
++/* The parser (yyparse) stores the result here. */
++extern struct section *parsed_index;
++
++/* yyparse sets this if any comments were seen.  Required for checking
++ * compatibility with virt-builder 1.24.
++ */
++extern int seen_comments;
++
++extern void free_index (void);
++
++#endif /* INDEX_STRUCT_H */
+diff --git a/builder/index-validate.c b/builder/index-validate.c
+new file mode 100644
+index 0000000..d156c43
+--- /dev/null
++++ b/builder/index-validate.c
+@@ -0,0 +1,161 @@
++/* libguestfs virt-builder tool
++ * Copyright (C) 2013 Red Hat Inc.
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License as published by
++ * the Free Software Foundation; either version 2 of the License, or
++ * (at your option) any later version.
++ *
++ * This program is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * GNU General Public License for more details.
++ *
++ * You should have received a copy of the GNU General Public License
++ * along with this program; if not, write to the Free Software
++ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
++ */
++
++#include <config.h>
++
++#include <stdio.h>
++#include <stdlib.h>
++#include <string.h>
++#include <limits.h>
++#include <getopt.h>
++#include <errno.h>
++#include <libintl.h>
++
++#include <guestfs.h>
++
++#include "guestfs-internal-frontend.h"
++
++#include "index-struct.h"
++#include "index-parse.h"
++
++extern FILE *yyin;
++
++static void
++usage (int exit_status)
++{
++  printf ("%s index\n", program_name);
++  exit (exit_status);
++}
++
++int
++main (int argc, char *argv[])
++{
++  enum { HELP_OPTION = CHAR_MAX + 1 };
++  static const char *options = "V";
++  static const struct option long_options[] = {
++    { "help", 0, 0, HELP_OPTION },
++    { "compat-1.24.0", 0, 0, 0 },
++    { "compat-1.24.1", 0, 0, 0 },
++    { "version", 0, 0, 'V' },
++    { 0, 0, 0, 0 }
++  };
++  int c;
++  int option_index;
++  int compat_1_24_0 = 0;
++  int compat_1_24_1 = 0;
++  const char *input;
++  struct section *sections;
++
++  for (;;) {
++    c = getopt_long (argc, argv, options, long_options, &option_index);
++    if (c == -1) break;
++
++    switch (c) {
++    case 0:                     /* options which are long only */
++      if (STREQ (long_options[option_index].name, "compat-1.24.0"))
++        compat_1_24_0 = compat_1_24_1 = 1;
++      else if (STREQ (long_options[option_index].name, "compat-1.24.1"))
++        compat_1_24_1 = 1;
++      else {
++        fprintf (stderr, _("%s: unknown long option: %s (%d)\n"),
++                 program_name, long_options[option_index].name, option_index);
++        exit (EXIT_FAILURE);
++      }
++      break;
++
++    case 'V':
++      printf ("%s %s\n", PACKAGE_NAME, PACKAGE_VERSION);
++      exit (EXIT_SUCCESS);
++
++    case HELP_OPTION:
++      usage (EXIT_SUCCESS);
++
++    default:
++      usage (EXIT_FAILURE);
++    }
++  }
++
++  if (optind != argc-1)
++    usage (EXIT_FAILURE);
++
++  input = argv[optind++];
++
++  yyin = fopen (input, "r");
++  if (yyin == NULL) {
++    perror (input);
++    exit (EXIT_FAILURE);
++  }
++
++  if (yyparse () != 0) {
++    fprintf (stderr, _("%s: '%s' could not be validated, see errors above\n"),
++             program_name, input);
++    exit (EXIT_FAILURE);
++  }
++
++  if (fclose (yyin) == EOF) {
++    fprintf (stderr, _("%s: %s: error reading input file: %m\n"),
++             program_name, input);
++    exit (EXIT_FAILURE);
++  }
++
++  if (compat_1_24_1 && seen_comments) {
++    fprintf (stderr, _("%s: %s contains comments which will not work with virt-builder 1.24.1\n"),
++             program_name, input);
++    exit (EXIT_FAILURE);
++  }
++
++  /* Iterate over the parsed sections, semantically validating it. */
++  for (sections = parsed_index; sections != NULL; sections = sections->next) {
++    int seen_sig = 0;
++    struct field *fields;
++
++    for (fields = sections->fields; fields != NULL; fields = fields->next) {
++      if (compat_1_24_0) {
++        if (strchr (fields->key, '[') ||
++            strchr (fields->key, ']')) {
++          fprintf (stderr, _("%s: %s: section [%s], field '%s' has invalid characters which will not work with virt-builder 1.24.0\n"),
++                   program_name, input, sections->name, fields->key);
++          exit (EXIT_FAILURE);
++        }
++      }
++      if (compat_1_24_1) {
++        if (strchr (fields->key, '.') ||
++            strchr (fields->key, ',')) {
++          fprintf (stderr, _("%s: %s: section [%s], field '%s' has invalid characters which will not work with virt-builder 1.24.1\n"),
++                   program_name, input, sections->name, fields->key);
++          exit (EXIT_FAILURE);
++        }
++      }
++      if (STREQ (fields->key, "sig"))
++        seen_sig = 1;
++    }
++
++    if (compat_1_24_0 && !seen_sig) {
++      fprintf (stderr, _("%s: %s: section [%s] is missing a 'sig' field which will not work with virt-builder 1.24.0\n"),
++               program_name, input, sections->name);
++      exit (EXIT_FAILURE);
++    }
++  }
++
++  /* Free the parsed data. */
++  free_index ();
++
++  printf ("%s validated OK\n", input);
++
++  exit (EXIT_SUCCESS);
++}
+diff --git a/builder/index_parser.ml b/builder/index_parser.ml
+index dc039fe..fb47e50 100644
+--- a/builder/index_parser.ml
++++ b/builder/index_parser.ml
+@@ -97,14 +97,17 @@ let print_entry chan (name, { printable_name = printable_name;
+   );
+   if hidden then fp "hidden=true\n"
+ 
+-let fieldname_rex = Str.regexp "^\\([][a-z0-9_]+\\)=\\(.*\\)$"
++(* Types returned by the C index parser. *)
++type sections = section array
++and section = string * fields           (* [name] + fields *)
++and fields = field array
++and field = string * string             (* key + value *)
++
++(* Calls yyparse in the C code. *)
++external parse_index : string -> sections = "virt_builder_parse_index"
+ 
+ let get_index ~debug ~downloader ~sigchecker source =
+-  let rec corrupt_line line =
+-    eprintf (f_"virt-builder: error parsing index near this line:\n\n%s\n")
+-      line;
+-    corrupt_file ()
+-  and corrupt_file () =
++  let corrupt_file () =
+     eprintf (f_"\nThe index file downloaded from '%s' is corrupt.\nYou need to ask the supplier of this file to fix it and upload a fixed version.\n")
+       source;
+     exit 1
+@@ -119,133 +122,15 @@ let get_index ~debug ~downloader ~sigchecker source =
+      *)
+     Sigchecker.verify sigchecker tmpfile;
+ 
+-    (* Check the index page is not too huge. *)
+-    let st = stat tmpfile in
+-    if st.st_size > 1_000_000 then (
+-      eprintf (f_"virt-builder: index page '%s' is too large (size %d bytes)\n")
+-        source st.st_size;
+-      exit 1
+-    );
+-
+-    (* Load the file into memory. *)
+-    let index = read_whole_file tmpfile in
++    (* Try parsing the file. *)
++    let sections = parse_index tmpfile in
+     if delete_tmpfile then
+       (try Unix.unlink tmpfile with _ -> ());
+ 
+-    (* Split file into lines. *)
+-    let index = string_nsplit "\n" index in
+-
+-    (* If there is a signature (checked above) then remove it. *)
+-    let index =
+-      match index with
+-      | "-----BEGIN PGP SIGNED MESSAGE-----" :: lines ->
+-        (* Ignore all lines until we get to first blank. *)
+-        let lines = dropwhile ((<>) "") lines in
+-        (* Ignore the blank line too. *)
+-        let lines = List.tl lines in
+-        (* Take lines until we get to the end signature. *)
+-        let lines = takewhile ((<>) "-----BEGIN PGP SIGNATURE-----") lines in
+-        lines
+-      | _ -> index in
+-
+-    (* Split into sections around each /^[/ *)
+-    let rec loop = function
+-      | [] -> []
+-      | x :: xs when String.length x >= 1 && x.[0] = '[' ->
+-        let lines = takewhile ((<>) "") xs in
+-        let rest = dropwhile ((<>) "") xs in
+-        if rest = [] then
+-          [x, lines]
+-        else (
+-          let rest = List.tl rest in
+-          let rest = loop rest in
+-          (x, lines) :: rest
+-        )
+-      | x :: _ -> corrupt_line x
+-    in
+-    let sections = loop index in
+-
+-    (* Parse the fields in each section. *)
+-    let isspace = function ' ' | '\t' -> true | _ -> false in
+-    let starts_space str = String.length str >= 1 && isspace str.[0] in
+-    let rec loop = function
+-      | [] -> []
+-      | x :: xs when not (starts_space x) && String.contains x '=' ->
+-        let xs' = takewhile starts_space xs in
+-        let ys = dropwhile starts_space xs in
+-        (x :: xs') :: loop ys
+-      | x :: _ -> corrupt_line x
+-    in
+-    let sections = List.map (fun (n, lines) -> n, loop lines) sections in
+-
+-    if debug then (
+-      eprintf "index file (%s) after splitting:\n" source;
+-      List.iter (
+-        fun (n, fields) ->
+-          eprintf "  os-version: %s\n" n;
+-          let i = ref 0 in
+-          List.iter (
+-            fun field ->
+-              eprintf "    %d: " !i;
+-              List.iter prerr_endline field;
+-              incr i
+-          ) fields
+-      ) sections
+-    );
+-
+-    (* Now we've parsed the file into the correct sections, we
+-     * interpret the meaning of the fields.
+-     *)
++    let sections = Array.to_list sections in
+     let sections = List.map (
+       fun (n, fields) ->
+-        let len = String.length n in
+-        if len < 3 || n.[0] <> '[' || n.[len-1] <> ']' then
+-          corrupt_line n;
+-        let n = String.sub n 1 (len-2) in
+-
+-        let fields = List.map (
+-          function
+-          | [] -> assert false (* can never happen, I think? *)
+-          | x :: xs when Str.string_match fieldname_rex x 0 ->
+-            let field = Str.matched_group 1 x in
+-            let rest_of_line = Str.matched_group 2 x in
+-            let allow_multiline =
+-              match field with
+-              | "name" -> false
+-              | "osinfo" -> false
+-              | "file" -> false
+-              | "sig" -> false
+-              | "checksum" | "checksum[sha512]" -> false
+-              | "revision" -> false
+-              | "format" -> false
+-              | "size" -> false
+-              | "compressed_size" -> false
+-              | "expand" -> false
+-              | "lvexpand" -> false
+-              | "notes" -> true
+-              | "hidden" -> false
+-              | _ ->
+-                if debug then
+-                  eprintf "warning: unknown field '%s' in index (ignored)\n%!"
+-                    field;
+-                true in
+-            let value =
+-              if not allow_multiline then (
+-                if xs <> [] then (
+-                  eprintf (f_"virt-builder: field '%s' cannot span multiple lines\n")
+-                    field;
+-                  corrupt_line (List.hd xs)
+-                );
+-                rest_of_line
+-              ) else (
+-                String.concat "\n" (rest_of_line :: xs)
+-              ) in
+-            field, value
+-          | x :: _ ->
+-            corrupt_line x
+-        ) fields in
+-
+-        (n, fields)
++        n, Array.to_list fields
+     ) sections in
+ 
+     (* Check for repeated os-version names. *)
+@@ -356,7 +241,7 @@ let get_index ~debug ~downloader ~sigchecker source =
+       ) sections in
+ 
+     if debug then (
+-      eprintf "index file (%s) after parsing:\n" source;
++      eprintf "index file (%s) after parsing (C parser):\n" source;
+       List.iter (print_entry Pervasives.stderr) entries
+     );
+ 
+diff --git a/builder/list_entries.ml b/builder/list_entries.ml
+index 04a65ca..8c24fe2 100644
+--- a/builder/list_entries.ml
++++ b/builder/list_entries.ml
+@@ -62,7 +62,7 @@ let list_entries ?(list_long = false) ~sources index =
+           | None -> ()
+           | Some notes ->
+             printf "\n";
+-            printf "Notes:\n %s\n" notes
++            printf "Notes:\n\n%s\n" notes
+           );
+           printf "\n"
+         )
+diff --git a/builder/test-virt-builder-list.sh b/builder/test-virt-builder-list.sh
+index 823f774..0a7c0d4 100755
+--- a/builder/test-virt-builder-list.sh
++++ b/builder/test-virt-builder-list.sh
+@@ -46,28 +46,32 @@ Full name:               Phony Debian
+ Minimum/default size:    512.0M
+ 
+ Notes:
+- Phony Debian look-alike used for testing.
++
++Phony Debian look-alike used for testing.
+ 
+ os-version:              phony-fedora
+ Full name:               Phony Fedora
+ Minimum/default size:    1.0G
+ 
+ Notes:
+- Phony Fedora look-alike used for testing.
++
++Phony Fedora look-alike used for testing.
+ 
+ os-version:              phony-ubuntu
+ Full name:               Phony Ubuntu
+ Minimum/default size:    512.0M
+ 
+ Notes:
+- Phony Ubuntu look-alike used for testing.
++
++Phony Ubuntu look-alike used for testing.
+ 
+ os-version:              phony-windows
+ Full name:               Phony Windows
+ Minimum/default size:    512.0M
+ 
+ Notes:
+- Phony Windows look-alike used for testing." ]; then
++
++Phony Windows look-alike used for testing." ]; then
+     echo "$0: unexpected --list --long output:"
+     echo "$long_list"
+     exit 1
+diff --git a/builder/virt-builder.pod b/builder/virt-builder.pod
+index 5eba666..6497c0a 100644
+--- a/builder/virt-builder.pod
++++ b/builder/virt-builder.pod
+@@ -1245,6 +1245,23 @@ For open source guests, provide a link to the source code in the
+ C<notes> field and comply with other requirements (eg. around
+ trademarks).
+ 
++=head3 Formal specification of the index file
++
++The index file format has a formal specification defined by the flex
++scanner and bison parser used to parse the file.  This can be found in
++the following files in the libguestfs source tree:
++
++ builder/index-scan.l
++ builder/index-parse.y
++
++A tool called L<virt-index-validate(1)> is available to validate the
++index file to ensure it is correct.
++
++Note that the parser and tool can work on either the signed or
++unsigned index file (ie. C<index> or C<index.asc>).
++
++The index is always encoded in UTF-8.
++
+ =head2 CACHING
+ 
+ Since the templates are usually very large, downloaded templates are
+diff --git a/builder/virt-index-validate.pod b/builder/virt-index-validate.pod
+new file mode 100644
+index 0000000..6b03703
+--- /dev/null
++++ b/builder/virt-index-validate.pod
+@@ -0,0 +1,92 @@
++=encoding utf8
++
++=head1 NAME
++
++virt-index-validate - Validate virt-builder index file
++
++=head1 SYNOPSIS
++
++ virt-index-validate index
++
++=head1 DESCRIPTION
++
++L<virt-builder(1)> uses an index file to store metadata about templates
++that it knows how to use.  This index file has a specific format which
++virt-index-validate knows how to validate.
++
++Note that virt-index-validate can validate either the signed or
++unsigned index file (ie. either C<index> or C<index.asc>).  It can
++only validate a local file, not a URL.
++
++=head1 OPTIONS
++
++=over 4
++
++=item B<--compat-1.24.0>
++
++Check for compatibility with virt-builder 1.24.0.  (Using this option
++implies I<--compat-1.24.1>, so you don't need to use both.)
++
++In particular:
++
++=over 4
++
++=item *
++
++This version of virt-builder could not handle C<[...]>
++(square brackets) in field names (eg. C<checksum[sha512]=...>).
++
++=item *
++
++It required detached signatures (C<sig=...>).
++
++=back
++
++=item B<--compat-1.24.1>
++
++Check for compatibility with virt-builder E<ge> 1.24.1.
++
++In particular:
++
++=over 4
++
++=item *
++
++This version of virt-builder could not handle C<.> (period) in field
++names or C<,> (comma) in subfield names.
++
++=item *
++
++It could not handle comments appearing in the file.
++
++=back
++
++=item B<--help>
++
++Display help.
++
++=item B<-V>
++
++=item B<--version>
++
++Display version number and exit.
++
++=back
++
++=head1 EXIT STATUS
++
++This program returns 0 if the index file validates, or non-zero if
++there was an error.
++
++=head1 SEE ALSO
++
++L<virt-builder(1)>,
++L<http://libguestfs.org/>.
++
++=head1 AUTHOR
++
++Richard W.M. Jones L<http://people.redhat.com/~rjones/>
++
++=head1 COPYRIGHT
++
++Copyright (C) 2013 Red Hat Inc.
+diff --git a/configure.ac b/configure.ac
+index 00cb151..30040e0 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -705,6 +705,10 @@ test "x$XZCAT" = "xno" && AC_MSG_ERROR([xzcat must be installed])
+ dnl Check for pxzcat (optional).
+ AC_PATH_PROGS([PXZCAT],[pxzcat],[no])
+ 
++dnl (f)lex and bison are required for virt-builder.
++AC_PROG_LEX
++AC_PROG_YACC
++
+ dnl Check for QEMU for running binaries on this $host_cpu, fall
+ dnl back to basic 'qemu'.  Allow the user to override it.
+ qemu_system="$(
+diff --git a/po-docs/ja/Makefile.am b/po-docs/ja/Makefile.am
+index b053be0..f74ee42 100644
+--- a/po-docs/ja/Makefile.am
++++ b/po-docs/ja/Makefile.am
+@@ -60,6 +60,7 @@ MANPAGES = \
+ 	virt-edit.1 \
+ 	virt-filesystems.1 \
+ 	virt-format.1 \
++	virt-index-validate.1 \
+ 	virt-inspector.1 \
+ 	virt-list-filesystems.1 \
+ 	virt-list-partitions.1 \
+diff --git a/po-docs/podfiles b/po-docs/podfiles
+index 5ff9447..dd2898c 100644
+--- a/po-docs/podfiles
++++ b/po-docs/podfiles
+@@ -1,6 +1,7 @@
+ ../align/virt-alignment-scan.pod
+ ../appliance/libguestfs-make-fixed-appliance.pod
+ ../builder/virt-builder.pod
++../builder/virt-index-validate.pod
+ ../cat/virt-cat.pod
+ ../cat/virt-filesystems.pod
+ ../cat/virt-ls.pod
+diff --git a/po-docs/uk/Makefile.am b/po-docs/uk/Makefile.am
+index b053be0..f74ee42 100644
+--- a/po-docs/uk/Makefile.am
++++ b/po-docs/uk/Makefile.am
+@@ -60,6 +60,7 @@ MANPAGES = \
+ 	virt-edit.1 \
+ 	virt-filesystems.1 \
+ 	virt-format.1 \
++	virt-index-validate.1 \
+ 	virt-inspector.1 \
+ 	virt-list-filesystems.1 \
+ 	virt-list-partitions.1 \
+diff --git a/po/POTFILES b/po/POTFILES
+index a766f64..aa52b75 100644
+--- a/po/POTFILES
++++ b/po/POTFILES
+@@ -1,4 +1,9 @@
+ align/scan.c
++builder/index-parse.c
++builder/index-parser-c.c
++builder/index-scan.c
++builder/index-struct.c
++builder/index-validate.c
+ cat/cat.c
+ cat/filesystems.c
+ cat/ls.c
+-- 
+1.8.3.1
+

@@ -1,0 +1,74 @@
+From 6ae9a5c40b4c19869e4843317c8884977cdd16b3 Mon Sep 17 00:00:00 2001
+From: "Richard W.M. Jones" <rjones@redhat.com>
+Date: Tue, 22 Oct 2013 14:22:46 +0100
+Subject: [PATCH] builder: Use pxzcat (optionally) to speed up xzcat step.
+
+(cherry picked from commit d4450c6590744ab96c7e0c3b21325d1eff666f29)
+---
+ README             | 3 +++
+ builder/builder.ml | 6 ++++--
+ configure.ac       | 3 +++
+ mllib/config.ml.in | 4 ++++
+ 4 files changed, 14 insertions(+), 2 deletions(-)
+
+diff --git a/README b/README
+index 676bb2f..cdf492e 100644
+--- a/README
++++ b/README
+@@ -170,6 +170,9 @@ The full requirements are described below.
+ | gpg          |             | O | Used by virt-builder for digital        |
+ |              |             |   | signatures                              |
+ +--------------+-------------+---+-----------------------------------------+
++| pxzcat       |             | O | Can be used by virt-builder for fast    |
++|              |             |   | uncompression of templates.             |
+++--------------+-------------+---+-----------------------------------------+
+ | findlib      |             | O | For the OCaml bindings.                 |
+ +--------------+-------------+---+-----------------------------------------+
+ | ocaml-gettext|             | O | For localizing OCaml virt-* tools.      |
+diff --git a/builder/builder.ml b/builder/builder.ml
+index ae642d0..477fc3e 100644
+--- a/builder/builder.ml
++++ b/builder/builder.ml
+@@ -323,9 +323,11 @@ let main () =
+ 
+       output, Some size, format, delete_output_file, do_resize, true in
+ 
+-  (* Create xzcat command to uncompress from input to output. *)
++  (* Create xzcat/pxzcat command to uncompress from input to output. *)
+   let xzcat_command input output =
+-    sprintf "%s %s > %s" Config.xzcat input output
++    match Config.pxzcat with
++    | None -> sprintf "%s %s > %s" Config.xzcat input output
++    | Some pxzcat -> sprintf "%s %s -o %s" pxzcat input output
+   in
+ 
+   if not do_resize then (
+diff --git a/configure.ac b/configure.ac
+index b31abbc..00cb151 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -702,6 +702,9 @@ dnl Check for xzcat (required).
+ AC_PATH_PROGS([XZCAT],[xzcat],[no])
+ test "x$XZCAT" = "xno" && AC_MSG_ERROR([xzcat must be installed])
+ 
++dnl Check for pxzcat (optional).
++AC_PATH_PROGS([PXZCAT],[pxzcat],[no])
++
+ dnl Check for QEMU for running binaries on this $host_cpu, fall
+ dnl back to basic 'qemu'.  Allow the user to override it.
+ qemu_system="$(
+diff --git a/mllib/config.ml.in b/mllib/config.ml.in
+index 129741d..5586c5c 100644
+--- a/mllib/config.ml.in
++++ b/mllib/config.ml.in
+@@ -20,3 +20,7 @@ let package_name = "@PACKAGE_NAME@"
+ let package_version = "@PACKAGE_VERSION@"
+ 
+ let xzcat = "@XZCAT@"
++let pxzcat =
++  match "@PXZCAT@" with
++  | "no" -> None
++  | path -> Some path
+-- 
+1.8.3.1
+

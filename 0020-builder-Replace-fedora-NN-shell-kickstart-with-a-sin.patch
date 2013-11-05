@@ -1,0 +1,493 @@
+From 7d81c64a1f96ef72c3ad84ce05d182bda3b30faa Mon Sep 17 00:00:00 2001
+From: "Richard W.M. Jones" <rjones@redhat.com>
+Date: Tue, 5 Nov 2013 13:59:55 +0000
+Subject: [PATCH] builder: Replace fedora-<NN> shell & kickstart with a single
+ script.
+
+Just use:
+
+  ./fedora.sh 18
+
+Note that you don't need to be root.
+
+(cherry picked from commit ade0f1a97d6371f5d5a538da9d41263146cc58d6)
+---
+ builder/website/Makefile.am  |  5 +--
+ builder/website/fedora-18.ks | 38 -----------------
+ builder/website/fedora-18.sh | 75 ---------------------------------
+ builder/website/fedora-19.ks | 38 -----------------
+ builder/website/fedora-19.sh | 75 ---------------------------------
+ builder/website/fedora.sh    | 99 ++++++++++++++++++++++++++++++++++++++++++++
+ builder/website/index        | 12 +++---
+ builder/website/index.asc    | 36 ++++++++--------
+ 8 files changed, 124 insertions(+), 254 deletions(-)
+ delete mode 100644 builder/website/fedora-18.ks
+ delete mode 100755 builder/website/fedora-18.sh
+ delete mode 100644 builder/website/fedora-19.ks
+ delete mode 100755 builder/website/fedora-19.sh
+ create mode 100755 builder/website/fedora.sh
+
+diff --git a/builder/website/Makefile.am b/builder/website/Makefile.am
+index 2a3bbe6..4188439 100644
+--- a/builder/website/Makefile.am
++++ b/builder/website/Makefile.am
+@@ -32,11 +32,8 @@ EXTRA_DIST = \
+ 	debian-7.preseed \
+ 	debian-7.sh \
+ 	debian-7.xz.sig \
+-	fedora-18.ks \
+-	fedora-18.sh \
++	fedora.sh \
+ 	fedora-18.xz.sig \
+-	fedora-19.ks \
+-	fedora-19.sh \
+ 	fedora-19.xz.sig \
+ 	ubuntu-10.04.preseed \
+ 	ubuntu-10.04.sh \
+diff --git a/builder/website/fedora-18.ks b/builder/website/fedora-18.ks
+deleted file mode 100644
+index 5e6fe24..0000000
+--- a/builder/website/fedora-18.ks
++++ /dev/null
+@@ -1,38 +0,0 @@
+-# virt-builder
+-# Copyright (C) 2013 Red Hat Inc.
+-#
+-# This program is free software; you can redistribute it and/or modify
+-# it under the terms of the GNU General Public License as published by
+-# the Free Software Foundation; either version 2 of the License, or
+-# (at your option) any later version.
+-#
+-# This program is distributed in the hope that it will be useful,
+-# but WITHOUT ANY WARRANTY; without even the implied warranty of
+-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+-# GNU General Public License for more details.
+-#
+-# You should have received a copy of the GNU General Public License
+-# along with this program; if not, write to the Free Software
+-# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+-
+-install
+-text
+-reboot
+-lang en_US.UTF-8
+-keyboard us
+-network --bootproto dhcp
+-rootpw builder
+-firewall --enabled --ssh
+-selinux --enforcing
+-timezone --utc America/New_York
+-bootloader --location=mbr --append="console=tty0 console=ttyS0,115200 rd_NO_PLYMOUTH"
+-zerombr
+-clearpart --all --initlabel
+-autopart --type=plain
+-
+-# Halt the system once configuration has finished.
+-poweroff
+-
+-%packages
+-@core
+-%end
+diff --git a/builder/website/fedora-18.sh b/builder/website/fedora-18.sh
+deleted file mode 100755
+index 6fd6214..0000000
+--- a/builder/website/fedora-18.sh
++++ /dev/null
+@@ -1,75 +0,0 @@
+-#!/bin/bash -
+-# virt-builder
+-# Copyright (C) 2013 Red Hat Inc.
+-#
+-# This program is free software; you can redistribute it and/or modify
+-# it under the terms of the GNU General Public License as published by
+-# the Free Software Foundation; either version 2 of the License, or
+-# (at your option) any later version.
+-#
+-# This program is distributed in the hope that it will be useful,
+-# but WITHOUT ANY WARRANTY; without even the implied warranty of
+-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+-# GNU General Public License for more details.
+-#
+-# You should have received a copy of the GNU General Public License
+-# along with this program; if not, write to the Free Software
+-# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+-
+-set -e
+-set -x
+-
+-# Some configuration.
+-export http_proxy=http://cache.home.annexia.org:3128
+-export https_proxy=$http_proxy
+-export ftp_proxy=$http_proxy
+-tree=http://mirror.bytemark.co.uk/fedora/linux/releases/18/Fedora/x86_64/os/
+-
+-# Currently you have to run this script as root.
+-if [ `id -u` -ne 0 ]; then
+-    echo "You have to run this script as root."
+-    exit 1
+-fi
+-
+-# Make sure it's being run from the correct directory.
+-if [ ! -f fedora-18.ks ]; then
+-    echo "You are running this script from the wrong directory."
+-    exit 1
+-fi
+-
+-pwd=`pwd`
+-
+-virsh undefine tmpf18 ||:
+-rm -f fedora-18 fedora-18.old
+-
+-virt-install \
+-    --name=tmpf18 \
+-    --ram 2048 \
+-    --cpu=host --vcpus=2 \
+-    --os-type=linux --os-variant=fedora18 \
+-    --initrd-inject=$pwd/fedora-18.ks \
+-    --extra-args="ks=file:/fedora-18.ks console=tty0 console=ttyS0,115200 proxy=$http_proxy" \
+-    --disk $pwd/fedora-18,size=6 \
+-    --location=$tree \
+-    --nographics \
+-    --noreboot
+-# The virt-install command should exit after complete installation.
+-# Remove the guest, we don't want it to be defined in libvirt.
+-virsh undefine tmpf18
+-
+-# Sysprep (removes logfiles and so on).
+-# Note this also touches /.autorelabel so the further installation
+-# changes that we make will be labelled properly at first boot.
+-virt-sysprep -a fedora-18
+-
+-# Sparsify.
+-mv fedora-18 fedora-18.old
+-virt-sparsify fedora-18.old fedora-18
+-rm fedora-18.old
+-
+-# Compress.
+-rm -f fedora-18.xz
+-xz --best --block-size=16777216 fedora-18
+-
+-# Result:
+-ls -lh fedora-18.xz
+diff --git a/builder/website/fedora-19.ks b/builder/website/fedora-19.ks
+deleted file mode 100644
+index 5e6fe24..0000000
+--- a/builder/website/fedora-19.ks
++++ /dev/null
+@@ -1,38 +0,0 @@
+-# virt-builder
+-# Copyright (C) 2013 Red Hat Inc.
+-#
+-# This program is free software; you can redistribute it and/or modify
+-# it under the terms of the GNU General Public License as published by
+-# the Free Software Foundation; either version 2 of the License, or
+-# (at your option) any later version.
+-#
+-# This program is distributed in the hope that it will be useful,
+-# but WITHOUT ANY WARRANTY; without even the implied warranty of
+-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+-# GNU General Public License for more details.
+-#
+-# You should have received a copy of the GNU General Public License
+-# along with this program; if not, write to the Free Software
+-# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+-
+-install
+-text
+-reboot
+-lang en_US.UTF-8
+-keyboard us
+-network --bootproto dhcp
+-rootpw builder
+-firewall --enabled --ssh
+-selinux --enforcing
+-timezone --utc America/New_York
+-bootloader --location=mbr --append="console=tty0 console=ttyS0,115200 rd_NO_PLYMOUTH"
+-zerombr
+-clearpart --all --initlabel
+-autopart --type=plain
+-
+-# Halt the system once configuration has finished.
+-poweroff
+-
+-%packages
+-@core
+-%end
+diff --git a/builder/website/fedora-19.sh b/builder/website/fedora-19.sh
+deleted file mode 100755
+index d175cdf..0000000
+--- a/builder/website/fedora-19.sh
++++ /dev/null
+@@ -1,75 +0,0 @@
+-#!/bin/bash -
+-# virt-builder
+-# Copyright (C) 2013 Red Hat Inc.
+-#
+-# This program is free software; you can redistribute it and/or modify
+-# it under the terms of the GNU General Public License as published by
+-# the Free Software Foundation; either version 2 of the License, or
+-# (at your option) any later version.
+-#
+-# This program is distributed in the hope that it will be useful,
+-# but WITHOUT ANY WARRANTY; without even the implied warranty of
+-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+-# GNU General Public License for more details.
+-#
+-# You should have received a copy of the GNU General Public License
+-# along with this program; if not, write to the Free Software
+-# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+-
+-set -e
+-set -x
+-
+-# Some configuration.
+-export http_proxy=http://cache.home.annexia.org:3128
+-export https_proxy=$http_proxy
+-export ftp_proxy=$http_proxy
+-tree=http://mirror.bytemark.co.uk/fedora/linux/releases/19/Fedora/x86_64/os/
+-
+-# Currently you have to run this script as root.
+-if [ `id -u` -ne 0 ]; then
+-    echo "You have to run this script as root."
+-    exit 1
+-fi
+-
+-# Make sure it's being run from the correct directory.
+-if [ ! -f fedora-19.ks ]; then
+-    echo "You are running this script from the wrong directory."
+-    exit 1
+-fi
+-
+-pwd=`pwd`
+-
+-virsh undefine tmpf19 ||:
+-rm -f fedora-19 fedora-19.old
+-
+-virt-install \
+-    --name=tmpf19 \
+-    --ram 2048 \
+-    --cpu=host --vcpus=2 \
+-    --os-type=linux --os-variant=fedora19 \
+-    --initrd-inject=$pwd/fedora-19.ks \
+-    --extra-args="ks=file:/fedora-19.ks console=tty0 console=ttyS0,115200 proxy=$http_proxy" \
+-    --disk $pwd/fedora-19,size=4 \
+-    --location=$tree \
+-    --nographics \
+-    --noreboot
+-# The virt-install command should exit after complete installation.
+-# Remove the guest, we don't want it to be defined in libvirt.
+-virsh undefine tmpf19
+-
+-# Sysprep (removes logfiles and so on).
+-# Note this also touches /.autorelabel so the further installation
+-# changes that we make will be labelled properly at first boot.
+-virt-sysprep -a fedora-19
+-
+-# Sparsify.
+-mv fedora-19 fedora-19.old
+-virt-sparsify fedora-19.old fedora-19
+-rm fedora-19.old
+-
+-# Compress.
+-rm -f fedora-19.xz
+-xz --best --block-size=16777216 fedora-19
+-
+-# Result:
+-ls -lh fedora-19.xz
+diff --git a/builder/website/fedora.sh b/builder/website/fedora.sh
+new file mode 100755
+index 0000000..bb164d8
+--- /dev/null
++++ b/builder/website/fedora.sh
+@@ -0,0 +1,99 @@
++#!/bin/bash -
++# virt-builder
++# Copyright (C) 2013 Red Hat Inc.
++#
++# This program is free software; you can redistribute it and/or modify
++# it under the terms of the GNU General Public License as published by
++# the Free Software Foundation; either version 2 of the License, or
++# (at your option) any later version.
++#
++# This program is distributed in the hope that it will be useful,
++# but WITHOUT ANY WARRANTY; without even the implied warranty of
++# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++# GNU General Public License for more details.
++#
++# You should have received a copy of the GNU General Public License
++# along with this program; if not, write to the Free Software
++# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
++
++# This script was used to create the Fedora templates used by
++# virt-builder.
++
++unset CDPATH
++export LANG=C
++set -e
++set -x
++
++if [ $# -ne 1 ]; then
++    echo "$0 VERSION"
++    exit 1
++fi
++
++version=$1
++tree=http://mirror.bytemark.co.uk/fedora/linux/releases/$version/Fedora/x86_64/os/
++output=fedora-$version
++tmpname=tmp-$(tr -cd 'a-f0-9' < /dev/urandom | head -c 8)
++
++rm -f $output $output.old $output.xz
++
++# Generate the kickstart to a temporary file.
++ks=$(mktemp)
++cat > $ks <<'EOF'
++install
++text
++reboot
++lang en_US.UTF-8
++keyboard us
++network --bootproto dhcp
++rootpw builder
++firewall --enabled --ssh
++selinux --enforcing
++timezone --utc America/New_York
++bootloader --location=mbr --append="console=tty0 console=ttyS0,115200 rd_NO_PLYMOUTH"
++zerombr
++clearpart --all --initlabel
++autopart --type=plain
++
++# Halt the system once configuration has finished.
++poweroff
++
++%packages
++@core
++%end
++EOF
++
++# Clean up function.
++cleanup ()
++{
++    rm -f $ks
++    virsh undefine $tmpname ||:
++}
++trap cleanup INT QUIT TERM EXIT ERR
++
++virt-install \
++    --name=$tmpname \
++    --ram=2048 \
++    --cpu=host --vcpus=2 \
++    --os-type=linux --os-variant=fedora18 \
++    --initrd-inject=$ks \
++    --extra-args="ks=file:/`basename $ks` console=tty0 console=ttyS0,115200 proxy=$http_proxy" \
++    --disk $(pwd)/$output,size=6 \
++    --location=$tree \
++    --nographics \
++    --noreboot
++
++# Sysprep (removes logfiles and so on).
++# Note this also touches /.autorelabel so the further installation
++# changes that we make will be labelled properly at first boot.
++virt-sysprep -a $output
++
++# Sparsify.
++mv $output $output.old
++virt-sparsify $output.old $output
++rm $output.old
++
++# Compress.
++xz --best --block-size=16777216 $output
++
++# Result:
++ls -lh $output.xz
+diff --git a/builder/website/index b/builder/website/index
+index 6165f28..bea11ce 100644
+--- a/builder/website/index
++++ b/builder/website/index
+@@ -96,9 +96,9 @@ notes=Fedora 18.
+  This Fedora image contains only unmodified @Core group packages.
+  
+  It is thus very minimal.  The kickstart and install script can be
+- found in the libguestfs git tree:
+- libguestfs.git/builder/website/fedora-18.ks
+- libguestfs.git/builder/website/fedora-18.sh
++ found in the libguestfs source tree:
++ 
++ builder/website/fedora.sh
+  
+  Fedora and the Infinity design logo are trademarks of Red Hat, Inc.
+  Source and further information is available from http://fedoraproject.org/
+@@ -118,9 +118,9 @@ notes=Fedora 19.
+  This Fedora image contains only unmodified @Core group packages.
+  
+  It is thus very minimal.  The kickstart and install script can be
+- found in the libguestfs git tree:
+- libguestfs.git/builder/website/fedora-19.ks
+- libguestfs.git/builder/website/fedora-19.sh
++ found in the libguestfs source tree:
++ 
++ builder/website/fedora.sh
+  
+  Fedora and the Infinity design logo are trademarks of Red Hat, Inc.
+  Source and further information is available from http://fedoraproject.org/
+diff --git a/builder/website/index.asc b/builder/website/index.asc
+index 087ebeb..c04cf1d 100644
+--- a/builder/website/index.asc
++++ b/builder/website/index.asc
+@@ -99,9 +99,9 @@ notes=Fedora 18.
+  This Fedora image contains only unmodified @Core group packages.
+  
+  It is thus very minimal.  The kickstart and install script can be
+- found in the libguestfs git tree:
+- libguestfs.git/builder/website/fedora-18.ks
+- libguestfs.git/builder/website/fedora-18.sh
++ found in the libguestfs source tree:
++ 
++ builder/website/fedora.sh
+  
+  Fedora and the Infinity design logo are trademarks of Red Hat, Inc.
+  Source and further information is available from http://fedoraproject.org/
+@@ -122,8 +122,8 @@ notes=Fedora 19.
+  
+  It is thus very minimal.  The kickstart and install script can be
+  found in the libguestfs git tree:
+- libguestfs.git/builder/website/fedora-19.ks
+- libguestfs.git/builder/website/fedora-19.sh
++ 
++ builder/website/fedora.sh
+  
+  Fedora and the Infinity design logo are trademarks of Red Hat, Inc.
+  Source and further information is available from http://fedoraproject.org/
+@@ -202,17 +202,17 @@ notes=Ubuntu 13.10 (Saucy).
+ -----BEGIN PGP SIGNATURE-----
+ Version: GnuPG v1.4.14 (GNU/Linux)
+ 
+-iQIcBAEBAgAGBQJSc9qSAAoJEJFzj3Pht2igkYkQAKoYhPycj0ydM5Gk3nbaSOuU
+-Rsz1LsujBsYTM+E51UjBm4bcCJw4HwHYRUMT/t5cdMSX/NjSNGHjeLRBQvOGJMHx
+-DV6quFv/mwSCjvncWPuT3iCRNIIAq0ECr5YvfKhJ6HtoD/cQM7WUivYdZUJERC89
+-H1d5bjDiU25qLrhl68fEMyQzzpKIq3CbsIsczlCxxuHefXNhhp7XmqGtrNwpd7im
+-FtbKaIPeUDreoDCNNZzeUwdJ3TR6ybPB1Iy5Pl3kaBcM3VKqV5qXdQdmCbLyVtzg
+-rg4cSxTRiMJGstMVIiDJzsS+DGfUngpXZnxndDpzaX6BVgMqFjSPcjjif2f+wWsK
+-t1eXAhyoUYK+mepsNmYsOzBLFgnQKnmRO4cy6DgKq+twrx4v7snDpQ8J+HZkGHM6
+-sdliAQ7QEBmcLVArlzsq61RP3XlWrSIwmRG7BBGFptom4p+m7JeIPCH9EKZ9QIDK
+-tWOq8LqEAsNvaJrw+HTcGaryEYOf6YmJFd0iHgqDOnrsvsPK9Ex8hhC05jYe/Lkp
+-HzZiRjHFpHbm8lBVFcrajyGumdIieg2EUh7iygxaRFQa+7UA7fkYuGhYXKcsbgyT
+-Q3/c5TUAAM9qpj70rtTHV0LCmXL21aPqsMRPD/Oawe9N2iYe0HfNuZ1bBauPJEGy
+-pixuD1Mt3Xl/2Hl0GVcY
+-=x34e
++iQIcBAEBAgAGBQJSePm7AAoJEJFzj3Pht2ig+fYP/RODYX3Y6Rfqgn5YcgOVbkEN
++5RNxNvE/cFba5w6eZzI2q/kdjH9JzHMqmevHwANNq8i37tmgrkFkGgZK7QD92xWS
++GF9QeaNh9usLi3gB9WRxsT5p017IUsns4lFhlPs6nXnuIqb3+7B/qYPQFqgW9QbO
++c3WYWhnHvxAAGvARnVirGs7ucyajjoqJA+P5yfnnxl8BPEk+1nuXowEH423czYq3
++E3dX5AUFy3mjfzK2DH12ladUYvxbur1p7eGKx7VkD1ZaqWtt+pss0+M7WO+tAt+w
++JkggdkBqY30T2zxchF8bRiObAFCXEpC7UmA50UPxXiVK94rXSr1jvAVHsh8nSjXA
++QfRcFA4JjnYRBqCiCu4Tp08MmfMKHFkCn/VtjUhugJHClkeR1GYkhUJ9pnu1goK/
++N3yNyW/kORgSgZFfmLvUcdAQIIyWTqvgXFkEe16FnWNmH1Aq8JbAH5l/Iw8Nk+bU
++gB9+kKdVyAH7j5+fasIuiw4N0dgiq4k3xktOgUMIt4I1mqpWEVJBGUWgcH/qx+FP
++nUoHXTDBLY6MZXAmtuV4TpvRPX85O5nSe6NnGsivaYVa7Dsqk5TUZhUpU46F2Sqv
++HsvhXO295LT7hPj2Cd++NAy1R+WV+eeldPwP+Ff9adOvB8uShHW+hVpSUVmeeIku
++LLd8N3ZnefviQj+p61It
++=qKVc
+ -----END PGP SIGNATURE-----
+-- 
+1.8.3.1
+

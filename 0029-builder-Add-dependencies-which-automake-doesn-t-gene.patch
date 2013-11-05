@@ -1,0 +1,51 @@
+From 90b8f20a41798ba4a38e7681783a5a14a13ef541 Mon Sep 17 00:00:00 2001
+From: "Richard W.M. Jones" <rjones@redhat.com>
+Date: Tue, 5 Nov 2013 17:40:20 +0000
+Subject: [PATCH] builder: Add dependencies which automake doesn't generate
+ correctly.
+
+This is a further attempt, earlier commits:
+commit e3ac293e869a4c69225e3d954b812e9bf21588a1
+commit dfe97b352d6b398c3cb3ddb1c9984767722e514b
+
+(cherry picked from commit 4339b55d105eab6eba2756bffff42a1c34f9f656)
+---
+ builder/Makefile.am | 11 +++++++----
+ 1 file changed, 7 insertions(+), 4 deletions(-)
+
+diff --git a/builder/Makefile.am b/builder/Makefile.am
+index 593e3ef..a828ffd 100644
+--- a/builder/Makefile.am
++++ b/builder/Makefile.am
+@@ -120,8 +120,6 @@ virt-builder: $(OBJECTS)
+ .ml.cmx:
+ 	$(OCAMLFIND) ocamlopt $(OCAMLOPTFLAGS) -c $< -o $@
+ 
+-index-parser-c.o: index-parse.h
+-
+ # Manual pages and HTML files for the website.
+ 
+ man_MANS += virt-builder.1
+@@ -192,8 +190,6 @@ virt_index_validate_SOURCES = \
+ 	index-struct.c \
+ 	index-validate.c
+ 
+-index-validate.o: index-parse.h
+-
+ man_MANS += virt-index-validate.1
+ noinst_DATA += $(top_builddir)/html/virt-index-validate.1.html
+ 
+@@ -212,3 +208,10 @@ CLEANFILES += \
+ 	index-parse.h \
+ 	index-scan.c \
+ 	stamp-virt-index-validate.pod
++
++# Fix dependencies which automake doesn't generate correctly.
++if HAVE_OCAML
++index-parser-c.o: index-parse.h
++index-scan.o: index-parse.h
++endif
++index-validate.o: index-parse.h
+-- 
+1.8.3.1
+

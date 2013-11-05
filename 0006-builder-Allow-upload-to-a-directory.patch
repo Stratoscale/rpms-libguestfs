@@ -1,0 +1,79 @@
+From ddf6681c75d3ca2a6e94a051a3d3650ac9f79d97 Mon Sep 17 00:00:00 2001
+From: "Richard W.M. Jones" <rjones@redhat.com>
+Date: Sat, 26 Oct 2013 11:27:06 +0100
+Subject: [PATCH] builder: Allow --upload to a directory.
+
+Also set the owner and permissions on the destination file correctly.
+
+(cherry picked from commit 10c849ed1cb4375c5ef811197fa0a3206d365b86)
+---
+ builder/builder.ml           | 19 +++++++++++++++++--
+ builder/test-virt-builder.sh |  1 +
+ builder/virt-builder.pod     |  9 ++++++++-
+ 3 files changed, 26 insertions(+), 3 deletions(-)
+
+diff --git a/builder/builder.ml b/builder/builder.ml
+index f4f0951..dab8b41 100644
+--- a/builder/builder.ml
++++ b/builder/builder.ml
+@@ -592,8 +592,23 @@ exec >>%s 2>&1
+   (* Upload files. *)
+   List.iter (
+     fun (file, dest) ->
+-      msg (f_"Uploading: %s") dest;
+-      g#upload file dest
++      msg (f_"Uploading: %s to %s") file dest;
++      let dest =
++        if g#is_dir dest then
++          dest ^ "/" ^ Filename.basename file
++        else
++          dest in
++      (* Do the file upload. *)
++      g#upload file dest;
++
++      (* Copy (some of) the permissions from the local file to the
++       * uploaded file.
++       *)
++      let statbuf = stat file in
++      let perms = statbuf.st_perm land 0o7777 (* sticky & set*id *) in
++      g#chmod perms dest;
++      let uid, gid = statbuf.st_uid, statbuf.st_gid in
++      g#chown uid gid dest
+   ) upload;
+ 
+   (* Edit files. *)
+diff --git a/builder/test-virt-builder.sh b/builder/test-virt-builder.sh
+index a5df027..b39bc3f 100755
+--- a/builder/test-virt-builder.sh
++++ b/builder/test-virt-builder.sh
+@@ -56,6 +56,7 @@ rm -f $output
+     --root-password password:123456 \
+     --mkdir /etc/foo/bar/baz \
+     --upload Makefile:/Makefile \
++    --upload Makefile:/etc/foo/bar/baz \
+     --delete /Makefile \
+     --firstboot Makefile --firstboot-command 'echo "hello"' \
+     --firstboot-install "minicom,inkscape"
+diff --git a/builder/virt-builder.pod b/builder/virt-builder.pod
+index 42d0d8a..810cee7 100644
+--- a/builder/virt-builder.pod
++++ b/builder/virt-builder.pod
+@@ -559,7 +559,14 @@ Upload local file C<FILE> to destination C<DEST> in the disk image.
+ File owner and permissions from the original are preserved, so you
+ should set them to what you want them to be in the disk image.
+ 
+-See also: I<--delete>, I<--scrub>.
++C<DEST> could be the final filename.  This can be used to rename
++the file on upload.
++
++If C<DEST> is a directory name (which must already exist in the guest)
++then the file is uploaded into that directory, and it keeps the same
++name as on the local filesystem.
++
++See also: I<--mkdir>, I<--delete>, I<--scrub>.
+ 
+ =item B<-v>
+ 
+-- 
+1.8.3.1
+

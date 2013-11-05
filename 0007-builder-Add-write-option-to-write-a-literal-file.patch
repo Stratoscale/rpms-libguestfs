@@ -1,0 +1,135 @@
+From 3c0dacb066a7aff4b55747862898e418f31dce9c Mon Sep 17 00:00:00 2001
+From: "Richard W.M. Jones" <rjones@redhat.com>
+Date: Sat, 26 Oct 2013 11:40:48 +0100
+Subject: [PATCH] builder: Add --write option to write a literal file.
+
+(cherry picked from commit 0520aa3c42fbb174be37ef75b19390855d225897)
+---
+ builder/builder.ml           |  9 ++++++++-
+ builder/cmdline.ml           | 17 ++++++++++++++++-
+ builder/test-virt-builder.sh |  1 +
+ builder/virt-builder.pod     |  9 +++++++++
+ 4 files changed, 34 insertions(+), 2 deletions(-)
+
+diff --git a/builder/builder.ml b/builder/builder.ml
+index dab8b41..803de0c 100644
+--- a/builder/builder.ml
++++ b/builder/builder.ml
+@@ -38,7 +38,7 @@ let main () =
+     attach, cache, check_signature, curl, debug, delete, edit, fingerprint,
+     firstboot, run, format, gpg, hostname, install, list_long, mkdirs,
+     network, output, password_crypto, quiet, root_password, scrub,
+-    scrub_logfile, size, source, sync, upload =
++    scrub_logfile, size, source, sync, upload, writes =
+     parse_cmdline () in
+ 
+   (* Timestamped messages in ordinary, non-debug non-quiet mode. *)
+@@ -589,6 +589,13 @@ exec >>%s 2>&1
+       g#mkdir_p dir
+   ) mkdirs;
+ 
++  (* Write files. *)
++  List.iter (
++    fun (file, content) ->
++      msg (f_"Writing: %s") file;
++      g#write file content
++  ) writes;
++
+   (* Upload files. *)
+   List.iter (
+     fun (file, dest) ->
+diff --git a/builder/cmdline.ml b/builder/cmdline.ml
+index dbf49f2..d92fcb9 100644
+--- a/builder/cmdline.ml
++++ b/builder/cmdline.ml
+@@ -184,6 +184,19 @@ let parse_cmdline () =
+     upload := (file, dest) :: !upload
+   in
+ 
++  let writes = ref [] in
++  let add_write arg =
++    let i =
++      try String.index arg ':'
++      with Not_found ->
++        eprintf (f_"%s: invalid --write format, see the man page.\n") prog;
++        exit 1 in
++    let len = String.length arg in
++    let file = String.sub arg 0 i in
++    let content = String.sub arg (i+1) (len-(i+1)) in
++    writes := (file, content) :: !writes
++  in
++
+   let ditto = " -\"-" in
+   let argspec = Arg.align [
+     "--attach",  Arg.String attach_disk,    "iso" ^ " " ^ s_"Attach data disk/ISO during install";
+@@ -245,6 +258,7 @@ let parse_cmdline () =
+     "--verbose", Arg.Set debug,             ditto;
+     "-V",        Arg.Unit display_version,  " " ^ s_"Display version and exit";
+     "--version", Arg.Unit display_version,  ditto;
++    "--write",   Arg.String add_write,      "file:content" ^ " " ^ s_"Write file";
+   ] in
+   long_options := argspec;
+ 
+@@ -298,6 +312,7 @@ read the man page virt-builder(1).
+   let source = !source in
+   let sync = !sync in
+   let upload = List.rev !upload in
++  let writes = List.rev !writes in
+ 
+   (* Check options. *)
+   let arg =
+@@ -353,4 +368,4 @@ read the man page virt-builder(1).
+   attach, cache, check_signature, curl, debug, delete, edit, fingerprint,
+   firstboot, run, format, gpg, hostname, install, list_long, mkdirs,
+   network, output, password_crypto, quiet, root_password, scrub,
+-  scrub_logfile, size, source, sync, upload
++  scrub_logfile, size, source, sync, upload, writes
+diff --git a/builder/test-virt-builder.sh b/builder/test-virt-builder.sh
+index b39bc3f..159f013 100755
+--- a/builder/test-virt-builder.sh
++++ b/builder/test-virt-builder.sh
+@@ -55,6 +55,7 @@ rm -f $output
+     --hostname test.example.com \
+     --root-password password:123456 \
+     --mkdir /etc/foo/bar/baz \
++    --write '/etc/foo/bar/baz/foo:Hello World' \
+     --upload Makefile:/Makefile \
+     --upload Makefile:/etc/foo/bar/baz \
+     --delete /Makefile \
+diff --git a/builder/virt-builder.pod b/builder/virt-builder.pod
+index 810cee7..13d342d 100644
+--- a/builder/virt-builder.pod
++++ b/builder/virt-builder.pod
+@@ -19,6 +19,7 @@ virt-builder - Build virtual machine images quickly
+     [--hostname HOSTNAME]
+     [--install PKG,[PKG...]]
+     [--mkdir DIR]
++    [--write FILE:CONTENT]
+     [--upload FILE:DEST]
+     [--edit FILE:EXPR]
+     [--delete FILE] [--scrub FILE]
+@@ -583,6 +584,10 @@ your bug report.
+ 
+ Display version number and exit.
+ 
++=item B<--write> FILE:CONTENT
++
++Write C<CONTENT> to C<FILE>.
++
+ =back
+ 
+ =head1 REFERENCE
+@@ -768,6 +773,10 @@ Directories are created (I<--mkdir>).
+ 
+ =item *
+ 
++Files are written (I<--write>).
++
++=item *
++
+ Files are uploaded (I<--upload>).
+ 
+ =item *
+-- 
+1.8.3.1
+

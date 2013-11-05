@@ -1,0 +1,62 @@
+From 044198313cda55e0f002d44459c7a09c3b3afdc5 Mon Sep 17 00:00:00 2001
+From: "Richard W.M. Jones" <rjones@redhat.com>
+Date: Sat, 26 Oct 2013 17:09:06 +0100
+Subject: [PATCH] firstboot: Send the output to the console as well as to the
+ log file.
+
+For systemd:
+Currently stdout+stderr go to the journal (these are effectively
+empty unless there are gross errors).  The output of the commands
+goes to the log file.
+
+With this change, the output goes to the journal, the console and
+the log file.
+
+For SysV-init:
+Currently stdout+stderr go to the console (but these are effectively
+empty).  The output of the commands goes to the log file.
+
+With this change, the output goes to the console and the log file.
+
+(cherry picked from commit f114e28cc80eabdcf47c97e7e3895065cdfe4886)
+---
+ mllib/firstboot.ml | 10 ++++++----
+ 1 file changed, 6 insertions(+), 4 deletions(-)
+
+diff --git a/mllib/firstboot.ml b/mllib/firstboot.ml
+index 0207cc1..9e4c7b6 100644
+--- a/mllib/firstboot.ml
++++ b/mllib/firstboot.ml
+@@ -45,16 +45,16 @@ let firstboot_sh = sprintf "\
+ d=%s/scripts
+ logfile=~root/virt-sysprep-firstboot.log
+ 
+-echo \"$0\" \"$@\" >>$logfile
+-echo \"Scripts dir: $d\" >>$logfile
++echo \"$0\" \"$@\" 2>&1 | tee $logfile
++echo \"Scripts dir: $d\" 2>&1 | tee $logfile
+ 
+ if test \"$1\" = \"start\"
+ then
+   for f in $d/* ; do
+     if test -x \"$f\"
+     then
+-      echo '=== Running' $f '===' >>$logfile
+-      $f >>$logfile 2>&1
++      echo '=== Running' $f '===' 2>&1 | tee $logfile
++      $f 2>&1 | tee $logfile
+       rm -f $f
+     fi
+   done
+@@ -71,6 +71,8 @@ Before=prefdm.service
+ Type=oneshot
+ ExecStart=%s/firstboot.sh start
+ RemainAfterExit=yes
++StandardOutput=journal+console
++StandardError=inherit
+ 
+ [Install]
+ WantedBy=default.target
+-- 
+1.8.3.1
+
