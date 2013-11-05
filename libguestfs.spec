@@ -84,6 +84,8 @@ BuildRequires: file-devel
 BuildRequires: libvirt-devel
 BuildRequires: po4a
 BuildRequires: gperf
+BuildRequires: flex
+BuildRequires: bison
 BuildRequires: libdb-utils
 BuildRequires: cpio
 BuildRequires: libconfig-devel
@@ -1044,6 +1046,7 @@ mkdir -p $RPM_BUILD_ROOT%{_localstatedir}/run/libguestfs
 * Tue Nov 05 2013 Richard W.M. Jones <rjones@redhat.com> - 1:1.24.1-2
 - Backport virt-builder features from upstream at users [multiple] requests.
 - Use git to manage patches, add copy-patches.sh script.
+- +BR flex & bison.
 
 * Fri Nov 01 2013 Richard W.M. Jones <rjones@redhat.com> - 1:1.24.1-1
 - New upstream version 1.24.1.
