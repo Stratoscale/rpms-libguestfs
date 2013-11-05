@@ -46,6 +46,7 @@ BuildRequires: bison
 BuildRequires: libdb-utils
 BuildRequires: cpio
 BuildRequires: libconfig-devel
+BuildRequires: xz-devel
 BuildRequires: ocaml
 BuildRequires: ocaml-findlib-devel
 BuildRequires: ocaml-gettext-devel
@@ -983,6 +984,7 @@ mkdir -p $RPM_BUILD_ROOT%{_localstatedir}/run/libguestfs
 * Tue Nov 05 2013 Richard W.M. Jones <rjones@redhat.com> - 1:1.25.3-2
 - Remove patches, now upstream.
 - +BR flex & bison, required by libguestfs >= 1.25.4.
+- +BR xz-devel (for liblzma) to accelerate virt-builder in >= 1.25.5.
 
 * Fri Nov 01 2013 Richard W.M. Jones <rjones@redhat.com> - 1:1.25.3-1
 - New upstream version 1.25.3.
