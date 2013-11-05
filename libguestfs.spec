@@ -808,6 +808,8 @@ mkdir -p $RPM_BUILD_ROOT%{_localstatedir}/run/libguestfs
 %{_mandir}/man1/virt-filesystems.1*
 %{_bindir}/virt-format
 %{_mandir}/man1/virt-format.1*
+%{_bindir}/virt-index-validate
+%{_mandir}/man1/virt-index-validate.1*
 %{_bindir}/virt-inspector
 %{_mandir}/man1/virt-inspector.1*
 %{_bindir}/virt-ls
