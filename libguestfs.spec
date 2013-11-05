@@ -12,7 +12,7 @@ Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
 Version:       1.25.6
-Release:       1%{?dist}
+Release:       2%{?dist}
 License:       LGPLv2+
 
 # Source and patches.
@@ -811,6 +811,8 @@ mkdir -p $RPM_BUILD_ROOT%{_localstatedir}/run/libguestfs
 %{_mandir}/man1/virt-filesystems.1*
 %{_bindir}/virt-format
 %{_mandir}/man1/virt-format.1*
+%{_bindir}/virt-index-validate
+%{_mandir}/man1/virt-index-validate.1*
 %{_bindir}/virt-inspector
 %{_mandir}/man1/virt-inspector.1*
 %{_bindir}/virt-ls
@@ -981,8 +983,9 @@ mkdir -p $RPM_BUILD_ROOT%{_localstatedir}/run/libguestfs
 
 
 %changelog
-* Tue Nov 05 2013 Richard W.M. Jones <rjones@redhat.com> - 1:1.25.6-1
+* Tue Nov 05 2013 Richard W.M. Jones <rjones@redhat.com> - 1:1.25.6-2
 - New upstream version 1.25.6.
+- Add virt-index-validate tool & man page.
 
 * Tue Nov 05 2013 Richard W.M. Jones <rjones@redhat.com> - 1:1.25.3-2
 - Remove patches, now upstream.
