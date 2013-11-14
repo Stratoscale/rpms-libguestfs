@@ -1,0 +1,31 @@
+From 10ce9fcc61057c7c37b79fb5bf5beae63426b148 Mon Sep 17 00:00:00 2001
+From: "Richard W.M. Jones" <rjones@redhat.com>
+Date: Mon, 11 Nov 2013 18:34:49 +0000
+Subject: [PATCH] podwrapper: virt-install is not a libguestfs page.
+
+This now redirect to http://man.he.net/man1/virt-install, but this is
+unfortunately a 404.
+
+Incomplete fix for RHBZ#1029134.
+
+Thanks: Paul Maunders.
+(cherry picked from commit edacd479faf7175eb2ddb10dd8c7ab4c90db5d0b)
+---
+ podwrapper.pl.in | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/podwrapper.pl.in b/podwrapper.pl.in
+index c14044c..8338579 100755
+--- a/podwrapper.pl.in
++++ b/podwrapper.pl.in
+@@ -443,6 +443,7 @@ SUBHTML: {
+         local $_ = shift;
+ 
+         return 1 if /^Sys::Guestfs/;
++        return 0 if /^virt-install/;
+         return 1 if /^virt-/;
+         return 1 if /^libguestf/;
+         return 1 if /^guestf/;
+-- 
+1.8.3.1
+

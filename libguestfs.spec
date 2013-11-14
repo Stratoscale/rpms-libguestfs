@@ -12,7 +12,7 @@ Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
 Version:       1.24.1
-Release:       2%{?dist}
+Release:       3%{?dist}
 License:       LGPLv2+
 
 # Source and patches.
@@ -54,6 +54,14 @@ Patch0026:     0026-builder-Add-some-generated-files-to-CLEANFILES.patch
 Patch0027:     0027-builder-Add-dependency-from-index-parse.h-to-index-v.patch
 Patch0028:     0028-builder-Fix-centos-script-output-filename-was-wrong.patch
 Patch0029:     0029-builder-Add-dependencies-which-automake-doesn-t-gene.patch
+Patch0030:     0030-builder-Fail-if-bison-is-not-installed.patch
+Patch0031:     0031-builder-Fail-if-lex-is-not-installed.patch
+Patch0032:     0032-builder-Allow-upload-to-directory-when-target-is-a-s.patch
+Patch0033:     0033-builder-Allow-tmp-or-Temp-to-be-symlinks-to-a-direct.patch
+Patch0034:     0034-podwrapper-virt-install-is-not-a-libguestfs-page.patch
+Patch0035:     0035-builder-Clarify-architecture-section-of-the-document.patch
+Patch0036:     0036-mllib-Add-a-utility-function-for-safely-reading-from.patch
+Patch0037:     0037-Avoid-modulo-bias-in-random-password-generation.patch
 # Add any non-git patches here.
 
 # Use git for patch management.
@@ -1044,6 +1052,9 @@ mkdir -p $RPM_BUILD_ROOT%{_localstatedir}/run/libguestfs
 
 
 %changelog
+* Thu Nov 14 2013 Richard W.M. Jones <rjones@redhat.com> - 1:1.24.1-3
+- Backport further virt-builder fixes from upstream.
+
 * Tue Nov 05 2013 Richard W.M. Jones <rjones@redhat.com> - 1:1.24.1-2
 - Backport virt-builder features from upstream at users [multiple] requests.
 - Use git to manage patches, add copy-patches.sh script.
