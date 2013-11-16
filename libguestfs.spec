@@ -449,7 +449,7 @@ ruby-%{name} contains Ruby bindings for %{name}.
 %package java
 Summary:       Java bindings for %{name}
 Requires:      %{name} = %{epoch}:%{version}-%{release}
-Requires:      java >= 1.5.0
+Requires:      java-headless >= 1.5.0
 Requires:      jpackage-utils
 
 %description java
