@@ -246,12 +246,6 @@ Requires:      gnupg
 Requires:      xz
 #Requires:     nbdkit, nbdkit-plugin-xz
 
-# Obsolete and replace earlier packages.
-Provides:      guestfish = %{epoch}:%{version}-%{release}
-Obsoletes:     guestfish < %{epoch}:%{version}-%{release}
-Provides:      libguestfs-mount = %{epoch}:%{version}-%{release}
-Obsoletes:     libguestfs-mount < %{epoch}:%{version}-%{release}
-
 
 %description tools-c
 This package contains miscellaneous system administrator command line
@@ -411,9 +405,6 @@ Requires:      %{name} = %{epoch}:%{version}-%{release}
 Requires:      perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $version))
 # RHBZ#523547
 Requires:      perl(XML::XPath)
-# RHBZ#652587 - for backwards compat with the old name
-Provides:      perl-%{name} = %{epoch}:%{version}-%{release}
-Obsoletes:     perl-%{name} < %{epoch}:%{version}-%{release}
 
 
 %description -n perl-Sys-Guestfs
