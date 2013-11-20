@@ -19,9 +19,6 @@ License:       LGPLv2+
 URL:           http://libguestfs.org/
 Source0:       http://libguestfs.org/download/1.25-development/%{name}-%{version}.tar.gz
 
-# Upstream patch to fix btrfs tests.
-Patch1:        0001-daemon-btrfs-Upstream-btrfs-device-add-command-now-n.patch
-
 # Basic build requirements:
 BuildRequires: perl(Pod::Simple)
 BuildRequires: perl(Pod::Man)
@@ -569,8 +566,6 @@ for %{name}.
 
 %prep
 %setup -q
-
-%patch1 -p1
 
 if [ "$(getenforce | tr '[A-Z]' '[a-z]')" != "disabled" ]; then
     # For sVirt to work, the local temporary directory we use in the
