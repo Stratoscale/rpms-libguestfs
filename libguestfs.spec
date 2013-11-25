@@ -12,7 +12,7 @@ Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
 Version:       1.25.11
-Release:       2%{?dist}
+Release:       3%{?dist}
 License:       LGPLv2+
 
 # Source and patches.
@@ -665,6 +665,9 @@ export SKIP_TEST_BTRFS_DEVICES_SH=1
 # Disable mdadm test, buggy in kernel 3.13 (RHBZ#1033971).
 export SKIP_TEST_MDADM_SH=1
 
+# Disable NBD test, buggy in qemu 1.7.0 (RHBZ#1034433).
+export SKIP_TEST_NBD_PL=1
+
 # Skip gnulib tests which fail (probably these are kernel/glibc bugs).
 pushd gnulib/tests
 make -k check ||:
@@ -977,6 +980,9 @@ mkdir -p $RPM_BUILD_ROOT%{_localstatedir}/run/libguestfs
 
 
 %changelog
+* Mon Nov 25 2013 Richard W.M. Jones <rjones@redhat.com> - 1:1.25.11-3
+- Disable NBD test, buggy in qemu 1.7.0 (filed as RHBZ#1034433).
+
 * Sat Nov 23 2013 Richard W.M. Jones <rjones@redhat.com> - 1:1.25.11-2
 - Disable mdadm test, buggy in kernel 3.13 (filed as RHBZ#1033971).
 
