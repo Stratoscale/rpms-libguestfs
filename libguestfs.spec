@@ -12,7 +12,7 @@ Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
 Version:       1.24.1
-Release:       4%{?dist}
+Release:       5%{?dist}
 License:       LGPLv2+
 
 # Source and patches.
@@ -63,6 +63,9 @@ Patch0035:     0035-builder-Clarify-architecture-section-of-the-document.patch
 Patch0036:     0036-mllib-Add-a-utility-function-for-safely-reading-from.patch
 Patch0037:     0037-Avoid-modulo-bias-in-random-password-generation.patch
 # Add any non-git patches here.
+
+# Upstream (but not 1.24) patch to workaround changed btrfs behaviour.
+Patch1000:     0001-daemon-btrfs-Upstream-btrfs-device-add-command-now-n.patch
 
 # Use git for patch management.
 BuildRequires: git
@@ -1053,8 +1056,9 @@ mkdir -p $RPM_BUILD_ROOT%{_localstatedir}/run/libguestfs
 
 
 %changelog
-* Thu Dec 05 2013 Richard W.M. Jones <rjones@redhat.com> - 1:1.24.1-4
+* Thu Dec 05 2013 Richard W.M. Jones <rjones@redhat.com> - 1:1.24.1-5
 - Rebuild to push change to PPC (secondary arches) RHBZ#1036742.
+- Backport upstream (but not 1.24) patch to workaround changed btrfs behaviour.
 
 * Thu Nov 14 2013 Richard W.M. Jones <rjones@redhat.com> - 1:1.24.1-3
 - Backport further virt-builder fixes from upstream.
