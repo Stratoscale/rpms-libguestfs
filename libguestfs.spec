@@ -12,7 +12,7 @@ Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
 Version:       1.25.12
-Release:       2%{?dist}
+Release:       3%{?dist}
 License:       LGPLv2+
 
 # Source and patches.
@@ -91,7 +91,7 @@ BuildRequires: erlang-erl_interface
 BuildRequires: glib2-devel
 BuildRequires: gobject-introspection-devel
 BuildRequires: gjs
-%ifnarch ppc64
+%ifarch %{arm} %{ix86} x86_64
 BuildRequires: golang
 %endif
 
@@ -533,7 +533,7 @@ Requires:      %{name}-gobject-devel = %{epoch}:%{version}-%{release}
 %{name} GObject bindings.
 
 
-%ifnarch ppc64
+%ifarch %{arm} %{ix86} x86_64
 %package -n golang-guestfs
 Summary:       Golang bindings for %{name}
 Requires:      %{name} = %{epoch}:%{version}-%{release}
@@ -958,7 +958,7 @@ mkdir -p $RPM_BUILD_ROOT%{_localstatedir}/run/libguestfs
 %{_datadir}/gtk-doc/html/guestfs
 
 
-%ifnarch ppc64
+%ifarch %{arm} %{ix86} x86_64
 %files -n golang-guestfs
 %doc golang/examples/*.go
 %doc golang/examples/LICENSE
@@ -981,6 +981,10 @@ mkdir -p $RPM_BUILD_ROOT%{_localstatedir}/run/libguestfs
 
 
 %changelog
+* Fri Dec 06 2013 Richard W.M. Jones <rjones@redhat.com> - 1:1.25.12-3
+- Build golang package only on x86 and ARM.  The golang package in Fedora
+  uses the same ExclusiveArch.  Thanks: Dan Horák.
+
 * Wed Dec 04 2013 Richard W.M. Jones <rjones@redhat.com> - 1:1.25.12-2
 - Rebuild for procps SONAME bump.
 
