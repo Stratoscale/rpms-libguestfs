@@ -1,4 +1,4 @@
-From 8a98e37fde47ad310e8cee3c041f401d8d9739a8 Mon Sep 17 00:00:00 2001
+From 0c82e27a75028553f6a549b548dd57b9e061bf6c Mon Sep 17 00:00:00 2001
 From: "Richard W.M. Jones" <rjones@redhat.com>
 Date: Tue, 29 Oct 2013 19:23:33 +0000
 Subject: [PATCH] builder: Add -m/--memsize and --smp command line options.
@@ -11,7 +11,7 @@ Subject: [PATCH] builder: Add -m/--memsize and --smp command line options.
  3 files changed, 33 insertions(+), 10 deletions(-)
 
 diff --git a/builder/builder.ml b/builder/builder.ml
-index 803de0c..c9fd291 100644
+index c765610..8c8e2d4 100644
 --- a/builder/builder.ml
 +++ b/builder/builder.ml
 @@ -36,9 +36,9 @@ let main () =
@@ -36,7 +36,7 @@ index 803de0c..c9fd291 100644
  
      (* The output disk is being created, so use cache=unsafe here. *)
 diff --git a/builder/cmdline.ml b/builder/cmdline.ml
-index d92fcb9..f8e604e 100644
+index 6611fad..aaeb763 100644
 --- a/builder/cmdline.ml
 +++ b/builder/cmdline.ml
 @@ -120,6 +120,9 @@ let parse_cmdline () =
@@ -102,7 +102,7 @@ index d92fcb9..f8e604e 100644
 -  scrub_logfile, size, source, sync, upload, writes
 +  scrub_logfile, size, smp, source, sync, upload, writes
 diff --git a/builder/virt-builder.pod b/builder/virt-builder.pod
-index 442bbec..70e19c3 100644
+index a603fcf..3905880 100644
 --- a/builder/virt-builder.pod
 +++ b/builder/virt-builder.pod
 @@ -366,6 +366,18 @@ the image was built, use this option.
@@ -135,7 +135,7 @@ index 442bbec..70e19c3 100644
  =item B<--source> URL
  
  Set the source URL to look for templates.  If not specified it
-@@ -1368,12 +1384,6 @@ are actually interpreted by L<curl(1)>, not virt-builder.
+@@ -1366,12 +1382,6 @@ are actually interpreted by L<curl(1)>, not virt-builder.
  
  Used to determine the location of the template cache.  See L</CACHING>.
  

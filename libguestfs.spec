@@ -11,8 +11,8 @@
 Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
-Version:       1.24.1
-Release:       5%{?dist}
+Version:       1.24.2
+Release:       1%{?dist}
 License:       LGPLv2+
 
 # Source and patches.
@@ -37,35 +37,18 @@ Patch0009:     0009-firstboot-Send-the-output-to-the-console-as-well-as-.patch
 Patch0010:     0010-builder-Add-a-section-on-performance-to-the-manual.patch
 Patch0011:     0011-builder-Add-m-memsize-and-smp-command-line-options.patch
 Patch0012:     0012-builder-Allow-multiple-source-paths-to-be-specified.patch
-Patch0013:     0013-builder-Don-t-use-git-tree-libguestfs.git-to-refer-t.patch
-Patch0014:     0014-builder-Add-a-real-scanner-parser-for-index-files.patch
-Patch0015:     0015-builder-Fix-check-valgrind-so-it-does-something-in-t.patch
-Patch0016:     0016-builder-Fix-missing-files-in-EXTRA_DIST.patch
-Patch0017:     0017-builder-Add-an-extra-Makefile.am-to-builder-website.patch
-Patch0018:     0018-builder-website-Add-index-validation-test-script.patch
-Patch0019:     0019-builder-Internal-implementation-of-parallel-xzcat-px.patch
-Patch0020:     0020-builder-Replace-fedora-NN-shell-kickstart-with-a-sin.patch
-Patch0021:     0021-builder-Replace-ubuntu-NN-.sh-with-a-single-script.patch
-Patch0022:     0022-builder-Replace-debian-NN-.sh-with-a-single-script.patch
-Patch0023:     0023-builder-Replace-centos-6.sh-with-a-single-script.patch
-Patch0024:     0024-builder-website-Add-validate.sh-test-script-to-EXTRA.patch
-Patch0025:     0025-builder-Add-missing-dependency.patch
-Patch0026:     0026-builder-Add-some-generated-files-to-CLEANFILES.patch
-Patch0027:     0027-builder-Add-dependency-from-index-parse.h-to-index-v.patch
-Patch0028:     0028-builder-Fix-centos-script-output-filename-was-wrong.patch
-Patch0029:     0029-builder-Add-dependencies-which-automake-doesn-t-gene.patch
-Patch0030:     0030-builder-Fail-if-bison-is-not-installed.patch
-Patch0031:     0031-builder-Fail-if-lex-is-not-installed.patch
-Patch0032:     0032-builder-Allow-upload-to-directory-when-target-is-a-s.patch
-Patch0033:     0033-builder-Allow-tmp-or-Temp-to-be-symlinks-to-a-direct.patch
-Patch0034:     0034-podwrapper-virt-install-is-not-a-libguestfs-page.patch
-Patch0035:     0035-builder-Clarify-architecture-section-of-the-document.patch
-Patch0036:     0036-mllib-Add-a-utility-function-for-safely-reading-from.patch
-Patch0037:     0037-Avoid-modulo-bias-in-random-password-generation.patch
+Patch0013:     0013-builder-Add-a-real-scanner-parser-for-index-files.patch
+Patch0014:     0014-builder-Fix-missing-files-in-EXTRA_DIST.patch
+Patch0015:     0015-builder-website-Add-index-validation-test-script.patch
+Patch0016:     0016-builder-Internal-implementation-of-parallel-xzcat-px.patch
+Patch0017:     0017-builder-website-Add-validate.sh-test-script-to-EXTRA.patch
+Patch0018:     0018-builder-Add-missing-dependency.patch
+Patch0019:     0019-builder-Add-some-generated-files-to-CLEANFILES.patch
+Patch0020:     0020-builder-Add-dependency-from-index-parse.h-to-index-v.patch
+Patch0021:     0021-builder-Add-dependencies-which-automake-doesn-t-gene.patch
+Patch0022:     0022-builder-Fail-if-bison-is-not-installed.patch
+Patch0023:     0023-builder-Fail-if-lex-is-not-installed.patch
 # Add any non-git patches here.
-
-# Upstream (but not 1.24) patch to workaround changed btrfs behaviour.
-Patch1000:     0001-daemon-btrfs-Upstream-btrfs-device-add-command-now-n.patch
 
 # Use git for patch management.
 BuildRequires: git
@@ -1056,6 +1039,10 @@ mkdir -p $RPM_BUILD_ROOT%{_localstatedir}/run/libguestfs
 
 
 %changelog
+* Sat Dec 07 2013 Richard W.M. Jones <rjones@redhat.com> - 1:1.24.2-1
+- New stable branch version 1.24.2.
+- Rebase patches.
+
 * Thu Dec 05 2013 Richard W.M. Jones <rjones@redhat.com> - 1:1.24.1-5
 - Rebuild to push change to PPC (secondary arches) RHBZ#1036742.
 - Backport upstream (but not 1.24) patch to workaround changed btrfs behaviour.

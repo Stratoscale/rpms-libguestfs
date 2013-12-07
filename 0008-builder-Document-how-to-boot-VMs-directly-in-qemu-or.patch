@@ -1,4 +1,4 @@
-From a80de72193e4a3fc379628b56035748436e2bcca Mon Sep 17 00:00:00 2001
+From f9d8a69ee0d853cffac2f7d628b928de9570876a Mon Sep 17 00:00:00 2001
 From: "Richard W.M. Jones" <rjones@redhat.com>
 Date: Sat, 26 Oct 2013 14:45:30 +0100
 Subject: [PATCH] builder: Document how to boot VMs directly in qemu or KVM.
@@ -9,7 +9,7 @@ Subject: [PATCH] builder: Document how to boot VMs directly in qemu or KVM.
  1 file changed, 15 insertions(+)
 
 diff --git a/builder/virt-builder.pod b/builder/virt-builder.pod
-index 13d342d..770d359 100644
+index f795e7a..7768366 100644
 --- a/builder/virt-builder.pod
 +++ b/builder/virt-builder.pod
 @@ -841,6 +841,21 @@ XXX

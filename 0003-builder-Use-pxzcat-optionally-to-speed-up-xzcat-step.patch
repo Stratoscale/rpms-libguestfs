@@ -1,4 +1,4 @@
-From 6ae9a5c40b4c19869e4843317c8884977cdd16b3 Mon Sep 17 00:00:00 2001
+From b29a8f27a9684342d5562019050714c62d6695d4 Mon Sep 17 00:00:00 2001
 From: "Richard W.M. Jones" <rjones@redhat.com>
 Date: Tue, 22 Oct 2013 14:22:46 +0100
 Subject: [PATCH] builder: Use pxzcat (optionally) to speed up xzcat step.
@@ -26,7 +26,7 @@ index 676bb2f..cdf492e 100644
  +--------------+-------------+---+-----------------------------------------+
  | ocaml-gettext|             | O | For localizing OCaml virt-* tools.      |
 diff --git a/builder/builder.ml b/builder/builder.ml
-index ae642d0..477fc3e 100644
+index 6251192..01fb042 100644
 --- a/builder/builder.ml
 +++ b/builder/builder.ml
 @@ -323,9 +323,11 @@ let main () =
@@ -44,7 +44,7 @@ index ae642d0..477fc3e 100644
  
    if not do_resize then (
 diff --git a/configure.ac b/configure.ac
-index b31abbc..00cb151 100644
+index c91314a..a5e8783 100644
 --- a/configure.ac
 +++ b/configure.ac
 @@ -702,6 +702,9 @@ dnl Check for xzcat (required).

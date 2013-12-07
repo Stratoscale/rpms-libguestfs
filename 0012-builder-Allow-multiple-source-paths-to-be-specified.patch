@@ -1,4 +1,4 @@
-From 2c081f7d45a250220860a3a21938a3f2d7d39a9b Mon Sep 17 00:00:00 2001
+From 2583c9e669e69eb799c16b9d72241297ec6744d4 Mon Sep 17 00:00:00 2001
 From: "Richard W.M. Jones" <rjones@redhat.com>
 Date: Fri, 1 Nov 2013 14:16:34 +0000
 Subject: [PATCH] builder: Allow multiple source paths to be specified.
@@ -27,7 +27,7 @@ There is still only one built-in path, but we can add more later.
  10 files changed, 143 insertions(+), 46 deletions(-)
 
 diff --git a/builder/builder.ml b/builder/builder.ml
-index c9fd291..fc6078c 100644
+index 8c8e2d4..6a4ef70 100644
 --- a/builder/builder.ml
 +++ b/builder/builder.ml
 @@ -35,22 +35,27 @@ let prog = Filename.basename Sys.executable_name
@@ -102,7 +102,7 @@ index c9fd291..fc6078c 100644
    (match mode with
    | `Notes ->                           (* --notes *)
 diff --git a/builder/cmdline.ml b/builder/cmdline.ml
-index f8e604e..5256390 100644
+index aaeb763..632b227 100644
 --- a/builder/cmdline.ml
 +++ b/builder/cmdline.ml
 @@ -37,6 +37,8 @@ let default_cachedir =
@@ -342,7 +342,7 @@ index 4d89129..cdd800e 100644
  val verify : t -> string -> unit
  (** Verify the file is signed (if check_signature is true). *)
 diff --git a/builder/test-virt-builder-list.sh b/builder/test-virt-builder-list.sh
-index 01e4d1b..823f774 100755
+index 134ca7c..256d993 100755
 --- a/builder/test-virt-builder-list.sh
 +++ b/builder/test-virt-builder-list.sh
 @@ -39,6 +39,7 @@ fi
@@ -354,7 +354,7 @@ index 01e4d1b..823f774 100755
  os-version:              phony-debian
  Full name:               Phony Debian
 diff --git a/builder/virt-builder.pod b/builder/virt-builder.pod
-index 70e19c3..4e33bc8 100644
+index 3905880..fb99d7c 100644
 --- a/builder/virt-builder.pod
 +++ b/builder/virt-builder.pod
 @@ -264,10 +264,14 @@ Check that the index and templates are signed by the key with the
@@ -390,7 +390,7 @@ index 70e19c3..4e33bc8 100644
  
  See also L</CREATING YOUR OWN TEMPLATES> below.
  
-@@ -1202,6 +1209,36 @@ Now run virt-builder commands as normal, eg:
+@@ -1201,6 +1208,36 @@ Now run virt-builder commands as normal, eg:
  
  To debug problems, add the C<-v> option to these commands.
  
@@ -427,7 +427,7 @@ index 70e19c3..4e33bc8 100644
  =head3 Licensing of templates
  
  You should be aware of the licensing of images that you distribute.
-@@ -1386,13 +1423,13 @@ Used to determine the location of the template cache.  See L</CACHING>.
+@@ -1384,13 +1421,13 @@ Used to determine the location of the template cache.  See L</CACHING>.
  
  =item C<VIRT_BUILDER_FINGERPRINT>
  

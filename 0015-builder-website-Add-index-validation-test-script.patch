@@ -1,4 +1,4 @@
-From 919c22ead98cce4368425259f882ba7ed47c98fa Mon Sep 17 00:00:00 2001
+From 94271fa21ac01b583257f2cdff5ba3d9520d206a Mon Sep 17 00:00:00 2001
 From: "Richard W.M. Jones" <rjones@redhat.com>
 Date: Tue, 5 Nov 2013 07:25:46 +0000
 Subject: [PATCH] builder/website: Add index validation test script.
@@ -11,10 +11,10 @@ Subject: [PATCH] builder/website: Add index validation test script.
  create mode 100755 builder/website/validate.sh
 
 diff --git a/builder/website/Makefile.am b/builder/website/Makefile.am
-index ba74485..2a3bbe6 100644
+index 4567dd9..b45d98a 100644
 --- a/builder/website/Makefile.am
 +++ b/builder/website/Makefile.am
-@@ -49,3 +49,7 @@ EXTRA_DIST = \
+@@ -43,3 +43,7 @@ EXTRA_DIST = \
  	ubuntu-13.10.xz.sig
  
  CLEANFILES = *~

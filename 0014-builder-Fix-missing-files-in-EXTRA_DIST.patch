@@ -1,4 +1,4 @@
-From 736e8d289efb5a1e749dc9961fcc4fd519fa8b4c Mon Sep 17 00:00:00 2001
+From 83d58ef9bdb030fe011b92fcf99575ac5e303f11 Mon Sep 17 00:00:00 2001
 From: "Richard W.M. Jones" <rjones@redhat.com>
 Date: Tue, 5 Nov 2013 07:15:19 +0000
 Subject: [PATCH] builder: Fix missing files in EXTRA_DIST.
@@ -11,7 +11,7 @@ This fixes commit a4800e2d4fc50f372a8b626333c4fbb9b8ca9633.
  1 file changed, 2 insertions(+)
 
 diff --git a/builder/Makefile.am b/builder/Makefile.am
-index cb490e1..9dbe51e 100644
+index 2a1e448..0af3f95 100644
 --- a/builder/Makefile.am
 +++ b/builder/Makefile.am
 @@ -26,6 +26,7 @@ AM_CFLAGS = \
@@ -20,9 +20,9 @@ index cb490e1..9dbe51e 100644
  	virt-builder.pod \
 +	virt-index-validate.pod \
  	test-virt-builder.sh \
- 	test-virt-builder-list.sh \
- 	website/.gitignore \
-@@ -70,6 +71,7 @@ SOURCES = \
+ 	test-virt-builder-list.sh
+ 
+@@ -41,6 +42,7 @@ SOURCES = \
  	get_kernel.ml \
  	index_parser.mli \
  	index_parser.ml \

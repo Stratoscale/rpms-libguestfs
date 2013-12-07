@@ -1,4 +1,4 @@
-From 4785b527ce69d0aa1c7983f81a70f30d9837ee88 Mon Sep 17 00:00:00 2001
+From b85acab733df612e43efc8070df4d9959bf8d6ed Mon Sep 17 00:00:00 2001
 From: "Richard W.M. Jones" <rjones@redhat.com>
 Date: Mon, 4 Nov 2013 14:53:41 +0000
 Subject: [PATCH] builder: Add a real scanner/parser for index files.
@@ -36,7 +36,7 @@ This adds a tool called virt-index-validate to validate index files.
  create mode 100644 builder/virt-index-validate.pod
 
 diff --git a/.gitignore b/.gitignore
-index 8a1ffef..e2ea9ce 100644
+index 8c5fbe7..43f9f40 100644
 --- a/.gitignore
 +++ b/.gitignore
 @@ -58,10 +58,16 @@ Makefile.in
@@ -80,7 +80,7 @@ index cdf492e..461915d 100644
  +--------------+-------------+---+-----------------------------------------+
  | genisoimage  |             | R | mkisofs may work.                       |
 diff --git a/builder/Makefile.am b/builder/Makefile.am
-index b995c90..cb490e1 100644
+index e3878dc..2a1e448 100644
 --- a/builder/Makefile.am
 +++ b/builder/Makefile.am
 @@ -17,6 +17,12 @@
@@ -96,7 +96,7 @@ index b995c90..cb490e1 100644
  EXTRA_DIST = \
  	$(SOURCES) \
  	virt-builder.pod \
-@@ -71,6 +77,9 @@ SOURCES = \
+@@ -42,6 +48,9 @@ SOURCES = \
  	sigchecker.mli \
  	sigchecker.ml
  
@@ -106,7 +106,7 @@ index b995c90..cb490e1 100644
  if HAVE_OCAML
  
  # Note this list must be in dependency order.
-@@ -87,6 +96,10 @@ OBJECTS = \
+@@ -59,6 +68,10 @@ OBJECTS = \
  	$(top_builddir)/mllib/fsync.cmx \
  	$(top_builddir)/mllib/password.cmx \
  	$(top_builddir)/mllib/config.cmx \
@@ -117,7 +117,7 @@ index b995c90..cb490e1 100644
  	get_kernel.cmx \
  	downloader.cmx \
  	sigchecker.cmx \
-@@ -127,24 +140,10 @@ virt-builder: $(OBJECTS)
+@@ -99,24 +112,10 @@ virt-builder: $(OBJECTS)
  .ml.cmx:
  	$(OCAMLFIND) ocamlopt $(OCAMLOPTFLAGS) -c $< -o $@
  
@@ -144,7 +144,7 @@ index b995c90..cb490e1 100644
  
  virt-builder.1 $(top_builddir)/html/virt-builder.1.html: stamp-virt-builder.pod
  
-@@ -200,3 +199,28 @@ endif
+@@ -172,3 +171,28 @@ endif
  DISTCLEANFILES = .depend
  
  .PHONY: depend docs
@@ -996,7 +996,7 @@ index 04a65ca..8c24fe2 100644
            printf "\n"
          )
 diff --git a/builder/test-virt-builder-list.sh b/builder/test-virt-builder-list.sh
-index 823f774..0a7c0d4 100755
+index 256d993..11305a9 100755
 --- a/builder/test-virt-builder-list.sh
 +++ b/builder/test-virt-builder-list.sh
 @@ -46,28 +46,32 @@ Full name:               Phony Debian
@@ -1037,7 +1037,7 @@ index 823f774..0a7c0d4 100755
      echo "$long_list"
      exit 1
 diff --git a/builder/virt-builder.pod b/builder/virt-builder.pod
-index 5eba666..6497c0a 100644
+index fb99d7c..b9fd69c 100644
 --- a/builder/virt-builder.pod
 +++ b/builder/virt-builder.pod
 @@ -1245,6 +1245,23 @@ For open source guests, provide a link to the source code in the
@@ -1163,7 +1163,7 @@ index 0000000..6b03703
 +
 +Copyright (C) 2013 Red Hat Inc.
 diff --git a/configure.ac b/configure.ac
-index 00cb151..30040e0 100644
+index a5e8783..9d551af 100644
 --- a/configure.ac
 +++ b/configure.ac
 @@ -705,6 +705,10 @@ test "x$XZCAT" = "xno" && AC_MSG_ERROR([xzcat must be installed])
@@ -1178,7 +1178,7 @@ index 00cb151..30040e0 100644
  dnl back to basic 'qemu'.  Allow the user to override it.
  qemu_system="$(
 diff --git a/po-docs/ja/Makefile.am b/po-docs/ja/Makefile.am
-index b053be0..f74ee42 100644
+index 75d47a8..da1bcc3 100644
 --- a/po-docs/ja/Makefile.am
 +++ b/po-docs/ja/Makefile.am
 @@ -60,6 +60,7 @@ MANPAGES = \
@@ -1202,7 +1202,7 @@ index 5ff9447..dd2898c 100644
  ../cat/virt-filesystems.pod
  ../cat/virt-ls.pod
 diff --git a/po-docs/uk/Makefile.am b/po-docs/uk/Makefile.am
-index b053be0..f74ee42 100644
+index 75d47a8..da1bcc3 100644
 --- a/po-docs/uk/Makefile.am
 +++ b/po-docs/uk/Makefile.am
 @@ -60,6 +60,7 @@ MANPAGES = \

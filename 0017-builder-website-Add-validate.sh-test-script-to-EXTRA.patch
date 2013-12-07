@@ -1,4 +1,4 @@
-From 6f548264f40339e829c3bb2023f3352b4e69b490 Mon Sep 17 00:00:00 2001
+From 0c9b6f8109dec616b5c03c56391cf6e2795da726 Mon Sep 17 00:00:00 2001
 From: "Richard W.M. Jones" <rjones@redhat.com>
 Date: Tue, 5 Nov 2013 15:15:17 +0000
 Subject: [PATCH] builder/website: Add validate.sh test script to EXTRA_DIST.
@@ -11,12 +11,12 @@ This fixes commit 154bfb7dd46e7998eed1d40ead95923590763739.
  1 file changed, 1 insertion(+)
 
 diff --git a/builder/website/Makefile.am b/builder/website/Makefile.am
-index cdf263a..ec1ca65 100644
+index b45d98a..680fd54 100644
 --- a/builder/website/Makefile.am
 +++ b/builder/website/Makefile.am
-@@ -20,6 +20,7 @@ include $(top_srcdir)/subdir-rules.mk
- EXTRA_DIST = \
+@@ -21,6 +21,7 @@ EXTRA_DIST = \
  	.gitignore \
+ 	compress.sh \
  	test-guest.sh \
 +	validate.sh \
  	README \

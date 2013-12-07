@@ -1,4 +1,4 @@
-From 5ab8da71343c6f8c0dd16111480893730db2cc84 Mon Sep 17 00:00:00 2001
+From 9eb2f0b6b875eff242dfbd50d7488713c69f1b9c Mon Sep 17 00:00:00 2001
 From: "Richard W.M. Jones" <rjones@redhat.com>
 Date: Tue, 5 Nov 2013 15:56:34 +0000
 Subject: [PATCH] builder: Add dependency from index-parse.h to index-validate.
@@ -13,10 +13,10 @@ rest of the build.
  1 file changed, 2 insertions(+)
 
 diff --git a/builder/Makefile.am b/builder/Makefile.am
-index 44384d9..593e3ef 100644
+index 97550a8..3ad18cc 100644
 --- a/builder/Makefile.am
 +++ b/builder/Makefile.am
-@@ -192,6 +192,8 @@ virt_index_validate_SOURCES = \
+@@ -193,6 +193,8 @@ virt_index_validate_SOURCES = \
  	index-struct.c \
  	index-validate.c
  

@@ -1,4 +1,4 @@
-From 7ae728b1a5db0290ca2ed488ae3e67c968d2f477 Mon Sep 17 00:00:00 2001
+From ffd1610a3d2a32905532d149faa335915a229cd1 Mon Sep 17 00:00:00 2001
 From: "Richard W.M. Jones" <rjones@redhat.com>
 Date: Tue, 5 Nov 2013 15:42:05 +0000
 Subject: [PATCH] builder: Add missing dependency.
@@ -16,10 +16,10 @@ This fixes commit a4800e2d4fc50f372a8b626333c4fbb9b8ca9633.
  1 file changed, 2 insertions(+)
 
 diff --git a/builder/Makefile.am b/builder/Makefile.am
-index 2027203..a44f820 100644
+index 9430d62..606ecc4 100644
 --- a/builder/Makefile.am
 +++ b/builder/Makefile.am
-@@ -120,6 +120,8 @@ virt-builder: $(OBJECTS)
+@@ -121,6 +121,8 @@ virt-builder: $(OBJECTS)
  .ml.cmx:
  	$(OCAMLFIND) ocamlopt $(OCAMLOPTFLAGS) -c $< -o $@
  

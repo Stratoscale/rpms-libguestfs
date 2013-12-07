@@ -1,4 +1,4 @@
-From 1e5b73563918c762542d5251a2fc79ec609a4547 Mon Sep 17 00:00:00 2001
+From 0d7c35a684c9786b0467bef4272d19f5881574eb Mon Sep 17 00:00:00 2001
 From: "Richard W.M. Jones" <rjones@redhat.com>
 Date: Tue, 22 Oct 2013 13:52:25 +0100
 Subject: [PATCH] builder: Don't run virt-resize when not necessary.
@@ -16,7 +16,7 @@ the template directly to the output file.
  1 file changed, 48 insertions(+), 17 deletions(-)
 
 diff --git a/builder/builder.ml b/builder/builder.ml
-index 286fd7d..6750deb 100644
+index fa34743..edeacea 100644
 --- a/builder/builder.ml
 +++ b/builder/builder.ml
 @@ -232,7 +232,12 @@ let main () =

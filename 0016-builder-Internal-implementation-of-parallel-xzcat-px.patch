@@ -1,4 +1,4 @@
-From e20aea882e564c537b7ce8f7db6c618e5b4ffaee Mon Sep 17 00:00:00 2001
+From 27041ccc22eed8fb94a0b389c1b186234174d396 Mon Sep 17 00:00:00 2001
 From: "Richard W.M. Jones" <rjones@redhat.com>
 Date: Tue, 5 Nov 2013 10:21:32 +0000
 Subject: [PATCH] builder: Internal implementation of parallel xzcat (pxzcat).
@@ -42,7 +42,7 @@ index 461915d..baf4de4 100644
  +--------------+-------------+---+-----------------------------------------+
  | findlib      |             | O | For the OCaml bindings.                 |
 diff --git a/builder/Makefile.am b/builder/Makefile.am
-index c3719d1..2027203 100644
+index 0af3f95..9430d62 100644
 --- a/builder/Makefile.am
 +++ b/builder/Makefile.am
 @@ -21,7 +21,9 @@ AM_YFLAGS = -d
@@ -66,7 +66,7 @@ index c3719d1..2027203 100644
  	sigchecker.mli \
  	sigchecker.ml
  
-@@ -73,6 +78,8 @@ OBJECTS = \
+@@ -74,6 +79,8 @@ OBJECTS = \
  	index-struct.o \
  	index-parse.o \
  	index-parser-c.o \
@@ -75,7 +75,7 @@ index c3719d1..2027203 100644
  	get_kernel.cmx \
  	downloader.cmx \
  	sigchecker.cmx \
-@@ -102,7 +109,7 @@ OCAMLOPTFLAGS = $(OCAMLCFLAGS)
+@@ -103,7 +110,7 @@ OCAMLOPTFLAGS = $(OCAMLCFLAGS)
  virt-builder: $(OBJECTS)
  	$(OCAMLFIND) ocamlopt $(OCAMLOPTFLAGS) \
  	  mlguestfs.cmxa -linkpkg $^ \
@@ -85,7 +85,7 @@ index c3719d1..2027203 100644
  	  -o $@
  
 diff --git a/builder/builder.ml b/builder/builder.ml
-index fc6078c..a5a4dfe 100644
+index 6a4ef70..4f000fd 100644
 --- a/builder/builder.ml
 +++ b/builder/builder.ml
 @@ -24,6 +24,7 @@ open Common_utils
@@ -860,10 +860,10 @@ index 0000000..a2830f0
 +        implementation of parallel xzcat.  Otherwise regular xzcat is
 +        used. *)
 diff --git a/builder/virt-builder.pod b/builder/virt-builder.pod
-index 6497c0a..bad59c1 100644
+index b9fd69c..19dc3ea 100644
 --- a/builder/virt-builder.pod
 +++ b/builder/virt-builder.pod
-@@ -1397,10 +1397,9 @@ the output format is the same as the template format (usually raw).
+@@ -1396,10 +1396,9 @@ the output format is the same as the template format (usually raw).
  
  =head3 pxzcat
  
@@ -878,7 +878,7 @@ index 6497c0a..bad59c1 100644
  =head3 User-Mode Linux
  
 diff --git a/configure.ac b/configure.ac
-index d797187..7a18b8e 100644
+index 9d551af..bd3078f 100644
 --- a/configure.ac
 +++ b/configure.ac
 @@ -701,9 +701,15 @@ fi
@@ -926,7 +926,7 @@ index aa52b75..4bf805f 100644
  cat/filesystems.c
  cat/ls.c
 diff --git a/po/POTFILES-ml b/po/POTFILES-ml
-index 185f87b..39ca2a0 100644
+index 2ca1042..efeb75d 100644
 --- a/po/POTFILES-ml
 +++ b/po/POTFILES-ml
 @@ -5,6 +5,7 @@ builder/get_kernel.ml
