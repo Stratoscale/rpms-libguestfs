@@ -11,8 +11,8 @@
 Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
-Version:       1.24.2
-Release:       2%{?dist}
+Version:       1.24.3
+Release:       1%{?dist}
 License:       LGPLv2+
 
 # Source and patches.
@@ -48,6 +48,19 @@ Patch0020:     0020-builder-Add-dependency-from-index-parse.h-to-index-v.patch
 Patch0021:     0021-builder-Add-dependencies-which-automake-doesn-t-gene.patch
 Patch0022:     0022-builder-Fail-if-bison-is-not-installed.patch
 Patch0023:     0023-builder-Fail-if-lex-is-not-installed.patch
+Patch0024:     0024-builder-sysprep-Allow-random-as-a-password-selector.patch
+Patch0025:     0025-builder-sysprep-Allow-accounts-to-be-locked-RHBZ-102.patch
+Patch0026:     0026-builder-Move-is_block_device-function-into-common-ut.patch
+Patch0027:     0027-builder-Use-a-planner-to-work-out-how-to-convert-the.patch
+Patch0028:     0028-builder-planner-Handle-no-format-in-source-case-corr.patch
+Patch0029:     0029-builder-Flush-debug-info-after-printing-it.patch
+Patch0030:     0030-builder-Add-a-test-of-the-planner.patch
+Patch0031:     0031-builder-tests-Fix-virt-builder-list-output.patch
+Patch0032:     0032-builder-tests-Add-test-virt-builder-planner.sh-to-EX.patch
+Patch0033:     0033-builder-Add-a-link-to-blog-posting-about-the-planner.patch
+Patch0034:     0034-builder-Only-use-virt-resize-no-sparse-when-writing-.patch
+Patch0035:     0035-builder-Refuse-to-write-to-a-char-device-or-dev-null.patch
+Patch0036:     0036-builder-Remove-blank-line.patch
 # Add any non-git patches here.
 
 # Use git for patch management.
@@ -1039,6 +1052,9 @@ mkdir -p $RPM_BUILD_ROOT%{_localstatedir}/run/libguestfs
 
 
 %changelog
+* Wed Dec 18 2013 Richard W.M. Jones <rjones@redhat.com> - 1:1.24.3-1
+- New stable branch version 1.24.3.
+
 * Mon Dec 16 2013 Richard W.M. Jones <rjones@redhat.com> - 1:1.24.2-2
 - Build golang package only on x86 and ARM.  The golang package in Fedora
   uses the same ExclusiveArch.  Thanks: Dan Horák.

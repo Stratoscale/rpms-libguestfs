@@ -1,4 +1,4 @@
-From 27041ccc22eed8fb94a0b389c1b186234174d396 Mon Sep 17 00:00:00 2001
+From 23f2221bbf9395a648e1a6fa949aae5d1dbcc20c Mon Sep 17 00:00:00 2001
 From: "Richard W.M. Jones" <rjones@redhat.com>
 Date: Tue, 5 Nov 2013 10:21:32 +0000
 Subject: [PATCH] builder: Internal implementation of parallel xzcat (pxzcat).
@@ -85,7 +85,7 @@ index 0af3f95..9430d62 100644
  	  -o $@
  
 diff --git a/builder/builder.ml b/builder/builder.ml
-index 6a4ef70..4f000fd 100644
+index 2940f3d..e0b724b 100644
 --- a/builder/builder.ml
 +++ b/builder/builder.ml
 @@ -24,6 +24,7 @@ open Common_utils
@@ -878,7 +878,7 @@ index b9fd69c..19dc3ea 100644
  =head3 User-Mode Linux
  
 diff --git a/configure.ac b/configure.ac
-index 9d551af..bd3078f 100644
+index 323a25b..3b6527f 100644
 --- a/configure.ac
 +++ b/configure.ac
 @@ -701,9 +701,15 @@ fi

@@ -1,4 +1,4 @@
-From fcd3c70379bb87776d42eac25776e30c9d61f8d8 Mon Sep 17 00:00:00 2001
+From 4947b8cee2fb52c5941713fc26fe504f79794424 Mon Sep 17 00:00:00 2001
 From: "Richard W.M. Jones" <rjones@redhat.com>
 Date: Tue, 22 Oct 2013 22:28:27 +0100
 Subject: [PATCH] builder: Add --no-sync option to avoid sync on exit.
@@ -11,7 +11,7 @@ Subject: [PATCH] builder: Add --no-sync option to avoid sync on exit.
  3 files changed, 25 insertions(+), 3 deletions(-)
 
 diff --git a/builder/builder.ml b/builder/builder.ml
-index 01fb042..ed83554 100644
+index 83bbad2..8665449 100644
 --- a/builder/builder.ml
 +++ b/builder/builder.ml
 @@ -38,7 +38,7 @@ let main () =

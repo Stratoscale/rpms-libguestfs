@@ -1,4 +1,4 @@
-From b85acab733df612e43efc8070df4d9959bf8d6ed Mon Sep 17 00:00:00 2001
+From 2bedd95bb32aa198cbf8fc010b2f3a3334f073f5 Mon Sep 17 00:00:00 2001
 From: "Richard W.M. Jones" <rjones@redhat.com>
 Date: Mon, 4 Nov 2013 14:53:41 +0000
 Subject: [PATCH] builder: Add a real scanner/parser for index files.
@@ -983,20 +983,20 @@ index dc039fe..fb47e50 100644
      );
  
 diff --git a/builder/list_entries.ml b/builder/list_entries.ml
-index 04a65ca..8c24fe2 100644
+index 5940d79..87001c0 100644
 --- a/builder/list_entries.ml
 +++ b/builder/list_entries.ml
 @@ -62,7 +62,7 @@ let list_entries ?(list_long = false) ~sources index =
            | None -> ()
            | Some notes ->
              printf "\n";
--            printf "Notes:\n %s\n" notes
-+            printf "Notes:\n\n%s\n" notes
+-            printf (f_"Notes:\n %s\n") notes
++            printf (f_"Notes:\n\n%s\n") notes
            );
            printf "\n"
          )
 diff --git a/builder/test-virt-builder-list.sh b/builder/test-virt-builder-list.sh
-index 256d993..11305a9 100755
+index 3077b23..ff16abe 100755
 --- a/builder/test-virt-builder-list.sh
 +++ b/builder/test-virt-builder-list.sh
 @@ -46,28 +46,32 @@ Full name:               Phony Debian
@@ -1163,7 +1163,7 @@ index 0000000..6b03703
 +
 +Copyright (C) 2013 Red Hat Inc.
 diff --git a/configure.ac b/configure.ac
-index a5e8783..9d551af 100644
+index aa48224..323a25b 100644
 --- a/configure.ac
 +++ b/configure.ac
 @@ -705,6 +705,10 @@ test "x$XZCAT" = "xno" && AC_MSG_ERROR([xzcat must be installed])
@@ -1178,7 +1178,7 @@ index a5e8783..9d551af 100644
  dnl back to basic 'qemu'.  Allow the user to override it.
  qemu_system="$(
 diff --git a/po-docs/ja/Makefile.am b/po-docs/ja/Makefile.am
-index 75d47a8..da1bcc3 100644
+index 23857bd..e954f04 100644
 --- a/po-docs/ja/Makefile.am
 +++ b/po-docs/ja/Makefile.am
 @@ -60,6 +60,7 @@ MANPAGES = \
@@ -1202,7 +1202,7 @@ index 5ff9447..dd2898c 100644
  ../cat/virt-filesystems.pod
  ../cat/virt-ls.pod
 diff --git a/po-docs/uk/Makefile.am b/po-docs/uk/Makefile.am
-index 75d47a8..da1bcc3 100644
+index 23857bd..e954f04 100644
 --- a/po-docs/uk/Makefile.am
 +++ b/po-docs/uk/Makefile.am
 @@ -60,6 +60,7 @@ MANPAGES = \

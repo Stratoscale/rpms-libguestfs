@@ -1,4 +1,4 @@
-From 01d6db9a46d45c327f30d611d2721b2283702eba Mon Sep 17 00:00:00 2001
+From bb05712cbeb2429f2bca3e8096eed5b6287f20ef Mon Sep 17 00:00:00 2001
 From: "Richard W.M. Jones" <rjones@redhat.com>
 Date: Sat, 26 Oct 2013 11:27:06 +0100
 Subject: [PATCH] builder: Allow --upload to a directory.
@@ -11,7 +11,7 @@ Also set the owner and permissions on the destination file correctly.
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/builder/test-virt-builder.sh b/builder/test-virt-builder.sh
-index 93fed4e..c69774c 100755
+index 6f76972..30c3cf8 100755
 --- a/builder/test-virt-builder.sh
 +++ b/builder/test-virt-builder.sh
 @@ -56,7 +56,7 @@ $VG ./virt-builder phony-fedora \

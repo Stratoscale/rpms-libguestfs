@@ -1,4 +1,4 @@
-From 47a44bec0a20a32ec470fdc9da92be04b4253286 Mon Sep 17 00:00:00 2001
+From b88dfad2356223057f9f65456409a3440ebce304 Mon Sep 17 00:00:00 2001
 From: "Richard W.M. Jones" <rjones@redhat.com>
 Date: Fri, 25 Oct 2013 13:35:51 +0100
 Subject: [PATCH] builder: Add --mkdir option to create directories.
@@ -12,7 +12,7 @@ Subject: [PATCH] builder: Add --mkdir option to create directories.
  4 files changed, 32 insertions(+), 6 deletions(-)
 
 diff --git a/builder/builder.ml b/builder/builder.ml
-index ed83554..0c8f3b1 100644
+index 8665449..fa3f8a7 100644
 --- a/builder/builder.ml
 +++ b/builder/builder.ml
 @@ -36,9 +36,9 @@ let main () =
@@ -84,7 +84,7 @@ index 43909cc..36c63a2 100644
 +  network, output, password_crypto, quiet, root_password, scrub,
 +  scrub_logfile, size, source, sync, upload
 diff --git a/builder/test-virt-builder.sh b/builder/test-virt-builder.sh
-index cec76fa..93fed4e 100755
+index c8d2e58..6f76972 100755
 --- a/builder/test-virt-builder.sh
 +++ b/builder/test-virt-builder.sh
 @@ -54,6 +54,7 @@ $VG ./virt-builder phony-fedora \

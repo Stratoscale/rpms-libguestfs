@@ -1,4 +1,4 @@
-From f9d8a69ee0d853cffac2f7d628b928de9570876a Mon Sep 17 00:00:00 2001
+From c8796ce8757b5a0861e9cc45363fb08dc873cd99 Mon Sep 17 00:00:00 2001
 From: "Richard W.M. Jones" <rjones@redhat.com>
 Date: Sat, 26 Oct 2013 14:45:30 +0100
 Subject: [PATCH] builder: Document how to boot VMs directly in qemu or KVM.

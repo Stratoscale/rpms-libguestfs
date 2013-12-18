@@ -1,4 +1,4 @@
-From 0c82e27a75028553f6a549b548dd57b9e061bf6c Mon Sep 17 00:00:00 2001
+From 63f1b19c294c0e5f4acfbc89e9cf1e09b55b5585 Mon Sep 17 00:00:00 2001
 From: "Richard W.M. Jones" <rjones@redhat.com>
 Date: Tue, 29 Oct 2013 19:23:33 +0000
 Subject: [PATCH] builder: Add -m/--memsize and --smp command line options.
@@ -11,7 +11,7 @@ Subject: [PATCH] builder: Add -m/--memsize and --smp command line options.
  3 files changed, 33 insertions(+), 10 deletions(-)
 
 diff --git a/builder/builder.ml b/builder/builder.ml
-index c765610..8c8e2d4 100644
+index 3447dc7..b120b45 100644
 --- a/builder/builder.ml
 +++ b/builder/builder.ml
 @@ -36,9 +36,9 @@ let main () =

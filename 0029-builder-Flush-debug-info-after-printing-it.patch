@@ -1,0 +1,26 @@
+From d793c0d918575a6d818b3001af437e8339815ab1 Mon Sep 17 00:00:00 2001
+From: "Richard W.M. Jones" <rjones@redhat.com>
+Date: Sat, 14 Dec 2013 15:50:04 +0000
+Subject: [PATCH] builder: Flush debug info after printing it.
+
+(cherry picked from commit 7af9cabadeb1da329de4411d7eaea2e347496446)
+---
+ builder/builder.ml | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/builder/builder.ml b/builder/builder.ml
+index d74251c..de229b3 100644
+--- a/builder/builder.ml
++++ b/builder/builder.ml
+@@ -427,7 +427,7 @@ let main () =
+         eprintf "\n";
+         eprintf "%d: otags:" i;
+         print_tags otags;
+-        eprintf "\n\n"
++        eprintf "\n\n%!"
+     ) plan
+   );
+ 
+-- 
+1.8.3.1
+

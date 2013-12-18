@@ -1,4 +1,4 @@
-From 61749ab267f66f304a5bc27138a49c8db016bdaf Mon Sep 17 00:00:00 2001
+From 9e48ee24fcea126edc5b7b6e174cd7a0c27a5a42 Mon Sep 17 00:00:00 2001
 From: "Richard W.M. Jones" <rjones@redhat.com>
 Date: Sat, 26 Oct 2013 17:09:06 +0100
 Subject: [PATCH] firstboot: Send the output to the console as well as to the

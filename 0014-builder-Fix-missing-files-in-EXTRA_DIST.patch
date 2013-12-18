@@ -1,4 +1,4 @@
-From 83d58ef9bdb030fe011b92fcf99575ac5e303f11 Mon Sep 17 00:00:00 2001
+From bb77514accc4134826a64f22cb0b86bae881c96e Mon Sep 17 00:00:00 2001
 From: "Richard W.M. Jones" <rjones@redhat.com>
 Date: Tue, 5 Nov 2013 07:15:19 +0000
 Subject: [PATCH] builder: Fix missing files in EXTRA_DIST.

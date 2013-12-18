@@ -1,4 +1,4 @@
-From 2583c9e669e69eb799c16b9d72241297ec6744d4 Mon Sep 17 00:00:00 2001
+From c541a35fb2e815c008161dbf8929bbddc6054259 Mon Sep 17 00:00:00 2001
 From: "Richard W.M. Jones" <rjones@redhat.com>
 Date: Fri, 1 Nov 2013 14:16:34 +0000
 Subject: [PATCH] builder: Allow multiple source paths to be specified.
@@ -27,7 +27,7 @@ There is still only one built-in path, but we can add more later.
  10 files changed, 143 insertions(+), 46 deletions(-)
 
 diff --git a/builder/builder.ml b/builder/builder.ml
-index 8c8e2d4..6a4ef70 100644
+index b120b45..2940f3d 100644
 --- a/builder/builder.ml
 +++ b/builder/builder.ml
 @@ -35,22 +35,27 @@ let prog = Filename.basename Sys.executable_name
@@ -267,7 +267,7 @@ index 79df5ef..0b6317d 100644
  
  val get_index : debug:bool -> downloader:Downloader.t -> sigchecker:Sigchecker.t -> string -> index
 diff --git a/builder/list_entries.ml b/builder/list_entries.ml
-index b233f0e..04a65ca 100644
+index cf97142..5940d79 100644
 --- a/builder/list_entries.ml
 +++ b/builder/list_entries.ml
 @@ -21,10 +21,14 @@ open Common_utils
@@ -342,7 +342,7 @@ index 4d89129..cdd800e 100644
  val verify : t -> string -> unit
  (** Verify the file is signed (if check_signature is true). *)
 diff --git a/builder/test-virt-builder-list.sh b/builder/test-virt-builder-list.sh
-index 134ca7c..256d993 100755
+index 3a159bb..3077b23 100755
 --- a/builder/test-virt-builder-list.sh
 +++ b/builder/test-virt-builder-list.sh
 @@ -39,6 +39,7 @@ fi

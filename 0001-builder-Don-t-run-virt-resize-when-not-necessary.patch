@@ -1,4 +1,4 @@
-From 0d7c35a684c9786b0467bef4272d19f5881574eb Mon Sep 17 00:00:00 2001
+From 931d8a5c4417ffcb360e8b1b88f566a494d4c737 Mon Sep 17 00:00:00 2001
 From: "Richard W.M. Jones" <rjones@redhat.com>
 Date: Tue, 22 Oct 2013 13:52:25 +0100
 Subject: [PATCH] builder: Don't run virt-resize when not necessary.
@@ -12,11 +12,11 @@ the template directly to the output file.
 
 (cherry picked from commit 2f3a3e308af8012501437f723471a66537ecbf64)
 ---
- builder/builder.ml | 65 ++++++++++++++++++++++++++++++++++++++++--------------
- 1 file changed, 48 insertions(+), 17 deletions(-)
+ builder/builder.ml | 70 +++++++++++++++++++++++++++++++++++++-----------------
+ 1 file changed, 48 insertions(+), 22 deletions(-)
 
 diff --git a/builder/builder.ml b/builder/builder.ml
-index fa34743..edeacea 100644
+index c814441..1785a0c 100644
 --- a/builder/builder.ml
 +++ b/builder/builder.ml
 @@ -232,7 +232,12 @@ let main () =
@@ -75,13 +75,18 @@ index fa34743..edeacea 100644
        msg (f_"Creating disk image: %s") output;
        let cmd =
          sprintf "qemu-img create -f %s%s %s %Ld%s"
-@@ -308,25 +321,42 @@ let main () =
+@@ -308,30 +321,42 @@ let main () =
        in
        at_exit delete_file;
  
 -      output, Some size, format, delete_output_file, true in
 +      output, Some size, format, delete_output_file, do_resize, true in
  
+-  if is_char_device output then (
+-    eprintf (f_"%s: cannot output to a character device or /dev/null\n") prog;
+-    exit 1
+-  );
+-
 -  let source =
 -    (* Uncompress it to a temporary file. *)
 +  if not do_resize then (
@@ -128,7 +133,7 @@ index fa34743..edeacea 100644
      (match size with
      | None ->
        msg (f_"Running virt-resize to expand the disk")
-@@ -351,13 +381,14 @@ let main () =
+@@ -356,13 +381,14 @@ let main () =
          (match lvexpand with
          | None -> ""
          | Some lvexpand -> sprintf " --lv-expand %s" (quote lvexpand))

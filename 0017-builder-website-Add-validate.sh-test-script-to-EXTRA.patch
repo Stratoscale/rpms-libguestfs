@@ -1,4 +1,4 @@
-From 0c9b6f8109dec616b5c03c56391cf6e2795da726 Mon Sep 17 00:00:00 2001
+From 9c93d8a71698cfde9f20b37b71e51f9663b755c4 Mon Sep 17 00:00:00 2001
 From: "Richard W.M. Jones" <rjones@redhat.com>
 Date: Tue, 5 Nov 2013 15:15:17 +0000
 Subject: [PATCH] builder/website: Add validate.sh test script to EXTRA_DIST.
@@ -11,7 +11,7 @@ This fixes commit 154bfb7dd46e7998eed1d40ead95923590763739.
  1 file changed, 1 insertion(+)
 
 diff --git a/builder/website/Makefile.am b/builder/website/Makefile.am
-index b45d98a..680fd54 100644
+index 61234a2..dff186f 100644
 --- a/builder/website/Makefile.am
 +++ b/builder/website/Makefile.am
 @@ -21,6 +21,7 @@ EXTRA_DIST = \

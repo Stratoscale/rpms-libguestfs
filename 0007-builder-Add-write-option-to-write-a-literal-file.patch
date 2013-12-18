@@ -1,4 +1,4 @@
-From 82ddc2d25e1bffbb5932492f25f45ada2aaeb67a Mon Sep 17 00:00:00 2001
+From bdf939b56dba000ad4f54b32bd3d2571070145ed Mon Sep 17 00:00:00 2001
 From: "Richard W.M. Jones" <rjones@redhat.com>
 Date: Sat, 26 Oct 2013 11:40:48 +0100
 Subject: [PATCH] builder: Add --write option to write a literal file.
@@ -12,7 +12,7 @@ Subject: [PATCH] builder: Add --write option to write a literal file.
  4 files changed, 34 insertions(+), 2 deletions(-)
 
 diff --git a/builder/builder.ml b/builder/builder.ml
-index 0c8f3b1..c765610 100644
+index fa3f8a7..3447dc7 100644
 --- a/builder/builder.ml
 +++ b/builder/builder.ml
 @@ -38,7 +38,7 @@ let main () =
@@ -85,7 +85,7 @@ index 36c63a2..6611fad 100644
 -  scrub_logfile, size, source, sync, upload
 +  scrub_logfile, size, source, sync, upload, writes
 diff --git a/builder/test-virt-builder.sh b/builder/test-virt-builder.sh
-index c69774c..6296d16 100755
+index 30c3cf8..438f2e9 100755
 --- a/builder/test-virt-builder.sh
 +++ b/builder/test-virt-builder.sh
 @@ -55,6 +55,7 @@ $VG ./virt-builder phony-fedora \

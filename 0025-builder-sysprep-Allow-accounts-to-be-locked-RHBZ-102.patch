@@ -1,0 +1,227 @@
+From 963140d7c1f48f9f76e9293ff581ccf1c9da496c Mon Sep 17 00:00:00 2001
+From: "Richard W.M. Jones" <rjones@redhat.com>
+Date: Thu, 21 Nov 2013 17:13:22 +0000
+Subject: [PATCH] builder/sysprep: Allow accounts to be locked (RHBZ#1028660).
+
+This allows you to select both locked accounts and disabled
+passwords.  The two are subtly different concepts.
+
+A locked account [cf. passwd -l] puts "!!" at the beginning of the
+shadow password field.  Locking is reversible, because the "!!"  can
+be removed, restoring the original password.  Therefore "locked"
+acts as a flag in front of an existing selector.
+
+A disabled account has "*" in the password field.  Therefore it has no
+password.
+
+Note that an account may be both locked and disabled, although this is
+probably not useful.  The shadow password field will contain "!!*".
+
+(cherry picked from commit 3712249f9659121277a0d2ca0549e02bc38e0cad)
+---
+ builder/builder.ml                    |  2 +-
+ builder/virt-builder.pod              | 21 +++++++++++++++
+ mllib/password.ml                     | 49 ++++++++++++++++++++++++++---------
+ mllib/password.mli                    | 11 +++++---
+ sysprep/sysprep_operation_password.ml | 33 +++++++++++++++++++++++
+ 5 files changed, 100 insertions(+), 16 deletions(-)
+
+diff --git a/builder/builder.ml b/builder/builder.ml
+index 541eb60..2710f10 100644
+--- a/builder/builder.ml
++++ b/builder/builder.ml
+@@ -458,7 +458,7 @@ let main () =
+           pw
+         | None ->
+           msg (f_"Setting random root password [did you mean to use --root-password?]");
+-          Password.Set_random_password in
++          parse_selector ~prog "random" in
+       Hashtbl.replace password_map "root" pw;
+       set_linux_passwords ~prog ?password_crypto g root password_map
+     | _ ->
+diff --git a/builder/virt-builder.pod b/builder/virt-builder.pod
+index 7b74bdb..4bb9f64 100644
+--- a/builder/virt-builder.pod
++++ b/builder/virt-builder.pod
+@@ -712,6 +712,27 @@ has approximately 120 bits of randomness.
+ 
+ This is the default.
+ 
++=item B<--root-password> disabled
++
++The root account password is disabled.  This is like putting C<*>
++in the password field.
++
++=item B<--root-password> locked:file:FILENAME
++
++=item B<--root-password> locked:password:PASSWORD
++
++=item B<--root-password> locked:random
++
++The root account is locked, but a password is placed on the
++account.  If first unlocked (using C<passwd -u>) then logins will
++use the given password.
++
++=item B<--root-password> locked
++
++=item B<--root-password> locked:disabled
++
++The root account is locked I<and> password is disabled.
++
+ =back
+ 
+ =head3 Creating user accounts
+diff --git a/mllib/password.ml b/mllib/password.ml
+index 421ce8d..08a7d3f 100644
+--- a/mllib/password.ml
++++ b/mllib/password.ml
+@@ -22,9 +22,14 @@ open Printf
+ 
+ type password_crypto = [`MD5 | `SHA256 | `SHA512 ]
+ 
+-type password_selector =
+-| Set_password of string
+-| Set_random_password
++type password_selector = {
++  pw_password : password;
++  pw_locked : bool;
++}
++and password =
++| Password of string
++| Random_password
++| Disabled_password
+ 
+ type password_map = (string, password_selector) Hashtbl.t
+ 
+@@ -45,12 +50,26 @@ let password_crypto_of_string ~prog = function
+     exit 1
+ 
+ let rec parse_selector ~prog arg =
+-  match string_nsplit ":" arg with
+-  | [ "file"; filename ] -> Set_password (read_password_from_file filename)
+-  | "password" :: password -> Set_password (String.concat ":" password)
+-  | [ "random" ] -> Set_random_password
++  parse_selector_list ~prog arg (string_nsplit ":" arg)
++
++and parse_selector_list ~prog orig_arg = function
++  | [ "lock"|"locked" ] ->
++    { pw_locked = true; pw_password = Disabled_password }
++  | ("lock"|"locked") :: rest ->
++    let pw = parse_selector_list ~prog orig_arg rest in
++    { pw with pw_locked = true }
++  | [ "file"; filename ] ->
++    { pw_password = Password (read_password_from_file filename);
++      pw_locked = false }
++  | "password" :: password ->
++    { pw_password = Password (String.concat ":" password); pw_locked = false }
++  | [ "random" ] ->
++    { pw_password = Random_password; pw_locked = false }
++  | [ "disable"|"disabled" ] ->
++    { pw_password = Disabled_password; pw_locked = false }
+   | _ ->
+-    eprintf (f_"%s: invalid password selector '%s'; see the man page.\n") prog arg;
++    eprintf (f_"%s: invalid password selector '%s'; see the man page.\n")
++      prog orig_arg;
+     exit 1
+ 
+ and read_password_from_file filename =
+@@ -77,7 +96,8 @@ let rec set_linux_passwords ~prog ?password_crypto g root passwords =
+     List.map (
+       fun line ->
+         try
+-          (* Each line is: "user:password:..."
++          (* Each line is: "user:[!!]password:..."
++           * !! at the front of the password field means the account is locked.
+            * 'i' points to the first colon, 'j' to the second colon.
+            *)
+           let i = String.index line ':' in
+@@ -87,12 +107,17 @@ let rec set_linux_passwords ~prog ?password_crypto g root passwords =
+           let rest = String.sub line j (String.length line - j) in
+           let pwfield =
+             match selector with
+-            | Set_password password -> encrypt password crypto
+-            | Set_random_password ->
++            | { pw_locked = locked;
++                pw_password = Password password } ->
++              if locked then "!!" else "" ^ encrypt password crypto
++            | { pw_locked = locked;
++                pw_password = Random_password } ->
+               let password = make_random_password () in
+               printf (f_"Setting random password of %s to %s\n%!")
+                 user password;
+-              encrypt password crypto in
++              if locked then "!!" else "" ^ encrypt password crypto
++            | { pw_locked = true; pw_password = Disabled_password } -> "!!*"
++            | { pw_locked = false; pw_password = Disabled_password } -> "*" in
+           user ^ ":" ^ pwfield ^ rest
+         with Not_found -> line
+     ) shadow in
+diff --git a/mllib/password.mli b/mllib/password.mli
+index 01b4cd0..db0a6d2 100644
+--- a/mllib/password.mli
++++ b/mllib/password.mli
+@@ -21,9 +21,14 @@ type password_crypto = [ `MD5 | `SHA256 | `SHA512 ]
+ val password_crypto_of_string : prog:string -> string -> password_crypto
+ (** Parse --password-crypto parameter on command line. *)
+ 
+-type password_selector =
+-| Set_password of string
+-| Set_random_password
++type password_selector = {
++  pw_password : password;      (** The password. *)
++  pw_locked : bool;            (** If the account should be locked. *)
++}
++and password =
++| Password of string                 (** Password (literal string). *)
++| Random_password                    (** Choose a random password. *)
++| Disabled_password                  (** [*] in the password field. *)
+ 
+ val parse_selector : prog:string -> string -> password_selector
+ (** Parse the selector field in --password/--root-password.  Note this
+diff --git a/sysprep/sysprep_operation_password.ml b/sysprep/sysprep_operation_password.ml
+index 0cd834a..ef0e985 100644
+--- a/sysprep/sysprep_operation_password.ml
++++ b/sysprep/sysprep_operation_password.ml
+@@ -143,6 +143,39 @@ can see the cleartext password using L<ps(1)>.
+ Choose a random password, which is printed on stdout.  The password
+ has approximately 120 bits of randomness.
+ 
++=item B<--password> USERNAME:disabled
++
++=item B<--root-password> disabled
++
++The account password is disabled.  This is like putting C<*>
++in the password field.
++
++=item B<--password> USERNAME:locked:file:FILENAME
++
++=item B<--password> USERNAME:locked:password:PASSWORD
++
++=item B<--password> USERNAME:locked:random
++
++=item B<--root-password> locked:file:FILENAME
++
++=item B<--root-password> locked:password:PASSWORD
++
++=item B<--root-password> locked:random
++
++The account is locked, but a password is placed on the
++account.  If first unlocked (using C<passwd -u>) then logins will
++use the given password.
++
++=item B<--password> USERNAME:locked
++
++=item B<--password> USERNAME:locked:disabled
++
++=item B<--root-password> locked
++
++=item B<--root-password> locked:disabled
++
++The account is locked I<and> password is disabled.
++
+ =back"
+       };
+ 
+-- 
+1.8.3.1
+

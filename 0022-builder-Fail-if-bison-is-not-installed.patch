@@ -1,4 +1,4 @@
-From 914eda77f8aa33a68c61f2620dc487dc5a104215 Mon Sep 17 00:00:00 2001
+From 374b2a43af68097f3488feeb48b1fef5b1e81a41 Mon Sep 17 00:00:00 2001
 From: "Richard W.M. Jones" <rjones@redhat.com>
 Date: Tue, 5 Nov 2013 22:25:59 +0000
 Subject: [PATCH] builder: Fail if bison is not installed.
@@ -11,7 +11,7 @@ This partially fixes commit a4800e2d4fc50f372a8b626333c4fbb9b8ca9633.
  1 file changed, 6 insertions(+), 1 deletion(-)
 
 diff --git a/configure.ac b/configure.ac
-index bd3078f..9b4ae12 100644
+index 3b6527f..b69e14c 100644
 --- a/configure.ac
 +++ b/configure.ac
 @@ -711,9 +711,14 @@ PKG_CHECK_MODULES([LIBLZMA], [liblzma],[

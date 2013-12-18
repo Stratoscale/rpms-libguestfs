@@ -1,4 +1,4 @@
-From 6324def6424e891a74b2aca01325c4999e9178ca Mon Sep 17 00:00:00 2001
+From 8455b9f263b3c84d118a3343353579683942f820 Mon Sep 17 00:00:00 2001
 From: "Richard W.M. Jones" <rjones@redhat.com>
 Date: Tue, 5 Nov 2013 15:43:24 +0000
 Subject: [PATCH] builder: Add some generated files to CLEANFILES.

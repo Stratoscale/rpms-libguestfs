@@ -1,4 +1,4 @@
-From 230def3aec1e56c09fef3f75ce9545322f4268ae Mon Sep 17 00:00:00 2001
+From 43549b26d791d295abff402978252026dba56980 Mon Sep 17 00:00:00 2001
 From: "Richard W.M. Jones" <rjones@redhat.com>
 Date: Sun, 27 Oct 2013 14:59:39 +0000
 Subject: [PATCH] builder: Add a section on performance to the manual.
