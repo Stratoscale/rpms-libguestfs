@@ -303,6 +303,8 @@ the virtual machine to see how much space is really being used.  It is
 like the df(1) command, but for virtual machines, except that it also
 works for Windows virtual machines.
 
+Virt-diff shows the differences between virtual machines.
+
 Virt-edit is a command line tool to edit the contents of a file in a
 virtual machine.
 
@@ -803,6 +805,8 @@ mkdir -p $RPM_BUILD_ROOT%{_localstatedir}/run/libguestfs
 %{_mandir}/man1/virt-copy-out.1*
 %{_bindir}/virt-df
 %{_mandir}/man1/virt-df.1*
+%{_bindir}/virt-diff
+%{_mandir}/man1/virt-diff.1*
 %{_bindir}/virt-edit
 %{_mandir}/man1/virt-edit.1*
 %{_bindir}/virt-filesystems
