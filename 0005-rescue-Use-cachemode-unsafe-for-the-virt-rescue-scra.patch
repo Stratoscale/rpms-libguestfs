@@ -1,0 +1,64 @@
+From 50d33d4463ad702fdd79484b9441fb2565d76dae Mon Sep 17 00:00:00 2001
+From: "Richard W.M. Jones" <rjones@redhat.com>
+Date: Sat, 31 Aug 2013 22:48:04 +0100
+Subject: [PATCH] rescue: Use cachemode "unsafe" for the virt-rescue --scratch
+ option.
+
+(cherry picked from commit 3f0748f1fc64e42517c0d4535c27b1f32da86023)
+(cherry picked from commit 1e421afa988195bead6650c421d9752fed32b73f)
+---
+ fish/options.c  | 5 +++++
+ fish/options.h  | 1 +
+ rescue/rescue.c | 1 +
+ 3 files changed, 7 insertions(+)
+
+diff --git a/fish/options.c b/fish/options.c
+index 6d63afa..75d61ad 100644
+--- a/fish/options.c
++++ b/fish/options.c
+@@ -110,6 +110,10 @@ add_drives (struct drv *drv, char next_drive)
+         ad_optargs.bitmask |= GUESTFS_ADD_DRIVE_OPTS_FORMAT_BITMASK;
+         ad_optargs.format = drv->a.format;
+       }
++      if (drv->a.cachemode) {
++        ad_optargs.bitmask |= GUESTFS_ADD_DRIVE_OPTS_CACHEMODE_BITMASK;
++        ad_optargs.cachemode = drv->a.cachemode;
++      }
+ 
+       r = guestfs_add_drive_opts_argv (g, drv->a.filename, &ad_optargs);
+       if (r == -1)
+@@ -254,6 +258,7 @@ free_drives (struct drv *drv)
+   case drv_a:
+     free (drv->a.filename);
+     /* a.format is an optarg, so don't free it */
++    /* a.cachemode is a static string, so don't free it */
+     break;
+   case drv_uri:
+     free (drv->uri.path);
+diff --git a/fish/options.h b/fish/options.h
+index 507ec1c..e2192b5 100644
+--- a/fish/options.h
++++ b/fish/options.h
+@@ -60,6 +60,7 @@ struct drv {
+     struct {
+       char *filename;       /* disk filename */
+       const char *format;   /* format (NULL == autodetect) */
++      const char *cachemode;/* cachemode (NULL == default) */
+     } a;
+     struct {
+       char *path;           /* disk path */
+diff --git a/rescue/rescue.c b/rescue/rescue.c
+index 65dd473..942c54a 100644
+--- a/rescue/rescue.c
++++ b/rescue/rescue.c
+@@ -580,6 +580,7 @@ add_scratch_disk (struct drv **drvs)
+     exit (EXIT_FAILURE);
+   }
+   drv->a.format = "raw";
++  drv->a.cachemode = "unsafe"; /* because it's a scratch disk */
+   drv->next = *drvs;
+   *drvs = drv;
+ }
+-- 
+1.8.3.1
+

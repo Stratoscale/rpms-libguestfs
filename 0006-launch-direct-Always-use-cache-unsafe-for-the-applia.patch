@@ -1,0 +1,43 @@
+From b54c131813d7a109a00c39d2597ae5ada8b68807 Mon Sep 17 00:00:00 2001
+From: "Richard W.M. Jones" <rjones@redhat.com>
+Date: Thu, 5 Sep 2013 18:45:24 +0100
+Subject: [PATCH] launch: direct: Always use cache=unsafe for the appliance.
+
+The code to select writeback was redundant, because current
+qemu always supports cache=unsafe.
+
+(cherry picked from commit 011c9639267f5f1bfac41e664b2c57cc12deabf8)
+(cherry picked from commit 5be3a863c57aa56677338b499c4d6774d6384c3d)
+---
+ src/launch-direct.c | 12 ++----------
+ 1 file changed, 2 insertions(+), 10 deletions(-)
+
+diff --git a/src/launch-direct.c b/src/launch-direct.c
+index 414658e..798d130 100644
+--- a/src/launch-direct.c
++++ b/src/launch-direct.c
+@@ -375,19 +375,11 @@ launch_direct (guestfs_h *g, const char *arg)
+ 
+     /* Add the ext2 appliance drive (after all the drives). */
+     if (has_appliance_drive) {
+-      const char *cachemode = "";
+-      if (qemu_supports (g, "cache=")) {
+-        if (qemu_supports (g, "unsafe"))
+-          cachemode = ",cache=unsafe";
+-        else if (qemu_supports (g, "writeback"))
+-          cachemode = ",cache=writeback";
+-      }
+-
+       size_t buf2_len = strlen (appliance) + 64;
+       char buf2[buf2_len];
+       add_cmdline (g, "-drive");
+-      snprintf (buf2, buf2_len, "file=%s,snapshot=on,id=appliance,if=%s%s",
+-                appliance, virtio_scsi ? "none" : "virtio", cachemode);
++      snprintf (buf2, buf2_len, "file=%s,snapshot=on,id=appliance,if=%s",
++                appliance, virtio_scsi ? "none" : "virtio");
+       add_cmdline (g, buf2);
+ 
+       if (virtio_scsi) {
+-- 
+1.8.3.1
+

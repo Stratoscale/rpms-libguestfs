@@ -1,0 +1,27 @@
+From 31a4bc0065dc2d4b4812b38f5296c771e7c088cd Mon Sep 17 00:00:00 2001
+From: "Richard W.M. Jones" <rjones@redhat.com>
+Date: Sat, 31 Aug 2013 22:47:44 +0100
+Subject: [PATCH] sparsify: Use cachemode "unsafe" for the overlay disk.
+
+(cherry picked from commit f3a9c9f867bed178d1aabf9675955f633bf3069a)
+(cherry picked from commit 322bf1dd40559d554f5c7540adbe49deacd5f590)
+---
+ sparsify/sparsify.ml | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/sparsify/sparsify.ml b/sparsify/sparsify.ml
+index 7f0090b..77dd2c7 100644
+--- a/sparsify/sparsify.ml
++++ b/sparsify/sparsify.ml
+@@ -265,7 +265,7 @@ let g =
+   if verbose then g#set_verbose true;
+ 
+   (* Note that the temporary overlay disk is always qcow2 format. *)
+-  g#add_drive ~format:"qcow2" ~readonly:false overlaydisk;
++  g#add_drive ~format:"qcow2" ~readonly:false ~cachemode:"unsafe" overlaydisk;
+ 
+   if not quiet then Progress.set_up_progress_bar ~machine_readable g;
+   g#launch ();
+-- 
+1.8.3.1
+

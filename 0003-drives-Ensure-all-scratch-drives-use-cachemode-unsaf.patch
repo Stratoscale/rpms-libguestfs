@@ -1,0 +1,39 @@
+From 5f54c5961f154f83dfe36caf319dcc75718c5ad2 Mon Sep 17 00:00:00 2001
+From: "Richard W.M. Jones" <rjones@redhat.com>
+Date: Sat, 31 Aug 2013 22:38:03 +0100
+Subject: [PATCH] drives: Ensure all scratch drives use cachemode "unsafe".
+
+They are _scratch_ drives so any data on them doesn't matter and can
+be reconstructed in the event of a host system crash.
+
+(cherry picked from commit 96cd7fcecb031bfe6baa49addfb026ae988fb7c1)
+(cherry picked from commit 053061f66f79d21bb48d089717a171470e05e47e)
+---
+ src/drives.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
+
+diff --git a/src/drives.c b/src/drives.c
+index a6cc45a..ebd17f3 100644
+--- a/src/drives.c
++++ b/src/drives.c
+@@ -1027,13 +1027,15 @@ int
+ guestfs__add_drive_scratch (guestfs_h *g, int64_t size,
+                                  const struct guestfs_add_drive_scratch_argv *optargs)
+ {
+-  struct guestfs_add_drive_opts_argv add_drive_optargs;
++  struct guestfs_add_drive_opts_argv add_drive_optargs = { .bitmask = 0 };
+   CLEANUP_FREE char *filename = NULL;
+   int fd;
+ 
+   /* Some parameters we always set. */
+-  add_drive_optargs.bitmask = GUESTFS_ADD_DRIVE_OPTS_FORMAT_BITMASK;
++  add_drive_optargs.bitmask |= GUESTFS_ADD_DRIVE_OPTS_FORMAT_BITMASK;
+   add_drive_optargs.format = "raw";
++  add_drive_optargs.bitmask |= GUESTFS_ADD_DRIVE_OPTS_CACHEMODE_BITMASK;
++  add_drive_optargs.cachemode = "unsafe";
+ 
+   /* Copy the optional arguments through to guestfs_add_drive_opts. */
+   if (optargs->bitmask & GUESTFS_ADD_DRIVE_SCRATCH_NAME_BITMASK) {
+-- 
+1.8.3.1
+

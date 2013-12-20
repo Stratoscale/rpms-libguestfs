@@ -1,0 +1,566 @@
+From fe3d4b9f9e70b6ec61e5eb8a5c7076729d6e1ad8 Mon Sep 17 00:00:00 2001
+From: "Richard W.M. Jones" <rjones@redhat.com>
+Date: Sat, 31 Aug 2013 22:24:40 +0100
+Subject: [PATCH] add_drive: Introduce 'cachemode' parameter to control drive
+ caching.
+
+This commit adds an optional 'cachemode' parameter to the 'add_drive'
+API to control caching.  This corresponds approximately to the
+'-drive ...,cache=' parameter in qemu, but the choices are much more
+restrictive, just 'writeback' or 'unsafe', for reasons outlined below.
+
+The caching modes supported by recent QEMU are:
+
+  writeback:
+   - Reports data writes completed when data is present in the host
+     page cache.
+     Only safe provided guest correctly issues flush operations.
+
+  writethrough:
+   - Reports data writes completed only when each write has been
+     flushed to disk.  Performance is reported as not good.
+
+  none:
+   - Uses O_DIRECT (avoids all interaction with host cache), but does
+     not ensure every write is flushed to disk.
+     Only safe provided guest correctly issues flush operations.
+
+  directsync:
+   - Uses O_DIRECT (avoids all interaction with host cache), and
+     ensures every write has been flushed to disk.
+
+  unsafe:
+   - No special handling.
+
+Since the libguestfs appliance kernel always issues flush operations
+(eg. for filesystem journalling and for sync) the following modes can
+be ignored: 'directsync', 'writethrough'.
+
+That leaves 'writeback', 'none' and 'unsafe'.  However 'none' is both
+a constant source of pain (RHBZ#994517), is inefficient because it
+doesn't use the host cache, and does not give us any safety guarantees
+over and above 'writeback'.  Therefore we should ignore 'none'.
+
+This leaves 'writeback' (safe) and 'unsafe' (fast, useful for scratch
+disks), which is what we implement in this patch.
+
+Note that the previous behaviour was to use 'none' if possible, else
+to use 'writeback'.  The new behaviour is to use 'writeback' only
+which is (in safety terms) equivalent to 'none', and also faster and
+less painful (RHBZ#994517).
+
+This patch also allows you to specify a cache mode for network drives
+which also previously defaulted to 'writeback'.
+
+There is a considerable performance benefit to using unsafe (for
+scratch disks only, of course).  The C API tests only use scratch
+disks (since they are just tests, the final state of the disk doesn't
+matter), and this decreases total run time from 202 seconds to 163
+seconds, about 25% faster.
+
+(cherry picked from commit 749e947bb0103f19feda0f29b6cbbf3cbfa350da)
+(cherry picked from commit c7304d0c8ebe38bc90547f149026ca279a4e7c46)
+---
+ generator/actions.ml   |  30 ++++++++++-
+ src/drives.c           | 141 +++++++++++++++++--------------------------------
+ src/guestfs-internal.h |   2 +-
+ src/launch-direct.c    |   4 +-
+ src/launch-libvirt.c   |  11 ++--
+ 5 files changed, 85 insertions(+), 103 deletions(-)
+
+diff --git a/generator/actions.ml b/generator/actions.ml
+index 4e6b687..eda43ed 100644
+--- a/generator/actions.ml
++++ b/generator/actions.ml
+@@ -1246,7 +1246,7 @@ not all belong to a single logical operating system
+ 
+   { defaults with
+     name = "add_drive";
+-    style = RErr, [String "filename"], [OBool "readonly"; OString "format"; OString "iface"; OString "name"; OString "label"; OString "protocol"; OStringList "server"; OString "username"; OString "secret"];
++    style = RErr, [String "filename"], [OBool "readonly"; OString "format"; OString "iface"; OString "name"; OString "label"; OString "protocol"; OStringList "server"; OString "username"; OString "secret"; OString "cachemode"];
+     once_had_no_optargs = true;
+     blocking = false;
+     fish_alias = ["add"];
+@@ -1436,6 +1436,34 @@ If not given, then a secret matching the given username will be looked up in the
+ default keychain locations, or if no username is given, then no authentication
+ will be used.
+ 
++=item C<cachemode>
++
++Choose whether or not libguestfs will obey sync operations (safe but slow)
++or not (unsafe but fast).  The possible values for this string are:
++
++=over 4
++
++=item C<cachemode = \"writeback\">
++
++This is the default.
++
++Write operations in the API do not return until a L<write(2)>
++call has completed in the host [but note this does not imply
++that anything gets written to disk].
++
++Sync operations in the API, including implicit syncs caused by
++filesystem journalling, will not return until an L<fdatasync(2)>
++call has completed in the host, indicating that data has been
++committed to disk.
++
++=item C<cachemode = \"unsafe\">
++
++In this mode, there are no guarantees.  Libguestfs may cache
++anything and ignore sync requests.  This is suitable only
++for scratch or temporary disks.
++
++=back
++
+ =back" };
+ 
+   { defaults with
+diff --git a/src/drives.c b/src/drives.c
+index 98aead2..a6cc45a 100644
+--- a/src/drives.c
++++ b/src/drives.c
+@@ -86,8 +86,7 @@ static struct drive *
+ create_drive_file (guestfs_h *g, const char *path,
+                    bool readonly, const char *format,
+                    const char *iface, const char *name,
+-                   const char *disk_label,
+-                   bool use_cache_none)
++                   const char *disk_label, const char *cachemode)
+ {
+   struct drive *drv = safe_calloc (g, 1, sizeof *drv);
+ 
+@@ -99,7 +98,7 @@ create_drive_file (guestfs_h *g, const char *path,
+   drv->iface = iface ? safe_strdup (g, iface) : NULL;
+   drv->name = name ? safe_strdup (g, name) : NULL;
+   drv->disk_label = disk_label ? safe_strdup (g, disk_label) : NULL;
+-  drv->use_cache_none = use_cache_none;
++  drv->cachemode = cachemode ? safe_strdup (g, cachemode) : NULL;
+ 
+   drv->priv = drv->free_priv = NULL;
+ 
+@@ -114,8 +113,7 @@ create_drive_non_file (guestfs_h *g,
+                        const char *username, const char *secret,
+                        bool readonly, const char *format,
+                        const char *iface, const char *name,
+-                       const char *disk_label,
+-                       bool use_cache_none)
++                       const char *disk_label, const char *cachemode)
+ {
+   struct drive *drv = safe_calloc (g, 1, sizeof *drv);
+ 
+@@ -131,7 +129,7 @@ create_drive_non_file (guestfs_h *g,
+   drv->iface = iface ? safe_strdup (g, iface) : NULL;
+   drv->name = name ? safe_strdup (g, name) : NULL;
+   drv->disk_label = disk_label ? safe_strdup (g, disk_label) : NULL;
+-  drv->use_cache_none = use_cache_none;
++  drv->cachemode = cachemode ? safe_strdup (g, cachemode) : NULL;
+ 
+   drv->priv = drv->free_priv = NULL;
+ 
+@@ -146,8 +144,7 @@ create_drive_curl (guestfs_h *g,
+                    const char *username, const char *secret,
+                    bool readonly, const char *format,
+                    const char *iface, const char *name,
+-                   const char *disk_label,
+-                   bool use_cache_none)
++                   const char *disk_label, const char *cachemode)
+ {
+   if (secret != NULL) {
+     error (g, _("curl: you cannot specify a secret with this protocol"));
+@@ -179,7 +176,7 @@ create_drive_curl (guestfs_h *g,
+                                 servers, nr_servers, exportname,
+                                 username, secret,
+                                 readonly, format, iface, name, disk_label,
+-                                use_cache_none);
++                                cachemode);
+ }
+ 
+ static struct drive *
+@@ -189,8 +186,7 @@ create_drive_gluster (guestfs_h *g,
+                       const char *username, const char *secret,
+                       bool readonly, const char *format,
+                       const char *iface, const char *name,
+-                      const char *disk_label,
+-                      bool use_cache_none)
++                      const char *disk_label, const char *cachemode)
+ {
+   if (username != NULL) {
+     error (g, _("gluster: you cannot specify a username with this protocol"));
+@@ -220,7 +216,7 @@ create_drive_gluster (guestfs_h *g,
+                                 servers, nr_servers, exportname,
+                                 username, secret,
+                                 readonly, format, iface, name, disk_label,
+-                                use_cache_none);
++                                cachemode);
+ }
+ 
+ static int
+@@ -242,8 +238,7 @@ create_drive_nbd (guestfs_h *g,
+                   const char *username, const char *secret,
+                   bool readonly, const char *format,
+                   const char *iface, const char *name,
+-                  const char *disk_label,
+-                  bool use_cache_none)
++                  const char *disk_label, const char *cachemode)
+ {
+   if (username != NULL) {
+     error (g, _("nbd: you cannot specify a username with this protocol"));
+@@ -266,7 +261,7 @@ create_drive_nbd (guestfs_h *g,
+                                 servers, nr_servers, exportname,
+                                 username, secret,
+                                 readonly, format, iface, name, disk_label,
+-                                use_cache_none);
++                                cachemode);
+ }
+ 
+ static struct drive *
+@@ -276,8 +271,7 @@ create_drive_rbd (guestfs_h *g,
+                   const char *username, const char *secret,
+                   bool readonly, const char *format,
+                   const char *iface, const char *name,
+-                  const char *disk_label,
+-                  bool use_cache_none)
++                  const char *disk_label, const char *cachemode)
+ {
+   size_t i;
+ 
+@@ -312,7 +306,7 @@ create_drive_rbd (guestfs_h *g,
+                                 servers, nr_servers, exportname,
+                                 username, secret,
+                                 readonly, format, iface, name, disk_label,
+-                                use_cache_none);
++                                cachemode);
+ }
+ 
+ static struct drive *
+@@ -322,8 +316,7 @@ create_drive_sheepdog (guestfs_h *g,
+                        const char *username, const char *secret,
+                        bool readonly, const char *format,
+                        const char *iface, const char *name,
+-                       const char *disk_label,
+-                       bool use_cache_none)
++                       const char *disk_label, const char *cachemode)
+ {
+   size_t i;
+ 
+@@ -362,7 +355,7 @@ create_drive_sheepdog (guestfs_h *g,
+                                 servers, nr_servers, exportname,
+                                 username, secret,
+                                 readonly, format, iface, name, disk_label,
+-                                use_cache_none);
++                                cachemode);
+ }
+ 
+ static struct drive *
+@@ -372,8 +365,7 @@ create_drive_ssh (guestfs_h *g,
+                   const char *username, const char *secret,
+                   bool readonly, const char *format,
+                   const char *iface, const char *name,
+-                  const char *disk_label,
+-                  bool use_cache_none)
++                  const char *disk_label, const char *cachemode)
+ {
+   if (secret != NULL) {
+     error (g, _("ssh: you cannot specify a secret with this protocol"));
+@@ -410,7 +402,7 @@ create_drive_ssh (guestfs_h *g,
+                                 servers, nr_servers, exportname,
+                                 username, secret,
+                                 readonly, format, iface, name, disk_label,
+-                                use_cache_none);
++                                cachemode);
+ }
+ 
+ static struct drive *
+@@ -420,8 +412,7 @@ create_drive_iscsi (guestfs_h *g,
+                     const char *username, const char *secret,
+                     bool readonly, const char *format,
+                     const char *iface, const char *name,
+-                    const char *disk_label,
+-                    bool use_cache_none)
++                    const char *disk_label, const char *cachemode)
+ {
+   if (username != NULL) {
+     error (g, _("iscsi: you cannot specify a username with this protocol"));
+@@ -458,7 +449,7 @@ create_drive_iscsi (guestfs_h *g,
+                                 servers, nr_servers, exportname,
+                                 username, secret,
+                                 readonly, format, iface, name, disk_label,
+-                                use_cache_none);
++                                cachemode);
+ }
+ 
+ /* Traditionally you have been able to use /dev/null as a filename, as
+@@ -537,6 +528,7 @@ free_drive_struct (struct drive *drv)
+   free (drv->iface);
+   free (drv->name);
+   free (drv->disk_label);
++  free (drv->cachemode);
+ 
+   if (drv->priv && drv->free_priv)
+     drv->free_priv (drv->priv);
+@@ -555,7 +547,7 @@ drive_to_string (guestfs_h *g, const struct drive *drv)
+   p = guestfs___drive_source_qemu_param (g, &drv->src);
+ 
+   return safe_asprintf
+-    (g, "%s%s%s%s%s%s%s%s%s%s%s",
++    (g, "%s%s%s%s%s%s%s%s%s%s%s%s",
+      p,
+      drv->readonly ? " readonly" : "",
+      drv->format ? " format=" : "",
+@@ -566,7 +558,8 @@ drive_to_string (guestfs_h *g, const struct drive *drv)
+      drv->name ? : "",
+      drv->disk_label ? " label=" : "",
+      drv->disk_label ? : "",
+-     drv->use_cache_none ? " cache=none" : "");
++     drv->cachemode ? " cache=" : "",
++     drv->cachemode ? : "");
+ }
+ 
+ /* Add struct drive to the g->drives vector at the given index. */
+@@ -621,47 +614,6 @@ guestfs___free_drives (guestfs_h *g)
+   g->nr_drives = 0;
+ }
+ 
+-/* cache=none improves reliability in the event of a host crash.
+- *
+- * However this option causes qemu to try to open the file with
+- * O_DIRECT.  This fails on some filesystem types (notably tmpfs).
+- * So we check if we can open the file with or without O_DIRECT,
+- * and use cache=none (or not) accordingly.
+- *
+- * Notes:
+- *
+- * (1) In qemu, cache=none and cache=off are identical.
+- *
+- * (2) cache=none does not disable caching entirely.  qemu still
+- * maintains a writeback cache internally, which will be written out
+- * when qemu is killed (with SIGTERM).  It disables *host kernel*
+- * caching by using O_DIRECT.  To disable caching entirely in kernel
+- * and qemu we would need to use cache=directsync but there is a
+- * performance penalty for that.
+- *
+- * (3) This function is only called on the !readonly path.  We must
+- * try to open with O_RDWR to test that the file is readable and
+- * writable here.
+- */
+-static int
+-test_cache_none (guestfs_h *g, const char *filename)
+-{
+-  int fd = open (filename, O_RDWR|O_DIRECT);
+-  if (fd >= 0) {
+-    close (fd);
+-    return 1;
+-  }
+-
+-  fd = open (filename, O_RDWR);
+-  if (fd >= 0) {
+-    close (fd);
+-    return 0;
+-  }
+-
+-  perrorf (g, "%s", filename);
+-  return -1;
+-}
+-
+ /* Check string parameter matches ^[-_[:alnum:]]+$ (in C locale). */
+ static int
+ valid_format_iface (const char *str)
+@@ -827,7 +779,7 @@ guestfs__add_drive_opts (guestfs_h *g, const char *filename,
+   struct drive_server *servers = NULL;
+   const char *username;
+   const char *secret;
+-  int use_cache_none;
++  const char *cachemode;
+   struct drive *drv;
+   size_t i, drv_index;
+ 
+@@ -853,6 +805,8 @@ guestfs__add_drive_opts (guestfs_h *g, const char *filename,
+     ? optargs->username : NULL;
+   secret = optargs->bitmask & GUESTFS_ADD_DRIVE_OPTS_SECRET_BITMASK
+     ? optargs->secret : NULL;
++  cachemode = optargs->bitmask & GUESTFS_ADD_DRIVE_OPTS_CACHEMODE_BITMASK
++    ? optargs->cachemode : NULL;
+ 
+   if (format && !valid_format_iface (format)) {
+     error (g, _("%s parameter is empty or contains disallowed characters"),
+@@ -871,6 +825,12 @@ guestfs__add_drive_opts (guestfs_h *g, const char *filename,
+     free_drive_servers (servers, nr_servers);
+     return -1;
+   }
++  if (cachemode &&
++      !(STREQ (cachemode, "writeback") || STREQ (cachemode, "unsafe"))) {
++    error (g, _("cachemode parameter must be 'writeback' (default) or 'unsafe'"));
++    free_drive_servers (servers, nr_servers);
++    return -1;
++  }
+ 
+   if (STREQ (protocol, "file")) {
+     if (servers != NULL) {
+@@ -891,23 +851,16 @@ guestfs__add_drive_opts (guestfs_h *g, const char *filename,
+       drv = create_drive_dev_null (g, readonly, format, iface, name,
+                                    disk_label);
+     else {
+-      /* For writable files, see if we can use cache=none.  This also
+-       * checks for the existence of the file.  For readonly we have
+-       * to do the check explicitly.
++      /* We have to check for the existence of the file since that's
++       * required by the API.
+        */
+-      use_cache_none = readonly ? false : test_cache_none (g, filename);
+-      if (use_cache_none == -1)
++      if (access (filename, R_OK) == -1) {
++        perrorf (g, "%s", filename);
+         return -1;
+-
+-      if (readonly) {
+-        if (access (filename, R_OK) == -1) {
+-          perrorf (g, "%s", filename);
+-          return -1;
+-        }
+       }
+ 
+       drv = create_drive_file (g, filename, readonly, format, iface, name,
+-                               disk_label, use_cache_none);
++                               disk_label, cachemode);
+     }
+   }
+   else if (STREQ (protocol, "ftp")) {
+@@ -915,71 +868,71 @@ guestfs__add_drive_opts (guestfs_h *g, const char *filename,
+                              servers, nr_servers, filename,
+                              username, secret,
+                              readonly, format, iface, name,
+-                             disk_label, false);
++                             disk_label, cachemode);
+   }
+   else if (STREQ (protocol, "ftps")) {
+     drv = create_drive_curl (g, drive_protocol_ftps,
+                              servers, nr_servers, filename,
+                              username, secret,
+                              readonly, format, iface, name,
+-                             disk_label, false);
++                             disk_label, cachemode);
+   }
+   else if (STREQ (protocol, "gluster")) {
+     drv = create_drive_gluster (g, servers, nr_servers, filename,
+                                 username, secret,
+                                 readonly, format, iface, name,
+-                                disk_label, false);
++                                disk_label, cachemode);
+   }
+   else if (STREQ (protocol, "http")) {
+     drv = create_drive_curl (g, drive_protocol_http,
+                              servers, nr_servers, filename,
+                              username, secret,
+                              readonly, format, iface, name,
+-                             disk_label, false);
++                             disk_label, cachemode);
+   }
+   else if (STREQ (protocol, "https")) {
+     drv = create_drive_curl (g, drive_protocol_https,
+                              servers, nr_servers, filename,
+                              username, secret,
+                              readonly, format, iface, name,
+-                             disk_label, false);
++                             disk_label, cachemode);
+   }
+   else if (STREQ (protocol, "iscsi")) {
+     drv = create_drive_iscsi (g, servers, nr_servers, filename,
+                               username, secret,
+                               readonly, format, iface, name,
+-                              disk_label, false);
++                              disk_label, cachemode);
+   }
+   else if (STREQ (protocol, "nbd")) {
+     drv = create_drive_nbd (g, servers, nr_servers, filename,
+                             username, secret,
+                             readonly, format, iface, name,
+-                            disk_label, false);
++                            disk_label, cachemode);
+   }
+   else if (STREQ (protocol, "rbd")) {
+     drv = create_drive_rbd (g, servers, nr_servers, filename,
+                             username, secret,
+                             readonly, format, iface, name,
+-                            disk_label, false);
++                            disk_label, cachemode);
+   }
+   else if (STREQ (protocol, "sheepdog")) {
+     drv = create_drive_sheepdog (g, servers, nr_servers, filename,
+                                  username, secret,
+                                  readonly, format, iface, name,
+-                                 disk_label, false);
++                                 disk_label, cachemode);
+   }
+   else if (STREQ (protocol, "ssh")) {
+     drv = create_drive_ssh (g, servers, nr_servers, filename,
+                             username, secret,
+                             readonly, format, iface, name,
+-                            disk_label, false);
++                            disk_label, cachemode);
+   }
+   else if (STREQ (protocol, "tftp")) {
+     drv = create_drive_curl (g, drive_protocol_tftp,
+                              servers, nr_servers, filename,
+                              username, secret,
+                              readonly, format, iface, name,
+-                             disk_label, false);
++                             disk_label, cachemode);
+   }
+   else {
+     error (g, _("unknown protocol '%s'"), protocol);
+diff --git a/src/guestfs-internal.h b/src/guestfs-internal.h
+index 347068b..8dc9983 100644
+--- a/src/guestfs-internal.h
++++ b/src/guestfs-internal.h
+@@ -197,7 +197,7 @@ struct drive {
+   char *iface;
+   char *name;
+   char *disk_label;
+-  bool use_cache_none;
++  char *cachemode;
+ 
+   /* Data used by the backend. */
+   void *priv;
+diff --git a/src/launch-direct.c b/src/launch-direct.c
+index 82e9c12..414658e 100644
+--- a/src/launch-direct.c
++++ b/src/launch-direct.c
+@@ -992,10 +992,10 @@ qemu_drive_param (guestfs_h *g, const struct drive *drv, size_t index)
+     iface = "virtio";
+ 
+   return safe_asprintf
+-    (g, "file=%s%s%s%s%s%s%s,id=hd%zu,if=%s",
++    (g, "file=%s%s,cache=%s%s%s%s%s,id=hd%zu,if=%s",
+      escaped_file,
+      drv->readonly ? ",snapshot=on" : "",
+-     drv->use_cache_none ? ",cache=none" : "",
++     drv->cachemode ? drv->cachemode : "writeback",
+      drv->format ? ",format=" : "",
+      drv->format ? drv->format : "",
+      drv->disk_label ? ",serial=" : "",
+diff --git a/src/launch-libvirt.c b/src/launch-libvirt.c
+index faafeba..16a5453 100644
+--- a/src/launch-libvirt.c
++++ b/src/launch-libvirt.c
+@@ -1218,11 +1218,12 @@ construct_libvirt_xml_disk (guestfs_h *g,
+     return -1;
+   }
+ 
+-  if (drv->use_cache_none) {
+-    XMLERROR (-1,
+-              xmlTextWriterWriteAttribute (xo, BAD_CAST "cache",
+-                                           BAD_CAST "none"));
+-  }
++  XMLERROR (-1,
++            xmlTextWriterWriteAttribute (xo, BAD_CAST "cache",
++                                         BAD_CAST (drv->cachemode ?
++                                                   drv->cachemode :
++                                                   "writeback")));
++
+   XMLERROR (-1, xmlTextWriterEndElement (xo));
+ 
+   if (drv->disk_label) {
+-- 
+1.8.3.1
+

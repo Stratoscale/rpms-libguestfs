@@ -12,12 +12,32 @@ Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
 Version:       1.22.7
-Release:       2%{?dist}
+Release:       3%{?dist}
 License:       LGPLv2+
 
 # Source and patches.
 URL:           http://libguestfs.org/
 Source0:       http://libguestfs.org/download/1.22-stable/%{name}-%{version}.tar.gz
+
+# Note we use the fedora-19 branch from the upstream repo which
+# contains only upstream, backported patches, but conveniently manages
+# them in git.  In order to update this list, run the
+# 'copy-patches.sh' script.
+
+# Git-managed patches.
+Patch0001:     0001-New-API-add-drive-scratch.patch
+Patch0002:     0002-add_drive-Introduce-cachemode-parameter-to-control-d.patch
+Patch0003:     0003-drives-Ensure-all-scratch-drives-use-cachemode-unsaf.patch
+Patch0004:     0004-sparsify-Use-cachemode-unsafe-for-the-overlay-disk.patch
+Patch0005:     0005-rescue-Use-cachemode-unsafe-for-the-virt-rescue-scra.patch
+Patch0006:     0006-launch-direct-Always-use-cache-unsafe-for-the-applia.patch
+# Add any non-git patches here.
+
+# Use git for patch management.
+BuildRequires: git
+
+# Run autotools after applying the patches.
+BuildRequires: autoconf, automake, libtool, gettext-devel
 
 # Basic build requirements:
 BuildRequires: perl(Pod::Simple)
@@ -132,6 +152,8 @@ Source3:       99-guestfsd.rules
 
 # Replacement README file for Fedora users.
 Source4:       README-replacement.in
+
+Source5:       copy-patches.sh
 
 # https://fedoraproject.org/wiki/Packaging:No_Bundled_Libraries#Packages_granted_exceptions
 Provides:      bundled(gnulib)
@@ -522,6 +544,19 @@ for %{name}.
 %prep
 %setup -q
 
+# Use git to manage patches.
+# http://rwmj.wordpress.com/2011/08/09/nice-rpm-git-patch-management-trick/
+git init
+git config user.email "libguestfs@redhat.com"
+git config user.name "libguestfs"
+git add .
+git commit -a -q -m "%{version} baseline"
+git am %{patches}
+
+# Patches affect Makefile.am and configure.ac, so rerun autotools.
+autoreconf -i
+autoconf
+
 if [ "$(getenforce | tr '[A-Z]' '[a-z]')" != "disabled" ]; then
     # For sVirt to work, the local temporary directory we use in the
     # tests must be labelled the same way as /tmp.
@@ -577,6 +612,9 @@ fi
   --with-qemu="qemu-kvm qemu-system-%{_build_arch} qemu" \
   --enable-install-daemon \
   $extra
+
+# Patches above add man pages, so this is needed.
+make -C po-docs update-po
 
 # 'INSTALLDIRS' ensures that Perl and Ruby libs are installed in the
 # vendor dir not the site dir.
@@ -897,6 +935,10 @@ mkdir -p $RPM_BUILD_ROOT%{_localstatedir}/run/libguestfs
 
 
 %changelog
+* Fri Dec 20 2013 Richard W.M. Jones <rjones@redhat.com> - 1:1.22.7-3
+- Backport cachemode parameter from upstream (RHBZ#1044762).
+- Use git to manage patches, add copy-patches.sh script.
+
 * Tue Oct 22 2013 Richard W.M. Jones <rjones@redhat.com> - 1:1.22.7-2
 - Don't use versioned jar file (RHBZ#1022133).
 
