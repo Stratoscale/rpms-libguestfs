@@ -12,7 +12,7 @@ Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
 Version:       1.22.7
-Release:       3%{?dist}
+Release:       4%{?dist}
 License:       LGPLv2+
 
 # Source and patches.
@@ -31,6 +31,7 @@ Patch0003:     0003-drives-Ensure-all-scratch-drives-use-cachemode-unsaf.patch
 Patch0004:     0004-sparsify-Use-cachemode-unsafe-for-the-overlay-disk.patch
 Patch0005:     0005-rescue-Use-cachemode-unsafe-for-the-virt-rescue-scra.patch
 Patch0006:     0006-launch-direct-Always-use-cache-unsafe-for-the-applia.patch
+Patch0007:     0007-daemon-btrfs-Upstream-btrfs-device-add-command-now-n.patch
 # Add any non-git patches here.
 
 # Use git for patch management.
@@ -935,6 +936,9 @@ mkdir -p $RPM_BUILD_ROOT%{_localstatedir}/run/libguestfs
 
 
 %changelog
+* Sat Dec 21 2013 Richard W.M. Jones <rjones@redhat.com> - 1:1.22.7-4
+- Backport upstream patch to workaround changed btrfs behaviour.
+
 * Fri Dec 20 2013 Richard W.M. Jones <rjones@redhat.com> - 1:1.22.7-3
 - Backport cachemode parameter from upstream (RHBZ#1044762).
 - Use git to manage patches, add copy-patches.sh script.
