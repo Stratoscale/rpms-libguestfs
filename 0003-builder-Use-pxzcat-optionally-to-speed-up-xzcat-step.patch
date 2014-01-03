@@ -1,4 +1,4 @@
-From d477bcd55d0d3b7cc04a6fc23d3564fcda081030 Mon Sep 17 00:00:00 2001
+From a5c81744e9301e944cb0225dec799d87b0372bd0 Mon Sep 17 00:00:00 2001
 From: "Richard W.M. Jones" <rjones@redhat.com>
 Date: Tue, 22 Oct 2013 14:22:46 +0100
 Subject: [PATCH] builder: Use pxzcat (optionally) to speed up xzcat step.
@@ -12,7 +12,7 @@ Subject: [PATCH] builder: Use pxzcat (optionally) to speed up xzcat step.
  4 files changed, 14 insertions(+), 2 deletions(-)
 
 diff --git a/README b/README
-index 676bb2f..cdf492e 100644
+index d9c0219..0e442e1 100644
 --- a/README
 +++ b/README
 @@ -170,6 +170,9 @@ The full requirements are described below.
@@ -44,7 +44,7 @@ index 5a2f23c..83bbad2 100644
  
    if not do_resize then (
 diff --git a/configure.ac b/configure.ac
-index 712ed80..aa48224 100644
+index 0ed5fe9..c4ce9be 100644
 --- a/configure.ac
 +++ b/configure.ac
 @@ -702,6 +702,9 @@ dnl Check for xzcat (required).
@@ -70,5 +70,5 @@ index 129741d..5586c5c 100644
 +  | "no" -> None
 +  | path -> Some path
 -- 
-1.8.3.1
+1.8.4.2
 

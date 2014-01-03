@@ -1,4 +1,4 @@
-From 56fd81ec89f83a877971bdc54d6e68c8b47569e5 Mon Sep 17 00:00:00 2001
+From b7d2d32be242115149f8831fdd028822fc9f2c9b Mon Sep 17 00:00:00 2001
 From: "Richard W.M. Jones" <rjones@redhat.com>
 Date: Mon, 16 Dec 2013 14:14:01 +0000
 Subject: [PATCH] builder: Remove blank line.
@@ -21,5 +21,5 @@ index 019fd23..66a3823 100644
    let mode =
      match mode with
 -- 
-1.8.3.1
+1.8.4.2
 

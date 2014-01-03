@@ -1,4 +1,4 @@
-From 23f2221bbf9395a648e1a6fa949aae5d1dbcc20c Mon Sep 17 00:00:00 2001
+From 1bd0129134c935e3bf0a51669c4534a56dda85fb Mon Sep 17 00:00:00 2001
 From: "Richard W.M. Jones" <rjones@redhat.com>
 Date: Tue, 5 Nov 2013 10:21:32 +0000
 Subject: [PATCH] builder: Internal implementation of parallel xzcat (pxzcat).
@@ -29,7 +29,7 @@ xzcat / unxz is able to use threads.
  create mode 100644 builder/pxzcat.mli
 
 diff --git a/README b/README
-index 461915d..baf4de4 100644
+index dee3bd4..8192086 100644
 --- a/README
 +++ b/README
 @@ -174,7 +174,7 @@ The full requirements are described below.
@@ -878,7 +878,7 @@ index b9fd69c..19dc3ea 100644
  =head3 User-Mode Linux
  
 diff --git a/configure.ac b/configure.ac
-index 323a25b..3b6527f 100644
+index 9b5c051..78e85ae 100644
 --- a/configure.ac
 +++ b/configure.ac
 @@ -701,9 +701,15 @@ fi
@@ -938,5 +938,5 @@ index 2ca1042..efeb75d 100644
  mllib/common_gettext.ml
  mllib/common_utils.ml
 -- 
-1.8.3.1
+1.8.4.2
 

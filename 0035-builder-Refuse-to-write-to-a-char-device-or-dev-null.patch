@@ -1,4 +1,4 @@
-From 804dabc5b64a0b5ec03bc0df8e943944afb022a7 Mon Sep 17 00:00:00 2001
+From b067259923b36ece95c5ad3e1e3c32cef649a58e Mon Sep 17 00:00:00 2001
 From: "Richard W.M. Jones" <rjones@redhat.com>
 Date: Sat, 14 Dec 2013 18:54:56 +0000
 Subject: [PATCH] builder: Refuse to write to a char device or /dev/null.
@@ -29,5 +29,5 @@ index 975284d..019fd23 100644
      (* MUST *)
      let goal_must = [
 -- 
-1.8.3.1
+1.8.4.2
 

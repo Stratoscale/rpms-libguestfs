@@ -1,4 +1,4 @@
-From bb05712cbeb2429f2bca3e8096eed5b6287f20ef Mon Sep 17 00:00:00 2001
+From 973b7a6676d5aae1a29d7b7567c91108a468b9ac Mon Sep 17 00:00:00 2001
 From: "Richard W.M. Jones" <rjones@redhat.com>
 Date: Sat, 26 Oct 2013 11:27:06 +0100
 Subject: [PATCH] builder: Allow --upload to a directory.
@@ -24,5 +24,5 @@ index 6f76972..30c3cf8 100755
      --firstboot Makefile --firstboot-command 'echo "hello"' \
      --firstboot-install "minicom,inkscape"
 -- 
-1.8.3.1
+1.8.4.2
 

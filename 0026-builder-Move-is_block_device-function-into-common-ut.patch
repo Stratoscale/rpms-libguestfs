@@ -1,4 +1,4 @@
-From a3ace31149b633f3c1f647d9ec06d622db2d4aa1 Mon Sep 17 00:00:00 2001
+From 47ebaa9a6276fa94014e8955611b49a04e4b3528 Mon Sep 17 00:00:00 2001
 From: "Richard W.M. Jones" <rjones@redhat.com>
 Date: Sat, 14 Dec 2013 13:18:48 +0000
 Subject: [PATCH] builder: Move is_block_device function into common utilities.
@@ -26,7 +26,7 @@ index 2710f10..b59f6ec 100644
  
      let headroom = 256L *^ 1024L *^ 1024L in
 diff --git a/mllib/common_utils.ml b/mllib/common_utils.ml
-index b2ea783..93d22fd 100644
+index 6497f58..3b0d9f8 100644
 --- a/mllib/common_utils.ml
 +++ b/mllib/common_utils.ml
 @@ -391,6 +391,10 @@ let rm_rf_only_files (g : Guestfs.guestfs) dir =
@@ -41,5 +41,5 @@ index b2ea783..93d22fd 100644
    try (Unix.stat file).Unix.st_kind = Unix.S_CHR
    with Unix.Unix_error _ -> false
 -- 
-1.8.3.1
+1.8.4.2
 

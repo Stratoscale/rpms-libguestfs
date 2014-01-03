@@ -1,4 +1,4 @@
-From 41e78b16dd7a581e6182e8def1b2a09392a150bf Mon Sep 17 00:00:00 2001
+From f6344122357663d783581878a73c848b4f08f0b6 Mon Sep 17 00:00:00 2001
 From: "Richard W.M. Jones" <rjones@redhat.com>
 Date: Wed, 6 Nov 2013 15:08:08 +0000
 Subject: [PATCH] builder: Fail if lex is not installed.
@@ -11,7 +11,7 @@ This completes the fix for commit a4800e2d4fc50f372a8b626333c4fbb9b8ca9633.
  1 file changed, 3 insertions(+)
 
 diff --git a/configure.ac b/configure.ac
-index b69e14c..50be801 100644
+index 595438d..5b4de91 100644
 --- a/configure.ac
 +++ b/configure.ac
 @@ -716,6 +716,9 @@ dnl XXX Could be optional with some work.
@@ -25,5 +25,5 @@ index b69e14c..50be801 100644
      AC_MSG_FAILURE([GNU 'bison' is required (yacc won't work).])
  fi
 -- 
-1.8.3.1
+1.8.4.2
 

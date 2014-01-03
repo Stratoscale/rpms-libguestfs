@@ -1,4 +1,4 @@
-From 4947b8cee2fb52c5941713fc26fe504f79794424 Mon Sep 17 00:00:00 2001
+From f7b2b98cf61dad455ca9c59ae9467540d7705afd Mon Sep 17 00:00:00 2001
 From: "Richard W.M. Jones" <rjones@redhat.com>
 Date: Tue, 22 Oct 2013 22:28:27 +0100
 Subject: [PATCH] builder: Add --no-sync option to avoid sync on exit.
@@ -97,5 +97,5 @@ index 5de1e51..aa543bb 100644
  
  List any notes associated with this guest, then exit (this does not do
 -- 
-1.8.3.1
+1.8.4.2
 

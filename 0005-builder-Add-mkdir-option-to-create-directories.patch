@@ -1,4 +1,4 @@
-From b88dfad2356223057f9f65456409a3440ebce304 Mon Sep 17 00:00:00 2001
+From ec66c09a8ee115b49a73a312ff6295df69adcedd Mon Sep 17 00:00:00 2001
 From: "Richard W.M. Jones" <rjones@redhat.com>
 Date: Fri, 25 Oct 2013 13:35:51 +0100
 Subject: [PATCH] builder: Add --mkdir option to create directories.
@@ -133,5 +133,5 @@ index aa543bb..55dba90 100644
  
  =item *
 -- 
-1.8.3.1
+1.8.4.2
 

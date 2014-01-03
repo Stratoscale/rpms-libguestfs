@@ -1,4 +1,4 @@
-From 63f1b19c294c0e5f4acfbc89e9cf1e09b55b5585 Mon Sep 17 00:00:00 2001
+From d2e2bfc2df5cccee15e752223f8dfd54a6057f72 Mon Sep 17 00:00:00 2001
 From: "Richard W.M. Jones" <rjones@redhat.com>
 Date: Tue, 29 Oct 2013 19:23:33 +0000
 Subject: [PATCH] builder: Add -m/--memsize and --smp command line options.
@@ -149,5 +149,5 @@ index a603fcf..3905880 100644
  
  Set the default value for the GPG signature fingerprint (see
 -- 
-1.8.3.1
+1.8.4.2
 

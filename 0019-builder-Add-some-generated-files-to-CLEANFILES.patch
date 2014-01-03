@@ -1,4 +1,4 @@
-From 8455b9f263b3c84d118a3343353579683942f820 Mon Sep 17 00:00:00 2001
+From 77aaa2ee468f42d27bf340876cc4084adedbd4a3 Mon Sep 17 00:00:00 2001
 From: "Richard W.M. Jones" <rjones@redhat.com>
 Date: Tue, 5 Nov 2013 15:43:24 +0000
 Subject: [PATCH] builder: Add some generated files to CLEANFILES.
@@ -25,5 +25,5 @@ index 606ecc4..97550a8 100644
 +	index-scan.c \
 +	stamp-virt-index-validate.pod
 -- 
-1.8.3.1
+1.8.4.2
 

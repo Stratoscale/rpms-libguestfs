@@ -1,4 +1,4 @@
-From f072e53e03e745ec6210fddaf5ce04f88b1697bb Mon Sep 17 00:00:00 2001
+From 1dfb6894138018c50534e90210f2916eab2fd842 Mon Sep 17 00:00:00 2001
 From: "Richard W.M. Jones" <rjones@redhat.com>
 Date: Fri, 13 Dec 2013 13:18:47 +0000
 Subject: [PATCH] builder: Use a planner to work out how to convert the
@@ -497,7 +497,7 @@ index b59f6ec..c0e81f5 100644
    (* Now that we've finished the build, don't delete the output file on
     * exit.
 diff --git a/mllib/Makefile.am b/mllib/Makefile.am
-index bacd2bc..d9accba 100644
+index 1103ffb..67027d2 100644
 --- a/mllib/Makefile.am
 +++ b/mllib/Makefile.am
 @@ -40,6 +40,8 @@ SOURCES = \
@@ -520,7 +520,7 @@ index bacd2bc..d9accba 100644
  noinst_SCRIPTS = dummy
  
 diff --git a/mllib/common_utils.ml b/mllib/common_utils.ml
-index 93d22fd..a2fd738 100644
+index 3b0d9f8..80c5aca 100644
 --- a/mllib/common_utils.ml
 +++ b/mllib/common_utils.ml
 @@ -391,6 +391,18 @@ let rm_rf_only_files (g : Guestfs.guestfs) dir =
@@ -725,5 +725,5 @@ index efeb75d..8ae6ea9 100644
  mllib/random_seed.ml
  mllib/tTY.ml
 -- 
-1.8.3.1
+1.8.4.2
 

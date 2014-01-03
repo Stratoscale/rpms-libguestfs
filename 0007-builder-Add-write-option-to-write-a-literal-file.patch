@@ -1,4 +1,4 @@
-From bdf939b56dba000ad4f54b32bd3d2571070145ed Mon Sep 17 00:00:00 2001
+From 7ac3c7ae90e7ffbd33e9ac782c4d5a8912be651b Mon Sep 17 00:00:00 2001
 From: "Richard W.M. Jones" <rjones@redhat.com>
 Date: Sat, 26 Oct 2013 11:40:48 +0100
 Subject: [PATCH] builder: Add --write option to write a literal file.
@@ -131,5 +131,5 @@ index 55dba90..f795e7a 100644
  
  =item *
 -- 
-1.8.3.1
+1.8.4.2
 

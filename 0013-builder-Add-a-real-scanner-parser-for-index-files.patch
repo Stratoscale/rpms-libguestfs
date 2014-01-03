@@ -1,4 +1,4 @@
-From 2bedd95bb32aa198cbf8fc010b2f3a3334f073f5 Mon Sep 17 00:00:00 2001
+From 6886883c75c46b56c970ed2c87a7b0ef377f18b2 Mon Sep 17 00:00:00 2001
 From: "Richard W.M. Jones" <rjones@redhat.com>
 Date: Mon, 4 Nov 2013 14:53:41 +0000
 Subject: [PATCH] builder: Add a real scanner/parser for index files.
@@ -65,7 +65,7 @@ index 8c5fbe7..43f9f40 100644
  /html/virt-list-filesystems.1.html
  /html/virt-list-partitions.1.html
 diff --git a/README b/README
-index cdf492e..461915d 100644
+index 0e442e1..dee3bd4 100644
 --- a/README
 +++ b/README
 @@ -94,6 +94,10 @@ The full requirements are described below.
@@ -1163,7 +1163,7 @@ index 0000000..6b03703
 +
 +Copyright (C) 2013 Red Hat Inc.
 diff --git a/configure.ac b/configure.ac
-index aa48224..323a25b 100644
+index c4ce9be..9b5c051 100644
 --- a/configure.ac
 +++ b/configure.ac
 @@ -705,6 +705,10 @@ test "x$XZCAT" = "xno" && AC_MSG_ERROR([xzcat must be installed])
@@ -1228,5 +1228,5 @@ index a766f64..aa52b75 100644
  cat/filesystems.c
  cat/ls.c
 -- 
-1.8.3.1
+1.8.4.2
 

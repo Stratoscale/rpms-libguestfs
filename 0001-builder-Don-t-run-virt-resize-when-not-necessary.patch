@@ -1,4 +1,4 @@
-From 931d8a5c4417ffcb360e8b1b88f566a494d4c737 Mon Sep 17 00:00:00 2001
+From 3348050d63bf00563689082ca97b8064bb241369 Mon Sep 17 00:00:00 2001
 From: "Richard W.M. Jones" <rjones@redhat.com>
 Date: Tue, 22 Oct 2013 13:52:25 +0100
 Subject: [PATCH] builder: Don't run virt-resize when not necessary.
@@ -151,5 +151,5 @@ index c814441..1785a0c 100644
    (* Now mount the output disk so we can make changes. *)
    msg (f_"Opening the new disk");
 -- 
-1.8.3.1
+1.8.4.2
 

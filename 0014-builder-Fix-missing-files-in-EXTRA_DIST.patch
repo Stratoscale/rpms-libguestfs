@@ -1,4 +1,4 @@
-From bb77514accc4134826a64f22cb0b86bae881c96e Mon Sep 17 00:00:00 2001
+From 59dd74c69728174b75ed092eda5390c434686091 Mon Sep 17 00:00:00 2001
 From: "Richard W.M. Jones" <rjones@redhat.com>
 Date: Tue, 5 Nov 2013 07:15:19 +0000
 Subject: [PATCH] builder: Fix missing files in EXTRA_DIST.
@@ -31,5 +31,5 @@ index 2a1e448..0af3f95 100644
  	list_entries.ml \
  	perl_edit.ml \
 -- 
-1.8.3.1
+1.8.4.2
 

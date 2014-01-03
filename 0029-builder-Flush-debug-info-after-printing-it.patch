@@ -1,4 +1,4 @@
-From d793c0d918575a6d818b3001af437e8339815ab1 Mon Sep 17 00:00:00 2001
+From baa57e116113ee9e416a26ec5c41c240c6bdd2f0 Mon Sep 17 00:00:00 2001
 From: "Richard W.M. Jones" <rjones@redhat.com>
 Date: Sat, 14 Dec 2013 15:50:04 +0000
 Subject: [PATCH] builder: Flush debug info after printing it.
@@ -22,5 +22,5 @@ index d74251c..de229b3 100644
    );
  
 -- 
-1.8.3.1
+1.8.4.2
 

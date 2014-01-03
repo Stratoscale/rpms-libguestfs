@@ -11,13 +11,13 @@
 Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
-Version:       1.24.3
+Version:       1.24.4
 Release:       1%{?dist}
 License:       LGPLv2+
 
 # Source and patches.
 URL:           http://libguestfs.org/
-Source0:       http://libguestfs.org/download/1.23-development/%{name}-%{version}.tar.gz
+Source0:       http://libguestfs.org/download/1.24-stable/%{name}-%{version}.tar.gz
 
 # Note we use the fedora-20 branch from the upstream repo which
 # contains only upstream, backported patches, but conveniently manages
@@ -61,6 +61,8 @@ Patch0033:     0033-builder-Add-a-link-to-blog-posting-about-the-planner.patch
 Patch0034:     0034-builder-Only-use-virt-resize-no-sparse-when-writing-.patch
 Patch0035:     0035-builder-Refuse-to-write-to-a-char-device-or-dev-null.patch
 Patch0036:     0036-builder-Remove-blank-line.patch
+Patch0037:     0037-builder-Add-update-option-to-update-template-core-pa.patch
+Patch0038:     0038-launch-libvirt-Don-t-default-to-using-NULL-for-libvi.patch
 # Add any non-git patches here.
 
 # Use git for patch management.
@@ -1052,6 +1054,10 @@ mkdir -p $RPM_BUILD_ROOT%{_localstatedir}/run/libguestfs
 
 
 %changelog
+* Fri Jan  3 2014 Richard W.M. Jones <rjones@redhat.com> - 1:1.24.4-1
+- New stable branch version 1.24.4.
+- Fix source URL.
+
 * Wed Dec 18 2013 Richard W.M. Jones <rjones@redhat.com> - 1:1.24.3-1
 - New stable branch version 1.24.3.
 
