@@ -1,0 +1,40 @@
+From d3dcc80c16b3731fefcde76659661b44b1bb881b Mon Sep 17 00:00:00 2001
+From: "Richard W.M. Jones" <rjones@redhat.com>
+Date: Sun, 12 Jan 2014 17:49:48 +0000
+Subject: [PATCH] builder: Fix virt-builder test.
+
+Add Europe/London timezone to phony Fedora guest.
+
+This fixes commit dd1bfea513658368afd3728e0c5bf8ab6041cd1f.
+
+(cherry picked from commit 7500ae3f75f4650c18f2a8433c6b5edcca6e88a6)
+---
+ tests/guests/guest-aux/make-fedora-img.pl | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
+
+diff --git a/tests/guests/guest-aux/make-fedora-img.pl b/tests/guests/guest-aux/make-fedora-img.pl
+index 7c96eb8..0537bd2 100755
+--- a/tests/guests/guest-aux/make-fedora-img.pl
++++ b/tests/guests/guest-aux/make-fedora-img.pl
+@@ -1,6 +1,6 @@
+ #!/usr/bin/perl
+ # libguestfs
+-# Copyright (C) 2010-2012 Red Hat Inc.
++# Copyright (C) 2010-2014 Red Hat Inc.
+ #
+ # This program is free software; you can redistribute it and/or modify
+ # it under the terms of the GNU General Public License as published by
+@@ -201,6 +201,10 @@ $g->mkdir ('/bin');
+ $g->mkdir ('/etc');
+ $g->mkdir ('/etc/sysconfig');
+ $g->mkdir ('/usr');
++$g->mkdir ('/usr/share');
++$g->mkdir ('/usr/share/zoneinfo');
++$g->mkdir ('/usr/share/zoneinfo/Europe');
++$g->touch ('/usr/share/zoneinfo/Europe/London');
+ $g->mkdir_p ('/var/lib/rpm');
+ $g->mkdir_p ('/var/log/journal');
+ 
+-- 
+1.8.4.2
+

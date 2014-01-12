@@ -12,7 +12,7 @@ Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
 Version:       1.24.4
-Release:       1%{?dist}
+Release:       2%{?dist}
 License:       LGPLv2+
 
 # Source and patches.
@@ -63,6 +63,25 @@ Patch0035:     0035-builder-Refuse-to-write-to-a-char-device-or-dev-null.patch
 Patch0036:     0036-builder-Remove-blank-line.patch
 Patch0037:     0037-builder-Add-update-option-to-update-template-core-pa.patch
 Patch0038:     0038-launch-libvirt-Don-t-default-to-using-NULL-for-libvi.patch
+Patch0039:     0039-builder-Add-CirrOS-0.3.1-disk-image.patch
+Patch0040:     0040-builder-Note-in-man-page-how-to-specify-size-in-byte.patch
+Patch0041:     0041-builder-Pass-prog-global-program-name-around.patch
+Patch0042:     0042-mllib-Add-library-function-to-run-external-command-a.patch
+Patch0043:     0043-builder-Fix-handling-of-size-parameter.patch
+Patch0044:     0044-libvirt-auth-Provide-a-friendlier-wrapper-around-vir.patch
+Patch0045:     0045-tests-Add-a-regression-test-of-libvirt-authenticatio.patch
+Patch0046:     0046-tests-Add-a-regression-test-for-libvirt-authenticati.patch
+Patch0047:     0047-sysprep-builder-Add-timezone-option-to-set-timezone-.patch
+Patch0048:     0048-builder-docs-Remove-confusing-reference-to-timezone.patch
+Patch0049:     0049-builder-Document-how-to-change-keyboard-layout.patch
+Patch0050:     0050-builder-List-install-packages-in-the-same-order-as-o.patch
+Patch0051:     0051-builder-Add-link-option-for-creating-symbolic-links.patch
+Patch0052:     0052-builder-Document-how-to-change-the-language-locale-o.patch
+Patch0053:     0053-builder-Document-how-to-set-up-local-mirrors-for-per.patch
+Patch0054:     0054-builder-Document-that-SELinux-guests-will-reboot-for.patch
+Patch0055:     0055-builder-Document-how-to-set-Japanese-language-suppor.patch
+Patch0056:     0056-builder-Fix-virt-builder-test.patch
+Patch0057:     0057-builder-website-Add-CirrOS-signature-file-to-EXTRA_D.patch
 # Add any non-git patches here.
 
 # Use git for patch management.
@@ -1054,6 +1073,9 @@ mkdir -p $RPM_BUILD_ROOT%{_localstatedir}/run/libguestfs
 
 
 %changelog
+* Sun Jan 12 2014 Richard W.M. Jones <rjones@redhat.com> - 1:1.24.4-2
+- Backport more virt-builder patches from upstream to Fedora.
+
 * Fri Jan  3 2014 Richard W.M. Jones <rjones@redhat.com> - 1:1.24.4-1
 - New stable branch version 1.24.4.
 - Fix source URL.

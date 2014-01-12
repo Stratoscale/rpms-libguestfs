@@ -1,0 +1,85 @@
+From 91ff15fb954b3cee51384a72c9771149f256719b Mon Sep 17 00:00:00 2001
+From: "Richard W.M. Jones" <rjones@redhat.com>
+Date: Tue, 7 Jan 2014 17:30:57 +0000
+Subject: [PATCH] mllib: Add library function to run external command and slurp
+ up the output.
+
+This also changes a couple of functions to use this new library
+function.
+
+(cherry picked from commit a403febb8c43bf573c2354c39df22a29cf8863d8)
+---
+ builder/downloader.ml | 19 ++++---------------
+ mllib/common_utils.ml | 16 +++++++++++++---
+ 2 files changed, 17 insertions(+), 18 deletions(-)
+
+diff --git a/builder/downloader.ml b/builder/downloader.ml
+index 442a011..77f48ae 100644
+--- a/builder/downloader.ml
++++ b/builder/downloader.ml
+@@ -75,23 +75,12 @@ and download_to ~prog t ?(progress_bar = false) uri filename =
+     (if t.debug then "" else " -s -S")
+     (quote uri) in
+   if t.debug then eprintf "%s\n%!" cmd;
+-  let chan = open_process_in cmd in
+-  let status_code = input_line chan in
+-  let stat = close_process_in chan in
+-  (match stat with
+-  | WEXITED 0 -> ()
+-  | WEXITED i ->
+-    eprintf (f_"virt-builder: curl (download) command failed downloading '%s'\n") uri;
+-    exit 1
+-  | WSIGNALED i ->
+-    eprintf (f_"virt-builder: external command '%s' killed by signal %d\n")
+-      cmd i;
+-    exit 1
+-  | WSTOPPED i ->
+-    eprintf (f_"virt-builder: external command '%s' stopped by signal %d\n")
+-      cmd i;
++  let lines = external_command ~prog cmd in
++  if List.length lines < 1 then (
++    eprintf (f_"%s: unexpected output from curl command, enable debug and look at previous messages\n") prog;
+     exit 1
+   );
++  let status_code = List.hd lines in
+   let bad_status_code = function
+     | "" -> true
+     | s when s.[0] = '4' -> true (* 4xx *)
+diff --git a/mllib/common_utils.ml b/mllib/common_utils.ml
+index 80c5aca..3943417 100644
+--- a/mllib/common_utils.ml
++++ b/mllib/common_utils.ml
+@@ -332,10 +332,13 @@ let display_long_options () =
+   ) !long_options;
+   exit 0
+ 
+-let uuidgen ~prog () =
+-  let cmd = "uuidgen -r" in
++(* Run an external command, slurp up the output as a list of lines. *)
++let external_command ~prog cmd =
+   let chan = Unix.open_process_in cmd in
+-  let uuid = input_line chan in
++  let lines = ref [] in
++  (try while true do lines := input_line chan :: !lines done
++   with End_of_file -> ());
++  let lines = List.rev !lines in
+   let stat = Unix.close_process_in chan in
+   (match stat with
+   | Unix.WEXITED 0 -> ()
+@@ -346,6 +349,13 @@ let uuidgen ~prog () =
+   | Unix.WSTOPPED i ->
+     error ~prog (f_"external command '%s' stopped by signal %d") cmd i
+   );
++  lines
++
++(* Run uuidgen to return a random UUID. *)
++let uuidgen ~prog () =
++  let lines = external_command ~prog "uuidgen -r" in
++  assert (List.length lines >= 1);
++  let uuid = List.hd lines in
+   let len = String.length uuid in
+   let uuid, len =
+     if len > 0 && uuid.[len-1] = '\n' then
+-- 
+1.8.4.2
+

@@ -1,0 +1,27 @@
+From 7317d80d502a8e26321aaed11290ff10b953d59b Mon Sep 17 00:00:00 2001
+From: "Richard W.M. Jones" <rjones@redhat.com>
+Date: Fri, 10 Jan 2014 13:47:05 +0000
+Subject: [PATCH] builder: docs: Remove confusing reference to timezone.
+
+(cherry picked from commit 1e1b027c1b7c592ae8f04bcef8ffe93b7f2841d4)
+---
+ builder/virt-builder.pod | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/builder/virt-builder.pod b/builder/virt-builder.pod
+index a703346..6db3dd9 100644
+--- a/builder/virt-builder.pod
++++ b/builder/virt-builder.pod
+@@ -1233,8 +1233,8 @@ least one character of whitespace (even on blank lines):
+  notes=This image was prepared using
+   the following kickstart script:
+                                 <-- one space at beginning of line
+-  timezone Europe/London
+   part /boot --fstype ext3
++  ...
+ 
+ =item C<hidden=true>
+ 
+-- 
+1.8.4.2
+

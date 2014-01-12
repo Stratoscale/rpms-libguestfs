@@ -1,0 +1,27 @@
+From ceef6f1e6e8d8c23d6fa859caf0c1565ced628a9 Mon Sep 17 00:00:00 2001
+From: "Richard W.M. Jones" <rjones@redhat.com>
+Date: Sun, 12 Jan 2014 18:06:26 +0000
+Subject: [PATCH] builder/website: Add CirrOS signature file to EXTRA_DIST.
+
+This fixes commit 40b88fdbc76515fd21b33f54587c7f4f7b6e9715.
+
+(cherry picked from commit ed43cc12c4492510e38eee9c7f8a5076956e4066)
+---
+ builder/website/Makefile.am | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/builder/website/Makefile.am b/builder/website/Makefile.am
+index dff186f..a5b1bcf 100644
+--- a/builder/website/Makefile.am
++++ b/builder/website/Makefile.am
+@@ -27,6 +27,7 @@ EXTRA_DIST = \
+ 	index.asc \
+ 	centos.sh \
+ 	centos-*.xz.sig \
++	cirros-*.xz.sig \
+ 	debian.preseed \
+ 	debian.sh \
+ 	debian-*.xz.sig \
+-- 
+1.8.4.2
+

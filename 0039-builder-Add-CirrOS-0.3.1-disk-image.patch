@@ -1,0 +1,133 @@
+From 406ee778aab64122ef55c27568671fc16e5259b4 Mon Sep 17 00:00:00 2001
+From: "Richard W.M. Jones" <rjones@redhat.com>
+Date: Sat, 4 Jan 2014 12:37:40 +0000
+Subject: [PATCH] builder: Add CirrOS 0.3.1 disk image.
+
+(cherry picked from commit 40b88fdbc76515fd21b33f54587c7f4f7b6e9715)
+---
+ builder/website/cirros-0.3.1.xz.sig | 17 ++++++++++++++
+ builder/website/index               | 19 +++++++++++++++
+ builder/website/index.asc           | 47 ++++++++++++++++++++++++++-----------
+ 3 files changed, 69 insertions(+), 14 deletions(-)
+ create mode 100644 builder/website/cirros-0.3.1.xz.sig
+
+diff --git a/builder/website/cirros-0.3.1.xz.sig b/builder/website/cirros-0.3.1.xz.sig
+new file mode 100644
+index 0000000..973d86c
+--- /dev/null
++++ b/builder/website/cirros-0.3.1.xz.sig
+@@ -0,0 +1,17 @@
++-----BEGIN PGP SIGNATURE-----
++Version: GnuPG v1
++
++iQIcBAABAgAGBQJSx//LAAoJEJFzj3Pht2igtekP/11RH1POvryBWsmtjgwviPJV
++P8eIGuUBy38BYbEO0jBWTsT6CAfwOCtyUUMWCBPJ3meoRd4C5AGWHUS5F6z6fZWq
++Qo+LU1BfPWDa3TMXP9TybexUCI6cIBMlbzbwkSE/fR2JDwl3K58ZWUrI1rxfKKNJ
++CM8rcpLVVP19sAiurndqiIU43bEOS7UwKhBYr1LtNQndpaDH2l+9XnC/HlOrAKgR
++H/X9GgscJ43MtA3VPY140RKgZ716c/zznd2yLXrXIJ9JJ9DsoPsooZ6cZSoxDl2E
++Y16lnQyAcDySPY+NZluQ6xvtk4JiDWxLFqdXMksRtUb14D91bJ2okhjtztg5yuLh
++tC1aNiwcZaDynjXec4SnB+06oPZGstO6uPotasb9sBH/Prm1mv1A4jLwwMTOjSLT
++svZ2/xy83lZqBBwU2oFTiSL+hSS3zTm8X0JaInZJPXlgDOTrdKb7UlzVEJ6SqOZo
++4omjaYnHWIe9H2SPxCH/7/DC9WW1K9fuxkIEjvqbxTC3n/6WziK2Aq2k5s1Aq0Yy
++Z0am0Xhi169V8s8BaLFWiHGi/VlCd81/q2bg+3qCZcWE4zonEZDZSNrL1FtDtHRj
++Cgzo0su2LYHhdt0+2QYnAfUJN7Q5kGA1apWrmVI2cvvDpx0eHsFKLcdJnzOntabv
++fI+rI2o+Lhp1DW7ywVzl
++=KKLo
++-----END PGP SIGNATURE-----
+diff --git a/builder/website/index b/builder/website/index
+index 648d890..32cc402 100644
+--- a/builder/website/index
++++ b/builder/website/index
+@@ -21,6 +21,25 @@ notes=CentOS 6.5
+  Note that `virt-builder centos-6' will always install the latest
+  6.x release.
+ 
++[cirros-0.3.1]
++name=CirrOS 0.3.1
++file=cirros-0.3.1.xz
++sig=cirros-0.3.1.xz.sig
++checksum=096209f00eb62d5722accf3d22ca3a4ee5baaac6d7d4ce0be93b56bbd1c8ab2e3eb4f5db1deffcb570e2c3d41f4d721798a1c499675346cee9546554a4b10388
++format=raw
++size=41126400
++compressed_size=11419004
++expand=/dev/sda1
++notes=CirrOS 0.3.1
++ 
++ CirrOS is a commonly used test image, ideal because it is very
++ small and boots into a minimally usable Linux system.
++ 
++ Note this is not a real Linux distribution, and several virt-builder
++ features such as installing packages will not (and cannot) work.
++ 
++ This CirrOS image comes from https://launchpad.net/cirros
++
+ [debian-6]
+ name=Debian 6 (Squeeze)
+ osinfo=debian6
+diff --git a/builder/website/index.asc b/builder/website/index.asc
+index c826d4a..b2291ca 100644
+--- a/builder/website/index.asc
++++ b/builder/website/index.asc
+@@ -24,6 +24,25 @@ notes=CentOS 6.5
+  Note that `virt-builder centos-6' will always install the latest
+  6.x release.
+ 
++[cirros-0.3.1]
++name=CirrOS 0.3.1
++file=cirros-0.3.1.xz
++sig=cirros-0.3.1.xz.sig
++checksum=096209f00eb62d5722accf3d22ca3a4ee5baaac6d7d4ce0be93b56bbd1c8ab2e3eb4f5db1deffcb570e2c3d41f4d721798a1c499675346cee9546554a4b10388
++format=raw
++size=41126400
++compressed_size=11419004
++expand=/dev/sda1
++notes=CirrOS 0.3.1
++ 
++ CirrOS is a commonly used test image, ideal because it is very
++ small and boots into a minimally usable Linux system.
++ 
++ Note this is not a real Linux distribution, and several virt-builder
++ features such as installing packages will not (and cannot) work.
++ 
++ This CirrOS image comes from https://launchpad.net/cirros
++
+ [debian-6]
+ name=Debian 6 (Squeeze)
+ osinfo=debian6
+@@ -252,19 +271,19 @@ notes=Ubuntu 13.10 (Saucy).
+  
+  --firstboot-command "dpkg-reconfigure openssh-server"
+ -----BEGIN PGP SIGNATURE-----
+-Version: GnuPG v1.4.15 (GNU/Linux)
++Version: GnuPG v1
+ 
+-iQIcBAEBAgAGBQJSsHIWAAoJEJFzj3Pht2igj4YQAJldrmQcSGYQkewurpJXd6IX
+-+HVUPZPLSc1w5Wdba7+ayYisUGpcXbdYlsNIEgO3W503YDT7HhsfVJojlY2PiBrl
+-d1oMpFxupDYfcLllFhaVvgqqT3gK/xVCOyNhzZjWhC4vJrJjfJDFrkh8f6I0xNeI
+-gzU3nwJ5aB8Ip9MG0oJqaRtL8b2wvMcdpv2BkIQCScCHPNIr8G5XYHbj+8ur2rlq
+-7I1Q4p5P0S0+uBUHA4vQt+lNi3DuXJjfrqZTSkYtMmMxtbfH+ReswN3NfPaU2iVW
+-BiUmGn8mMmLndOnfYF1mDdzByznSYQBfmQEJVrrUZQtL8jUjeEOfVURMIxd6iuly
+-COU1eJ53qTuYZV/PuHJgFS1BV03icT2I/Yk7WowWsbIWZgqKhEf8HpskZh7UoSqD
+-LSxYdqV8cYnKjXqL2WLk+2/V0Nul5ceIYO6fGHjz/EuS4T7vjyMC+DaoItLuC1IR
+-55P7Xksw0hLXKPmOkfPObStPfBG/+lZyOaf1OjC/yFfCUc054kvL1Q0QXMBXuw1R
+-e3Suc2CVSDp3AWSJi4a7kSH1GqyMfFF6FSuSd3Vbp3MC2N/iHk/PIs1uR/ogO0oR
+-4ESXH30RJBfDa00LkoNabBs97AqmYrh8lqIi0XqEiJvJaeR/LR5uLyVpbynvU3r4
+-LCE8XQ8F06ZKkg8JBksF
+-=15Z8
++iQIcBAEBAgAGBQJSx/+uAAoJEJFzj3Pht2igUzQP/2ssVh9l6TL7vd9z13rbernd
++fsxcTwV/2Vpv2qUVbxuCOZj1uFxkRb+CVk6kRaLKrGYH/bNROJitn6FieHM7lf09
++0vd/vEj7Ie9pATxMzFoEy+M8sSJAXTVH2k8OjGhpOuevSswb/JQx23L/KdGa/ERu
++X9ZRpsNTaJ/xDOx9tZt/YbWP/SesF8G/LWFG30ULRH8S5jqPUb/DS2k1sgZjCeUk
++kawf7/kLzPTuH51YpjZGHDgCIOoyRQORtZDmcaMWFcEVyvoyvMMnK0vsq7mvzvhO
++FYqq+32TadS9cLC1O0R6rQxQALmFMuZCd/O2XO6E8mMMeLHS7ooCjdoxl4ospecf
++9NefsIXAcHk69hT3EBZflxCkZT5H7rXIAsrDfoK0p3259vgBh8qiYaC7v3RLbJBy
++ZICixl9s5KcizI/GU5qZ2/eYXDnsrYRXOFNtKltwe+PeGDDVokmoILMupvAuci1i
++e52rxe0jHPsdoJGdAtS61/8jnpL5MbCSbImjZroaWic4NSv9L1klElTNc2cRRQN8
++rS/7P7zmBdno8/Ft/UWVePaS4x0BN/JWbe3SgmWjAuw7gYCVh6FPq/paUyKa6p93
++ZA+UziEXDxUvE6YNPjjwR1n1X9qqkNTyMu3fL3KyaPc3VfCfPKYmfOfzxhcXA/Ou
++9LVnGbZKRdOke5wJ572Z
++=fOtX
+ -----END PGP SIGNATURE-----
+-- 
+1.8.4.2
+

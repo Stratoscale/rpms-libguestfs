@@ -1,0 +1,55 @@
+From 67d5d90d6d5f8a983ddd39616f0e2d43ba4e326d Mon Sep 17 00:00:00 2001
+From: "Richard W.M. Jones" <rjones@redhat.com>
+Date: Fri, 10 Jan 2014 19:48:28 +0000
+Subject: [PATCH] builder: Document how to change the language/locale of a new
+ guest.
+
+(cherry picked from commit 7e8ad13e863a5c87e3da47288bcecdb88ca0e4cb)
+---
+ builder/virt-builder.pod | 30 ++++++++++++++++++++++++++++++
+ 1 file changed, 30 insertions(+)
+
+diff --git a/builder/virt-builder.pod b/builder/virt-builder.pod
+index 584a0e0..031f3d7 100644
+--- a/builder/virt-builder.pod
++++ b/builder/virt-builder.pod
+@@ -827,6 +827,36 @@ I<--edit> options.  For example:
+ 
+ See L<https://wiki.debian.org/Keyboard>.
+ 
++=head2 LANGUAGE
++
++Most Linux distributions support multiple locale settings so that you
++can have guest messages printed in another language such as Russian.
++However there is no single setting which controls this, since extra
++packages may need to be installed to support console and X fonts and
++keyboard input methods.  The packages required, and their
++configuration is highly distro-specific, and it is outside the scope
++of virt-builder to do this.
++
++=begin comment
++
++This section contains examples for some common Linux distributions.
++
++=head3 Setting Japanese in Fedora 20
++
++XXX This does not work.
++
++ virt-builder fedora-20 \
++   --size 20G \
++   --update \
++   --install @gnome-desktop --install @japanese-support \
++   --firstboot-command 'localectl set-locale LANG=ja_JP.utf8' \
++   --firstboot-command 'localectl set-keymap jp' \
++   --firstboot-command 'systemctl enable gdm.service' \
++   --firstboot-command 'systemctl start gdm.service' \
++   --link /usr/lib/systemd/system/graphical.target:/etc/systemd/system/default.target
++
++=end comment
++
+ =head2 LOG FILE
+ 
+ Scripts and package installation that runs at build time (I<--run>,
+-- 
+1.8.4.2
+

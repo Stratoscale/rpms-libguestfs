@@ -1,0 +1,27 @@
+From 105aa91d38a8817a3be6540a4571780394b7387e Mon Sep 17 00:00:00 2001
+From: "Richard W.M. Jones" <rjones@redhat.com>
+Date: Tue, 7 Jan 2014 14:52:08 +0000
+Subject: [PATCH] builder: Note in man page how to specify size in bytes.
+
+(cherry picked from commit ac41f616db35921074a4909524b9bc1a2bd2406d)
+---
+ builder/virt-builder.pod | 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/builder/virt-builder.pod b/builder/virt-builder.pod
+index 09315e4..c3f685c 100644
+--- a/builder/virt-builder.pod
++++ b/builder/virt-builder.pod
+@@ -560,6 +560,9 @@ output is a file, then the size is the same as the template.  If the
+ output is a device, partition, etc then the size of that device is
+ used.
+ 
++To specify size in bytes, the number must be followed by the lowercase
++letter I<b>, eg: S<C<--size 10737418240b>>.
++
+ =item B<--smp> N
+ 
+ Enable N E<ge> 2 virtual CPUs for I<--run> scripts to use.
+-- 
+1.8.4.2
+
