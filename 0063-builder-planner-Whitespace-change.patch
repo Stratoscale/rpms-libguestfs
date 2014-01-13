@@ -1,0 +1,42 @@
+From 586776330a7bf48f0338b9186822cbd67f98e07c Mon Sep 17 00:00:00 2001
+From: "Richard W.M. Jones" <rjones@redhat.com>
+Date: Mon, 13 Jan 2014 20:58:08 +0000
+Subject: [PATCH] builder: planner: Whitespace change.
+
+(cherry picked from commit e664739a578f31c3f97073e713f9f33d4eb62d8d)
+---
+ mllib/planner.ml  | 3 ++-
+ mllib/planner.mli | 3 ++-
+ 2 files changed, 4 insertions(+), 2 deletions(-)
+
+diff --git a/mllib/planner.ml b/mllib/planner.ml
+index 0121b84..9405dab 100644
+--- a/mllib/planner.ml
++++ b/mllib/planner.ml
+@@ -23,7 +23,8 @@ type ('name, 'value) tags = ('name, 'value) tag list
+ type ('name, 'value, 'task) plan =
+   (('name, 'value) tags * 'task * ('name, 'value) tags) list
+ 
+-type ('name, 'value, 'task) transitions_function = ('name, 'value) tags -> ('task * int * ('name, 'value) tags) list
++type ('name, 'value, 'task) transitions_function =
++  ('name, 'value) tags -> ('task * int * ('name, 'value) tags) list
+ 
+ let plan ?(max_depth = 10) transitions itags (goal_must, goal_must_not) =
+   (* Do the given output tags match the finish condition? *)
+diff --git a/mllib/planner.mli b/mllib/planner.mli
+index 8c77acd..7a502fb 100644
+--- a/mllib/planner.mli
++++ b/mllib/planner.mli
+@@ -48,7 +48,8 @@ type ('name, 'value) tags = ('name, 'value) tag list
+ type ('name, 'value, 'task) plan =
+   (('name, 'value) tags * 'task * ('name, 'value) tags) list
+ 
+-type ('name, 'value, 'task) transitions_function = ('name, 'value) tags -> ('task * int * ('name, 'value) tags) list
++type ('name, 'value, 'task) transitions_function =
++  ('name, 'value) tags -> ('task * int * ('name, 'value) tags) list
+ 
+ val plan : ?max_depth:int -> ('name, 'value, 'task) transitions_function -> ('name, 'value) tags -> ('name, 'value) tags * ('name, 'value) tags -> ('name, 'value, 'task) plan
+ (** Make a plan.
+-- 
+1.8.4.2
+

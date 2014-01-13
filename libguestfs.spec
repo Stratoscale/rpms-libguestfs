@@ -12,7 +12,7 @@ Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
 Version:       1.24.4
-Release:       2%{?dist}
+Release:       3%{?dist}
 License:       LGPLv2+
 
 # Source and patches.
@@ -82,6 +82,12 @@ Patch0054:     0054-builder-Document-that-SELinux-guests-will-reboot-for.patch
 Patch0055:     0055-builder-Document-how-to-set-Japanese-language-suppor.patch
 Patch0056:     0056-builder-Fix-virt-builder-test.patch
 Patch0057:     0057-builder-website-Add-CirrOS-signature-file-to-EXTRA_D.patch
+Patch0058:     0058-builder-Document-how-to-set-Japanese-in-Debian-7.patch
+Patch0059:     0059-builder-Fix-documentation-for-attach-option.patch
+Patch0060:     0060-builder-Minor-documentation-fix-to-manual-page.patch
+Patch0061:     0061-builder-Add-no-delete-on-failure-option-to-aid-debug.patch
+Patch0062:     0062-builder-For-performance-recommend-using-the-no-sync-.patch
+Patch0063:     0063-builder-planner-Whitespace-change.patch
 # Add any non-git patches here.
 
 # Use git for patch management.
@@ -1073,6 +1079,9 @@ mkdir -p $RPM_BUILD_ROOT%{_localstatedir}/run/libguestfs
 
 
 %changelog
+* Mon Jan 13 2014 Richard W.M. Jones <rjones@redhat.com> - 1:1.24.4-3
+- Backport more virt-builder patches from upstream to Fedora.
+
 * Sun Jan 12 2014 Richard W.M. Jones <rjones@redhat.com> - 1:1.24.4-2
 - Backport more virt-builder patches from upstream to Fedora.
 
