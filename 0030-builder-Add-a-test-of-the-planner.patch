@@ -1,4 +1,4 @@
-From f3f592d14b0362933aeeb5d7d891193529d8ce0a Mon Sep 17 00:00:00 2001
+From b50e02ca9354ebd173bc47684eaec41fa250215f Mon Sep 17 00:00:00 2001
 From: "Richard W.M. Jones" <rjones@redhat.com>
 Date: Sat, 14 Dec 2013 15:50:37 +0000
 Subject: [PATCH] builder: Add a test of the planner.
@@ -16,7 +16,7 @@ that the planner can deal with them.
  create mode 100755 builder/test-virt-builder-planner.sh
 
 diff --git a/.gitignore b/.gitignore
-index 43f9f40..b967dbd 100644
+index 4a77963..32b8662 100644
 --- a/.gitignore
 +++ b/.gitignore
 @@ -61,6 +61,7 @@ Makefile.in

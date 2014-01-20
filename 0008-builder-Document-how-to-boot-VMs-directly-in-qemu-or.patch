@@ -1,4 +1,4 @@
-From 0d2ee42ef354b95cfa58cb10a647736a70a6855f Mon Sep 17 00:00:00 2001
+From f27194ce17e0806c3e3d917626c48b5f63e49928 Mon Sep 17 00:00:00 2001
 From: "Richard W.M. Jones" <rjones@redhat.com>
 Date: Sat, 26 Oct 2013 14:45:30 +0100
 Subject: [PATCH] builder: Document how to boot VMs directly in qemu or KVM.
@@ -9,12 +9,12 @@ Subject: [PATCH] builder: Document how to boot VMs directly in qemu or KVM.
  1 file changed, 15 insertions(+)
 
 diff --git a/builder/virt-builder.pod b/builder/virt-builder.pod
-index f795e7a..7768366 100644
+index 766815d..c8e1ad7 100644
 --- a/builder/virt-builder.pod
 +++ b/builder/virt-builder.pod
-@@ -841,6 +841,21 @@ XXX
- 
- =end comment
+@@ -865,6 +865,21 @@ To boot up an instance of your image on a Nova compute node, do:
+ Use S<C<nova flavor-list>> to list possible machine flavors.  Use
+ S<C<nova list>> to list running instances.
  
 +=head3 Booting directly using qemu or KVM
 +

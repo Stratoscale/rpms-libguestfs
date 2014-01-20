@@ -1,4 +1,4 @@
-From 614cdbcbef51f222318519509e703c3cecf76f65 Mon Sep 17 00:00:00 2001
+From 44cc06949962243ac0d262a9b1c6166a7840a147 Mon Sep 17 00:00:00 2001
 From: "Richard W.M. Jones" <rjones@redhat.com>
 Date: Sat, 14 Dec 2013 16:18:23 +0000
 Subject: [PATCH] builder: tests: Fix virt-builder --list output.

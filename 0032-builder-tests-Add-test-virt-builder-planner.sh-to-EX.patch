@@ -1,4 +1,4 @@
-From 466ab4e0a1fe0536ed5b4c5ef7367574e34745dd Mon Sep 17 00:00:00 2001
+From c6a116452d896f8b164806ad440091732b8645f5 Mon Sep 17 00:00:00 2001
 From: "Richard W.M. Jones" <rjones@redhat.com>
 Date: Sat, 14 Dec 2013 16:18:50 +0000
 Subject: [PATCH] builder: tests: Add test-virt-builder-planner.sh to

@@ -1,4 +1,4 @@
-From f7b2b98cf61dad455ca9c59ae9467540d7705afd Mon Sep 17 00:00:00 2001
+From 7114f530f3c0ae0fda9f7888b426a813c292b071 Mon Sep 17 00:00:00 2001
 From: "Richard W.M. Jones" <rjones@redhat.com>
 Date: Tue, 22 Oct 2013 22:28:27 +0100
 Subject: [PATCH] builder: Add --no-sync option to avoid sync on exit.
@@ -11,7 +11,7 @@ Subject: [PATCH] builder: Add --no-sync option to avoid sync on exit.
  3 files changed, 25 insertions(+), 3 deletions(-)
 
 diff --git a/builder/builder.ml b/builder/builder.ml
-index 83bbad2..8665449 100644
+index 9951e71..2394c76 100644
 --- a/builder/builder.ml
 +++ b/builder/builder.ml
 @@ -38,7 +38,7 @@ let main () =
@@ -34,7 +34,7 @@ index 83bbad2..8665449 100644
    (* Now that we've finished the build, don't delete the output file on
     * exit.
 diff --git a/builder/cmdline.ml b/builder/cmdline.ml
-index b1fb003..43909cc 100644
+index 7bbde70..c8e9c46 100644
 --- a/builder/cmdline.ml
 +++ b/builder/cmdline.ml
 @@ -161,6 +161,8 @@ let parse_cmdline () =
@@ -69,7 +69,7 @@ index b1fb003..43909cc 100644
 -  upload
 +  sync, upload
 diff --git a/builder/virt-builder.pod b/builder/virt-builder.pod
-index 5de1e51..aa543bb 100644
+index 051b045..9dd86de 100644
 --- a/builder/virt-builder.pod
 +++ b/builder/virt-builder.pod
 @@ -410,6 +410,23 @@ You don't have a host network (eg. in secure/restricted environments).

@@ -1,4 +1,4 @@
-From 545f557603ac96e1f655dfe4a4f797a5975de697 Mon Sep 17 00:00:00 2001
+From ec21401178ef8ac0b1b2ebf5d9e4680bf16c4665 Mon Sep 17 00:00:00 2001
 From: "Richard W.M. Jones" <rjones@redhat.com>
 Date: Thu, 19 Dec 2013 11:17:43 +0000
 Subject: [PATCH] builder: Add --update option to update template/core
@@ -12,7 +12,7 @@ Subject: [PATCH] builder: Add --update option to update template/core
  3 files changed, 90 insertions(+), 22 deletions(-)
 
 diff --git a/builder/builder.ml b/builder/builder.ml
-index 66a3823..07c2b02 100644
+index f6e3595..0f8e069 100644
 --- a/builder/builder.ml
 +++ b/builder/builder.ml
 @@ -39,7 +39,7 @@ let main () =
@@ -79,7 +79,7 @@ index 66a3823..07c2b02 100644
    if install <> [] then (
      msg (f_"Installing packages: %s") (String.concat " " install);
 diff --git a/builder/cmdline.ml b/builder/cmdline.ml
-index 632b227..c6a3cd8 100644
+index b4e21fc..f25280c 100644
 --- a/builder/cmdline.ml
 +++ b/builder/cmdline.ml
 @@ -169,6 +169,7 @@ let parse_cmdline () =
@@ -113,10 +113,10 @@ index 632b227..c6a3cd8 100644
 -  scrub_logfile, size, smp, sources, sync, upload, writes
 +  scrub_logfile, size, smp, sources, sync, update, upload, writes
 diff --git a/builder/virt-builder.pod b/builder/virt-builder.pod
-index 4bb9f64..09315e4 100644
+index 02b07e4..f72e284 100644
 --- a/builder/virt-builder.pod
 +++ b/builder/virt-builder.pod
-@@ -17,6 +17,7 @@ virt-builder - Build virtual machine images quickly
+@@ -18,6 +18,7 @@ virt-builder - Build virtual machine images quickly
      [--attach ISOFILE]
      [--root-password SELECTOR]
      [--hostname HOSTNAME]
@@ -142,7 +142,7 @@ index 4bb9f64..09315e4 100644
  =item B<-l>
  
  =item B<--list>
-@@ -577,6 +580,14 @@ Note that you should not point I<--source> to sources that you don't
+@@ -580,6 +583,14 @@ Note that you should not point I<--source> to sources that you don't
  trust (unless the source is signed by someone you do trust).  See also
  the I<--no-network> option.
  
@@ -157,7 +157,7 @@ index 4bb9f64..09315e4 100644
  =item B<--upload> FILE:DEST
  
  Upload local file C<FILE> to destination C<DEST> in the disk image.
-@@ -631,6 +642,18 @@ you can use I<--install> to install packages like this:
+@@ -634,6 +645,18 @@ you can use I<--install> to install packages like this:
  This uses the guest's package manager and the host's network
  connection.
  
@@ -176,7 +176,7 @@ index 4bb9f64..09315e4 100644
  =head3 Installing packages at first boot
  
  Another option is to install the packages when the guest first boots:
-@@ -750,8 +773,8 @@ are other ways to manage passwords, see L<useradd(8)> for details.
+@@ -757,8 +780,8 @@ are other ways to manage passwords, see L<useradd(8)> for details.
  =head2 LOG FILE
  
  Scripts and package installation that runs at build time (I<--run>,
@@ -187,7 +187,7 @@ index 4bb9f64..09315e4 100644
  
  =over 4
  
-@@ -816,6 +839,10 @@ The root password is changed (I<--root-password>).
+@@ -823,6 +846,10 @@ The root password is changed (I<--root-password>).
  
  =item *
  
@@ -198,7 +198,7 @@ index 4bb9f64..09315e4 100644
  Packages are installed (I<--install>).
  
  =item *
-@@ -1318,9 +1345,9 @@ are not cached.
+@@ -1342,9 +1369,9 @@ are not cached.
  
  Virt-builder uses L<curl(1)> to download files and it also uses the
  current C<http_proxy> (etc) settings when installing packages
@@ -211,7 +211,7 @@ index 4bb9f64..09315e4 100644
  
  =head2 DIGITAL SIGNATURES
  
-@@ -1355,8 +1382,8 @@ host architecture is.  For example an x86-64 guest on an ARM host.
+@@ -1379,8 +1406,8 @@ host architecture is.  For example an x86-64 guest on an ARM host.
  
  However certain options may not work correctly, specifically options
  that require running commands in the guest during the build process:
@@ -222,7 +222,7 @@ index 4bb9f64..09315e4 100644
  
  An x86-64 host building 32 bit i686 guests should work without any
  special steps.
-@@ -1366,11 +1393,11 @@ special steps.
+@@ -1390,11 +1417,11 @@ special steps.
  Virt-builder does not need to run as root (in fact, should not be run
  as root), and doesn't use setuid, C<sudo> or any similar mechanism.
  
@@ -239,7 +239,7 @@ index 4bb9f64..09315e4 100644
  
  However these options will have access to the host's network and since
  the template may contain untrusted code, the code might try to access
-@@ -1393,13 +1420,13 @@ Templates gets downloaded into the cache the first time they are used,
+@@ -1417,13 +1444,13 @@ Templates gets downloaded into the cache the first time they are used,
  or if you use the I<--cache-all-templates> option.  See L</CACHING>
  above for further information.
  

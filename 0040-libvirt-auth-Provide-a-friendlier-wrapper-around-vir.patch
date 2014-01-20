@@ -1,4 +1,4 @@
-From 816462383a0cc7827177e97bbe4de775950b1aac Mon Sep 17 00:00:00 2001
+From a9da4193cf0c11b85d24f088458224be129cd550 Mon Sep 17 00:00:00 2001
 From: "Richard W.M. Jones" <rjones@redhat.com>
 Date: Thu, 2 Jan 2014 12:20:18 +0000
 Subject: [PATCH] libvirt-auth: Provide a friendlier wrapper around

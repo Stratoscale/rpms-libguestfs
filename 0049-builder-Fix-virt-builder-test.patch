@@ -1,4 +1,4 @@
-From d3dcc80c16b3731fefcde76659661b44b1bb881b Mon Sep 17 00:00:00 2001
+From 43de2c5184fbc73ea6e2a9c0f057044a6d841c4b Mon Sep 17 00:00:00 2001
 From: "Richard W.M. Jones" <rjones@redhat.com>
 Date: Sun, 12 Jan 2014 17:49:48 +0000
 Subject: [PATCH] builder: Fix virt-builder test.

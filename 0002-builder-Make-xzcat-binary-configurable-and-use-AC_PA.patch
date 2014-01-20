@@ -1,4 +1,4 @@
-From 16ae55f5d0be0e61b00aceed70d0b71ee2503d11 Mon Sep 17 00:00:00 2001
+From 65b953629686797239b33a8dff573390308fa0d4 Mon Sep 17 00:00:00 2001
 From: "Richard W.M. Jones" <rjones@redhat.com>
 Date: Tue, 22 Oct 2013 14:09:20 +0100
 Subject: [PATCH] builder: Make xzcat binary configurable and use AC_PATH_PROG.
@@ -11,7 +11,7 @@ Subject: [PATCH] builder: Make xzcat binary configurable and use AC_PATH_PROG.
  3 files changed, 13 insertions(+), 2 deletions(-)
 
 diff --git a/builder/builder.ml b/builder/builder.ml
-index 1785a0c..5a2f23c 100644
+index 16005e1..f6d0ad9 100644
 --- a/builder/builder.ml
 +++ b/builder/builder.ml
 @@ -323,13 +323,18 @@ let main () =
@@ -44,7 +44,7 @@ index 1785a0c..5a2f23c 100644
        msg (f_"Uncompressing: %s") file_uri;
        let r = Sys.command cmd in
 diff --git a/configure.ac b/configure.ac
-index ba390fe..0ed5fe9 100644
+index 0b3980f..35f254d 100644
 --- a/configure.ac
 +++ b/configure.ac
 @@ -698,6 +698,10 @@ if test "x$WRESTOOL" != "xno"; then

@@ -1,4 +1,4 @@
-From 1dfb6894138018c50534e90210f2916eab2fd842 Mon Sep 17 00:00:00 2001
+From d2327e3eff07ed25e326c52f6e3c9d22b6a61547 Mon Sep 17 00:00:00 2001
 From: "Richard W.M. Jones" <rjones@redhat.com>
 Date: Fri, 13 Dec 2013 13:18:47 +0000
 Subject: [PATCH] builder: Use a planner to work out how to convert the
@@ -41,7 +41,7 @@ index 30ada87..ca4a254 100644
  	index-scan.o \
  	index-struct.o \
 diff --git a/builder/builder.ml b/builder/builder.ml
-index b59f6ec..c0e81f5 100644
+index 86e38f3..df82707 100644
 --- a/builder/builder.ml
 +++ b/builder/builder.ml
 @@ -22,9 +22,9 @@ module G = Guestfs
@@ -520,10 +520,10 @@ index 1103ffb..67027d2 100644
  noinst_SCRIPTS = dummy
  
 diff --git a/mllib/common_utils.ml b/mllib/common_utils.ml
-index 3b0d9f8..80c5aca 100644
+index 357ffba..3943417 100644
 --- a/mllib/common_utils.ml
 +++ b/mllib/common_utils.ml
-@@ -391,6 +391,18 @@ let rm_rf_only_files (g : Guestfs.guestfs) dir =
+@@ -401,6 +401,18 @@ let rm_rf_only_files (g : Guestfs.guestfs) dir =
      List.iter g#rm files
    )
  

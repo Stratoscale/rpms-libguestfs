@@ -1,4 +1,4 @@
-From 7e9e44f84f2ab98a095633ff4fb8da36a7f68d3b Mon Sep 17 00:00:00 2001
+From 5482bfb88f6c07675f4ca9073d0f3faca733fc15 Mon Sep 17 00:00:00 2001
 From: "Richard W.M. Jones" <rjones@redhat.com>
 Date: Thu, 19 Dec 2013 14:22:26 +0000
 Subject: [PATCH] launch: libvirt: Don't default to using NULL for libvirt
@@ -67,7 +67,7 @@ index 6909b50..1931055 100644
  The libvirt backend supports more features, including
  hotplugging (see L</HOTPLUGGING>) and sVirt.
 diff --git a/src/launch-libvirt.c b/src/launch-libvirt.c
-index 6b81d8b..e0506e4 100644
+index b78590a..729f437 100644
 --- a/src/launch-libvirt.c
 +++ b/src/launch-libvirt.c
 @@ -216,6 +216,16 @@ launch_libvirt (guestfs_h *g, void *datav, const char *libvirt_uri)

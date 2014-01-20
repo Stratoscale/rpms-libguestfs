@@ -1,4 +1,4 @@
-From 4d149e883f6ff3744b8bf0ebacf049b0070fab0b Mon Sep 17 00:00:00 2001
+From 7b618e1d4da8407652f74a5a7d466ff50bcb71b7 Mon Sep 17 00:00:00 2001
 From: "Richard W.M. Jones" <rjones@redhat.com>
 Date: Sat, 14 Dec 2013 18:53:20 +0000
 Subject: [PATCH] builder: Only use virt-resize --no-sparse when writing to a
@@ -16,7 +16,7 @@ device.
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/builder/builder.ml b/builder/builder.ml
-index 95896ed..975284d 100644
+index 77b18ce..5c2b27a 100644
 --- a/builder/builder.ml
 +++ b/builder/builder.ml
 @@ -491,7 +491,7 @@ let main () =

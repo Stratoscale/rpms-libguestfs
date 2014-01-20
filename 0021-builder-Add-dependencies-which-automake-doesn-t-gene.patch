@@ -1,4 +1,4 @@
-From 605d3669c34efb00422b3103c08d501b216bfa3d Mon Sep 17 00:00:00 2001
+From 0d06b917f7c8fa15e397f64d964326ce22631847 Mon Sep 17 00:00:00 2001
 From: "Richard W.M. Jones" <rjones@redhat.com>
 Date: Tue, 5 Nov 2013 17:40:20 +0000
 Subject: [PATCH] builder: Add dependencies which automake doesn't generate

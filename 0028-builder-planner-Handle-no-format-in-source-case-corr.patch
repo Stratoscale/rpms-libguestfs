@@ -1,4 +1,4 @@
-From 5a6c4921a84ff98ce200024cf997c89a7d34367b Mon Sep 17 00:00:00 2001
+From 80671be3c32a4d95801448815435f4ee708b446b Mon Sep 17 00:00:00 2001
 From: "Richard W.M. Jones" <rjones@redhat.com>
 Date: Sat, 14 Dec 2013 15:49:25 +0000
 Subject: [PATCH] builder: planner: Handle no format= in source case correctly.
@@ -9,7 +9,7 @@ Subject: [PATCH] builder: planner: Handle no format= in source case correctly.
  1 file changed, 28 insertions(+), 16 deletions(-)
 
 diff --git a/builder/builder.ml b/builder/builder.ml
-index c0e81f5..d74251c 100644
+index df82707..f5a8df4 100644
 --- a/builder/builder.ml
 +++ b/builder/builder.ml
 @@ -246,14 +246,16 @@ let main () =

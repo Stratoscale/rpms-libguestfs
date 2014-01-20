@@ -1,4 +1,4 @@
-From d4938044d2be6f8ed90022fb7ca9378378f2604b Mon Sep 17 00:00:00 2001
+From 3323012c8d90c570770049d6f68f6fb686fa0166 Mon Sep 17 00:00:00 2001
 From: "Richard W.M. Jones" <rjones@redhat.com>
 Date: Wed, 8 Jan 2014 20:22:21 +0000
 Subject: [PATCH] tests: Add a regression test for libvirt authentication
@@ -21,24 +21,24 @@ This tests the virConnectAuthPtrDefault wrapper path.
  create mode 100644 tests/regressions/rhbz1044014.xml
 
 diff --git a/.gitignore b/.gitignore
-index b44af29..90cd68b 100644
+index 3d429de..985795f 100644
 --- a/.gitignore
 +++ b/.gitignore
-@@ -483,6 +483,8 @@ Makefile.in
+@@ -484,6 +484,8 @@ Makefile.in
  /tests/regressions/rhbz501893
  /tests/regressions/rhbz790721
  /tests/regressions/rhbz914931
 +/tests/regressions/rhbz1044014
 +/tests/regressions/rhbz1044014.out
+ /tests/regressions/rhbz1055452
  /tests/rsync/rsyncd.pid
  /tests/syslinux/extlinux-guest.img
- /tests/syslinux/syslinux-guest.img
 diff --git a/tests/regressions/Makefile.am b/tests/regressions/Makefile.am
-index 1b0fb69..8051c14 100644
+index 97bc64e..3cd121a 100644
 --- a/tests/regressions/Makefile.am
 +++ b/tests/regressions/Makefile.am
-@@ -36,6 +36,10 @@ TESTS = \
- 	rhbz1001875.sh \
+@@ -37,6 +37,10 @@ TESTS = \
+ 	rhbz1055452 \
  	test-noexec-stack.pl
  
 +if HAVE_LIBVIRT
@@ -48,9 +48,9 @@ index 1b0fb69..8051c14 100644
  tests_not_run = \
  	rhbz727178.sh \
  	rhbz909624.sh
-@@ -49,6 +53,10 @@ check_PROGRAMS = \
- 	rhbz790721 \
- 	rhbz914931
+@@ -51,6 +55,10 @@ check_PROGRAMS = \
+ 	rhbz914931 \
+ 	rhbz1055452
  
 +if HAVE_LIBVIRT
 +check_PROGRAMS += rhbz1044014
@@ -59,7 +59,7 @@ index 1b0fb69..8051c14 100644
  rhbz501893_SOURCES = rhbz501893.c
  rhbz501893_CPPFLAGS = \
  	-I$(top_srcdir)/src -I$(top_builddir)/src
-@@ -79,11 +87,30 @@ rhbz914931_CFLAGS = \
+@@ -81,6 +89,23 @@ rhbz914931_CFLAGS = \
  rhbz914931_LDADD = \
  	$(top_builddir)/src/libguestfs.la
  
@@ -80,7 +80,10 @@ index 1b0fb69..8051c14 100644
 +        $(top_builddir)/gnulib/lib/libgnu.la
 +endif
 +
- EXTRA_DIST = \
+ rhbz1055452_SOURCES = rhbz1055452.c
+ rhbz1055452_CPPFLAGS = \
+ 	-I$(top_srcdir)/src -I$(top_builddir)/src \
+@@ -96,7 +121,9 @@ EXTRA_DIST = \
  	$(TESTS) \
  	$(tests_not_run) \
  	rhbz557655-expected.stdout \

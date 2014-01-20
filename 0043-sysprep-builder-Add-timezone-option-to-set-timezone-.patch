@@ -1,4 +1,4 @@
-From 441fc2a889d8e1196f2f364f66e465b67984a828 Mon Sep 17 00:00:00 2001
+From 076cffb5802a01a2908fcc8d0f20b1331e3d4bf5 Mon Sep 17 00:00:00 2001
 From: "Richard W.M. Jones" <rjones@redhat.com>
 Date: Fri, 10 Jan 2014 12:12:30 +0000
 Subject: [PATCH] sysprep, builder: Add --timezone option to set timezone of
@@ -70,7 +70,7 @@ index f007b46..90300a3 100644
     * Note 'None' means that we randomize the root password.
     *)
 diff --git a/builder/cmdline.ml b/builder/cmdline.ml
-index c6a3cd8..99412bb 100644
+index f25280c..813fbd8 100644
 --- a/builder/cmdline.ml
 +++ b/builder/cmdline.ml
 @@ -169,6 +169,10 @@ let parse_cmdline () =
@@ -120,10 +120,10 @@ index 438f2e9..8d2766a 100755
      --mkdir /etc/foo/bar/baz \
      --write '/etc/foo/bar/baz/foo:Hello World' \
 diff --git a/builder/virt-builder.pod b/builder/virt-builder.pod
-index c3f685c..a703346 100644
+index f72e284..3558119 100644
 --- a/builder/virt-builder.pod
 +++ b/builder/virt-builder.pod
-@@ -17,6 +17,7 @@ virt-builder - Build virtual machine images quickly
+@@ -18,6 +18,7 @@ virt-builder - Build virtual machine images quickly
      [--attach ISOFILE]
      [--root-password SELECTOR]
      [--hostname HOSTNAME]
@@ -143,7 +143,7 @@ index c3f685c..a703346 100644
  =item B<--update>
  
  Do the equivalent of C<yum update>, C<apt-get upgrade>, or whatever
-@@ -834,7 +840,7 @@ A new random seed is generated for the guest.
+@@ -838,7 +844,7 @@ A new random seed is generated for the guest.
  
  =item *
  

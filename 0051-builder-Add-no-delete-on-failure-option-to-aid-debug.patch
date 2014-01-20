@@ -1,4 +1,4 @@
-From ed25594dca1d263048f2accd04ab415b77fbbe27 Mon Sep 17 00:00:00 2001
+From 274c1063ef59156570196b55e1549cbecf216c38 Mon Sep 17 00:00:00 2001
 From: "Richard W.M. Jones" <rjones@redhat.com>
 Date: Mon, 13 Jan 2014 20:29:50 +0000
 Subject: [PATCH] builder: Add --no-delete-on-failure option to aid debugging.
@@ -83,7 +83,7 @@ index 58e8a6b..67b142a 100644
    network, output, password_crypto, quiet, root_password, scrub,
    scrub_logfile, size, smp, sources, sync, timezone, update, upload,
 diff --git a/builder/virt-builder.pod b/builder/virt-builder.pod
-index 1e5b9bb..366ff76 100644
+index 3972391..81db516 100644
 --- a/builder/virt-builder.pod
 +++ b/builder/virt-builder.pod
 @@ -250,6 +250,15 @@ See also: I<--upload>, I<--scrub>.
@@ -102,7 +102,7 @@ index 1e5b9bb..366ff76 100644
  =item B<--edit> FILE:EXPR
  
  Edit C<FILE> using the Perl expression C<EXPR>.
-@@ -1048,8 +1057,12 @@ chosen.  It will be C<raw> unless the I<--format> option was used.
+@@ -1065,8 +1074,12 @@ chosen.  It will be C<raw> unless the I<--format> option was used.
  
  =head2 DEBUGGING BUILDS
  

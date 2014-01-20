@@ -1,4 +1,4 @@
-From baa57e116113ee9e416a26ec5c41c240c6bdd2f0 Mon Sep 17 00:00:00 2001
+From 2e7013906f7e1eb6f11fe63196eb07e414cc584a Mon Sep 17 00:00:00 2001
 From: "Richard W.M. Jones" <rjones@redhat.com>
 Date: Sat, 14 Dec 2013 15:50:04 +0000
 Subject: [PATCH] builder: Flush debug info after printing it.
@@ -9,7 +9,7 @@ Subject: [PATCH] builder: Flush debug info after printing it.
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/builder/builder.ml b/builder/builder.ml
-index d74251c..de229b3 100644
+index f5a8df4..5106263 100644
 --- a/builder/builder.ml
 +++ b/builder/builder.ml
 @@ -427,7 +427,7 @@ let main () =

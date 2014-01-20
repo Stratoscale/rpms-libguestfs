@@ -1,0 +1,27 @@
+From 3c3659fe2fe5e26d0daaf1e414cbbdfa5ae3064f Mon Sep 17 00:00:00 2001
+From: "Richard W.M. Jones" <rjones@redhat.com>
+Date: Fri, 10 Jan 2014 21:19:43 +0000
+Subject: [PATCH] daemon: xattr: Remove unused variable.
+
+Revealed by using ./configure --enable-gcc-warnings.
+
+(cherry picked from commit cea270de3be3ca3c2b2e6555418c4b4eb8da7509)
+---
+ daemon/xattr.c | 1 -
+ 1 file changed, 1 deletion(-)
+
+diff --git a/daemon/xattr.c b/daemon/xattr.c
+index 768f780..dc024d3 100644
+--- a/daemon/xattr.c
++++ b/daemon/xattr.c
+@@ -226,7 +226,6 @@ _listxattrs (const char *path,
+              ssize_t (*listxattr) (const char *path, char *list, size_t size),
+              ssize_t *size)
+ {
+-  int r;
+   char *buf = NULL;
+   ssize_t len;
+ 
+-- 
+1.8.4.2
+

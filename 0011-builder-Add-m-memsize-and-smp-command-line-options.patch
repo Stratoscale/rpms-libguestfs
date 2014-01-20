@@ -1,4 +1,4 @@
-From d2e2bfc2df5cccee15e752223f8dfd54a6057f72 Mon Sep 17 00:00:00 2001
+From 6a3be2dbe7dcba8e0b0880168bfb880e74fbd9c3 Mon Sep 17 00:00:00 2001
 From: "Richard W.M. Jones" <rjones@redhat.com>
 Date: Tue, 29 Oct 2013 19:23:33 +0000
 Subject: [PATCH] builder: Add -m/--memsize and --smp command line options.
@@ -11,7 +11,7 @@ Subject: [PATCH] builder: Add -m/--memsize and --smp command line options.
  3 files changed, 33 insertions(+), 10 deletions(-)
 
 diff --git a/builder/builder.ml b/builder/builder.ml
-index 3447dc7..b120b45 100644
+index a89b03f..85234e0 100644
 --- a/builder/builder.ml
 +++ b/builder/builder.ml
 @@ -36,9 +36,9 @@ let main () =
@@ -36,7 +36,7 @@ index 3447dc7..b120b45 100644
  
      (* The output disk is being created, so use cache=unsafe here. *)
 diff --git a/builder/cmdline.ml b/builder/cmdline.ml
-index 6611fad..aaeb763 100644
+index 28a1643..97ccd89 100644
 --- a/builder/cmdline.ml
 +++ b/builder/cmdline.ml
 @@ -120,6 +120,9 @@ let parse_cmdline () =
@@ -78,7 +78,7 @@ index 6611fad..aaeb763 100644
      "--upload",  Arg.String add_upload,     "file:dest" ^ " " ^ s_"Upload file to dest";
 @@ -300,6 +309,7 @@ read the man page virt-builder(1).
    let hostname = !hostname in
-   let install = !install in
+   let install = List.rev !install in
    let list_long = !list_long in
 +  let memsize = !memsize in
    let mkdirs = List.rev !mkdirs in
@@ -102,7 +102,7 @@ index 6611fad..aaeb763 100644
 -  scrub_logfile, size, source, sync, upload, writes
 +  scrub_logfile, size, smp, source, sync, upload, writes
 diff --git a/builder/virt-builder.pod b/builder/virt-builder.pod
-index a603fcf..3905880 100644
+index bcd3615..7d486f7 100644
 --- a/builder/virt-builder.pod
 +++ b/builder/virt-builder.pod
 @@ -366,6 +366,18 @@ the image was built, use this option.
@@ -124,9 +124,9 @@ index a603fcf..3905880 100644
  =item B<--mkdir> DIR
  
  Create a directory in the guest.
-@@ -541,6 +553,10 @@ output is a file, then the size is the same as the template.  If the
- output is a device, partition, etc then the size of that device is
- used.
+@@ -544,6 +556,10 @@ used.
+ To specify size in bytes, the number must be followed by the lowercase
+ letter I<b>, eg: S<C<--size 10737418240b>>.
  
 +=item B<--smp> N
 +
@@ -135,7 +135,7 @@ index a603fcf..3905880 100644
  =item B<--source> URL
  
  Set the source URL to look for templates.  If not specified it
-@@ -1366,12 +1382,6 @@ are actually interpreted by L<curl(1)>, not virt-builder.
+@@ -1402,12 +1418,6 @@ are actually interpreted by L<curl(1)>, not virt-builder.
  
  Used to determine the location of the template cache.  See L</CACHING>.
  

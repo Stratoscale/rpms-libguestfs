@@ -1,4 +1,4 @@
-From 47ebaa9a6276fa94014e8955611b49a04e4b3528 Mon Sep 17 00:00:00 2001
+From 330f37c4c0937ca258595254a647c57a7e6554c2 Mon Sep 17 00:00:00 2001
 From: "Richard W.M. Jones" <rjones@redhat.com>
 Date: Sat, 14 Dec 2013 13:18:48 +0000
 Subject: [PATCH] builder: Move is_block_device function into common utilities.
@@ -12,7 +12,7 @@ This is just code motion.
  2 files changed, 4 insertions(+), 3 deletions(-)
 
 diff --git a/builder/builder.ml b/builder/builder.ml
-index 2710f10..b59f6ec 100644
+index 2050d10..86e38f3 100644
 --- a/builder/builder.ml
 +++ b/builder/builder.ml
 @@ -249,9 +249,6 @@ let main () =
@@ -26,10 +26,10 @@ index 2710f10..b59f6ec 100644
  
      let headroom = 256L *^ 1024L *^ 1024L in
 diff --git a/mllib/common_utils.ml b/mllib/common_utils.ml
-index 6497f58..3b0d9f8 100644
+index 1f8208b..357ffba 100644
 --- a/mllib/common_utils.ml
 +++ b/mllib/common_utils.ml
-@@ -391,6 +391,10 @@ let rm_rf_only_files (g : Guestfs.guestfs) dir =
+@@ -401,6 +401,10 @@ let rm_rf_only_files (g : Guestfs.guestfs) dir =
      List.iter g#rm files
    )
  

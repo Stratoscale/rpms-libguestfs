@@ -1,4 +1,4 @@
-From 289e050b75532cce6bfb9d75a8646f02b189b44f Mon Sep 17 00:00:00 2001
+From 7087b9287f9381af0e16b14bcedefaa9b2776f0a Mon Sep 17 00:00:00 2001
 From: "Richard W.M. Jones" <rjones@redhat.com>
 Date: Fri, 10 Jan 2014 21:18:07 +0000
 Subject: [PATCH] builder: Add --link option for creating symbolic links.
@@ -106,10 +106,10 @@ index 8d2766a..47d20a4 100755
      --firstboot-install "minicom,inkscape"
  
 diff --git a/builder/virt-builder.pod b/builder/virt-builder.pod
-index f81c556..584a0e0 100644
+index 7d91daf..3405c62 100644
 --- a/builder/virt-builder.pod
 +++ b/builder/virt-builder.pod
-@@ -23,6 +23,7 @@ virt-builder - Build virtual machine images quickly
+@@ -24,6 +24,7 @@ virt-builder - Build virtual machine images quickly
      [--mkdir DIR]
      [--write FILE:CONTENT]
      [--upload FILE:DEST]
@@ -131,7 +131,7 @@ index f81c556..584a0e0 100644
  =item B<-l>
  
  =item B<--list>
-@@ -916,6 +924,10 @@ Files are deleted (I<--delete>, I<--scrub>).
+@@ -920,6 +928,10 @@ Files are deleted (I<--delete>, I<--scrub>).
  
  =item *
  

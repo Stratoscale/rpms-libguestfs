@@ -1,4 +1,4 @@
-From f60ef10973d1bdc0df93603d5667d0528eeb0dd0 Mon Sep 17 00:00:00 2001
+From 4a6606e18882c7dfd8de84b2a081e8c6caeadcd4 Mon Sep 17 00:00:00 2001
 From: "Richard W.M. Jones" <rjones@redhat.com>
 Date: Tue, 7 Jan 2014 17:32:04 +0000
 Subject: [PATCH] builder: Fix handling of --size parameter.

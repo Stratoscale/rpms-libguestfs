@@ -1,4 +1,4 @@
-From 73f2282234d44164a502733d77b36513dd4b3fae Mon Sep 17 00:00:00 2001
+From 269da752908ac9a8ba0ab6d12e5e020cd3179657 Mon Sep 17 00:00:00 2001
 From: "Richard W.M. Jones" <rjones@redhat.com>
 Date: Sun, 27 Oct 2013 14:59:39 +0000
 Subject: [PATCH] builder: Add a section on performance to the manual.
@@ -9,10 +9,10 @@ Subject: [PATCH] builder: Add a section on performance to the manual.
  1 file changed, 44 insertions(+), 1 deletion(-)
 
 diff --git a/builder/virt-builder.pod b/builder/virt-builder.pod
-index 7768366..a603fcf 100644
+index c8e1ad7..bcd3615 100644
 --- a/builder/virt-builder.pod
 +++ b/builder/virt-builder.pod
-@@ -1288,7 +1288,50 @@ etc are truly random when the guest boots.
+@@ -1312,7 +1312,50 @@ etc are truly random when the guest boots.
  
  You should check digital signatures and not ignore any signing errors.
  

@@ -1,4 +1,4 @@
-From 6886883c75c46b56c970ed2c87a7b0ef377f18b2 Mon Sep 17 00:00:00 2001
+From 142ae72758d659df4a6a945c827b8dcffb2388f5 Mon Sep 17 00:00:00 2001
 From: "Richard W.M. Jones" <rjones@redhat.com>
 Date: Mon, 4 Nov 2013 14:53:41 +0000
 Subject: [PATCH] builder: Add a real scanner/parser for index files.
@@ -36,7 +36,7 @@ This adds a tool called virt-index-validate to validate index files.
  create mode 100644 builder/virt-index-validate.pod
 
 diff --git a/.gitignore b/.gitignore
-index 8c5fbe7..43f9f40 100644
+index ea42d28..4a77963 100644
 --- a/.gitignore
 +++ b/.gitignore
 @@ -58,10 +58,16 @@ Makefile.in
@@ -808,7 +808,7 @@ index 0000000..d156c43
 +  exit (EXIT_SUCCESS);
 +}
 diff --git a/builder/index_parser.ml b/builder/index_parser.ml
-index dc039fe..fb47e50 100644
+index 5f07902..453a3a1 100644
 --- a/builder/index_parser.ml
 +++ b/builder/index_parser.ml
 @@ -97,14 +97,17 @@ let print_entry chan (name, { printable_name = printable_name;
@@ -825,17 +825,17 @@ index dc039fe..fb47e50 100644
 +(* Calls yyparse in the C code. *)
 +external parse_index : string -> sections = "virt_builder_parse_index"
  
- let get_index ~debug ~downloader ~sigchecker source =
+ let get_index ~prog ~debug ~downloader ~sigchecker source =
 -  let rec corrupt_line line =
--    eprintf (f_"virt-builder: error parsing index near this line:\n\n%s\n")
--      line;
+-    eprintf (f_"%s: error parsing index near this line:\n\n%s\n")
+-      prog line;
 -    corrupt_file ()
 -  and corrupt_file () =
 +  let corrupt_file () =
      eprintf (f_"\nThe index file downloaded from '%s' is corrupt.\nYou need to ask the supplier of this file to fix it and upload a fixed version.\n")
        source;
      exit 1
-@@ -119,133 +122,15 @@ let get_index ~debug ~downloader ~sigchecker source =
+@@ -119,133 +122,15 @@ let get_index ~prog ~debug ~downloader ~sigchecker source =
       *)
      Sigchecker.verify sigchecker tmpfile;
  
@@ -973,7 +973,7 @@ index dc039fe..fb47e50 100644
      ) sections in
  
      (* Check for repeated os-version names. *)
-@@ -356,7 +241,7 @@ let get_index ~debug ~downloader ~sigchecker source =
+@@ -356,7 +241,7 @@ let get_index ~prog ~debug ~downloader ~sigchecker source =
        ) sections in
  
      if debug then (
@@ -1037,10 +1037,10 @@ index 3077b23..ff16abe 100755
      echo "$long_list"
      exit 1
 diff --git a/builder/virt-builder.pod b/builder/virt-builder.pod
-index fb99d7c..b9fd69c 100644
+index bbcdb3a..71569ec 100644
 --- a/builder/virt-builder.pod
 +++ b/builder/virt-builder.pod
-@@ -1245,6 +1245,23 @@ For open source guests, provide a link to the source code in the
+@@ -1269,6 +1269,23 @@ For open source guests, provide a link to the source code in the
  C<notes> field and comply with other requirements (eg. around
  trademarks).
  
@@ -1163,7 +1163,7 @@ index 0000000..6b03703
 +
 +Copyright (C) 2013 Red Hat Inc.
 diff --git a/configure.ac b/configure.ac
-index c4ce9be..9b5c051 100644
+index 2e35252..35d0879 100644
 --- a/configure.ac
 +++ b/configure.ac
 @@ -705,6 +705,10 @@ test "x$XZCAT" = "xno" && AC_MSG_ERROR([xzcat must be installed])
@@ -1214,7 +1214,7 @@ index 23857bd..e954f04 100644
  	virt-list-filesystems.1 \
  	virt-list-partitions.1 \
 diff --git a/po/POTFILES b/po/POTFILES
-index a766f64..aa52b75 100644
+index 56d192e..5418a6b 100644
 --- a/po/POTFILES
 +++ b/po/POTFILES
 @@ -1,4 +1,9 @@

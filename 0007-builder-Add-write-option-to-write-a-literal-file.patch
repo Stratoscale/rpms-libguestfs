@@ -1,4 +1,4 @@
-From 7ac3c7ae90e7ffbd33e9ac782c4d5a8912be651b Mon Sep 17 00:00:00 2001
+From 17c806003bb1d41f1a70c407991c8de1d48ed492 Mon Sep 17 00:00:00 2001
 From: "Richard W.M. Jones" <rjones@redhat.com>
 Date: Sat, 26 Oct 2013 11:40:48 +0100
 Subject: [PATCH] builder: Add --write option to write a literal file.
@@ -12,7 +12,7 @@ Subject: [PATCH] builder: Add --write option to write a literal file.
  4 files changed, 34 insertions(+), 2 deletions(-)
 
 diff --git a/builder/builder.ml b/builder/builder.ml
-index fa3f8a7..3447dc7 100644
+index 760c8a1..a89b03f 100644
 --- a/builder/builder.ml
 +++ b/builder/builder.ml
 @@ -38,7 +38,7 @@ let main () =
@@ -39,7 +39,7 @@ index fa3f8a7..3447dc7 100644
    List.iter (
      fun (file, dest) ->
 diff --git a/builder/cmdline.ml b/builder/cmdline.ml
-index 36c63a2..6611fad 100644
+index 7ac114a..28a1643 100644
 --- a/builder/cmdline.ml
 +++ b/builder/cmdline.ml
 @@ -184,6 +184,19 @@ let parse_cmdline () =
@@ -97,10 +97,10 @@ index 30c3cf8..438f2e9 100755
      --upload Makefile:/etc/foo/bar/baz \
      --delete /Makefile \
 diff --git a/builder/virt-builder.pod b/builder/virt-builder.pod
-index 55dba90..f795e7a 100644
+index d8d3435..766815d 100644
 --- a/builder/virt-builder.pod
 +++ b/builder/virt-builder.pod
-@@ -19,6 +19,7 @@ virt-builder - Build virtual machine images quickly
+@@ -20,6 +20,7 @@ virt-builder - Build virtual machine images quickly
      [--hostname HOSTNAME]
      [--install PKG,[PKG...]]
      [--mkdir DIR]
@@ -108,7 +108,7 @@ index 55dba90..f795e7a 100644
      [--upload FILE:DEST]
      [--edit FILE:EXPR]
      [--delete FILE] [--scrub FILE]
-@@ -583,6 +584,10 @@ your bug report.
+@@ -586,6 +587,10 @@ your bug report.
  
  Display version number and exit.
  
@@ -119,7 +119,7 @@ index 55dba90..f795e7a 100644
  =back
  
  =head1 REFERENCE
-@@ -768,6 +773,10 @@ Directories are created (I<--mkdir>).
+@@ -775,6 +780,10 @@ Directories are created (I<--mkdir>).
  
  =item *
  

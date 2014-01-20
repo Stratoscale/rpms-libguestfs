@@ -1,4 +1,4 @@
-From 1bd0129134c935e3bf0a51669c4534a56dda85fb Mon Sep 17 00:00:00 2001
+From 2eabacbc0d217ece0091dc754969f0c0df3c7eac Mon Sep 17 00:00:00 2001
 From: "Richard W.M. Jones" <rjones@redhat.com>
 Date: Tue, 5 Nov 2013 10:21:32 +0000
 Subject: [PATCH] builder: Internal implementation of parallel xzcat (pxzcat).
@@ -85,7 +85,7 @@ index 0af3f95..9430d62 100644
  	  -o $@
  
 diff --git a/builder/builder.ml b/builder/builder.ml
-index 2940f3d..e0b724b 100644
+index a3a31e5..7dba186 100644
 --- a/builder/builder.ml
 +++ b/builder/builder.ml
 @@ -24,6 +24,7 @@ open Common_utils
@@ -860,10 +860,10 @@ index 0000000..a2830f0
 +        implementation of parallel xzcat.  Otherwise regular xzcat is
 +        used. *)
 diff --git a/builder/virt-builder.pod b/builder/virt-builder.pod
-index b9fd69c..19dc3ea 100644
+index 71569ec..a1b2a1f 100644
 --- a/builder/virt-builder.pod
 +++ b/builder/virt-builder.pod
-@@ -1396,10 +1396,9 @@ the output format is the same as the template format (usually raw).
+@@ -1420,10 +1420,9 @@ the output format is the same as the template format (usually raw).
  
  =head3 pxzcat
  
@@ -878,7 +878,7 @@ index b9fd69c..19dc3ea 100644
  =head3 User-Mode Linux
  
 diff --git a/configure.ac b/configure.ac
-index 9b5c051..78e85ae 100644
+index 35d0879..7648977 100644
 --- a/configure.ac
 +++ b/configure.ac
 @@ -701,9 +701,15 @@ fi
@@ -914,7 +914,7 @@ index 5586c5c..d18bf7b 100644
 -  | "no" -> None
 -  | path -> Some path
 diff --git a/po/POTFILES b/po/POTFILES
-index aa52b75..4bf805f 100644
+index 5418a6b..1e831ff 100644
 --- a/po/POTFILES
 +++ b/po/POTFILES
 @@ -4,6 +4,7 @@ builder/index-parser-c.c

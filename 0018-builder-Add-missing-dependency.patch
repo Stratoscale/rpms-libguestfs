@@ -1,4 +1,4 @@
-From bdbc3118bff765a028164eccb7ce317f9eca776f Mon Sep 17 00:00:00 2001
+From b5889645e7c558b3d65206920235ac1ac990f509 Mon Sep 17 00:00:00 2001
 From: "Richard W.M. Jones" <rjones@redhat.com>
 Date: Tue, 5 Nov 2013 15:42:05 +0000
 Subject: [PATCH] builder: Add missing dependency.

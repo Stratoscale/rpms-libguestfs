@@ -1,4 +1,4 @@
-From bfd9ea287b56d6e466fc555873a45c452628ad09 Mon Sep 17 00:00:00 2001
+From ebf8c4404850977946904aae3f905479916fce21 Mon Sep 17 00:00:00 2001
 From: "Richard W.M. Jones" <rjones@redhat.com>
 Date: Fri, 1 Nov 2013 14:16:34 +0000
 Subject: [PATCH] builder: Allow multiple source paths to be specified.
@@ -27,7 +27,7 @@ There is still only one built-in path, but we can add more later.
  10 files changed, 143 insertions(+), 46 deletions(-)
 
 diff --git a/builder/builder.ml b/builder/builder.ml
-index b120b45..2940f3d 100644
+index 85234e0..a3a31e5 100644
 --- a/builder/builder.ml
 +++ b/builder/builder.ml
 @@ -35,22 +35,27 @@ let prog = Filename.basename Sys.executable_name
@@ -73,14 +73,14 @@ index b120b45..2940f3d 100644
 -    Sigchecker.create ~debug ~gpg ?fingerprint ~check_signature in
 -
 -  (* Download the source (index) file. *)
--  let index = Index_parser.get_index ~debug ~downloader ~sigchecker source in
+-  let index = Index_parser.get_index ~prog ~debug ~downloader ~sigchecker source in
 +  let index : Index_parser.index =
 +    List.concat (
 +      List.map (
 +        fun (source, fingerprint) ->
 +          let sigchecker =
 +            Sigchecker.create ~debug ~gpg ~fingerprint ~check_signature in
-+          Index_parser.get_index ~debug ~downloader ~sigchecker source
++          Index_parser.get_index ~prog ~debug ~downloader ~sigchecker source
 +      ) sources
 +    ) in
  
@@ -102,7 +102,7 @@ index b120b45..2940f3d 100644
    (match mode with
    | `Notes ->                           (* --notes *)
 diff --git a/builder/cmdline.ml b/builder/cmdline.ml
-index aaeb763..632b227 100644
+index 97ccd89..b4e21fc 100644
 --- a/builder/cmdline.ml
 +++ b/builder/cmdline.ml
 @@ -37,6 +37,8 @@ let default_cachedir =
@@ -231,7 +231,7 @@ index aaeb763..632b227 100644
 -  scrub_logfile, size, smp, source, sync, upload, writes
 +  scrub_logfile, size, smp, sources, sync, upload, writes
 diff --git a/builder/index_parser.ml b/builder/index_parser.ml
-index b5a0cf0..dc039fe 100644
+index 326b395..5f07902 100644
 --- a/builder/index_parser.ml
 +++ b/builder/index_parser.ml
 @@ -37,6 +37,8 @@ and entry = {
@@ -243,7 +243,7 @@ index b5a0cf0..dc039fe 100644
  }
  
  let print_entry chan (name, { printable_name = printable_name;
-@@ -348,7 +350,8 @@ let get_index ~debug ~downloader ~sigchecker source =
+@@ -348,7 +350,8 @@ let get_index ~prog ~debug ~downloader ~sigchecker source =
                          expand = expand;
                          lvexpand = lvexpand;
                          notes = notes;
@@ -254,7 +254,7 @@ index b5a0cf0..dc039fe 100644
        ) sections in
  
 diff --git a/builder/index_parser.mli b/builder/index_parser.mli
-index 79df5ef..0b6317d 100644
+index a9b328a..54f1807 100644
 --- a/builder/index_parser.mli
 +++ b/builder/index_parser.mli
 @@ -31,6 +31,8 @@ and entry = {
@@ -265,7 +265,7 @@ index 79df5ef..0b6317d 100644
 +  sigchecker : Sigchecker.t;
  }
  
- val get_index : debug:bool -> downloader:Downloader.t -> sigchecker:Sigchecker.t -> string -> index
+ val get_index : prog:string -> debug:bool -> downloader:Downloader.t -> sigchecker:Sigchecker.t -> string -> index
 diff --git a/builder/list_entries.ml b/builder/list_entries.ml
 index cf97142..5940d79 100644
 --- a/builder/list_entries.ml
@@ -354,7 +354,7 @@ index 3a159bb..3077b23 100755
  os-version:              phony-debian
  Full name:               Phony Debian
 diff --git a/builder/virt-builder.pod b/builder/virt-builder.pod
-index 3905880..fb99d7c 100644
+index 7d486f7..bbcdb3a 100644
 --- a/builder/virt-builder.pod
 +++ b/builder/virt-builder.pod
 @@ -264,10 +264,14 @@ Check that the index and templates are signed by the key with the
@@ -376,7 +376,7 @@ index 3905880..fb99d7c 100644
  
  You can also set the C<VIRT_BUILDER_FINGERPRINT> environment variable.
  
-@@ -559,8 +563,11 @@ Enable N E<ge> 2 virtual CPUs for I<--run> scripts to use.
+@@ -562,8 +566,11 @@ Enable N E<ge> 2 virtual CPUs for I<--run> scripts to use.
  
  =item B<--source> URL
  
@@ -390,7 +390,7 @@ index 3905880..fb99d7c 100644
  
  See also L</CREATING YOUR OWN TEMPLATES> below.
  
-@@ -1201,6 +1208,36 @@ Now run virt-builder commands as normal, eg:
+@@ -1225,6 +1232,36 @@ Now run virt-builder commands as normal, eg:
  
  To debug problems, add the C<-v> option to these commands.
  
@@ -427,7 +427,7 @@ index 3905880..fb99d7c 100644
  =head3 Licensing of templates
  
  You should be aware of the licensing of images that you distribute.
-@@ -1384,13 +1421,13 @@ Used to determine the location of the template cache.  See L</CACHING>.
+@@ -1420,13 +1457,13 @@ Used to determine the location of the template cache.  See L</CACHING>.
  
  =item C<VIRT_BUILDER_FINGERPRINT>
  

@@ -1,4 +1,4 @@
-From b04ada9b37eb1296800c212bcda4382872cece90 Mon Sep 17 00:00:00 2001
+From caaed7ea75b82f89aec818bf000fe476febe118f Mon Sep 17 00:00:00 2001
 From: "Richard W.M. Jones" <rjones@redhat.com>
 Date: Mon, 13 Jan 2014 20:42:48 +0000
 Subject: [PATCH] builder: For performance, recommend using the --no-sync
@@ -10,10 +10,10 @@ Subject: [PATCH] builder: For performance, recommend using the --no-sync
  1 file changed, 5 insertions(+)
 
 diff --git a/builder/virt-builder.pod b/builder/virt-builder.pod
-index 366ff76..6130036 100644
+index 81db516..9cbfbab 100644
 --- a/builder/virt-builder.pod
 +++ b/builder/virt-builder.pod
-@@ -1599,6 +1599,11 @@ downloaded once.  You can also try using a local package repository,
+@@ -1616,6 +1616,11 @@ downloaded once.  You can also try using a local package repository,
  although this can be complex to set up and varies according to which
  Linux distro you are trying to install.
  

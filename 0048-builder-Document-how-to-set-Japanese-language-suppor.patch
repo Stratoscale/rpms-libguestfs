@@ -1,4 +1,4 @@
-From bf1c985746c136b39ed0a60817242731a09d2a19 Mon Sep 17 00:00:00 2001
+From 1db9c09f74eea29cc7b23469b3c711ff623744c3 Mon Sep 17 00:00:00 2001
 From: "Richard W.M. Jones" <rjones@redhat.com>
 Date: Sun, 12 Jan 2014 17:06:02 +0000
 Subject: [PATCH] builder: Document how to set Japanese language support in
@@ -12,10 +12,10 @@ This updates/fixes commit 7e8ad13e863a5c87e3da47288bcecdb88ca0e4cb.
  1 file changed, 7 insertions(+), 11 deletions(-)
 
 diff --git a/builder/virt-builder.pod b/builder/virt-builder.pod
-index c1adfa8..f7eb9e9 100644
+index 2ee6db9..4f57d20 100644
 --- a/builder/virt-builder.pod
 +++ b/builder/virt-builder.pod
-@@ -831,31 +831,27 @@ See L<https://wiki.debian.org/Keyboard>.
+@@ -835,31 +835,27 @@ See L<https://wiki.debian.org/Keyboard>.
  
  Most Linux distributions support multiple locale settings so that you
  can have guest messages printed in another language such as Russian.

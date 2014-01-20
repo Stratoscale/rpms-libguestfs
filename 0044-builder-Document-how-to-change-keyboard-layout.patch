@@ -1,4 +1,4 @@
-From cace864fa0bd50a00aeb6df62bb34cf441d25281 Mon Sep 17 00:00:00 2001
+From 742a5e9fa5efdc5ba406687690c0d68a39fa7d45 Mon Sep 17 00:00:00 2001
 From: "Richard W.M. Jones" <rjones@redhat.com>
 Date: Fri, 10 Jan 2014 14:21:17 +0000
 Subject: [PATCH] builder: Document how to change keyboard layout.
@@ -14,10 +14,10 @@ using --run-command, --edit etc.
  1 file changed, 40 insertions(+)
 
 diff --git a/builder/virt-builder.pod b/builder/virt-builder.pod
-index 6db3dd9..f81c556 100644
+index 3558119..7d91daf 100644
 --- a/builder/virt-builder.pod
 +++ b/builder/virt-builder.pod
-@@ -779,6 +779,46 @@ The above command will create an C<rjones> account with no password,
+@@ -783,6 +783,46 @@ The above command will create an C<rjones> account with no password,
  and force the user to set a password when they first log in.  There
  are other ways to manage passwords, see L<useradd(8)> for details.
  

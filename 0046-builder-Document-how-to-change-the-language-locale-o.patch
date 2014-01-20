@@ -1,4 +1,4 @@
-From 67d5d90d6d5f8a983ddd39616f0e2d43ba4e326d Mon Sep 17 00:00:00 2001
+From fd4138919f32d4cc0b9d3fa0007b8c327afff29a Mon Sep 17 00:00:00 2001
 From: "Richard W.M. Jones" <rjones@redhat.com>
 Date: Fri, 10 Jan 2014 19:48:28 +0000
 Subject: [PATCH] builder: Document how to change the language/locale of a new
@@ -10,10 +10,10 @@ Subject: [PATCH] builder: Document how to change the language/locale of a new
  1 file changed, 30 insertions(+)
 
 diff --git a/builder/virt-builder.pod b/builder/virt-builder.pod
-index 584a0e0..031f3d7 100644
+index 3405c62..6d1e25f 100644
 --- a/builder/virt-builder.pod
 +++ b/builder/virt-builder.pod
-@@ -827,6 +827,36 @@ I<--edit> options.  For example:
+@@ -831,6 +831,36 @@ I<--edit> options.  For example:
  
  See L<https://wiki.debian.org/Keyboard>.
  

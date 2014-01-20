@@ -1,4 +1,4 @@
-From 4f769c49cbd8e89f0e143b153357725327fb69d5 Mon Sep 17 00:00:00 2001
+From 76ce46c587e5e8ec45acc10b6578a59b9651d454 Mon Sep 17 00:00:00 2001
 From: "Richard W.M. Jones" <rjones@redhat.com>
 Date: Wed, 8 Jan 2014 19:36:00 +0000
 Subject: [PATCH] tests: Add a regression test of libvirt authentication
@@ -18,10 +18,10 @@ https://www.redhat.com/archives/libvir-list/2014-January/msg00378.html
  create mode 100644 tests/events/test-libvirt-auth-callbacks.c
 
 diff --git a/.gitignore b/.gitignore
-index b967dbd..b44af29 100644
+index 32b8662..3d429de 100644
 --- a/.gitignore
 +++ b/.gitignore
-@@ -461,6 +461,7 @@ Makefile.in
+@@ -462,6 +462,7 @@ Makefile.in
  /tests/data/initrd-x86_64.img.gz
  /tests/data/test-grep.txt.gz
  /tests/data/test.iso

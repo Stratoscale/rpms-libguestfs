@@ -1,0 +1,73 @@
+From 10e2bc794e15a8d64d06e0fe79cc2a7b94d7c44a Mon Sep 17 00:00:00 2001
+From: Pino Toscano <ptoscano@redhat.com>
+Date: Tue, 14 Jan 2014 13:30:19 +0100
+Subject: [PATCH] builder: test-virt-builder: check some results
+
+Check at least some basic modifications in the image created with
+virt-builder.
+
+(cherry picked from commit 775c6daf22884edad8ede4b0916024d3d7c04585)
+---
+ builder/test-virt-builder.sh | 47 +++++++++++++++++++++++++++++++++++++++++++-
+ 1 file changed, 46 insertions(+), 1 deletion(-)
+
+diff --git a/builder/test-virt-builder.sh b/builder/test-virt-builder.sh
+index 47d20a4..3c8eb60 100755
+--- a/builder/test-virt-builder.sh
++++ b/builder/test-virt-builder.sh
+@@ -65,6 +65,51 @@ $VG ./virt-builder phony-fedora \
+     --firstboot Makefile --firstboot-command 'echo "hello"' \
+     --firstboot-install "minicom,inkscape"
+ 
+-# XXX Test that the modifications were made.
++# Check that some modifications were made.
++$VG ../fish/guestfish --ro -i -a $output > test.out <<EOF
++# Uploaded files
++is-file /etc/foo/bar/baz/Makefile
++cat /etc/foo/bar/baz/foo
++is-symlink /foo
++is-symlink /foo1
++is-symlink /foo2
++is-symlink /foo3
++
++echo -----
++# Hostname
++cat /etc/sysconfig/network | grep HOSTNAME=
++
++echo -----
++# Timezone
++is-file /usr/share/zoneinfo/Europe/London
++is-symlink /etc/localtime
++readlink /etc/localtime
++
++echo -----
++# Password
++is-file /etc/shadow
++cat /etc/shadow | sed -r '/^root:/!d;s,^(root:\\\$6\\\$).*,\\1,g'
++EOF
++
++if [ "$(cat test.out)" != "true
++Hello World
++true
++true
++true
++true
++-----
++HOSTNAME=test.example.com
++-----
++true
++true
++/usr/share/zoneinfo/Europe/London
++-----
++true
++root:\$6\$" ]; then
++    echo "$0: unexpected output:"
++    cat test.out
++    exit 1
++fi
+ 
+ rm $output
++rm test.out
+-- 
+1.8.4.2
+

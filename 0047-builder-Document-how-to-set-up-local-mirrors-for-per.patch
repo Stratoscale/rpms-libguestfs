@@ -1,4 +1,4 @@
-From 20adf1506b99ae4c7a2ed901e6d14ba83e017325 Mon Sep 17 00:00:00 2001
+From 9170c90b419162ba3c234d83cb679c3dba801152 Mon Sep 17 00:00:00 2001
 From: "Richard W.M. Jones" <rjones@redhat.com>
 Date: Fri, 10 Jan 2014 19:49:02 +0000
 Subject: [PATCH] builder: Document how to set up local mirrors for performance
@@ -10,10 +10,10 @@ Subject: [PATCH] builder: Document how to set up local mirrors for performance
  1 file changed, 49 insertions(+), 3 deletions(-)
 
 diff --git a/builder/virt-builder.pod b/builder/virt-builder.pod
-index 031f3d7..000dfae 100644
+index 6d1e25f..2ee6db9 100644
 --- a/builder/virt-builder.pod
 +++ b/builder/virt-builder.pod
-@@ -1410,6 +1410,8 @@ The index is always encoded in UTF-8.
+@@ -1431,6 +1431,8 @@ The index is always encoded in UTF-8.
  
  =head2 CACHING
  
@@ -22,7 +22,7 @@ index 031f3d7..000dfae 100644
  Since the templates are usually very large, downloaded templates are
  cached in the user's home directory.
  
-@@ -1434,11 +1436,55 @@ To disable the template cache, use I<--no-cache>.
+@@ -1455,11 +1457,55 @@ To disable the template cache, use I<--no-cache>.
  Only templates are cached.  The index and detached digital signatures
  are not cached.
  
