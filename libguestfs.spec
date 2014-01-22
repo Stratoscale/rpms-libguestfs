@@ -12,7 +12,7 @@ Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
 Version:       1.25.25
-Release:       1%{?dist}
+Release:       2%{?dist}
 License:       LGPLv2+
 
 # Source and patches.
@@ -538,8 +538,10 @@ Requires:      %{name}-gobject-devel = %{epoch}:%{version}-%{release}
 %ifarch %{arm} %{ix86} x86_64
 %package -n golang-guestfs
 Summary:       Golang bindings for %{name}
+BuildArch:     noarch
 Requires:      %{name} = %{epoch}:%{version}-%{release}
 Requires:      golang
+Provides:      golang(libguestfs.org) = %{epoch}:%{version}-%{release}
 
 %description -n golang-guestfs
 golang-%{name} contains Go language bindings for %{name}.
@@ -723,6 +725,14 @@ fi
 # See: https://bugzilla.redhat.com/show_bug.cgi?id=1022184#c4
 mv $RPM_BUILD_ROOT%{_datadir}/java/%{name}-%{version}.jar \
   $RPM_BUILD_ROOT%{_datadir}/java/%{name}.jar
+
+# golang: Ignore what libguestfs upstream installs, and just copy the
+# source files to %{_datadir}/gocode/src.
+%ifarch %{arm} %{ix86} x86_64
+rm -r $RPM_BUILD_ROOT%{_libdir}/golang
+mkdir -p $RPM_BUILD_ROOT%{_datadir}/gocode/src
+cp -a golang/src/libguestfs.org $RPM_BUILD_ROOT%{_datadir}/gocode/src
+%endif
 
 # Move installed documentation back to the source directory so
 # we can install it using a %%doc rule.
@@ -966,8 +976,7 @@ mkdir -p $RPM_BUILD_ROOT%{_localstatedir}/run/libguestfs
 %files -n golang-guestfs
 %doc golang/examples/*.go
 %doc golang/examples/LICENSE
-%{_libdir}/golang/pkg/linux_*/libguestfs.org
-%{_libdir}/golang/src/pkg/libguestfs.org
+%{_datadir}/gocode/src/libguestfs.org
 %{_mandir}/man3/guestfs-golang.3*
 %endif
 
@@ -985,6 +994,10 @@ mkdir -p $RPM_BUILD_ROOT%{_localstatedir}/run/libguestfs
 
 
 %changelog
+* Wed Jan 22 2014 Richard W.M. Jones <rjones@redhat.com> - 1:1.25.25-2
+- Update to latest Fedora golang packaging draft.
+- See: https://fedoraproject.org/wiki/PackagingDrafts/Go
+
 * Tue Jan 21 2014 Richard W.M. Jones <rjones@redhat.com> - 1:1.25.25-1
 - New upstream version 1.25.25.
 
