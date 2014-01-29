@@ -75,7 +75,6 @@ BuildRequires: perl(Test::More)
 BuildRequires: perl(Test::Pod) >= 1.00
 BuildRequires: perl(Test::Pod::Coverage) >= 1.00
 BuildRequires: perl(ExtUtils::MakeMaker)
-BuildRequires: perl(String::ShellQuote)
 BuildRequires: perl(Locale::TextDomain)
 BuildRequires: python-devel
 BuildRequires: ruby-devel
@@ -123,6 +122,9 @@ Requires:      libosinfo
 
 # For core mount-local (FUSE) API.
 Requires:      fuse
+
+# For core disk-create API.
+Requires:      /usr/bin/qemu-img
 
 # For libvirt backend.
 %ifarch %{ix86} x86_64
@@ -237,9 +239,6 @@ Requires:      /usr/bin/less
 Requires:      /usr/bin/man
 Requires:      /usr/bin/vi
 
-# for virt-sparsify:
-Requires:      /usr/bin/qemu-img
-
 # for virt-builder:
 Requires:      curl
 Requires:      gnupg
@@ -268,9 +267,6 @@ Requires:      perl(Sys::Virt)
 Requires:      perl(String::ShellQuote)
 Requires:      perl(XML::Writer)
 Requires:      perl(Win::Hivex) >= 1.2.7
-
-# for virt-make-fs:
-Requires:      /usr/bin/qemu-img
 
 
 %description tools
@@ -829,6 +825,8 @@ mkdir -p $RPM_BUILD_ROOT%{_localstatedir}/run/libguestfs
 %{_mandir}/man1/virt-inspector.1*
 %{_bindir}/virt-ls
 %{_mandir}/man1/virt-ls.1*
+%{_bindir}/virt-make-fs
+%{_mandir}/man1/virt-make-fs.1*
 %{_bindir}/virt-rescue
 %{_mandir}/man1/virt-rescue.1*
 %{_bindir}/virt-resize
@@ -849,8 +847,6 @@ mkdir -p $RPM_BUILD_ROOT%{_localstatedir}/run/libguestfs
 %{_mandir}/man1/virt-list-filesystems.1*
 %{_bindir}/virt-list-partitions
 %{_mandir}/man1/virt-list-partitions.1*
-%{_bindir}/virt-make-fs
-%{_mandir}/man1/virt-make-fs.1*
 %{_bindir}/virt-tar
 %{_mandir}/man1/virt-tar.1*
 %{_bindir}/virt-win-reg
@@ -994,6 +990,11 @@ mkdir -p $RPM_BUILD_ROOT%{_localstatedir}/run/libguestfs
 
 
 %changelog
+* Wed Jan 29 2014 Richard W.M. Jones <rjones@redhat.com> - 1:1.25.31-2
+- virt-make-fs has been rewritten in C.
+- qemu-img is now required by the core library (for guestfs_disk_create).
+- perl(String::ShellQuote) is no longer used.
+
 * Wed Jan 29 2014 Richard W.M. Jones <rjones@redhat.com> - 1:1.25.31-1
 - New upstream version 1.25.31.
 
