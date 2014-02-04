@@ -12,7 +12,7 @@ Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
 Version:       1.25.32
-Release:       1%{?dist}
+Release:       2%{?dist}
 License:       LGPLv2+
 
 # Source and patches.
@@ -710,13 +710,6 @@ find $RPM_BUILD_ROOT -name .packlist -delete
 find $RPM_BUILD_ROOT -name '*.bs' -delete
 find $RPM_BUILD_ROOT -name 'bindtests.pl' -delete
 
-# Move Python libraries to sitelib.
-if [ "$RPM_BUILD_ROOT%{python_sitearch}" != "$RPM_BUILD_ROOT%{python_sitelib}" ]; then
-   mkdir -p $RPM_BUILD_ROOT%{python_sitelib}
-   mv $RPM_BUILD_ROOT%{python_sitearch}/guestfs.py* \
-     $RPM_BUILD_ROOT%{python_sitelib}/
-fi
-
 # Don't use versioned jar file (RHBZ#1022133).
 # See: https://bugzilla.redhat.com/show_bug.cgi?id=1022184#c4
 mv $RPM_BUILD_ROOT%{_datadir}/java/%{name}-%{version}.jar \
@@ -897,10 +890,10 @@ mkdir -p $RPM_BUILD_ROOT%{_localstatedir}/run/libguestfs
 
 %files -n python-%{name}
 %doc python/examples/*.py
-%{python_sitearch}/*
-%{python_sitelib}/*.py
-%{python_sitelib}/*.pyc
-%{python_sitelib}/*.pyo
+%{python_sitearch}/libguestfsmod.so
+%{python_sitearch}/guestfs.py
+%{python_sitearch}/guestfs.pyc
+%{python_sitearch}/guestfs.pyo
 %{_mandir}/man3/guestfs-python.3*
 
 
@@ -990,6 +983,10 @@ mkdir -p $RPM_BUILD_ROOT%{_localstatedir}/run/libguestfs
 
 
 %changelog
+* Tue Feb 04 2014 Richard W.M. Jones <rjones@redhat.com> - 1:1.25.32-2
+- Since Python package is not noarch, do not put Python files into
+  shared /usr/lib/python2.X/site-packages (RHBZ#1061155).
+
 * Tue Feb 04 2014 Richard W.M. Jones <rjones@redhat.com> - 1:1.25.32-1
 - New upstream version 1.25.32.
 
