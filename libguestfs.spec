@@ -11,8 +11,8 @@
 Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
-Version:       1.25.32
-Release:       2%{?dist}
+Version:       1.25.33
+Release:       1%{?dist}
 License:       LGPLv2+
 
 # Source and patches.
@@ -986,6 +986,9 @@ mkdir -p $RPM_BUILD_ROOT%{_localstatedir}/run/libguestfs
 
 
 %changelog
+* Wed Feb 05 2014 Richard W.M. Jones <rjones@redhat.com> - 1:1.25.33-1
+- New upstream version 1.25.33.
+
 * Tue Feb 04 2014 Richard W.M. Jones <rjones@redhat.com> - 1:1.25.32-2
 - Since Python package is not noarch, do not put Python files into
   shared /usr/lib/python2.X/site-packages (RHBZ#1061155).
