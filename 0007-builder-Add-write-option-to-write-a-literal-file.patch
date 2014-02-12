@@ -1,4 +1,4 @@
-From 17c806003bb1d41f1a70c407991c8de1d48ed492 Mon Sep 17 00:00:00 2001
+From 5937b734dd6ac056766080a096a8a1060894a688 Mon Sep 17 00:00:00 2001
 From: "Richard W.M. Jones" <rjones@redhat.com>
 Date: Sat, 26 Oct 2013 11:40:48 +0100
 Subject: [PATCH] builder: Add --write option to write a literal file.
@@ -12,10 +12,10 @@ Subject: [PATCH] builder: Add --write option to write a literal file.
  4 files changed, 34 insertions(+), 2 deletions(-)
 
 diff --git a/builder/builder.ml b/builder/builder.ml
-index 760c8a1..a89b03f 100644
+index acd016d..f247cd2 100644
 --- a/builder/builder.ml
 +++ b/builder/builder.ml
-@@ -38,7 +38,7 @@ let main () =
+@@ -40,7 +40,7 @@ let main () =
      attach, cache, check_signature, curl, debug, delete, edit, fingerprint,
      firstboot, run, format, gpg, hostname, install, list_long, mkdirs,
      network, output, password_crypto, quiet, root_password, scrub,
@@ -24,7 +24,7 @@ index 760c8a1..a89b03f 100644
      parse_cmdline () in
  
    (* Timestamped messages in ordinary, non-debug non-quiet mode. *)
-@@ -582,6 +582,13 @@ exec >>%s 2>&1
+@@ -579,6 +579,13 @@ exec >>%s 2>&1
        g#mkdir_p dir
    ) mkdirs;
  
@@ -97,7 +97,7 @@ index 30c3cf8..438f2e9 100755
      --upload Makefile:/etc/foo/bar/baz \
      --delete /Makefile \
 diff --git a/builder/virt-builder.pod b/builder/virt-builder.pod
-index d8d3435..766815d 100644
+index dc08a6d..e40dfd4 100644
 --- a/builder/virt-builder.pod
 +++ b/builder/virt-builder.pod
 @@ -20,6 +20,7 @@ virt-builder - Build virtual machine images quickly

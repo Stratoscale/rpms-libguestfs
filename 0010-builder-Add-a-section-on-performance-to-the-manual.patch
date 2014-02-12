@@ -1,22 +1,21 @@
-From 269da752908ac9a8ba0ab6d12e5e020cd3179657 Mon Sep 17 00:00:00 2001
+From f3f0dc3c93a4ab0e5eb4b93e1e5515a69fc20f37 Mon Sep 17 00:00:00 2001
 From: "Richard W.M. Jones" <rjones@redhat.com>
 Date: Sun, 27 Oct 2013 14:59:39 +0000
 Subject: [PATCH] builder: Add a section on performance to the manual.
 
 (cherry picked from commit 2937c035958f84986e84c47df49f79d19c4b5b59)
 ---
- builder/virt-builder.pod | 45 ++++++++++++++++++++++++++++++++++++++++++++-
- 1 file changed, 44 insertions(+), 1 deletion(-)
+ builder/virt-builder.pod | 43 +++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 43 insertions(+)
 
 diff --git a/builder/virt-builder.pod b/builder/virt-builder.pod
-index c8e1ad7..bcd3615 100644
+index a5f766d..cd20043 100644
 --- a/builder/virt-builder.pod
 +++ b/builder/virt-builder.pod
-@@ -1312,7 +1312,50 @@ etc are truly random when the guest boots.
+@@ -1330,6 +1330,49 @@ want clones to have duplicate identities.
  
- You should check digital signatures and not ignore any signing errors.
+ See also: L<virt-sysprep(1)>.
  
--=head2 USER MODE LINUX
 +=head2 PERFORMANCE
 +
 +The most important aspect of getting good performance is caching.
@@ -60,10 +59,9 @@ index c8e1ad7..bcd3615 100644
 +which is single-threaded.  Currently this has to be compiled in,
 +ie. virt-builder will probably need to be recompiled to use pxzcat.
 +
-+=head3 User-Mode Linux
+ =head2 USER MODE LINUX
  
  You can use virt-builder with the User-Mode Linux (UML) backend.  This
- may be faster when running virt-builder inside a virtual machine
 -- 
 1.8.4.2
 

@@ -1,4 +1,4 @@
-From 08ffde60906f113fa2c8d6c56efb7d7bd0b15015 Mon Sep 17 00:00:00 2001
+From fddbb679b27e45fa4ef83446670de48ce12466d4 Mon Sep 17 00:00:00 2001
 From: "Richard W.M. Jones" <rjones@redhat.com>
 Date: Thu, 21 Nov 2013 17:13:22 +0000
 Subject: [PATCH] builder/sysprep: Allow accounts to be locked (RHBZ#1028660).
@@ -27,10 +27,10 @@ probably not useful.  The shadow password field will contain "!!*".
  5 files changed, 100 insertions(+), 16 deletions(-)
 
 diff --git a/builder/builder.ml b/builder/builder.ml
-index 473460c..2050d10 100644
+index 57e903c..690f3e2 100644
 --- a/builder/builder.ml
 +++ b/builder/builder.ml
-@@ -458,7 +458,7 @@ let main () =
+@@ -455,7 +455,7 @@ let main () =
            pw
          | None ->
            msg (f_"Setting random root password [did you mean to use --root-password?]");
@@ -40,7 +40,7 @@ index 473460c..2050d10 100644
        set_linux_passwords ~prog ?password_crypto g root password_map
      | _ ->
 diff --git a/builder/virt-builder.pod b/builder/virt-builder.pod
-index f70802b..02b07e4 100644
+index 2803142..817ddd4 100644
 --- a/builder/virt-builder.pod
 +++ b/builder/virt-builder.pod
 @@ -719,6 +719,27 @@ has approximately 120 bits of randomness.

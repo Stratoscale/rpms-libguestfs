@@ -1,4 +1,4 @@
-From 6a3be2dbe7dcba8e0b0880168bfb880e74fbd9c3 Mon Sep 17 00:00:00 2001
+From f9fe74926f476cf12f81988f2dffb34bb77607cb Mon Sep 17 00:00:00 2001
 From: "Richard W.M. Jones" <rjones@redhat.com>
 Date: Tue, 29 Oct 2013 19:23:33 +0000
 Subject: [PATCH] builder: Add -m/--memsize and --smp command line options.
@@ -11,10 +11,10 @@ Subject: [PATCH] builder: Add -m/--memsize and --smp command line options.
  3 files changed, 33 insertions(+), 10 deletions(-)
 
 diff --git a/builder/builder.ml b/builder/builder.ml
-index a89b03f..85234e0 100644
+index f247cd2..2437d56 100644
 --- a/builder/builder.ml
 +++ b/builder/builder.ml
-@@ -36,9 +36,9 @@ let main () =
+@@ -38,9 +38,9 @@ let main () =
    (* Command line argument parsing - see cmdline.ml. *)
    let mode, arg,
      attach, cache, check_signature, curl, debug, delete, edit, fingerprint,
@@ -26,7 +26,7 @@ index a89b03f..85234e0 100644
      parse_cmdline () in
  
    (* Timestamped messages in ordinary, non-debug non-quiet mode. *)
-@@ -403,6 +403,8 @@ let main () =
+@@ -400,6 +400,8 @@ let main () =
      let g = new G.guestfs () in
      if debug then g#set_trace true;
  
@@ -102,7 +102,7 @@ index 28a1643..97ccd89 100644
 -  scrub_logfile, size, source, sync, upload, writes
 +  scrub_logfile, size, smp, source, sync, upload, writes
 diff --git a/builder/virt-builder.pod b/builder/virt-builder.pod
-index bcd3615..7d486f7 100644
+index cd20043..66ed030 100644
 --- a/builder/virt-builder.pod
 +++ b/builder/virt-builder.pod
 @@ -366,6 +366,18 @@ the image was built, use this option.
@@ -135,7 +135,7 @@ index bcd3615..7d486f7 100644
  =item B<--source> URL
  
  Set the source URL to look for templates.  If not specified it
-@@ -1402,12 +1418,6 @@ are actually interpreted by L<curl(1)>, not virt-builder.
+@@ -1438,12 +1454,6 @@ are actually interpreted by L<curl(1)>, not virt-builder.
  
  Used to determine the location of the template cache.  See L</CACHING>.
  

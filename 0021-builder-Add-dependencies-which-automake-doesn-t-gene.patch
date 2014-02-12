@@ -1,4 +1,4 @@
-From 0d06b917f7c8fa15e397f64d964326ce22631847 Mon Sep 17 00:00:00 2001
+From eee820fe7675ab79c33efe43684cef5c415b4ec7 Mon Sep 17 00:00:00 2001
 From: "Richard W.M. Jones" <rjones@redhat.com>
 Date: Tue, 5 Nov 2013 17:40:20 +0000
 Subject: [PATCH] builder: Add dependencies which automake doesn't generate
@@ -14,10 +14,10 @@ commit dfe97b352d6b398c3cb3ddb1c9984767722e514b
  1 file changed, 7 insertions(+), 4 deletions(-)
 
 diff --git a/builder/Makefile.am b/builder/Makefile.am
-index 3ad18cc..30ada87 100644
+index 09401af..8e7f104 100644
 --- a/builder/Makefile.am
 +++ b/builder/Makefile.am
-@@ -121,8 +121,6 @@ virt-builder: $(OBJECTS)
+@@ -119,8 +119,6 @@ virt-builder: $(OBJECTS)
  .ml.cmx:
  	$(OCAMLFIND) ocamlopt $(OCAMLOPTFLAGS) -c $< -o $@
  
@@ -26,7 +26,7 @@ index 3ad18cc..30ada87 100644
  # Manual pages and HTML files for the website.
  
  man_MANS += virt-builder.1
-@@ -193,8 +191,6 @@ virt_index_validate_SOURCES = \
+@@ -191,8 +189,6 @@ virt_index_validate_SOURCES = \
  	index-struct.c \
  	index-validate.c
  
@@ -35,7 +35,7 @@ index 3ad18cc..30ada87 100644
  man_MANS += virt-index-validate.1
  noinst_DATA += $(top_builddir)/html/virt-index-validate.1.html
  
-@@ -213,3 +209,10 @@ CLEANFILES += \
+@@ -211,3 +207,10 @@ CLEANFILES += \
  	index-parse.h \
  	index-scan.c \
  	stamp-virt-index-validate.pod

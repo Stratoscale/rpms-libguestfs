@@ -1,0 +1,25 @@
+From 0331c729237b94df8db7a936aefde6c5270d4da0 Mon Sep 17 00:00:00 2001
+From: "Richard W.M. Jones" <rjones@redhat.com>
+Date: Mon, 16 Dec 2013 14:14:01 +0000
+Subject: [PATCH] builder: Remove blank line.
+
+(cherry picked from commit c4fdb4023eed45dbf905526da4a91b846792079d)
+---
+ builder/builder.ml | 1 -
+ 1 file changed, 1 deletion(-)
+
+diff --git a/builder/builder.ml b/builder/builder.ml
+index 5d8ad09..1551b72 100644
+--- a/builder/builder.ml
++++ b/builder/builder.ml
+@@ -58,7 +58,6 @@ let main () =
+     ) sources
+   );
+ 
+-
+   (* Handle some modes here, some later on. *)
+   let mode =
+     match mode with
+-- 
+1.8.4.2
+

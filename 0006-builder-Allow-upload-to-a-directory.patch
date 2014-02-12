@@ -1,4 +1,4 @@
-From 8053edc7bc64dc41655d55f8e4f4ef3242bb0b33 Mon Sep 17 00:00:00 2001
+From 3d26612fcac6ec51fe34822b07577fb415c00f85 Mon Sep 17 00:00:00 2001
 From: "Richard W.M. Jones" <rjones@redhat.com>
 Date: Sat, 26 Oct 2013 11:27:06 +0100
 Subject: [PATCH] builder: Allow --upload to a directory.

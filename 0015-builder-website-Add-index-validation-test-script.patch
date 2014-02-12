@@ -1,4 +1,4 @@
-From 2627de60b603630ba8be79707766d5631d56f714 Mon Sep 17 00:00:00 2001
+From 521414b8f2fcd33994c79e68f5324222d3c9530f Mon Sep 17 00:00:00 2001
 From: "Richard W.M. Jones" <rjones@redhat.com>
 Date: Tue, 5 Nov 2013 07:25:46 +0000
 Subject: [PATCH] builder/website: Add index validation test script.

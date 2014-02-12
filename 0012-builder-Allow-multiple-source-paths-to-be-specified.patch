@@ -1,4 +1,4 @@
-From ebf8c4404850977946904aae3f905479916fce21 Mon Sep 17 00:00:00 2001
+From 502027f0517a5ef6784dc09681ef1bca6cc35ad5 Mon Sep 17 00:00:00 2001
 From: "Richard W.M. Jones" <rjones@redhat.com>
 Date: Fri, 1 Nov 2013 14:16:34 +0000
 Subject: [PATCH] builder: Allow multiple source paths to be specified.
@@ -27,10 +27,10 @@ There is still only one built-in path, but we can add more later.
  10 files changed, 143 insertions(+), 46 deletions(-)
 
 diff --git a/builder/builder.ml b/builder/builder.ml
-index 85234e0..a3a31e5 100644
+index 2437d56..b375de4 100644
 --- a/builder/builder.ml
 +++ b/builder/builder.ml
-@@ -35,22 +35,27 @@ let prog = Filename.basename Sys.executable_name
+@@ -37,22 +37,27 @@ let () = Random.self_init ()
  let main () =
    (* Command line argument parsing - see cmdline.ml. *)
    let mode, arg,
@@ -62,7 +62,7 @@ index 85234e0..a3a31e5 100644
    (* Handle some modes here, some later on. *)
    let mode =
      match mode with
-@@ -125,19 +130,23 @@ let main () =
+@@ -127,19 +132,23 @@ let main () =
        )
    in
  
@@ -93,7 +93,7 @@ index 85234e0..a3a31e5 100644
        exit 0
  
      | `Print_cache ->                   (* --print-cache *)
-@@ -184,6 +193,7 @@ let main () =
+@@ -186,6 +195,7 @@ let main () =
        eprintf (f_"%s: cannot find os-version '%s'.\nUse --list to list available guest types.\n")
          prog arg;
        exit 1 in
@@ -354,7 +354,7 @@ index 3a159bb..3077b23 100755
  os-version:              phony-debian
  Full name:               Phony Debian
 diff --git a/builder/virt-builder.pod b/builder/virt-builder.pod
-index 7d486f7..bbcdb3a 100644
+index 66ed030..39729d6 100644
 --- a/builder/virt-builder.pod
 +++ b/builder/virt-builder.pod
 @@ -264,10 +264,14 @@ Check that the index and templates are signed by the key with the
@@ -427,7 +427,7 @@ index 7d486f7..bbcdb3a 100644
  =head3 Licensing of templates
  
  You should be aware of the licensing of images that you distribute.
-@@ -1420,13 +1457,13 @@ Used to determine the location of the template cache.  See L</CACHING>.
+@@ -1456,13 +1493,13 @@ Used to determine the location of the template cache.  See L</CACHING>.
  
  =item C<VIRT_BUILDER_FINGERPRINT>
  

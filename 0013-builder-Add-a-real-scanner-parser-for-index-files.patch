@@ -1,4 +1,4 @@
-From 142ae72758d659df4a6a945c827b8dcffb2388f5 Mon Sep 17 00:00:00 2001
+From 3ff459f0e50cdf8aa26053b59b0a183636813241 Mon Sep 17 00:00:00 2001
 From: "Richard W.M. Jones" <rjones@redhat.com>
 Date: Mon, 4 Nov 2013 14:53:41 +0000
 Subject: [PATCH] builder: Add a real scanner/parser for index files.
@@ -36,7 +36,7 @@ This adds a tool called virt-index-validate to validate index files.
  create mode 100644 builder/virt-index-validate.pod
 
 diff --git a/.gitignore b/.gitignore
-index ea42d28..4a77963 100644
+index 7bcd500..8f0cda3 100644
 --- a/.gitignore
 +++ b/.gitignore
 @@ -58,10 +58,16 @@ Makefile.in
@@ -80,7 +80,7 @@ index 0e442e1..dee3bd4 100644
  +--------------+-------------+---+-----------------------------------------+
  | genisoimage  |             | R | mkisofs may work.                       |
 diff --git a/builder/Makefile.am b/builder/Makefile.am
-index e3878dc..2a1e448 100644
+index b8bf6ac..ff27318 100644
 --- a/builder/Makefile.am
 +++ b/builder/Makefile.am
 @@ -17,6 +17,12 @@
@@ -96,7 +96,7 @@ index e3878dc..2a1e448 100644
  EXTRA_DIST = \
  	$(SOURCES) \
  	virt-builder.pod \
-@@ -42,6 +48,9 @@ SOURCES = \
+@@ -40,6 +46,9 @@ SOURCES = \
  	sigchecker.mli \
  	sigchecker.ml
  
@@ -106,7 +106,7 @@ index e3878dc..2a1e448 100644
  if HAVE_OCAML
  
  # Note this list must be in dependency order.
-@@ -59,6 +68,10 @@ OBJECTS = \
+@@ -58,6 +67,10 @@ OBJECTS = \
  	$(top_builddir)/mllib/fsync.cmx \
  	$(top_builddir)/mllib/password.cmx \
  	$(top_builddir)/mllib/config.cmx \
@@ -117,7 +117,7 @@ index e3878dc..2a1e448 100644
  	get_kernel.cmx \
  	downloader.cmx \
  	sigchecker.cmx \
-@@ -99,24 +112,10 @@ virt-builder: $(OBJECTS)
+@@ -97,24 +110,10 @@ virt-builder: $(OBJECTS)
  .ml.cmx:
  	$(OCAMLFIND) ocamlopt $(OCAMLOPTFLAGS) -c $< -o $@
  
@@ -144,7 +144,7 @@ index e3878dc..2a1e448 100644
  
  virt-builder.1 $(top_builddir)/html/virt-builder.1.html: stamp-virt-builder.pod
  
-@@ -172,3 +171,28 @@ endif
+@@ -170,3 +169,28 @@ endif
  DISTCLEANFILES = .depend
  
  .PHONY: depend docs
@@ -1037,7 +1037,7 @@ index 3077b23..ff16abe 100755
      echo "$long_list"
      exit 1
 diff --git a/builder/virt-builder.pod b/builder/virt-builder.pod
-index bbcdb3a..71569ec 100644
+index 39729d6..ce22920 100644
 --- a/builder/virt-builder.pod
 +++ b/builder/virt-builder.pod
 @@ -1269,6 +1269,23 @@ For open source guests, provide a link to the source code in the
@@ -1163,7 +1163,7 @@ index 0000000..6b03703
 +
 +Copyright (C) 2013 Red Hat Inc.
 diff --git a/configure.ac b/configure.ac
-index 2e35252..35d0879 100644
+index a378be7..732946f 100644
 --- a/configure.ac
 +++ b/configure.ac
 @@ -705,6 +705,10 @@ test "x$XZCAT" = "xno" && AC_MSG_ERROR([xzcat must be installed])

@@ -1,0 +1,60 @@
+From 4842105b79ba74b18c926416e3dc02f978e7e80b Mon Sep 17 00:00:00 2001
+From: "Richard W.M. Jones" <rjones@redhat.com>
+Date: Sat, 14 Dec 2013 16:43:40 +0000
+Subject: [PATCH] builder: Add a link to blog posting about the planner.
+
+http://rwmj.wordpress.com/2013/12/14/writing-a-planner-to-solve-a-tricky-programming-optimization-problem/
+should help people to understand how this code works.
+
+(cherry picked from commit d5d1dac3ac1e3027dc507b1343022f6bcea20822)
+---
+ builder/builder.ml |  4 ++++
+ mllib/planner.mli  | 17 ++---------------
+ 2 files changed, 6 insertions(+), 15 deletions(-)
+
+diff --git a/builder/builder.ml b/builder/builder.ml
+index 854093d..8951be5 100644
+--- a/builder/builder.ml
++++ b/builder/builder.ml
+@@ -245,6 +245,10 @@ let main () =
+ 
+       Sigchecker.verify_detached sigchecker template sigfile in
+ 
++  (* For an explanation of the Planner, see:
++   * http://rwmj.wordpress.com/2013/12/14/writing-a-planner-to-solve-a-tricky-programming-optimization-problem/
++   *)
++
+   (* Planner: Input tags. *)
+   let itags =
+     let { Index_parser.size = size; format = format } = entry in
+diff --git a/mllib/planner.mli b/mllib/planner.mli
+index 770a00f..8c77acd 100644
+--- a/mllib/planner.mli
++++ b/mllib/planner.mli
+@@ -22,21 +22,8 @@
+     multi-step plan (list of transitions) from the input state to the
+     output state.
+ 
+-    For example:
+-
+-    Input tags: xz cached size=4G format=raw
+-
+-    Output tags: -xz -cached +size=8G +format=raw
+-
+-    (In this case the "-" before an output tag means the tag MUST NOT
+-    appear, and the "+" before an output tag means the tag MUST
+-    appear).
+-
+-    The plan produced might be:
+-
+-    (1) Run xzcat (removes xz and cached tags).
+-
+-    (2) Run virt-resize (changes size=4G to size=8G)
++    For an explanation of the Planner, see:
++    http://rwmj.wordpress.com/2013/12/14/writing-a-planner-to-solve-a-tricky-programming-optimization-problem/
+ 
+     Tags are described as OCaml association lists.  See the OCaml
+     {!List} module.
+-- 
+1.8.4.2
+

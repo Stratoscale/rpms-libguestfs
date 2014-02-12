@@ -1,0 +1,147 @@
+From 0f91372e5e6c4a8428918264574ac9ae874b622b Mon Sep 17 00:00:00 2001
+From: "Richard W.M. Jones" <rjones@redhat.com>
+Date: Fri, 10 Jan 2014 21:18:07 +0000
+Subject: [PATCH] builder: Add --link option for creating symbolic links.
+
+This is useful for configuring systemd services.
+
+(cherry picked from commit 6d4ac696e54902baf7d76de527b3df3d66c7dfa1)
+---
+ builder/builder.ml           | 13 ++++++++++++-
+ builder/cmdline.ml           | 16 +++++++++++++++-
+ builder/test-virt-builder.sh |  2 ++
+ builder/virt-builder.pod     | 12 ++++++++++++
+ 4 files changed, 41 insertions(+), 2 deletions(-)
+
+diff --git a/builder/builder.ml b/builder/builder.ml
+index daf355c..6105c75 100644
+--- a/builder/builder.ml
++++ b/builder/builder.ml
+@@ -39,7 +39,8 @@ let main () =
+   (* Command line argument parsing - see cmdline.ml. *)
+   let mode, arg,
+     attach, cache, check_signature, curl, debug, delete, edit,
+-    firstboot, run, format, gpg, hostname, install, list_long, memsize, mkdirs,
++    firstboot, run, format, gpg, hostname, install, list_long, links,
++    memsize, mkdirs,
+     network, output, password_crypto, quiet, root_password, scrub,
+     scrub_logfile, size, smp, sources, sync, timezone, update, upload,
+     writes =
+@@ -839,6 +840,16 @@ exec >>%s 2>&1
+       g#rm_rf file
+   ) delete;
+ 
++  (* Symbolic links. *)
++  List.iter (
++    fun (target, links) ->
++      List.iter (
++        fun link ->
++          msg (f_"Linking: %s -> %s") link target;
++          g#ln_sf target link
++      ) links
++  ) links;
++
+   (* Scrub files. *)
+   List.iter (
+     fun file ->
+diff --git a/builder/cmdline.ml b/builder/cmdline.ml
+index 813fbd8..58e8a6b 100644
+--- a/builder/cmdline.ml
++++ b/builder/cmdline.ml
+@@ -117,6 +117,17 @@ let parse_cmdline () =
+     install := pkgs @ !install
+   in
+ 
++  let links = ref [] in
++  let add_link arg =
++    let target, lns =
++      match string_nsplit ":" arg with
++      | [] | [_] ->
++        eprintf (f_"%s: invalid --link format, see the man page.\n") prog;
++        exit 1
++      | target :: lns -> target, lns in
++    links := (target, lns) :: !links
++  in
++
+   let list_long = ref false in
+ 
+   let memsize = ref None in
+@@ -237,6 +248,7 @@ let parse_cmdline () =
+     "--gpg",    Arg.Set_string gpg,         "gpg" ^ " " ^ s_"Set GPG binary/command";
+     "--hostname", Arg.String set_hostname,  "hostname" ^ " " ^ s_"Set the hostname";
+     "--install", Arg.String add_install,    "pkg,pkg" ^ " " ^ s_"Add package(s) to install";
++    "--link",    Arg.String add_link,       "target:link.." ^ " " ^ s_"Create symbolic links";
+     "-l",        Arg.Unit list_mode,        " " ^ s_"List available templates";
+     "--list",    Arg.Unit list_mode,        ditto;
+     "--long",    Arg.Set list_long,         ditto;
+@@ -313,6 +325,7 @@ read the man page virt-builder(1).
+   let hostname = !hostname in
+   let install = List.rev !install in
+   let list_long = !list_long in
++  let links = List.rev !links in
+   let memsize = !memsize in
+   let mkdirs = List.rev !mkdirs in
+   let network = !network in
+@@ -425,7 +438,8 @@ read the man page virt-builder(1).
+ 
+   mode, arg,
+   attach, cache, check_signature, curl, debug, delete, edit,
+-  firstboot, run, format, gpg, hostname, install, list_long, memsize, mkdirs,
++  firstboot, run, format, gpg, hostname, install, list_long, links,
++  memsize, mkdirs,
+   network, output, password_crypto, quiet, root_password, scrub,
+   scrub_logfile, size, smp, sources, sync, timezone, update, upload,
+   writes
+diff --git a/builder/test-virt-builder.sh b/builder/test-virt-builder.sh
+index 8d2766a..47d20a4 100755
+--- a/builder/test-virt-builder.sh
++++ b/builder/test-virt-builder.sh
+@@ -60,6 +60,8 @@ $VG ./virt-builder phony-fedora \
+     --upload Makefile:/Makefile \
+     --upload Makefile:/etc/foo/bar/baz \
+     --delete /Makefile \
++    --link /etc/foo/bar/baz/foo:/foo \
++    --link /etc/foo/bar/baz/foo:/foo1:/foo2:/foo3 \
+     --firstboot Makefile --firstboot-command 'echo "hello"' \
+     --firstboot-install "minicom,inkscape"
+ 
+diff --git a/builder/virt-builder.pod b/builder/virt-builder.pod
+index fc6ad40..0fd865f 100644
+--- a/builder/virt-builder.pod
++++ b/builder/virt-builder.pod
+@@ -24,6 +24,7 @@ virt-builder - Build virtual machine images quickly
+     [--mkdir DIR]
+     [--write FILE:CONTENT]
+     [--upload FILE:DEST]
++    [--link TARGET:LINK[:LINK]]
+     [--edit FILE:EXPR]
+     [--delete FILE] [--scrub FILE]
+     [--run SCRIPT] [--run-command 'CMD ARGS ...']
+@@ -353,6 +354,13 @@ L</INSTALLING PACKAGES>.
+ 
+ See also I<--update>.
+ 
++=item B<--link TARGET:LINK>
++
++=item B<--link TARGET:LINK[:LINK...]>
++
++Create symbolic link(s) in the guest, starting at C<LINK> and
++pointing at C<TARGET>.
++
+ =item B<-l>
+ 
+ =item B<--list>
+@@ -920,6 +928,10 @@ Files are deleted (I<--delete>, I<--scrub>).
+ 
+ =item *
+ 
++Symbolic links are created (I<--link).
++
++=item *
++
+ Firstboot scripts are installed (I<--firstboot>,
+ I<--firstboot-command>, I<--firstboot-install>).
+ 
+-- 
+1.8.4.2
+

@@ -1,0 +1,28 @@
+From 5bd9401f4a533b01fca4bee8cadc1e7f4ac85c87 Mon Sep 17 00:00:00 2001
+From: "Richard W.M. Jones" <rjones@redhat.com>
+Date: Mon, 27 Jan 2014 21:20:32 +0000
+Subject: [PATCH] daemon: Add a note about how 'mount --rbind' doesn't work.
+
+(cherry picked from commit d9cd2dc9b0e847fda3831c9ff13def616ca5043d)
+---
+ daemon/command.c | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/daemon/command.c b/daemon/command.c
+index 939bf87..1593de9 100644
+--- a/daemon/command.c
++++ b/daemon/command.c
+@@ -94,6 +94,10 @@ bind_mount (struct bind_state *bs)
+     return -1;
+   }
+ 
++  /* Note it is tempting to use --rbind here (to bind submounts).
++   * However I have not found a reliable way to unmount the same set
++   * of directories (umount -R does NOT work).
++   */
+   r = command (NULL, NULL, str_mount, "--bind", "/dev", bs->sysroot_dev, NULL);
+   bs->dev_ok = r != -1;
+   r = command (NULL, NULL, str_mount, "--bind", "/dev/pts", bs->sysroot_dev_pts, NULL);
+-- 
+1.8.4.2
+

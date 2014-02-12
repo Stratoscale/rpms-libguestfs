@@ -1,4 +1,4 @@
-From 9a97ac527afdacc07007aa1f0ec84c2a6f95b608 Mon Sep 17 00:00:00 2001
+From 2129b9267c2a26a15a2128cd1f9086f7e659ccb9 Mon Sep 17 00:00:00 2001
 From: "Richard W.M. Jones" <rjones@redhat.com>
 Date: Tue, 5 Nov 2013 15:43:24 +0000
 Subject: [PATCH] builder: Add some generated files to CLEANFILES.
@@ -11,10 +11,10 @@ This updates commit a4800e2d4fc50f372a8b626333c4fbb9b8ca9633.
  1 file changed, 5 insertions(+), 1 deletion(-)
 
 diff --git a/builder/Makefile.am b/builder/Makefile.am
-index 606ecc4..97550a8 100644
+index 30741a0..244214b 100644
 --- a/builder/Makefile.am
 +++ b/builder/Makefile.am
-@@ -206,4 +206,8 @@ stamp-virt-index-validate.pod: virt-index-validate.pod
+@@ -204,4 +204,8 @@ stamp-virt-index-validate.pod: virt-index-validate.pod
  	  $<
  	touch $@
  

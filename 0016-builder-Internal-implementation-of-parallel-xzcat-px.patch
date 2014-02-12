@@ -1,4 +1,4 @@
-From 2eabacbc0d217ece0091dc754969f0c0df3c7eac Mon Sep 17 00:00:00 2001
+From 1fecdfb2a3f56bfc602d0cbcc489c04059cb672b Mon Sep 17 00:00:00 2001
 From: "Richard W.M. Jones" <rjones@redhat.com>
 Date: Tue, 5 Nov 2013 10:21:32 +0000
 Subject: [PATCH] builder: Internal implementation of parallel xzcat (pxzcat).
@@ -42,7 +42,7 @@ index dee3bd4..8192086 100644
  +--------------+-------------+---+-----------------------------------------+
  | findlib      |             | O | For the OCaml bindings.                 |
 diff --git a/builder/Makefile.am b/builder/Makefile.am
-index 0af3f95..9430d62 100644
+index b892477..1c469ac 100644
 --- a/builder/Makefile.am
 +++ b/builder/Makefile.am
 @@ -21,7 +21,9 @@ AM_YFLAGS = -d
@@ -56,17 +56,17 @@ index 0af3f95..9430d62 100644
  
  EXTRA_DIST = \
  	$(SOURCES) \
-@@ -47,6 +49,9 @@ SOURCES = \
+@@ -45,6 +47,9 @@ SOURCES = \
+ 	index-parser-c.c \
+ 	list_entries.mli \
  	list_entries.ml \
- 	perl_edit.ml \
- 	perl_edit.mli \
 +	pxzcat.ml \
 +	pxzcat.mli \
 +	pxzcat-c.c \
  	sigchecker.mli \
  	sigchecker.ml
  
-@@ -74,6 +79,8 @@ OBJECTS = \
+@@ -73,6 +78,8 @@ OBJECTS = \
  	index-struct.o \
  	index-parse.o \
  	index-parser-c.o \
@@ -75,7 +75,7 @@ index 0af3f95..9430d62 100644
  	get_kernel.cmx \
  	downloader.cmx \
  	sigchecker.cmx \
-@@ -103,7 +110,7 @@ OCAMLOPTFLAGS = $(OCAMLCFLAGS)
+@@ -101,7 +108,7 @@ OCAMLOPTFLAGS = $(OCAMLCFLAGS)
  virt-builder: $(OBJECTS)
  	$(OCAMLFIND) ocamlopt $(OCAMLOPTFLAGS) \
  	  mlguestfs.cmxa -linkpkg $^ \
@@ -85,7 +85,7 @@ index 0af3f95..9430d62 100644
  	  -o $@
  
 diff --git a/builder/builder.ml b/builder/builder.ml
-index a3a31e5..7dba186 100644
+index b375de4..7cbc539 100644
 --- a/builder/builder.ml
 +++ b/builder/builder.ml
 @@ -24,6 +24,7 @@ open Common_utils
@@ -96,7 +96,7 @@ index a3a31e5..7dba186 100644
  
  open Unix
  open Printf
-@@ -333,27 +334,14 @@ let main () =
+@@ -330,27 +331,14 @@ let main () =
  
        output, Some size, format, delete_output_file, do_resize, true in
  
@@ -125,7 +125,7 @@ index a3a31e5..7dba186 100644
    ) else (
      (* If none of the above apply, uncompress to a temporary file and
       * run virt-resize on the result.
-@@ -362,14 +350,8 @@ let main () =
+@@ -359,14 +347,8 @@ let main () =
        (* Uncompress it to a temporary file. *)
        let { Index_parser.file_uri = file_uri } = entry in
        let tmpfile = Filename.temp_file "vbsrc" ".img" in
@@ -860,10 +860,10 @@ index 0000000..a2830f0
 +        implementation of parallel xzcat.  Otherwise regular xzcat is
 +        used. *)
 diff --git a/builder/virt-builder.pod b/builder/virt-builder.pod
-index 71569ec..a1b2a1f 100644
+index ce22920..e84d87f 100644
 --- a/builder/virt-builder.pod
 +++ b/builder/virt-builder.pod
-@@ -1420,10 +1420,9 @@ the output format is the same as the template format (usually raw).
+@@ -1438,10 +1438,9 @@ the output format is the same as the template format (usually raw).
  
  =head3 pxzcat
  
@@ -875,10 +875,10 @@ index 71569ec..a1b2a1f 100644
 +xzcat) if liblzma was found at build time.  If liblzma was not found
 +at build time, regular C<xzcat> is used which is single-threaded.
  
- =head3 User-Mode Linux
+ =head2 USER MODE LINUX
  
 diff --git a/configure.ac b/configure.ac
-index 35d0879..7648977 100644
+index 732946f..56a7eb5 100644
 --- a/configure.ac
 +++ b/configure.ac
 @@ -701,9 +701,15 @@ fi
@@ -926,13 +926,13 @@ index 5418a6b..1e831ff 100644
  cat/filesystems.c
  cat/ls.c
 diff --git a/po/POTFILES-ml b/po/POTFILES-ml
-index 2ca1042..efeb75d 100644
+index eff4de4..a63b69a 100644
 --- a/po/POTFILES-ml
 +++ b/po/POTFILES-ml
-@@ -5,6 +5,7 @@ builder/get_kernel.ml
+@@ -4,6 +4,7 @@ builder/downloader.ml
+ builder/get_kernel.ml
  builder/index_parser.ml
  builder/list_entries.ml
- builder/perl_edit.ml
 +builder/pxzcat.ml
  builder/sigchecker.ml
  mllib/common_gettext.ml

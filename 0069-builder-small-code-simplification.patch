@@ -1,0 +1,35 @@
+From 5e42538ac42393be1a161b7eca158d4256422067 Mon Sep 17 00:00:00 2001
+From: Pino Toscano <ptoscano@redhat.com>
+Date: Wed, 22 Jan 2014 23:13:24 +0100
+Subject: [PATCH] builder: small code simplification
+
+No actual behaviour changes, just remove extra match statements.
+
+(cherry picked from commit 958e84d69960faf5b321bdec92283a0b37abd858)
+---
+ builder/list_entries.ml | 6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
+
+diff --git a/builder/list_entries.ml b/builder/list_entries.ml
+index 7369e6c..9da7664 100644
+--- a/builder/list_entries.ml
++++ b/builder/list_entries.ml
+@@ -98,13 +98,11 @@ and list_entries_json ~sources index =
+         | c -> String.make 1 c)
+     done;
+     !res in
+-  let json_optional_printf_string key value =
+-    match value with
++  let json_optional_printf_string key = function
+     | None -> ()
+     | Some str ->
+       printf "    \"%s\": \"%s\",\n" key (json_string_escape str) in
+-  let json_optional_printf_int64 key value =
+-    match value with
++  let json_optional_printf_int64 key = function
+     | None -> ()
+     | Some n ->
+       printf "    \"%s\": \"%Ld\",\n" key n in
+-- 
+1.8.4.2
+

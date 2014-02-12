@@ -1,0 +1,27 @@
+From 41c857fb7672379d7036cf73e4de9808a900bc22 Mon Sep 17 00:00:00 2001
+From: "Richard W.M. Jones" <rjones@redhat.com>
+Date: Thu, 16 Jan 2014 18:01:20 +0000
+Subject: [PATCH] builder: Fix unterminated I<...> in man page.
+
+Thanks: Lukas Zapletal.
+(cherry picked from commit b3cf877e58cbcc4f6fd5d228028e19c1b294b1ac)
+---
+ builder/virt-builder.pod | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/builder/virt-builder.pod b/builder/virt-builder.pod
+index 6f835ed..918f372 100644
+--- a/builder/virt-builder.pod
++++ b/builder/virt-builder.pod
+@@ -1012,7 +1012,7 @@ Files are deleted (I<--delete>, I<--scrub>).
+ 
+ =item *
+ 
+-Symbolic links are created (I<--link).
++Symbolic links are created (I<--link>).
+ 
+ =item *
+ 
+-- 
+1.8.4.2
+

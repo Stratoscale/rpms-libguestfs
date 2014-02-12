@@ -1,4 +1,4 @@
-From 65b953629686797239b33a8dff573390308fa0d4 Mon Sep 17 00:00:00 2001
+From 0adad887c70e26a578dd0809efd339c4b791a615 Mon Sep 17 00:00:00 2001
 From: "Richard W.M. Jones" <rjones@redhat.com>
 Date: Tue, 22 Oct 2013 14:09:20 +0100
 Subject: [PATCH] builder: Make xzcat binary configurable and use AC_PATH_PROG.
@@ -11,10 +11,10 @@ Subject: [PATCH] builder: Make xzcat binary configurable and use AC_PATH_PROG.
  3 files changed, 13 insertions(+), 2 deletions(-)
 
 diff --git a/builder/builder.ml b/builder/builder.ml
-index 16005e1..f6d0ad9 100644
+index 5f6ff3b..b1cc1f0 100644
 --- a/builder/builder.ml
 +++ b/builder/builder.ml
-@@ -323,13 +323,18 @@ let main () =
+@@ -320,13 +320,18 @@ let main () =
  
        output, Some size, format, delete_output_file, do_resize, true in
  
@@ -34,7 +34,7 @@ index 16005e1..f6d0ad9 100644
      if debug then eprintf "%s\n%!" cmd;
      msg (f_"Uncompressing: %s") file_uri;
      let r = Sys.command cmd in
-@@ -345,7 +350,7 @@ let main () =
+@@ -342,7 +347,7 @@ let main () =
        (* Uncompress it to a temporary file. *)
        let { Index_parser.file_uri = file_uri } = entry in
        let tmpfile = Filename.temp_file "vbsrc" ".img" in
@@ -44,7 +44,7 @@ index 16005e1..f6d0ad9 100644
        msg (f_"Uncompressing: %s") file_uri;
        let r = Sys.command cmd in
 diff --git a/configure.ac b/configure.ac
-index 0b3980f..35f254d 100644
+index d7430db..a14d5d6 100644
 --- a/configure.ac
 +++ b/configure.ac
 @@ -698,6 +698,10 @@ if test "x$WRESTOOL" != "xno"; then

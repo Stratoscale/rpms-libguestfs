@@ -1,4 +1,4 @@
-From 33b3a097b4b7720d4d43ebe15e9881e976f70e4b Mon Sep 17 00:00:00 2001
+From b42b4f0cba8649a21b925f18b6819026a3cf6df0 Mon Sep 17 00:00:00 2001
 From: "Richard W.M. Jones" <rjones@redhat.com>
 Date: Tue, 22 Oct 2013 13:52:25 +0100
 Subject: [PATCH] builder: Don't run virt-resize when not necessary.
@@ -16,10 +16,10 @@ the template directly to the output file.
  1 file changed, 48 insertions(+), 22 deletions(-)
 
 diff --git a/builder/builder.ml b/builder/builder.ml
-index 25ab8c4..16005e1 100644
+index 18c07fc..5f6ff3b 100644
 --- a/builder/builder.ml
 +++ b/builder/builder.ml
-@@ -232,7 +232,12 @@ let main () =
+@@ -234,7 +234,12 @@ let main () =
  
        Sigchecker.verify_detached sigchecker template sigfile in
  
@@ -30,10 +30,10 @@ index 25ab8c4..16005e1 100644
 +   * - did the user specify --size?
 +   *)
 +  let output, size, format, delete_output_file, do_resize, resize_sparse =
-     let is_block_device file =
-       try (stat file).st_kind = S_BLK
-       with Unix_error _ -> false
-@@ -259,22 +264,22 @@ let main () =
+     let headroom = 256L *^ 1024L *^ 1024L in
+ 
+     match output with
+@@ -256,22 +261,22 @@ let main () =
        (* Dummy: The output file is never deleted in this case. *)
        let delete_output_file = ref false in
  
@@ -60,7 +60,7 @@ index 25ab8c4..16005e1 100644
  
        (* Create the output file. *)
        let output, format =
-@@ -285,6 +290,14 @@ let main () =
+@@ -282,6 +287,14 @@ let main () =
          | Some output, None -> output, "raw"
          | Some output, Some format -> output, format in
  
@@ -75,7 +75,7 @@ index 25ab8c4..16005e1 100644
        msg (f_"Creating disk image: %s") output;
        let cmd =
          sprintf "qemu-img create -f %s%s %s %Ld%s"
-@@ -308,30 +321,42 @@ let main () =
+@@ -305,30 +318,42 @@ let main () =
        in
        at_exit delete_file;
  
@@ -133,7 +133,7 @@ index 25ab8c4..16005e1 100644
      (match size with
      | None ->
        msg (f_"Running virt-resize to expand the disk")
-@@ -356,13 +381,14 @@ let main () =
+@@ -353,13 +378,14 @@ let main () =
          (match lvexpand with
          | None -> ""
          | Some lvexpand -> sprintf " --lv-expand %s" (quote lvexpand))

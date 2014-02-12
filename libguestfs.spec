@@ -11,7 +11,7 @@
 Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
-Version:       1.24.5
+Version:       1.24.6
 Release:       1%{?dist}
 License:       LGPLv2+
 
@@ -50,46 +50,61 @@ Patch0022:     0022-builder-Fail-if-bison-is-not-installed.patch
 Patch0023:     0023-builder-Fail-if-lex-is-not-installed.patch
 Patch0024:     0024-builder-sysprep-Allow-random-as-a-password-selector.patch
 Patch0025:     0025-builder-sysprep-Allow-accounts-to-be-locked-RHBZ-102.patch
-Patch0026:     0026-builder-Move-is_block_device-function-into-common-ut.patch
-Patch0027:     0027-builder-Use-a-planner-to-work-out-how-to-convert-the.patch
-Patch0028:     0028-builder-planner-Handle-no-format-in-source-case-corr.patch
-Patch0029:     0029-builder-Flush-debug-info-after-printing-it.patch
-Patch0030:     0030-builder-Add-a-test-of-the-planner.patch
-Patch0031:     0031-builder-tests-Fix-virt-builder-list-output.patch
-Patch0032:     0032-builder-tests-Add-test-virt-builder-planner.sh-to-EX.patch
-Patch0033:     0033-builder-Add-a-link-to-blog-posting-about-the-planner.patch
-Patch0034:     0034-builder-Only-use-virt-resize-no-sparse-when-writing-.patch
-Patch0035:     0035-builder-Refuse-to-write-to-a-char-device-or-dev-null.patch
-Patch0036:     0036-builder-Remove-blank-line.patch
-Patch0037:     0037-builder-Add-update-option-to-update-template-core-pa.patch
-Patch0038:     0038-launch-libvirt-Don-t-default-to-using-NULL-for-libvi.patch
-Patch0039:     0039-builder-Fix-handling-of-size-parameter.patch
-Patch0040:     0040-libvirt-auth-Provide-a-friendlier-wrapper-around-vir.patch
-Patch0041:     0041-tests-Add-a-regression-test-of-libvirt-authenticatio.patch
-Patch0042:     0042-tests-Add-a-regression-test-for-libvirt-authenticati.patch
-Patch0043:     0043-sysprep-builder-Add-timezone-option-to-set-timezone-.patch
-Patch0044:     0044-builder-Document-how-to-change-keyboard-layout.patch
-Patch0045:     0045-builder-Add-link-option-for-creating-symbolic-links.patch
-Patch0046:     0046-builder-Document-how-to-change-the-language-locale-o.patch
-Patch0047:     0047-builder-Document-how-to-set-up-local-mirrors-for-per.patch
-Patch0048:     0048-builder-Document-how-to-set-Japanese-language-suppor.patch
-Patch0049:     0049-builder-Fix-virt-builder-test.patch
-Patch0050:     0050-builder-Document-how-to-set-Japanese-in-Debian-7.patch
-Patch0051:     0051-builder-Add-no-delete-on-failure-option-to-aid-debug.patch
-Patch0052:     0052-builder-For-performance-recommend-using-the-no-sync-.patch
-Patch0053:     0053-builder-planner-Whitespace-change.patch
-Patch0054:     0054-daemon-xattr-simplify-the-enabling-of-the-linuxxattr.patch
-Patch0055:     0055-daemon-xattr-move-the-listxattrs-code-in-an-own-func.patch
-Patch0056:     0056-daemon-xattr-Remove-unused-variable.patch
-Patch0057:     0057-New-API-copy-attributes.patch
-Patch0058:     0058-Update-generated-files-for-new-copy-attributes-API.patch
-Patch0059:     0059-fish-Add-test-file-attrs.sh-to-EXTRA_DIST.patch
-Patch0060:     0060-builder-edit-fish-use-copy-attributes.patch
-Patch0061:     0061-builder-test-virt-builder-check-some-results.patch
-Patch0062:     0062-builder-small-refactor-of-the-list-output.patch
-Patch0063:     0063-builder-add-list-format.patch
-Patch0064:     0064-builder-add-a-JSON-output-for-list.patch
-Patch0065:     0065-builder-Fix-unterminated-I-.-in-man-page.patch
+Patch0026:     0026-builder-Use-a-planner-to-work-out-how-to-convert-the.patch
+Patch0027:     0027-builder-planner-Handle-no-format-in-source-case-corr.patch
+Patch0028:     0028-builder-Flush-debug-info-after-printing-it.patch
+Patch0029:     0029-builder-Add-a-test-of-the-planner.patch
+Patch0030:     0030-builder-tests-Fix-virt-builder-list-output.patch
+Patch0031:     0031-builder-tests-Add-test-virt-builder-planner.sh-to-EX.patch
+Patch0032:     0032-builder-Add-a-link-to-blog-posting-about-the-planner.patch
+Patch0033:     0033-builder-Only-use-virt-resize-no-sparse-when-writing-.patch
+Patch0034:     0034-builder-Refuse-to-write-to-a-char-device-or-dev-null.patch
+Patch0035:     0035-builder-Remove-blank-line.patch
+Patch0036:     0036-builder-Add-update-option-to-update-template-core-pa.patch
+Patch0037:     0037-launch-libvirt-Don-t-default-to-using-NULL-for-libvi.patch
+Patch0038:     0038-builder-Fix-handling-of-size-parameter.patch
+Patch0039:     0039-libvirt-auth-Provide-a-friendlier-wrapper-around-vir.patch
+Patch0040:     0040-tests-Add-a-regression-test-of-libvirt-authenticatio.patch
+Patch0041:     0041-tests-Add-a-regression-test-for-libvirt-authenticati.patch
+Patch0042:     0042-sysprep-builder-Add-timezone-option-to-set-timezone-.patch
+Patch0043:     0043-builder-Document-how-to-change-keyboard-layout.patch
+Patch0044:     0044-builder-Add-link-option-for-creating-symbolic-links.patch
+Patch0045:     0045-builder-Document-how-to-change-the-language-locale-o.patch
+Patch0046:     0046-builder-Document-how-to-set-up-local-mirrors-for-per.patch
+Patch0047:     0047-builder-Document-how-to-set-Japanese-language-suppor.patch
+Patch0048:     0048-builder-Fix-virt-builder-test.patch
+Patch0049:     0049-builder-Document-how-to-set-Japanese-in-Debian-7.patch
+Patch0050:     0050-builder-Add-no-delete-on-failure-option-to-aid-debug.patch
+Patch0051:     0051-builder-For-performance-recommend-using-the-no-sync-.patch
+Patch0052:     0052-builder-planner-Whitespace-change.patch
+Patch0053:     0053-daemon-xattr-simplify-the-enabling-of-the-linuxxattr.patch
+Patch0054:     0054-daemon-xattr-move-the-listxattrs-code-in-an-own-func.patch
+Patch0055:     0055-daemon-xattr-Remove-unused-variable.patch
+Patch0056:     0056-New-API-copy-attributes.patch
+Patch0057:     0057-Update-generated-files-for-new-copy-attributes-API.patch
+Patch0058:     0058-fish-Add-test-file-attrs.sh-to-EXTRA_DIST.patch
+Patch0059:     0059-builder-edit-fish-use-copy-attributes.patch
+Patch0060:     0060-builder-test-virt-builder-check-some-results.patch
+Patch0061:     0061-builder-small-refactor-of-the-list-output.patch
+Patch0062:     0062-builder-add-list-format.patch
+Patch0063:     0063-builder-add-a-JSON-output-for-list.patch
+Patch0064:     0064-builder-Fix-unterminated-I-.-in-man-page.patch
+Patch0065:     0065-builder-add-index-struct.h-as-dependency-for-index-p.patch
+Patch0066:     0066-builder-allow-more-empty-lines-in-index-files.patch
+Patch0067:     0067-builder-proper-consider-subkeys-in-index-files.patch
+Patch0068:     0068-builder-fix-small-regression-in-subkey-parsing.patch
+Patch0069:     0069-builder-small-code-simplification.patch
+Patch0070:     0070-builder-read-all-the-available-notes-from-the-index.patch
+Patch0071:     0071-builder-Add-selinux-relabel-option-to-perform-SELinu.patch
+Patch0072:     0072-builder-Add-documentation-for-enabling-Puppet-agent-.patch
+Patch0073:     0073-daemon-Bind-mount-sys-fs-selinux-into-sysroot-when-r.patch
+Patch0074:     0074-daemon-If-selinux-exists-in-the-guest-bind-mount-sys.patch
+Patch0075:     0075-daemon-Add-a-note-about-how-mount-rbind-doesn-t-work.patch
+Patch0076:     0076-builder-output-translated-notes.patch
+Patch0077:     0077-builder-remove-unused-variables.patch
+Patch0078:     0078-builder-isolate-C-libraries-in-an-own-OCAMLCLIBS.patch
+Patch0079:     0079-builder-prepare-for-different-per-protocol-download-.patch
+Patch0080:     0080-builder-do-a-copy-when-downloading-local-files.patch
 # Add any non-git patches here.
 
 # Use git for patch management.
@@ -1081,6 +1096,9 @@ mkdir -p $RPM_BUILD_ROOT%{_localstatedir}/run/libguestfs
 
 
 %changelog
+* Wed Feb 12 2014 Richard W.M. Jones <rjones@redhat.com> - 1:1.24.6-1
+- New stable branch version 1.24.6.
+
 * Mon Jan 20 2014 Richard W.M. Jones <rjones@redhat.com> - 1:1.24.5-1
 - New stable branch version 1.24.5.
 - Backport more virt-builder patches from upstream to Fedora 20.
