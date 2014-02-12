@@ -1,4 +1,4 @@
-From fe3d4b9f9e70b6ec61e5eb8a5c7076729d6e1ad8 Mon Sep 17 00:00:00 2001
+From 7042424ec224184a7d169f8918c1baf2e2f531e2 Mon Sep 17 00:00:00 2001
 From: "Richard W.M. Jones" <rjones@redhat.com>
 Date: Sat, 31 Aug 2013 22:24:40 +0100
 Subject: [PATCH] add_drive: Introduce 'cachemode' parameter to control drive
@@ -562,5 +562,5 @@ index faafeba..16a5453 100644
  
    if (drv->disk_label) {
 -- 
-1.8.3.1
+1.8.4.2
 

@@ -1,4 +1,4 @@
-From 5f54c5961f154f83dfe36caf319dcc75718c5ad2 Mon Sep 17 00:00:00 2001
+From ac0742b96f3c32539ec93df4251600ba9553d769 Mon Sep 17 00:00:00 2001
 From: "Richard W.M. Jones" <rjones@redhat.com>
 Date: Sat, 31 Aug 2013 22:38:03 +0100
 Subject: [PATCH] drives: Ensure all scratch drives use cachemode "unsafe".
@@ -35,5 +35,5 @@ index a6cc45a..ebd17f3 100644
    /* Copy the optional arguments through to guestfs_add_drive_opts. */
    if (optargs->bitmask & GUESTFS_ADD_DRIVE_SCRATCH_NAME_BITMASK) {
 -- 
-1.8.3.1
+1.8.4.2
 

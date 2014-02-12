@@ -1,4 +1,4 @@
-From 31a4bc0065dc2d4b4812b38f5296c771e7c088cd Mon Sep 17 00:00:00 2001
+From d58493e26017e52bb0899df35fee2c6be2b901ce Mon Sep 17 00:00:00 2001
 From: "Richard W.M. Jones" <rjones@redhat.com>
 Date: Sat, 31 Aug 2013 22:47:44 +0100
 Subject: [PATCH] sparsify: Use cachemode "unsafe" for the overlay disk.
@@ -23,5 +23,5 @@ index 7f0090b..77dd2c7 100644
    if not quiet then Progress.set_up_progress_bar ~machine_readable g;
    g#launch ();
 -- 
-1.8.3.1
+1.8.4.2
 

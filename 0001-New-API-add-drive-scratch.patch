@@ -1,4 +1,4 @@
-From dc6db5144a0e4f4b8238ef9b77949ac548991a52 Mon Sep 17 00:00:00 2001
+From 35c4270399c1bb97ea0806d44e60ed58c06d159e Mon Sep 17 00:00:00 2001
 From: "Richard W.M. Jones" <rjones@redhat.com>
 Date: Fri, 19 Jul 2013 14:09:56 +0100
 Subject: [PATCH] New API: add-drive-scratch.
@@ -41,7 +41,7 @@ index 1d44a47..4e6b687 100644
  
  (* daemon_functions are any functions which cause some action
 diff --git a/gobject/Makefile.inc b/gobject/Makefile.inc
-index 69f7215..17da527 100644
+index 8a5f1fb..835813f 100644
 --- a/gobject/Makefile.inc
 +++ b/gobject/Makefile.inc
 @@ -51,6 +51,7 @@ guestfs_gobject_headers= \
@@ -144,5 +144,5 @@ index f515ede..98aead2 100644
  {
    if (strchr (filename, ':') != NULL) {
 -- 
-1.8.3.1
+1.8.4.2
 

@@ -1,4 +1,4 @@
-From b54c131813d7a109a00c39d2597ae5ada8b68807 Mon Sep 17 00:00:00 2001
+From 9e9d78ade12fac739eb02303a71a646ce9c2b14a Mon Sep 17 00:00:00 2001
 From: "Richard W.M. Jones" <rjones@redhat.com>
 Date: Thu, 5 Sep 2013 18:45:24 +0100
 Subject: [PATCH] launch: direct: Always use cache=unsafe for the appliance.
@@ -39,5 +39,5 @@ index 414658e..798d130 100644
  
        if (virtio_scsi) {
 -- 
-1.8.3.1
+1.8.4.2
 
