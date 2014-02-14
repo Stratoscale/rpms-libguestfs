@@ -683,15 +683,12 @@ popd
 export SKIP_TEST_VIRT_ALIGNMENT_SCAN_GUESTS_SH=1
 export SKIP_TEST_VIRT_DF_GUESTS_SH=1
 
-# Disabled everywhere because LVM is broken in the kernel (RHBZ#1061339).
-%if 0
 # Disabled on ARM because of RHBZ#990258.
 # Disabled on 32 bit x86 because of RHBZ#998722 & RHBZ#998692.
 # Disabled on ppc, ppc64 (secondary arches), see RHBZ#1036742.
 %ifnarch armv7hl %{ix86} ppc ppc64
 %if %{runtests}
 make check -k
-%endif
 %endif
 %endif
 
@@ -988,6 +985,7 @@ mkdir -p $RPM_BUILD_ROOT%{_localstatedir}/run/libguestfs
 %changelog
 * Thu Feb 13 2014 Richard W.M. Jones <rjones@redhat.com> - 1:1.25.34-1
 - New upstream version 1.25.34.
+- Reenable tests as the kernel bug is fixed.
 
 * Wed Feb 05 2014 Richard W.M. Jones <rjones@redhat.com> - 1:1.25.33-1
 - New upstream version 1.25.33.
