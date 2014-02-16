@@ -684,9 +684,8 @@ export SKIP_TEST_VIRT_ALIGNMENT_SCAN_GUESTS_SH=1
 export SKIP_TEST_VIRT_DF_GUESTS_SH=1
 
 # Disabled on ARM because of RHBZ#990258.
-# Disabled on 32 bit x86 because of RHBZ#998722 & RHBZ#998692.
 # Disabled on ppc, ppc64 (secondary arches), see RHBZ#1036742.
-%ifnarch armv7hl %{ix86} ppc ppc64
+%ifnarch armv7hl ppc ppc64
 %if %{runtests}
 make check -k
 %endif
@@ -983,6 +982,10 @@ mkdir -p $RPM_BUILD_ROOT%{_localstatedir}/run/libguestfs
 
 
 %changelog
+* Sun Feb 16 2014 Richard W.M. Jones <rjones@redhat.com> - 1:1.25.34-1
+- Enable tests on i686 as both of the referenced bugs (RHBZ#998722 &
+  RHBZ#998692) are now supposed to be fixed.
+
 * Thu Feb 13 2014 Richard W.M. Jones <rjones@redhat.com> - 1:1.25.34-1
 - New upstream version 1.25.34.
 - Reenable tests as the kernel bug is fixed.
