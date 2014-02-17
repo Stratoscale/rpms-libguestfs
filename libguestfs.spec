@@ -11,7 +11,7 @@
 Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
-Version:       1.25.34
+Version:       1.25.36
 Release:       1%{?dist}
 License:       LGPLv2+
 
@@ -981,6 +981,9 @@ mkdir -p $RPM_BUILD_ROOT%{_localstatedir}/run/libguestfs
 
 
 %changelog
+* Mon Feb 17 2014 Richard W.M. Jones <rjones@redhat.com> - 1:1.25.36-1
+- New upstream version 1.25.36.
+
 * Sun Feb 16 2014 Richard W.M. Jones <rjones@redhat.com> - 1:1.25.34-1
 - Enable tests on i686 as both of the referenced bugs (RHBZ#998722 &
   RHBZ#998692) are now supposed to be fixed.
