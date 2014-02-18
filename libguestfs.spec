@@ -1,9 +1,15 @@
-# Enable to run tests during check
-# Default is enabled
+# Run tests during check.  Default is enabled on most architectures.
+# You can override this by putting '%libguestfs_runtests 0' into
+# '~/.rpmmacros'
 %if %{defined libguestfs_runtests}
 %global runtests %{libguestfs_runtests}
 %else
+%ifnarch ppc ppc64
 %global runtests 1
+%else
+# Disabled on ppc, ppc64 (secondary arches), see RHBZ#1036742.
+%global runtests 0
+%endif
 %endif
 
 %global _hardened_build 1
@@ -688,12 +694,10 @@ popd
 export SKIP_TEST_VIRT_ALIGNMENT_SCAN_GUESTS_SH=1
 export SKIP_TEST_VIRT_DF_GUESTS_SH=1
 
-# Disabled on ppc, ppc64 (secondary arches), see RHBZ#1036742.
-%ifnarch ppc ppc64
 %if %{runtests}
 make quickcheck
 make check -k
-%endif
+
 %endif
 
 
