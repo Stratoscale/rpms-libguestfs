@@ -12,7 +12,7 @@ Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
 Version:       1.25.36
-Release:       3%{?dist}
+Release:       4%{?dist}
 License:       LGPLv2+
 
 # Source and patches.
@@ -691,6 +691,7 @@ export SKIP_TEST_VIRT_DF_GUESTS_SH=1
 # Disabled on ppc, ppc64 (secondary arches), see RHBZ#1036742.
 %ifnarch ppc ppc64
 %if %{runtests}
+make quickcheck
 make check -k
 %endif
 %endif
@@ -986,8 +987,9 @@ mkdir -p $RPM_BUILD_ROOT%{_localstatedir}/run/libguestfs
 
 
 %changelog
-* Tue Feb 18 2014 Richard W.M. Jones <rjones@redhat.com> - 1:1.25.36-3
+* Tue Feb 18 2014 Richard W.M. Jones <rjones@redhat.com> - 1:1.25.36-4
 - Add upstream patch, workaround for libvirt on ARM bug.
+- Run make quickcheck (and fail early) before doing full make check.
 
 * Mon Feb 17 2014 Richard W.M. Jones <rjones@redhat.com> - 1:1.25.36-1
 - New upstream version 1.25.36.
