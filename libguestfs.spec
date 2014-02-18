@@ -12,7 +12,7 @@ Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
 Version:       1.25.36
-Release:       2%{?dist}
+Release:       3%{?dist}
 License:       LGPLv2+
 
 # Source and patches.
@@ -570,6 +570,8 @@ for %{name}.
 %prep
 %setup -q
 
+%patch0001 -p1
+
 if [ "$(getenforce | tr '[A-Z]' '[a-z]')" != "disabled" ]; then
     # For sVirt to work, the local temporary directory we use in the
     # tests must be labelled the same way as /tmp.
@@ -984,7 +986,7 @@ mkdir -p $RPM_BUILD_ROOT%{_localstatedir}/run/libguestfs
 
 
 %changelog
-* Tue Feb 18 2014 Richard W.M. Jones <rjones@redhat.com> - 1:1.25.36-2
+* Tue Feb 18 2014 Richard W.M. Jones <rjones@redhat.com> - 1:1.25.36-3
 - Add upstream patch, workaround for libvirt on ARM bug.
 
 * Mon Feb 17 2014 Richard W.M. Jones <rjones@redhat.com> - 1:1.25.36-1
