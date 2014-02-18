@@ -12,12 +12,15 @@ Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
 Version:       1.25.36
-Release:       1%{?dist}
+Release:       2%{?dist}
 License:       LGPLv2+
 
 # Source and patches.
 URL:           http://libguestfs.org/
 Source0:       http://libguestfs.org/download/1.25-development/%{name}-%{version}.tar.gz
+
+# Upstream workaround for libvirt on ARM bug.
+Patch0001:     0001-launch-libvirt-Don-t-include-hpet-XML-fragment-on-AR.patch
 
 # Basic build requirements:
 BuildRequires: perl(Pod::Simple)
@@ -981,6 +984,9 @@ mkdir -p $RPM_BUILD_ROOT%{_localstatedir}/run/libguestfs
 
 
 %changelog
+* Tue Feb 18 2014 Richard W.M. Jones <rjones@redhat.com> - 1:1.25.36-2
+- Add upstream patch, workaround for libvirt on ARM bug.
+
 * Mon Feb 17 2014 Richard W.M. Jones <rjones@redhat.com> - 1:1.25.36-1
 - New upstream version 1.25.36.
 
