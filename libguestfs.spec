@@ -695,7 +695,14 @@ export SKIP_TEST_VIRT_ALIGNMENT_SCAN_GUESTS_SH=1
 export SKIP_TEST_VIRT_DF_GUESTS_SH=1
 
 %if %{runtests}
-make quickcheck
+
+# Do make quickcheck first, to fail early if the appliance is
+# obviously broken.  Also dump libvirt log files if this happens.
+if ! make quickcheck; then
+    cat $HOME/.cache/libvirt/qemu/log/*
+    exit 1
+fi
+
 make check -k
 
 %endif
