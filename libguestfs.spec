@@ -18,7 +18,7 @@ Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
 Version:       1.25.36
-Release:       4%{?dist}
+Release:       5%{?dist}
 License:       LGPLv2+
 
 # Source and patches.
@@ -27,6 +27,8 @@ Source0:       http://libguestfs.org/download/1.25-development/%{name}-%{version
 
 # Upstream workaround for libvirt on ARM bug.
 Patch0001:     0001-launch-libvirt-Don-t-include-hpet-XML-fragment-on-AR.patch
+# Same for ppc64:
+Patch0002:     0001-ppc64-Disable-hpet-fragment-in-libvirt-XML.patch
 
 # Basic build requirements:
 BuildRequires: perl(Pod::Simple)
@@ -577,6 +579,7 @@ for %{name}.
 %setup -q
 
 %patch0001 -p1
+%patch0002 -p1
 
 if [ "$(getenforce | tr '[A-Z]' '[a-z]')" != "disabled" ]; then
     # For sVirt to work, the local temporary directory we use in the
@@ -998,8 +1001,8 @@ mkdir -p $RPM_BUILD_ROOT%{_localstatedir}/run/libguestfs
 
 
 %changelog
-* Tue Feb 18 2014 Richard W.M. Jones <rjones@redhat.com> - 1:1.25.36-4
-- Add upstream patch, workaround for libvirt on ARM bug.
+* Tue Feb 18 2014 Richard W.M. Jones <rjones@redhat.com> - 1:1.25.36-5
+- Add upstream patches, workaround for libvirt on ARM / ppc64 bug.
 - Run make quickcheck (and fail early) before doing full make check.
 
 * Mon Feb 17 2014 Richard W.M. Jones <rjones@redhat.com> - 1:1.25.36-1
