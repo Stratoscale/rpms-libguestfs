@@ -25,11 +25,6 @@ License:       LGPLv2+
 URL:           http://libguestfs.org/
 Source0:       http://libguestfs.org/download/1.25-development/%{name}-%{version}.tar.gz
 
-# Upstream workaround for libvirt on ARM bug.
-Patch0001:     0001-launch-libvirt-Don-t-include-hpet-XML-fragment-on-AR.patch
-# Same for ppc64:
-Patch0002:     0001-ppc64-Disable-hpet-fragment-in-libvirt-XML.patch
-
 # Basic build requirements:
 BuildRequires: perl(Pod::Simple)
 BuildRequires: perl(Pod::Man)
@@ -577,9 +572,6 @@ for %{name}.
 
 %prep
 %setup -q
-
-%patch0001 -p1
-%patch0002 -p1
 
 if [ "$(getenforce | tr '[A-Z]' '[a-z]')" != "disabled" ]; then
     # For sVirt to work, the local temporary directory we use in the
