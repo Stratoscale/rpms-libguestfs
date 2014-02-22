@@ -4,9 +4,10 @@
 %if %{defined libguestfs_runtests}
 %global runtests %{libguestfs_runtests}
 %else
-%ifnarch ppc ppc64
+%ifnarch %{arm} ppc ppc64
 %global runtests 1
 %else
+# Disabled on arm, see RHBZ#1066581.
 # Disabled on ppc, ppc64 (secondary arches), see RHBZ#1036742.
 %global runtests 0
 %endif
@@ -18,7 +19,7 @@ Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
 Version:       1.25.37
-Release:       1%{?dist}
+Release:       2%{?dist}
 License:       LGPLv2+
 
 # Source and patches.
@@ -993,8 +994,9 @@ mkdir -p $RPM_BUILD_ROOT%{_localstatedir}/run/libguestfs
 
 
 %changelog
-* Sat Feb 22 2014 Richard W.M. Jones <rjones@redhat.com> - 1:1.25.37-1
+* Sat Feb 22 2014 Richard W.M. Jones <rjones@redhat.com> - 1:1.25.37-2
 - New upstream version 1.25.37.
+- Disable tests on ARM because of RHBZ#1066581.
 
 * Tue Feb 18 2014 Richard W.M. Jones <rjones@redhat.com> - 1:1.25.36-5
 - Add upstream patches, workaround for libvirt on ARM / ppc64 bug.
