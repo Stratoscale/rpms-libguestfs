@@ -18,7 +18,7 @@
 Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
-Version:       1.25.37
+Version:       1.25.38
 Release:       2%{?dist}
 License:       LGPLv2+
 
@@ -30,7 +30,7 @@ Source0:       http://libguestfs.org/download/1.25-development/%{name}-%{version
 BuildRequires: perl(Pod::Simple)
 BuildRequires: perl(Pod::Man)
 BuildRequires: /usr/bin/pod2text
-BuildRequires: supermin >= 4.1.5
+BuildRequires: supermin >= 5.1.0
 BuildRequires: hivex-devel >= 1.2.7-7
 BuildRequires: perl(Win::Hivex)
 BuildRequires: perl(Win::Hivex::Regedit)
@@ -116,10 +116,9 @@ BuildRequires: golang
 %endif
 %global appliance_buildreqs %{appliance_buildreqs0} %{?appliance_buildreqs1} %{?appliance_buildreqs2} %{?appliance_buildreqs3}
 BuildRequires: %{appliance_buildreqs}
-Requires:      %{appliance_buildreqs}
 
 # For building the appliance.
-Requires:      supermin-helper >= 4.1.5
+Requires:      supermin >= 5.1.0
 
 # For core inspection API.
 Requires:      libdb-utils
@@ -197,6 +196,10 @@ For shell scripting and command line access, install 'guestfish'.
 To mount guest filesystems on the host using FUSE, install
 '%{name}-mount'.
 
+For extra features, install 'libguestfs-gfs2', 'libguestfs-hfsplus',
+'libguestfs-jfs', 'libguestfs-nilfs', 'libguestfs-reiserfs',
+'libguestfs-rsync', 'libguestfs-xfs', 'libguestfs-zfs'.
+
 For Erlang bindings, install 'erlang-libguestfs'.
 
 For GObject bindings and GObject Introspection, install
@@ -232,6 +235,94 @@ Requires:      %{name}-tools-c = %{epoch}:%{version}-%{release}
 %description devel
 %{name}-devel contains development tools and libraries
 for %{name}.
+
+
+%package gfs2
+Summary:       GFS2 support for %{name}
+License:       LGPLv2+
+Requires:      %{name} = %{epoch}:%{version}-%{release}
+Requires:      gfs2-utils
+
+%description gfs2
+This adds GFS2 support to %{name}.  Install it if you want to process
+disk images containing GFS2.
+
+
+%package hfsplus
+Summary:       HFS+ support for %{name}
+License:       LGPLv2+
+Requires:      %{name} = %{epoch}:%{version}-%{release}
+Requires:      hfsplus-tools
+
+%description hfsplus
+This adds HFS+ support to %{name}.  Install it if you want to process
+disk images containing HFS+ / Mac OS Extended filesystems.
+
+
+%package jfs
+Summary:       JFS support for %{name}
+License:       LGPLv2+
+Requires:      %{name} = %{epoch}:%{version}-%{release}
+Requires:      jfsutils
+
+%description jfs
+This adds JFS support to %{name}.  Install it if you want to process
+disk images containing JFS.
+
+
+%package nilfs
+Summary:       NILFS support for %{name}
+License:       LGPLv2+
+Requires:      %{name} = %{epoch}:%{version}-%{release}
+Requires:      nilfs-utils
+
+%description nilfs
+This adds NILFS v2 support to %{name}.  Install it if you want to process
+disk images containing NILFS v2.
+
+
+%package reiserfs
+Summary:       ReiserFS support for %{name}
+License:       LGPLv2+
+Requires:      %{name} = %{epoch}:%{version}-%{release}
+Requires:      reiserfs-utils
+
+%description reiserfs
+This adds ReiserFS support to %{name}.  Install it if you want to process
+disk images containing ReiserFS.
+
+
+%package rsync
+Summary:       rsync support for %{name}
+License:       LGPLv2+
+Requires:      %{name} = %{epoch}:%{version}-%{release}
+Requires:      rsync
+
+%description rsync
+This adds rsync support to %{name}.  Install it if you want to use
+rsync to upload or download files into disk images.
+
+
+%package xfs
+Summary:       XFS support for %{name}
+License:       LGPLv2+
+Requires:      %{name} = %{epoch}:%{version}-%{release}
+Requires:      xfsprogs
+
+%description xfs
+This adds XFS support to %{name}.  Install it if you want to process
+disk images containing XFS.
+
+
+%package zfs
+Summary:       ZFS support for %{name}
+License:       LGPLv2+
+Requires:      %{name} = %{epoch}:%{version}-%{release}
+Requires:      zfs-fuse
+
+%description zfs
+This adds ZFS support to %{name}.  Install it if you want to process
+disk images containing ZFS.
 
 
 %package tools-c
@@ -587,12 +678,6 @@ mkdir -p daemon/m4
 mv README README.orig
 sed 's/@VERSION@/%{version}/g' < %{SOURCE4} > README
 
-# Remove udev from the packagelist.  systemd now 'obsoletes' udev, but
-# supermin doesn't get this relationship right.  When udev disappears
-# from the repository we can stop doing this.
-cp appliance/packagelist.in appliance/packagelist.in.orig
-grep -Ev '\budev\b' < appliance/packagelist.in.orig > appliance/packagelist.in
-
 
 %build
 # Test if network is available.
@@ -739,6 +824,18 @@ cp -a golang/src/libguestfs.org $RPM_BUILD_ROOT%{_datadir}/gocode/src
 mv $RPM_BUILD_ROOT%{_docdir}/libguestfs installed-docs
 gzip --best installed-docs/*.xml
 
+# Split up the monolithic packages file in the supermin appliance so
+# we can install dependencies in subpackages.
+pushd $RPM_BUILD_ROOT%{_libdir}/guestfs/supermin.d
+for f in gfs2-utils hfsplus-tools jfsutils nilfs-utils \
+         reiserfs-utils rsync xfsprogs zfs-fuse; do
+    mv packages packages~
+    grep -Ev "^$f\$" < packages~ > packages
+    rm packages~
+    echo $f > zz-packages-$f
+done
+popd
+
 # For the libguestfs-live-service subpackage install the systemd
 # service and udev rules.
 mkdir -p $RPM_BUILD_ROOT%{_unitdir}
@@ -769,6 +866,7 @@ mkdir -p $RPM_BUILD_ROOT%{_localstatedir}/run/libguestfs
 %doc COPYING README
 %{_bindir}/libguestfs-test-tool
 %{_libdir}/guestfs/
+%exclude %{_libdir}/guestfs/supermin.d/zz-packages-*
 %{_libdir}/libguestfs.so.*
 %{_mandir}/man1/guestfs-faq.1*
 %{_mandir}/man1/guestfs-performance.1*
@@ -792,6 +890,29 @@ mkdir -p $RPM_BUILD_ROOT%{_localstatedir}/run/libguestfs
 %{_includedir}/guestfs.h
 %{_libdir}/pkgconfig/libguestfs.pc
 
+%files gfs2
+%{_libdir}/guestfs/supermin.d/zz-packages-gfs2-utils
+
+%files hfsplus
+%{_libdir}/guestfs/supermin.d/zz-packages-hfsplus-tools
+
+%files jfs
+%{_libdir}/guestfs/supermin.d/zz-packages-jfsutils
+
+%files nilfs
+%{_libdir}/guestfs/supermin.d/zz-packages-nilfs-utils
+
+%files reiserfs
+%{_libdir}/guestfs/supermin.d/zz-packages-reiserfs-utils
+
+%files rsync
+%{_libdir}/guestfs/supermin.d/zz-packages-rsync
+
+%files xfs
+%{_libdir}/guestfs/supermin.d/zz-packages-xfsprogs
+
+%files zfs
+%{_libdir}/guestfs/supermin.d/zz-packages-zfs-fuse
 
 %files tools-c
 %doc README
@@ -994,6 +1115,13 @@ mkdir -p $RPM_BUILD_ROOT%{_localstatedir}/run/libguestfs
 
 
 %changelog
+* Wed Feb 26 2014 Richard W.M. Jones <rjones@redhat.com> - 1:1.25.38-2
+- New upstream version 1.25.38.
+- Requires new supermin 5.1.0.
+- Split the dependencies into subpackages, at least for the less common
+  filesystem types.
+- In the dependency generator, we can now generate ordinary dependencies!
+
 * Sat Feb 22 2014 Richard W.M. Jones <rjones@redhat.com> - 1:1.25.37-2
 - New upstream version 1.25.37.
 - Disable tests on ARM because of RHBZ#1066581.
