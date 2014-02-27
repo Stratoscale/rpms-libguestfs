@@ -19,7 +19,7 @@ Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
 Version:       1.25.38
-Release:       2%{?dist}
+Release:       3%{?dist}
 License:       LGPLv2+
 
 # Source and patches.
@@ -1115,6 +1115,9 @@ mkdir -p $RPM_BUILD_ROOT%{_localstatedir}/run/libguestfs
 
 
 %changelog
+* Thu Feb 27 2014 Richard W.M. Jones <rjones@redhat.com> - 1:1.25.38-3
+- Ensure dependencies needed by the daemon are added to base libguestfs.
+
 * Wed Feb 26 2014 Richard W.M. Jones <rjones@redhat.com> - 1:1.25.38-2
 - New upstream version 1.25.38.
 - Requires new supermin 5.1.0.
