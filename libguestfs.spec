@@ -4,11 +4,12 @@
 %if %{defined libguestfs_runtests}
 %global runtests %{libguestfs_runtests}
 %else
-%ifnarch %{arm} ppc ppc64
+%ifnarch %{arm} ppc ppc64 %{ix86}
 %global runtests 1
 %else
 # Disabled on arm, see RHBZ#1066581.
 # Disabled on ppc, ppc64 (secondary arches), see RHBZ#1036742.
+# Disabled on x86, bug to come.
 %global runtests 0
 %endif
 %endif
@@ -19,7 +20,7 @@ Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
 Version:       1.25.38
-Release:       3%{?dist}
+Release:       4%{?dist}
 License:       LGPLv2+
 
 # Source and patches.
@@ -248,6 +249,7 @@ This adds GFS2 support to %{name}.  Install it if you want to process
 disk images containing GFS2.
 
 
+%ifnarch %{arm} ppc
 %package hfsplus
 Summary:       HFS+ support for %{name}
 License:       LGPLv2+
@@ -257,6 +259,7 @@ Requires:      hfsplus-tools
 %description hfsplus
 This adds HFS+ support to %{name}.  Install it if you want to process
 disk images containing HFS+ / Mac OS Extended filesystems.
+%endif
 
 
 %package jfs
@@ -314,6 +317,7 @@ This adds XFS support to %{name}.  Install it if you want to process
 disk images containing XFS.
 
 
+%ifnarch %{arm}
 %package zfs
 Summary:       ZFS support for %{name}
 License:       LGPLv2+
@@ -323,6 +327,7 @@ Requires:      zfs-fuse
 %description zfs
 This adds ZFS support to %{name}.  Install it if you want to process
 disk images containing ZFS.
+%endif
 
 
 %package tools-c
@@ -829,10 +834,12 @@ gzip --best installed-docs/*.xml
 pushd $RPM_BUILD_ROOT%{_libdir}/guestfs/supermin.d
 for f in gfs2-utils hfsplus-tools jfsutils nilfs-utils \
          reiserfs-utils rsync xfsprogs zfs-fuse; do
-    mv packages packages~
-    grep -Ev "^$f\$" < packages~ > packages
-    rm packages~
-    echo $f > zz-packages-$f
+    if grep -Esq "^$f\$" packages; then
+        mv packages packages~
+        grep -Ev "^$f\$" < packages~ > packages
+        rm packages~
+        echo $f > zz-packages-$f
+    fi
 done
 popd
 
@@ -893,8 +900,10 @@ mkdir -p $RPM_BUILD_ROOT%{_localstatedir}/run/libguestfs
 %files gfs2
 %{_libdir}/guestfs/supermin.d/zz-packages-gfs2-utils
 
+%ifnarch %{arm} ppc
 %files hfsplus
 %{_libdir}/guestfs/supermin.d/zz-packages-hfsplus-tools
+%endif
 
 %files jfs
 %{_libdir}/guestfs/supermin.d/zz-packages-jfsutils
@@ -911,8 +920,10 @@ mkdir -p $RPM_BUILD_ROOT%{_localstatedir}/run/libguestfs
 %files xfs
 %{_libdir}/guestfs/supermin.d/zz-packages-xfsprogs
 
+%ifnarch %{arm}
 %files zfs
 %{_libdir}/guestfs/supermin.d/zz-packages-zfs-fuse
+%endif
 
 %files tools-c
 %doc README
@@ -1115,6 +1126,11 @@ mkdir -p $RPM_BUILD_ROOT%{_localstatedir}/run/libguestfs
 
 
 %changelog
+* Fri Feb 28 2014 Richard W.M. Jones <rjones@redhat.com> - 1:1.25.38-4
+- Disable hfsplus subpackage on arm & ppc.
+- Disable zfs subpackage on arm.
+- Disable tests on x86.
+
 * Thu Feb 27 2014 Richard W.M. Jones <rjones@redhat.com> - 1:1.25.38-3
 - Ensure dependencies needed by the daemon are added to base libguestfs.
 
