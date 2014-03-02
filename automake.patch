@@ -1,0 +1,11 @@
+--- builder/Makefile.in.old	2014-03-02 13:28:33.348057819 +0000
++++ builder/Makefile.in	2014-03-02 13:28:18.482107909 +0000
+@@ -1634,7 +1634,7 @@
+ DISTCLEANFILES = .depend
+ 
+ # virt-builder's default repository
+-repoconfdir = $(sysconfdir)/xdg/virt-builder/repos.d
++repoconfdir = $(sysconfdir)/virt-builder/repos.d
+ repoconf_DATA = libguestfs.conf libguestfs.gpg
+ virt_index_validate_SOURCES = \
+ 	index-parse.y \
