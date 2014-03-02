@@ -19,8 +19,8 @@
 Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
-Version:       1.25.38
-Release:       4%{?dist}
+Version:       1.25.39
+Release:       1%{?dist}
 License:       LGPLv2+
 
 # Source and patches.
@@ -1136,6 +1136,9 @@ mkdir -p $RPM_BUILD_ROOT%{_localstatedir}/run/libguestfs
 
 
 %changelog
+* Sun Mar 02 2014 Richard W.M. Jones <rjones@redhat.com> - 1:1.25.39-1
+- New upstream version 1.25.39.
+
 * Fri Feb 28 2014 Richard W.M. Jones <rjones@redhat.com> - 1:1.25.38-4
 - Disable hfsplus subpackage on arm & ppc.
 - Disable zfs subpackage on arm.
