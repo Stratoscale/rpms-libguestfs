@@ -27,6 +27,10 @@ License:       LGPLv2+
 URL:           http://libguestfs.org/
 Source0:       http://libguestfs.org/download/1.25-development/%{name}-%{version}.tar.gz
 
+# Non-upstream patch to move virt-builder configuration files to
+# /etc/virt-builder.
+Patch1:        0001-builder-Move-repos-configuration-to-etc-virt-builder.patch
+
 # Basic build requirements:
 BuildRequires: perl(Pod::Simple)
 BuildRequires: perl(Pod::Man)
@@ -670,6 +674,8 @@ for %{name}.
 %prep
 %setup -q
 
+%patch1 -p1
+
 if [ "$(getenforce | tr '[A-Z]' '[a-z]')" != "disabled" ]; then
     # For sVirt to work, the local temporary directory we use in the
     # tests must be labelled the same way as /tmp.
@@ -928,6 +934,10 @@ mkdir -p $RPM_BUILD_ROOT%{_localstatedir}/run/libguestfs
 %files tools-c
 %doc README
 %config(noreplace) %{_sysconfdir}/libguestfs-tools.conf
+%dir %{_sysconfdir}/virt-builder
+%dir %{_sysconfdir}/virt-builder/repos.d
+%config %{_sysconfdir}/virt-builder/repos.d/libguestfs.conf
+%config %{_sysconfdir}/virt-builder/repos.d/libguestfs.gpg
 %{_mandir}/man5/libguestfs-tools.conf.5*
 %{_bindir}/guestfish
 %{_mandir}/man1/guestfish.1*
