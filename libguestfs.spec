@@ -20,7 +20,7 @@ Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
 Version:       1.25.40
-Release:       2%{?dist}
+Release:       1%{?dist}
 License:       LGPLv2+
 
 # Source and patches.
@@ -832,7 +832,6 @@ gzip --best installed-docs/*.xml
 # Split up the monolithic packages file in the supermin appliance so
 # we can install dependencies in subpackages.
 pushd $RPM_BUILD_ROOT%{_libdir}/guestfs/supermin.d
-cat packages
 for f in gfs2-utils hfsplus-tools jfsutils nilfs-utils \
          reiserfs-utils rsync xfsprogs zfs-fuse; do
     if grep -Esq "^$f\$" packages; then
@@ -1132,7 +1131,7 @@ mkdir -p $RPM_BUILD_ROOT%{_localstatedir}/run/libguestfs
 
 
 %changelog
-* Mon Mar 03 2014 Richard W.M. Jones <rjones@redhat.com> - 1:1.25.40-2
+* Mon Mar 03 2014 Richard W.M. Jones <rjones@redhat.com> - 1:1.25.40-1
 - New upstream version 1.25.40.
 
 * Sun Mar 02 2014 Richard W.M. Jones <rjones@redhat.com> - 1:1.25.39-2
