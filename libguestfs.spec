@@ -782,9 +782,11 @@ export SKIP_TEST_VIRT_DF_GUESTS_SH=1
 
 %if %{runtests}
 
-# Do make quickcheck first, to fail early if the appliance is
-# obviously broken.  Also dump libvirt log files if this happens.
-if ! make quickcheck; then
+# Do make quickcheck first, to fail early if the appliance or libvirt
+# is obviously broken.  Also dump libvirt log files if this happens.
+# Since it's most likely libvirt which is broken, make sure libvirt
+# debugging is enabled here.
+if ! make quickcheck LIBVIRT_DEBUG=1; then
     cat $HOME/.cache/libvirt/qemu/log/*
     exit 1
 fi
