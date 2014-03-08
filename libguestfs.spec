@@ -922,6 +922,11 @@ mkdir -p $RPM_BUILD_ROOT%{_localstatedir}/run/libguestfs
 %files tools-c
 %doc README
 %config(noreplace) %{_sysconfdir}/libguestfs-tools.conf
+%{_sysconfdir}/virt-builder
+%dir %{_sysconfdir}/xdg/virt-builder
+%dir %{_sysconfdir}/xdg/virt-builder/repos.d
+%config %{_sysconfdir}/xdg/virt-builder/repos.d/libguestfs.conf
+%config %{_sysconfdir}/xdg/virt-builder/repos.d/libguestfs.gpg
 %{_mandir}/man5/libguestfs-tools.conf.5*
 %{_bindir}/guestfish
 %{_mandir}/man1/guestfish.1*
