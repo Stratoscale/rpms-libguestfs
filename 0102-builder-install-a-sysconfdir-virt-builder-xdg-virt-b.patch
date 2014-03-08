@@ -1,0 +1,43 @@
+From 1b5d4fb3349733294f50cb7a6840c09dbd2598fb Mon Sep 17 00:00:00 2001
+From: Pino Toscano <ptoscano@redhat.com>
+Date: Mon, 3 Mar 2014 16:28:14 +0100
+Subject: [PATCH] builder: install a $sysconfdir/virt-builder ->
+ xdg-virt-builder symlink
+
+This way "virt-builder" appears directly in the sysconfdir.
+
+(cherry picked from commit 631c7d9241febcc7889d0fcb88aa07858174dbe1)
+---
+ builder/Makefile.am | 3 +++
+ configure.ac        | 1 +
+ 2 files changed, 4 insertions(+)
+
+diff --git a/builder/Makefile.am b/builder/Makefile.am
+index 2dc9d23..7548599 100644
+--- a/builder/Makefile.am
++++ b/builder/Makefile.am
+@@ -230,6 +230,9 @@ DISTCLEANFILES = .depend
+ repoconfdir = $(sysconfdir)/xdg/virt-builder/repos.d
+ repoconf_DATA = libguestfs.conf libguestfs.gpg
+ 
++install-exec-hook:
++	$(LN_S) xdg/virt-builder $(DESTDIR)$(sysconfdir)/virt-builder
++
+ # Build a small C index validator program.
+ bin_PROGRAMS = virt-index-validate
+ 
+diff --git a/configure.ac b/configure.ac
+index e05ad5f..299cb29 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -116,6 +116,7 @@ gl_EARLY
+ gl_INIT
+ 
+ AC_PROG_LIBTOOL
++AC_PROG_LN_S
+ 
+ # Define $(SED).
+ m4_ifdef([AC_PROG_SED],[
+-- 
+1.8.5.3
+

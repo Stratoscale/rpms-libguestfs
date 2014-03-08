@@ -1,4 +1,4 @@
-From f334675344aec741d10d076835e202874f3adb33 Mon Sep 17 00:00:00 2001
+From 3ae2ab0a49b6b23e883dd1eb66e6a5a408c70143 Mon Sep 17 00:00:00 2001
 From: "Richard W.M. Jones" <rjones@redhat.com>
 Date: Tue, 5 Nov 2013 15:56:34 +0000
 Subject: [PATCH] builder: Add dependency from index-parse.h to index-validate.
@@ -26,5 +26,5 @@ index 244214b..09401af 100644
  noinst_DATA += $(top_builddir)/html/virt-index-validate.1.html
  
 -- 
-1.8.4.2
+1.8.5.3
 

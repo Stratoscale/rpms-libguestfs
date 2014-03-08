@@ -1,4 +1,4 @@
-From 521414b8f2fcd33994c79e68f5324222d3c9530f Mon Sep 17 00:00:00 2001
+From 103931fd696131bba8debad14ea3aa0d47d96d0c Mon Sep 17 00:00:00 2001
 From: "Richard W.M. Jones" <rjones@redhat.com>
 Date: Tue, 5 Nov 2013 07:25:46 +0000
 Subject: [PATCH] builder/website: Add index validation test script.
@@ -53,5 +53,5 @@ index 0000000..f09e30c
 +../virt-index-validate index.asc
 +
 -- 
-1.8.4.2
+1.8.5.3
 

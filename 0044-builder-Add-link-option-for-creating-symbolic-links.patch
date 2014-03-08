@@ -1,4 +1,4 @@
-From 0f91372e5e6c4a8428918264574ac9ae874b622b Mon Sep 17 00:00:00 2001
+From 16ab6472fb1d78b6e051057d157d7249ea13b08a Mon Sep 17 00:00:00 2001
 From: "Richard W.M. Jones" <rjones@redhat.com>
 Date: Fri, 10 Jan 2014 21:18:07 +0000
 Subject: [PATCH] builder: Add --link option for creating symbolic links.
@@ -143,5 +143,5 @@ index fc6ad40..0fd865f 100644
  I<--firstboot-command>, I<--firstboot-install>).
  
 -- 
-1.8.4.2
+1.8.5.3
 

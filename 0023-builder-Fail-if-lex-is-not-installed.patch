@@ -1,4 +1,4 @@
-From 8f266bb2dbb769eecb30f5c1563b9e2c2fce533f Mon Sep 17 00:00:00 2001
+From ea8ea5d05a17fb068efcb91c0fae01660d1d937a Mon Sep 17 00:00:00 2001
 From: "Richard W.M. Jones" <rjones@redhat.com>
 Date: Wed, 6 Nov 2013 15:08:08 +0000
 Subject: [PATCH] builder: Fail if lex is not installed.
@@ -11,10 +11,10 @@ This completes the fix for commit a4800e2d4fc50f372a8b626333c4fbb9b8ca9633.
  1 file changed, 3 insertions(+)
 
 diff --git a/configure.ac b/configure.ac
-index f6a08c9..872b9a6 100644
+index e691542..56b6b37 100644
 --- a/configure.ac
 +++ b/configure.ac
-@@ -716,6 +716,9 @@ dnl XXX Could be optional with some work.
+@@ -722,6 +722,9 @@ dnl XXX Could be optional with some work.
  AC_PROG_LEX
  AC_PROG_YACC
  dnl These macros don't fail, instead they set some useless defaults.
@@ -25,5 +25,5 @@ index f6a08c9..872b9a6 100644
      AC_MSG_FAILURE([GNU 'bison' is required (yacc won't work).])
  fi
 -- 
-1.8.4.2
+1.8.5.3
 

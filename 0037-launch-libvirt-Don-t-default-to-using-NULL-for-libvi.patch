@@ -1,4 +1,4 @@
-From acd1f5bde638bf8e9e8ed4f914a051e6f3d2e605 Mon Sep 17 00:00:00 2001
+From 592ad2e9e6bca314308389a60da421597f6c7d38 Mon Sep 17 00:00:00 2001
 From: "Richard W.M. Jones" <rjones@redhat.com>
 Date: Thu, 19 Dec 2013 14:22:26 +0000
 Subject: [PATCH] launch: libvirt: Don't default to using NULL for libvirt
@@ -88,5 +88,5 @@ index b78590a..729f437 100644
    conn = guestfs___open_libvirt_connection (g, libvirt_uri, 0);
    if (!conn) {
 -- 
-1.8.4.2
+1.8.5.3
 

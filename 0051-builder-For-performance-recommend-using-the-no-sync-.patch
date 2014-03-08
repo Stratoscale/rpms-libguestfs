@@ -1,4 +1,4 @@
-From c6648611837833375447812ff97e34ad3d78930a Mon Sep 17 00:00:00 2001
+From 806b8e010038335e5cf9a6a57974829741ae374e Mon Sep 17 00:00:00 2001
 From: "Richard W.M. Jones" <rjones@redhat.com>
 Date: Mon, 13 Jan 2014 20:42:48 +0000
 Subject: [PATCH] builder: For performance, recommend using the --no-sync
@@ -26,5 +26,5 @@ index f3ddce5..0d9b33f 100644
  
  Virt-builder can skip the virt-resize step under certain conditions.
 -- 
-1.8.4.2
+1.8.5.3
 

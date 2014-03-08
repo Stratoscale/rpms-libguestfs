@@ -1,0 +1,38 @@
+From b9f40ee0a08c2722964e47efa692c50b269c5e67 Mon Sep 17 00:00:00 2001
+From: Pino Toscano <ptoscano@redhat.com>
+Date: Tue, 11 Feb 2014 12:52:10 +0100
+Subject: [PATCH] builder: do a copy when downloading local files
+
+Instead of spawning curl even to "download" file:// URIs, just copy
+them.
+
+(cherry picked from commit 76e3e15d031df77db71b11ac1c40199eff80fa4d)
+---
+ builder/downloader.ml | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
+
+diff --git a/builder/downloader.ml b/builder/downloader.ml
+index 95b5817..e386c06 100644
+--- a/builder/downloader.ml
++++ b/builder/downloader.ml
+@@ -84,6 +84,17 @@ and download_to ~prog t ?(progress_bar = false) uri filename =
+   unlink_on_exit filename_new;
+ 
+   (match parseduri.URI.protocol with
++  | "file" ->
++    let path = parseduri.URI.path in
++    let cmd = sprintf "cp%s %s %s"
++      (if t.debug then " -v" else "")
++      (quote path) (quote filename_new) in
++    let r = Sys.command cmd in
++    if r <> 0 then (
++      eprintf (f_"%s: cp (download) command failed copying '%s'\n")
++        prog path;
++      exit 1
++    )
+   | _ -> (* Any other protocol. *)
+     (* Get the status code first to ensure the file exists. *)
+     let cmd = sprintf "%s%s -g -o /dev/null -I -w '%%{http_code}' %s"
+-- 
+1.8.5.3
+

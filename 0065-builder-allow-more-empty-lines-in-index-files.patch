@@ -1,0 +1,48 @@
+From 5327e6988d3a5e79197b0338a592e8f4b41044ac Mon Sep 17 00:00:00 2001
+From: Pino Toscano <ptoscano@redhat.com>
+Date: Tue, 21 Jan 2014 17:54:23 +0100
+Subject: [PATCH] builder: allow more empty lines in index files
+
+Improve the index grammar to allow more than one empty line between
+sections, and to allow any number of empty lines at the end of the file
+(after the last section).
+
+(cherry picked from commit 4505f61979a9737da53cdad419ae6d22538780d5)
+---
+ builder/index-parse.y | 12 +++++++++---
+ 1 file changed, 9 insertions(+), 3 deletions(-)
+
+diff --git a/builder/index-parse.y b/builder/index-parse.y
+index f5e551b..a8d2f62 100644
+--- a/builder/index-parse.y
++++ b/builder/index-parse.y
+@@ -80,10 +80,10 @@ index:
+         { parsed_index = $2; }
+ 
+ sections:
+-      section
++      section emptylines
+         { $$ = $1; }
+-    | section EMPTY_LINE sections
+-        { $$ = $1; $$->next = $3; }
++    | section EMPTY_LINE emptylines sections
++        { $$ = $1; $$->next = $4; }
+ 
+ section:
+       SECTION_HEADER fields
+@@ -113,6 +113,12 @@ continuations:
+           free ($1);
+           free ($2); }
+ 
++emptylines:
++      /* empty */
++        {}
++    | EMPTY_LINE emptylines
++        {}
++
+ %%
+ 
+ void
+-- 
+1.8.5.3
+

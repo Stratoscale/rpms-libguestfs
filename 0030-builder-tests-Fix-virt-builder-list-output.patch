@@ -1,4 +1,4 @@
-From 4c834e9703fea0bab32e2360c40caa7ca3a5a2c2 Mon Sep 17 00:00:00 2001
+From 2f85ca812f4bf36c2462b03d92d78b5619176b01 Mon Sep 17 00:00:00 2001
 From: "Richard W.M. Jones" <rjones@redhat.com>
 Date: Sat, 14 Dec 2013 16:18:23 +0000
 Subject: [PATCH] builder: tests: Fix virt-builder --list output.
@@ -56,5 +56,5 @@ index ff16abe..083c035 100755
  Full name:               Phony Ubuntu
  Minimum/default size:    512.0M
 -- 
-1.8.4.2
+1.8.5.3
 

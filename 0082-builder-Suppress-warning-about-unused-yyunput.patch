@@ -1,0 +1,34 @@
+From 6592e59f309e70d638cc5cf3f6c2b13fb0325159 Mon Sep 17 00:00:00 2001
+From: "Richard W.M. Jones" <rjones@redhat.com>
+Date: Thu, 13 Feb 2014 21:38:42 +0000
+Subject: [PATCH] builder: Suppress warning about unused yyunput.
+
+  CC       virt_index_validate-index-validate.o
+index-scan.c:1270:17: warning: 'yyunput' defined but not used [-Wunused-function]
+     static void yyunput (int c, register char * yy_bp )
+                 ^
+  CCLD     virt-index-validate
+
+By using %option nounput we can prevent this from being generated in
+the first place.
+
+(cherry picked from commit e3d23cccf4099680a4335db97fe2ccf2d3c950f4)
+---
+ builder/index-scan.l | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/builder/index-scan.l b/builder/index-scan.l
+index e43f82e..b120590 100644
+--- a/builder/index-scan.l
++++ b/builder/index-scan.l
+@@ -32,6 +32,7 @@ extern void yyerror (const char *);
+ 
+ %}
+ 
++%option nounput
+ %option noyywrap
+ %option yylineno
+ 
+-- 
+1.8.5.3
+

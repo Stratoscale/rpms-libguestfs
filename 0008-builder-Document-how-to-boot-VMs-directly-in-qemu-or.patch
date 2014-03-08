@@ -1,4 +1,4 @@
-From 34d4789bf939b44e76af2f6ae2186e1638986aa2 Mon Sep 17 00:00:00 2001
+From dad52974ac7e1127ed1ca56a01a22cbbfcb8a7c8 Mon Sep 17 00:00:00 2001
 From: "Richard W.M. Jones" <rjones@redhat.com>
 Date: Sat, 26 Oct 2013 14:45:30 +0100
 Subject: [PATCH] builder: Document how to boot VMs directly in qemu or KVM.
@@ -35,5 +35,5 @@ index e40dfd4..a5f766d 100644
  
  If virt-builder fails with an error, then enable debugging (I<-v>) and
 -- 
-1.8.4.2
+1.8.5.3
 

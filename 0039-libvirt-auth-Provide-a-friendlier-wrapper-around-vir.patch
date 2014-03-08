@@ -1,4 +1,4 @@
-From 528be4e716fab77ab36258382bcb114c1acf277c Mon Sep 17 00:00:00 2001
+From 4ee4296d5bd5ca9788974810918e31aa12e3cd61 Mon Sep 17 00:00:00 2001
 From: "Richard W.M. Jones" <rjones@redhat.com>
 Date: Thu, 2 Jan 2014 12:20:18 +0000
 Subject: [PATCH] libvirt-auth: Provide a friendlier wrapper around
@@ -118,5 +118,5 @@ index fb18f8a..f8ed1b1 100644
    if (conn)
      debug (g, "successfully opened libvirt handle: conn = %p", conn);
 -- 
-1.8.4.2
+1.8.5.3
 

@@ -1,0 +1,62 @@
+From 07ee461bda703b988346ca0bec39a4b5cbe19a21 Mon Sep 17 00:00:00 2001
+From: Pino Toscano <ptoscano@redhat.com>
+Date: Tue, 25 Feb 2014 17:29:06 +0100
+Subject: [PATCH] builder: allow "no key" as key in Sigchecker
+
+Additional way to distinguish no actual key available for signature
+checking; make sure to not allow signing in such situation.
+
+(cherry picked from commit c09f5bbc708bbed772570ba63a706efcedf68cac)
+---
+ builder/sigchecker.ml  | 8 ++++++++
+ builder/sigchecker.mli | 1 +
+ 2 files changed, 9 insertions(+)
+
+diff --git a/builder/sigchecker.ml b/builder/sigchecker.ml
+index 7459e4b..67d1600 100644
+--- a/builder/sigchecker.ml
++++ b/builder/sigchecker.ml
+@@ -97,6 +97,7 @@ ZvXkQ3FVJwZoLmHw47vvlVpLD/4gi1SuHWieRvZ+UdDq00E348pm
+ "
+ 
+ type gpgkey_type =
++  | No_Key
+   | Fingerprint of string
+   | KeyFile of string
+ 
+@@ -127,6 +128,11 @@ let rec create ~debug ~gpg ~gpgkey ~check_signature =
+   (* Create a temporary directory for gnupg. *)
+   let tmpdir = Mkdtemp.mkdtemp (Filename.temp_dir_name // "vb.gpghome.XXXXXX") in
+   rmdir_on_exit tmpdir;
++  (* Make sure we have no check_signature=true with no actual key. *)
++  let check_signature, gpgkey =
++    match check_signature, gpgkey with
++    | true, No_Key -> false, No_Key
++    | x, y -> x, y in
+   let fingerprint =
+     if check_signature then (
+       (* Run gpg so it can setup its own home directory, failing if it
+@@ -141,6 +147,8 @@ let rec create ~debug ~gpg ~gpgkey ~check_signature =
+         exit 1
+       );
+       match gpgkey with
++      | No_Key ->
++        assert false
+       | KeyFile kf ->
+         let status_file = import_keyfile gpg tmpdir debug kf in
+         let status = read_whole_file status_file in
+diff --git a/builder/sigchecker.mli b/builder/sigchecker.mli
+index f4e817e..ab44a5c 100644
+--- a/builder/sigchecker.mli
++++ b/builder/sigchecker.mli
+@@ -21,6 +21,7 @@ val default_fingerprint : string
+ type t
+ 
+ type gpgkey_type =
++  | No_Key
+   | Fingerprint of string
+   | KeyFile of string
+ 
+-- 
+1.8.5.3
+

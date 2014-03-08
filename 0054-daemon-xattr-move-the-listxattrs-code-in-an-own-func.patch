@@ -1,4 +1,4 @@
-From bc846d70f3eab0752c0c49de20751daa5bca613c Mon Sep 17 00:00:00 2001
+From 44cd429c03d283237f718c6dab96dc9f3279d95c Mon Sep 17 00:00:00 2001
 From: Pino Toscano <ptoscano@redhat.com>
 Date: Fri, 10 Jan 2014 15:10:03 +0100
 Subject: [PATCH] daemon: xattr: move the listxattrs code in an own function
@@ -104,5 +104,5 @@ index 2f642db..768f780 100644
  do_internal_lxattrlist (const char *path, char *const *names)
  {
 -- 
-1.8.4.2
+1.8.5.3
 

@@ -1,0 +1,113 @@
+From 32e1da26d4ab6e2eea0e08c4b26fd9e988c18edf Mon Sep 17 00:00:00 2001
+From: Pino Toscano <ptoscano@redhat.com>
+Date: Tue, 25 Feb 2014 17:29:07 +0100
+Subject: [PATCH] builder: use Sigchecker.gpgkey_type for the fingerprint
+
+Use Sigchecker.gpgkey_type instead of just string as type in the
+sources list; adapt the listing code (and its expected output) to that.
+
+No behaviour change which eases a bit the addition of new sources with
+other key types.
+
+(cherry picked from commit ad38e68c34d3d15fb02901e3fbdd68bfe9887ebf)
+---
+ builder/builder.ml                |  9 ++++++---
+ builder/list_entries.ml           | 22 +++++++++++++++++-----
+ builder/list_entries.mli          |  2 +-
+ builder/test-virt-builder-list.sh |  4 ++--
+ 4 files changed, 26 insertions(+), 11 deletions(-)
+
+diff --git a/builder/builder.ml b/builder/builder.ml
+index ec1fc2b..f4d70b1 100644
+--- a/builder/builder.ml
++++ b/builder/builder.ml
+@@ -136,13 +136,16 @@ let main () =
+ 
+   (* Download the sources. *)
+   let downloader = Downloader.create ~debug ~curl ~cache in
++  let sources = List.map (
++    fun (source, fingerprint) ->
++      source, Sigchecker.Fingerprint fingerprint
++  ) sources in
+   let index : Index_parser.index =
+     List.concat (
+       List.map (
+-        fun (source, fingerprint) ->
++        fun (source, key) ->
+           let sigchecker =
+-            Sigchecker.create ~debug ~gpg ~check_signature
+-              ~gpgkey:(Sigchecker.Fingerprint fingerprint) in
++            Sigchecker.create ~debug ~gpg ~check_signature ~gpgkey:key in
+           Index_parser.get_index ~prog ~debug ~downloader ~sigchecker source
+       ) sources
+     ) in
+diff --git a/builder/list_entries.ml b/builder/list_entries.ml
+index edf7dfb..476bf14 100644
+--- a/builder/list_entries.ml
++++ b/builder/list_entries.ml
+@@ -65,9 +65,15 @@ and list_entries_long ~sources index =
+   | Some locale -> split_locale locale in
+ 
+   List.iter (
+-    fun (source, fingerprint) ->
++    fun (source, key) ->
+       printf (f_"Source URI: %s\n") source;
+-      printf (f_"Fingerprint: %s\n") fingerprint;
++      (match key with
++      | Sigchecker.No_Key -> ()
++      | Sigchecker.Fingerprint fp ->
++        printf (f_"Fingerprint: %s\n") fp;
++      | Sigchecker.KeyFile kf ->
++        printf (f_"Key: %s\n") kf;
++      );
+       printf "\n"
+   ) sources;
+ 
+@@ -160,10 +166,16 @@ and list_entries_json ~sources index =
+   printf "  \"version\": %d,\n" 1;
+   printf "  \"sources\": [\n";
+   iteri (
+-    fun i (source, fingerprint) ->
++    fun i (source, key) ->
+       printf "  {\n";
+-      printf "    \"uri\": \"%s\",\n" source;
+-      printf "    \"fingerprint\": \"%s\"\n" fingerprint;
++      (match key with
++      | Sigchecker.No_Key -> ()
++      | Sigchecker.Fingerprint fp ->
++        printf "    \"fingerprint\": \"%s\",\n" fp;
++      | Sigchecker.KeyFile kf ->
++        printf "    \"key\": \"%s\",\n" kf;
++      );
++      printf "    \"uri\": \"%s\"\n" source;
+       printf "  }%s\n" (trailing_comma i (List.length sources))
+   ) sources;
+   printf "  ],\n";
+diff --git a/builder/list_entries.mli b/builder/list_entries.mli
+index e7c32f1..b53ccec 100644
+--- a/builder/list_entries.mli
++++ b/builder/list_entries.mli
+@@ -16,4 +16,4 @@
+  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+  *)
+ 
+-val list_entries : list_format:([ `Short | `Long | `Json ]) -> sources:(string * string) list -> Index_parser.index -> unit
++val list_entries : list_format:([ `Short | `Long | `Json ]) -> sources:(string * Sigchecker.gpgkey_type) list -> Index_parser.index -> unit
+diff --git a/builder/test-virt-builder-list.sh b/builder/test-virt-builder-list.sh
+index 7174152..6db9b78 100755
+--- a/builder/test-virt-builder-list.sh
++++ b/builder/test-virt-builder-list.sh
+@@ -117,8 +117,8 @@ if [ "$json_list" != "{
+   \"version\": 1,
+   \"sources\": [
+   {
+-    \"uri\": \"$VIRT_BUILDER_SOURCE\",
+-    \"fingerprint\": \"F777 4FB1 AD07 4A7E 8C87 67EA 9173 8F73 E1B7 68A0\"
++    \"fingerprint\": \"F777 4FB1 AD07 4A7E 8C87 67EA 9173 8F73 E1B7 68A0\",
++    \"uri\": \"$VIRT_BUILDER_SOURCE\"
+   }
+   ],
+   \"templates\": [
+-- 
+1.8.5.3
+

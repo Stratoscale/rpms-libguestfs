@@ -1,4 +1,4 @@
-From f3f0dc3c93a4ab0e5eb4b93e1e5515a69fc20f37 Mon Sep 17 00:00:00 2001
+From 699aa8c4bd1926b2de3e9b10354a3f17d5929c92 Mon Sep 17 00:00:00 2001
 From: "Richard W.M. Jones" <rjones@redhat.com>
 Date: Sun, 27 Oct 2013 14:59:39 +0000
 Subject: [PATCH] builder: Add a section on performance to the manual.
@@ -63,5 +63,5 @@ index a5f766d..cd20043 100644
  
  You can use virt-builder with the User-Mode Linux (UML) backend.  This
 -- 
-1.8.4.2
+1.8.5.3
 

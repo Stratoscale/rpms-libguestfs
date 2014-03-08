@@ -1,0 +1,264 @@
+From b18d073221fced0db8d600006cfb0991b569c388 Mon Sep 17 00:00:00 2001
+From: Pino Toscano <ptoscano@redhat.com>
+Date: Tue, 18 Feb 2014 10:44:49 +0100
+Subject: [PATCH] fish: use XDG paths for the config file
+
+Read the configuration file from XDG paths for both global and
+user-local locations, keeping the old paths as fallback.
+
+(cherry picked from commit 8b1f1c15f5dfdeea122784d8c4d97e75b335989a)
+---
+ fish/config.c                  | 68 ++++++++++++++++++++++++++++++++++++++----
+ fish/guestfish.pod             |  9 ++++--
+ fish/libguestfs-tools.conf.pod | 52 ++++++++++++++++++++++++++------
+ fuse/guestmount.pod            |  4 +++
+ rescue/virt-rescue.pod         |  4 +++
+ 5 files changed, 119 insertions(+), 18 deletions(-)
+
+diff --git a/fish/config.c b/fish/config.c
+index 9e5da87..7d319ad 100644
+--- a/fish/config.c
++++ b/fish/config.c
+@@ -34,8 +34,9 @@
+ 
+ #ifdef HAVE_LIBCONFIG
+ 
++#define GLOBAL_CONFIG_FILENAME "libguestfs-tools.conf"
+ static const char *home_filename = /* $HOME/ */ ".libguestfs-tools.rc";
+-static const char *etc_filename = "/etc/libguestfs-tools.conf";
++static const char *etc_filename = "/etc/" GLOBAL_CONFIG_FILENAME;
+ 
+ /* Note that parse_config is called very early, before command line
+  * parsing, before the verbose flag has been set, even before the
+@@ -86,17 +87,72 @@ parse_config (void)
+   /* Try the global configuration first. */
+   read_config_from_file (etc_filename);
+ 
++  {
++    /* Then read the configuration from XDG system paths. */
++    const char *xdg_env, *var;
++    CLEANUP_FREE_STRING_LIST char **xdg_config_dirs = NULL;
++    size_t xdg_config_dirs_count;
++
++    xdg_env = getenv ("XDG_CONFIG_DIRS");
++    var = xdg_env != NULL && xdg_env[0] != 0 ? xdg_env : "/etc/xdg";
++    xdg_config_dirs = guestfs___split_string (':', var);
++    xdg_config_dirs_count = guestfs___count_strings (xdg_config_dirs);
++    for (size_t i = xdg_config_dirs_count; i > 0; --i) {
++      CLEANUP_FREE char *path = NULL;
++      const char *dir = xdg_config_dirs[i - 1];
++
++      if (asprintf (&path, "%s/libguestfs/" GLOBAL_CONFIG_FILENAME, dir) == -1) {
++        perror ("asprintf");
++        exit (EXIT_FAILURE);
++      }
++
++      read_config_from_file (path);
++    }
++  }
++
+   /* Read the configuration from $HOME, to override system settings. */
+   home = getenv ("HOME");
+   if (home != NULL) {
+-    CLEANUP_FREE char *path = NULL;
++    {
++      /* Old-style configuration file first. */
++      CLEANUP_FREE char *path = NULL;
+ 
+-    if (asprintf (&path, "%s/%s", home, home_filename) == -1) {
+-      perror ("asprintf");
+-      exit (EXIT_FAILURE);
++      if (asprintf (&path, "%s/%s", home, home_filename) == -1) {
++        perror ("asprintf");
++        exit (EXIT_FAILURE);
++      }
++
++      read_config_from_file (path);
+     }
+ 
+-    read_config_from_file (path);
++    {
++      /* Then, XDG_CONFIG_HOME path. */
++      CLEANUP_FREE char *path = NULL;
++      CLEANUP_FREE char *home_copy = strdup (home);
++      const char *xdg_env;
++
++      if (home_copy == NULL) {
++        perror ("strdup");
++        exit (EXIT_FAILURE);
++      }
++
++      xdg_env = getenv ("XDG_CONFIG_HOME");
++      if (xdg_env == NULL) {
++        if (asprintf (&path, "%s/.config/libguestfs/" GLOBAL_CONFIG_FILENAME,
++                      home_copy) == -1) {
++          perror ("asprintf");
++          exit (EXIT_FAILURE);
++        }
++      } else {
++        if (asprintf (&path, "%s/libguestfs/" GLOBAL_CONFIG_FILENAME,
++                      xdg_env) == -1) {
++          perror ("asprintf");
++          exit (EXIT_FAILURE);
++        }
++      }
++
++      read_config_from_file (path);
++    }
+   }
+ }
+ 
+diff --git a/fish/guestfish.pod b/fish/guestfish.pod
+index f6afda1..b954005 100644
+--- a/fish/guestfish.pod
++++ b/fish/guestfish.pod
+@@ -516,9 +516,8 @@ then you will cause irreversible disk corruption.
+ In a future libguestfs we intend to change the default the other way.
+ Disk images will be opened read-only.  You will have to either specify
+ I<guestfish --rw>, I<guestmount --rw>, I<virt-rescue --rw>, or change
+-the configuration file C</etc/libguestfs-tools.conf> in order to get
+-write access for disk images specified by those other command line
+-options.
++the configuration file in order to get write access for disk images
++specified by those other command line options.
+ 
+ This version of guestfish, guestmount and virt-rescue has a I<--rw>
+ option which does nothing (it is already the default).  However it is
+@@ -1497,8 +1496,12 @@ See L</LIBGUESTFS_CACHEDIR>, L</LIBGUESTFS_TMPDIR>.
+ 
+ =over 4
+ 
++=item $XDG_CONFIG_HOME/libguestfs/libguestfs-tools.conf
++
+ =item $HOME/.libguestfs-tools.rc
+ 
++=item $XDG_CONFIG_DIRS/libguestfs/libguestfs-tools.conf
++
+ =item /etc/libguestfs-tools.conf
+ 
+ This configuration file controls the default read-only or read-write
+diff --git a/fish/libguestfs-tools.conf.pod b/fish/libguestfs-tools.conf.pod
+index 771eb50..bba00e3 100644
+--- a/fish/libguestfs-tools.conf.pod
++++ b/fish/libguestfs-tools.conf.pod
+@@ -2,18 +2,22 @@
+ 
+ =head1 NAME
+ 
+-/etc/libguestfs-tools.conf - configuration file for guestfish, guestmount, virt-rescue
++libguestfs-tools.conf - configuration file for guestfish, guestmount, virt-rescue
+ 
+ =head1 SYNOPSIS
+ 
+  /etc/libguestfs-tools.conf
+ 
++ $XDG_CONFIG_DIRS/libguestfs/libguestfs-tools.conf
++
+  $HOME/.libguestfs-tools.rc
+ 
++ $XDG_CONFIG_HOME/libguestfs/libguestfs-tools.conf
++
+ =head1 DESCRIPTION
+ 
+-C</etc/libguestfs-tools.conf> or C<$HOME/.libguestfs-tools.rc> changes
+-the defaults for the following programs only:
++C<libguestfs-tools.conf> (or C<$HOME/.libguestfs-tools.rc>) changes the
++defaults for the following programs only:
+ 
+ =over 4
+ 
+@@ -45,21 +49,51 @@ See also L<guestfish(1)/OPENING DISKS FOR READ AND WRITE>.
+ 
+ Note that B<the semicolon is required>.
+ 
+-C</etc/libguestfs-tools.conf> is the global configuration file for all
+-of the above programs.  Local users can override the global
+-configuration by copying this file into C<.libguestfs-tools.rc> in
+-their home directory and modifying it accordingly.
+-
+ This file is parsed by the libconfig library.  For more information
+ about the format, see:
+ L<http://www.hyperrealm.com/libconfig/libconfig_manual.html>
+ 
++=head1 FILE LOCATION
++
++The order of the configuration files being read is, by importance:
++
++=over 4
++
++=item *
++
++$XDG_CONFIG_HOME/libguestfs/libguestfs-tools.conf (C<$XDG_CONFIG_HOME> is
++C<$HOME/.config> if not set).
++
++=item *
++
++$HOME/.libguestfs-tools.rc
++
++=item *
++
++$XDG_CONFIG_DIRS/libguestfs/libguestfs-tools.conf (where C<$XDG_CONFIG_DIRS>
++means any of the directories in that environment variable, or just C</etc/xdg>
++if not set)
++
++=item *
++
++/etc/libguestfs-tools.conf
++
++=back
++
++This means local users can override the system configuration by copying
++the configuration file (or creating it anew) into
++C<$XDG_CONFIG_HOME/libguestfs/libguestfs-tools.conf>.
++
++C</etc/libguestfs-tools.conf> and C<$HOME/.libguestfs-tools.rc> are the old
++non-XDG paths which are read for compatibility.
++
+ =head1 SEE ALSO
+ 
+ L<guestfish(1)/OPENING DISKS FOR READ AND WRITE>,
+ L<guestmount(1)>,
+ L<virt-rescue(1)>,
+-L<http://libguestfs.org/>.
++L<http://libguestfs.org/>,
++L<http://standards.freedesktop.org/basedir-spec/latest/>.
+ 
+ =head1 AUTHORS
+ 
+diff --git a/fuse/guestmount.pod b/fuse/guestmount.pod
+index 9586a76..6ebf51f 100644
+--- a/fuse/guestmount.pod
++++ b/fuse/guestmount.pod
+@@ -387,8 +387,12 @@ This also stops the daemon from forking into the background
+ 
+ =over 4
+ 
++=item $XDG_CONFIG_HOME/libguestfs/libguestfs-tools.conf
++
+ =item $HOME/.libguestfs-tools.rc
+ 
++=item $XDG_CONFIG_DIRS/libguestfs/libguestfs-tools.conf
++
+ =item /etc/libguestfs-tools.conf
+ 
+ This configuration file controls the default read-only or read-write
+diff --git a/rescue/virt-rescue.pod b/rescue/virt-rescue.pod
+index 9a55d48..c295bda 100644
+--- a/rescue/virt-rescue.pod
++++ b/rescue/virt-rescue.pod
+@@ -403,8 +403,12 @@ manual page L<sh(1)> for details.
+ 
+ =over 4
+ 
++=item $XDG_CONFIG_HOME/libguestfs/libguestfs-tools.conf
++
+ =item $HOME/.libguestfs-tools.rc
+ 
++=item $XDG_CONFIG_DIRS/libguestfs/libguestfs-tools.conf
++
+ =item /etc/libguestfs-tools.conf
+ 
+ This configuration file controls the default read-only or read-write
+-- 
+1.8.5.3
+

@@ -1,4 +1,4 @@
-From 3ff459f0e50cdf8aa26053b59b0a183636813241 Mon Sep 17 00:00:00 2001
+From 987c6ed3bee14341615134b8a4148f409cf78d3f Mon Sep 17 00:00:00 2001
 From: "Richard W.M. Jones" <rjones@redhat.com>
 Date: Mon, 4 Nov 2013 14:53:41 +0000
 Subject: [PATCH] builder: Add a real scanner/parser for index files.
@@ -1163,10 +1163,10 @@ index 0000000..6b03703
 +
 +Copyright (C) 2013 Red Hat Inc.
 diff --git a/configure.ac b/configure.ac
-index a378be7..732946f 100644
+index da777d4..21d89a0 100644
 --- a/configure.ac
 +++ b/configure.ac
-@@ -705,6 +705,10 @@ test "x$XZCAT" = "xno" && AC_MSG_ERROR([xzcat must be installed])
+@@ -711,6 +711,10 @@ test "x$XZCAT" = "xno" && AC_MSG_ERROR([xzcat must be installed])
  dnl Check for pxzcat (optional).
  AC_PATH_PROGS([PXZCAT],[pxzcat],[no])
  
@@ -1214,7 +1214,7 @@ index 23857bd..e954f04 100644
  	virt-list-filesystems.1 \
  	virt-list-partitions.1 \
 diff --git a/po/POTFILES b/po/POTFILES
-index 56d192e..5418a6b 100644
+index d8edd99..ebbea3d 100644
 --- a/po/POTFILES
 +++ b/po/POTFILES
 @@ -1,4 +1,9 @@
@@ -1228,5 +1228,5 @@ index 56d192e..5418a6b 100644
  cat/filesystems.c
  cat/ls.c
 -- 
-1.8.4.2
+1.8.5.3
 

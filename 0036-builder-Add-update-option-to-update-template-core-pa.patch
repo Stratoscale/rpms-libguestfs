@@ -1,4 +1,4 @@
-From a7a1577b86da7b90de88d39431035fa92cc022f9 Mon Sep 17 00:00:00 2001
+From c89fc8f073498ea515f7acb666b9a2d970f46a93 Mon Sep 17 00:00:00 2001
 From: "Richard W.M. Jones" <rjones@redhat.com>
 Date: Thu, 19 Dec 2013 11:17:43 +0000
 Subject: [PATCH] builder: Add --update option to update template/core
@@ -261,5 +261,5 @@ index 817ddd4..094f028 100644
  =head3 Skipping virt-resize
  
 -- 
-1.8.4.2
+1.8.5.3
 

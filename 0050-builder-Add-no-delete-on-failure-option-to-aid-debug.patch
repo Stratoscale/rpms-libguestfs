@@ -1,4 +1,4 @@
-From 1eb009accb06dde100b390ad1b1aaabf12fe9927 Mon Sep 17 00:00:00 2001
+From 0777aa0b2e29f451e15e6e8c40f66112059aa957 Mon Sep 17 00:00:00 2001
 From: "Richard W.M. Jones" <rjones@redhat.com>
 Date: Mon, 13 Jan 2014 20:29:50 +0000
 Subject: [PATCH] builder: Add --no-delete-on-failure option to aid debugging.
@@ -118,5 +118,5 @@ index ec41078..f3ddce5 100644
  If virt-builder is successful but the image doesn't work, here are
  some things to try:
 -- 
-1.8.4.2
+1.8.5.3
 

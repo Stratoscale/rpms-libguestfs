@@ -1,4 +1,4 @@
-From eee820fe7675ab79c33efe43684cef5c415b4ec7 Mon Sep 17 00:00:00 2001
+From d1d175746af6611ecfc52aa2eaa97152c22ecffc Mon Sep 17 00:00:00 2001
 From: "Richard W.M. Jones" <rjones@redhat.com>
 Date: Tue, 5 Nov 2013 17:40:20 +0000
 Subject: [PATCH] builder: Add dependencies which automake doesn't generate
@@ -47,5 +47,5 @@ index 09401af..8e7f104 100644
 +endif
 +index-validate.o: index-parse.h
 -- 
-1.8.4.2
+1.8.5.3
 

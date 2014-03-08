@@ -1,4 +1,4 @@
-From 0adad887c70e26a578dd0809efd339c4b791a615 Mon Sep 17 00:00:00 2001
+From 43799a9fd9253da29496bb5e0647ee970bb80b34 Mon Sep 17 00:00:00 2001
 From: "Richard W.M. Jones" <rjones@redhat.com>
 Date: Tue, 22 Oct 2013 14:09:20 +0100
 Subject: [PATCH] builder: Make xzcat binary configurable and use AC_PATH_PROG.
@@ -44,10 +44,10 @@ index 5f6ff3b..b1cc1f0 100644
        msg (f_"Uncompressing: %s") file_uri;
        let r = Sys.command cmd in
 diff --git a/configure.ac b/configure.ac
-index d7430db..a14d5d6 100644
+index 57d0ca3..c10e7bb 100644
 --- a/configure.ac
 +++ b/configure.ac
-@@ -698,6 +698,10 @@ if test "x$WRESTOOL" != "xno"; then
+@@ -704,6 +704,10 @@ if test "x$WRESTOOL" != "xno"; then
      AC_DEFINE_UNQUOTED([WRESTOOL],["$WRESTOOL"],[Name of wrestool program.])
  fi
  
@@ -69,5 +69,5 @@ index d18bf7b..129741d 100644
 +
 +let xzcat = "@XZCAT@"
 -- 
-1.8.4.2
+1.8.5.3
 

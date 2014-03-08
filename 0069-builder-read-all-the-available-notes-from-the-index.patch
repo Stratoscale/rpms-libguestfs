@@ -1,0 +1,136 @@
+From 0766c47cfd6eaca6e351cde79a9eba2a27c2d56e Mon Sep 17 00:00:00 2001
+From: Pino Toscano <ptoscano@redhat.com>
+Date: Thu, 23 Jan 2014 15:36:15 +0100
+Subject: [PATCH] builder: read all the available notes from the index
+
+Switch the internal storage for the notes of each entry to a sorted list
+with all the subkeys available (which should represent the translations
+to various languages).
+The current outputs are the same (i.e. still the untranslated notes), so
+this is just internal refactoring/preparation.
+
+(cherry picked from commit b7cd63fc1dc031914e110a46de3faa431387d959)
+---
+ builder/builder.ml       |  5 +++--
+ builder/index_parser.ml  | 20 ++++++++++++++++----
+ builder/index_parser.mli |  2 +-
+ builder/list_entries.ml  | 12 +++++++++---
+ 4 files changed, 29 insertions(+), 10 deletions(-)
+
+diff --git a/builder/builder.ml b/builder/builder.ml
+index 7e1c614..c0dc06d 100644
+--- a/builder/builder.ml
++++ b/builder/builder.ml
+@@ -202,9 +202,10 @@ let main () =
+   (match mode with
+   | `Notes ->                           (* --notes *)
+     (match entry with
+-    | { Index_parser.notes = Some notes } ->
++    | { Index_parser.notes = ("", notes) :: _ } ->
+       print_endline notes;
+-    | { Index_parser.notes = None } ->
++    | { Index_parser.notes = _ :: _ }
++    | { Index_parser.notes = [] } ->
+       printf (f_"There are no notes for %s\n") arg
+     );
+     exit 0
+diff --git a/builder/index_parser.ml b/builder/index_parser.ml
+index da44b21..d5b48ae 100644
+--- a/builder/index_parser.ml
++++ b/builder/index_parser.ml
+@@ -35,7 +35,7 @@ and entry = {
+   compressed_size : int64 option;
+   expand : string option;
+   lvexpand : string option;
+-  notes : string option;
++  notes : (string * string) list;
+   hidden : bool;
+ 
+   sigchecker : Sigchecker.t;
+@@ -92,8 +92,9 @@ let print_entry chan (name, { printable_name = printable_name;
+   | Some lvexpand -> fp "lvexpand=%s\n" lvexpand
+   );
+   (match notes with
+-  | None -> ()
+-  | Some notes -> fp "notes=%s\n" notes
++  | ("", notes) :: _ -> fp "notes=%s\n" notes
++  | _ :: _
++  | [] -> ()
+   );
+   if hidden then fp "hidden=true\n"
+ 
+@@ -219,7 +220,18 @@ let get_index ~prog ~debug ~downloader ~sigchecker source =
+           let lvexpand =
+             try Some (List.assoc ("lvexpand", None) fields) with Not_found -> None in
+           let notes =
+-            try Some (List.assoc ("notes", None) fields) with Not_found -> None in
++            let rec loop = function
++              | [] -> []
++              | (("notes", subkey), value) :: xs ->
++                let subkey = match subkey with
++                | None -> ""
++                | Some v -> v in
++                (subkey, value) :: loop xs
++              | _ :: xs -> loop xs in
++            List.sort (
++              fun (k1, _) (k2, _) ->
++                String.compare k1 k2
++            ) (loop fields) in
+           let hidden =
+             try bool_of_string (List.assoc ("hidden", None) fields)
+             with
+diff --git a/builder/index_parser.mli b/builder/index_parser.mli
+index 54f1807..3c679b3 100644
+--- a/builder/index_parser.mli
++++ b/builder/index_parser.mli
+@@ -29,7 +29,7 @@ and entry = {
+   compressed_size : int64 option;
+   expand : string option;
+   lvexpand : string option;
+-  notes : string option;
++  notes : (string * string) list;
+   hidden : bool;
+ 
+   sigchecker : Sigchecker.t;
+diff --git a/builder/list_entries.ml b/builder/list_entries.ml
+index 9da7664..b947cc8 100644
+--- a/builder/list_entries.ml
++++ b/builder/list_entries.ml
+@@ -71,10 +71,11 @@ and list_entries_long ~sources index =
+           printf "%-24s %s\n" (s_"Download size:") (human_size size);
+         );
+         (match notes with
+-        | None -> ()
+-        | Some notes ->
++        | ("", notes) :: _ ->
+           printf "\n";
+           printf (f_"Notes:\n\n%s\n") notes
++        | _ :: _
++        | [] -> ()
+         );
+         printf "\n"
+       )
+@@ -106,6 +107,11 @@ and list_entries_json ~sources index =
+     | None -> ()
+     | Some n ->
+       printf "    \"%s\": \"%Ld\",\n" key n in
++  let print_notes = function
++    | ("", notes) :: _ ->
++      printf "    \"notes\": \"%s\",\n" (json_string_escape notes)
++    | _ :: _
++    | _ -> () in
+ 
+   printf "{\n";
+   printf "  \"version\": %d,\n" 1;
+@@ -130,7 +136,7 @@ and list_entries_json ~sources index =
+       json_optional_printf_string "full-name" printable_name;
+       printf "    \"size\": %Ld,\n" size;
+       json_optional_printf_int64 "compressed-size" compressed_size;
+-      json_optional_printf_string "notes" notes;
++      print_notes notes;
+       printf "    \"hidden\": %s\n" (json_string_of_bool hidden);
+       printf "  }%s\n" (trailing_comma i (List.length index))
+   ) index;
+-- 
+1.8.5.3
+

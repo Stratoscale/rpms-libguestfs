@@ -1,4 +1,4 @@
-From 1ca9b9ef1a0e8972420a2756fc39b401d61a8963 Mon Sep 17 00:00:00 2001
+From 66bf3e30591b88b473c316adb5b6f1f06ff648fd Mon Sep 17 00:00:00 2001
 From: "Richard W.M. Jones" <rjones@redhat.com>
 Date: Sat, 14 Dec 2013 15:50:37 +0000
 Subject: [PATCH] builder: Add a test of the planner.
@@ -169,5 +169,5 @@ index 0000000..738b299
 +
 +rm planner-output
 -- 
-1.8.4.2
+1.8.5.3
 

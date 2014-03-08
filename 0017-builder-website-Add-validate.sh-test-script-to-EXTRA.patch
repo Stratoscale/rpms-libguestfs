@@ -1,4 +1,4 @@
-From 04bbe36875dd73533d8841b9435831480b922a70 Mon Sep 17 00:00:00 2001
+From e4fe80938fe6f4a2b2a92ce131455de3e219718e Mon Sep 17 00:00:00 2001
 From: "Richard W.M. Jones" <rjones@redhat.com>
 Date: Tue, 5 Nov 2013 15:15:17 +0000
 Subject: [PATCH] builder/website: Add validate.sh test script to EXTRA_DIST.
@@ -23,5 +23,5 @@ index cf13ed4..a5b1bcf 100644
  	index \
  	index.asc \
 -- 
-1.8.4.2
+1.8.5.3
 

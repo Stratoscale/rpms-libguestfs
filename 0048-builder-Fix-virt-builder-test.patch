@@ -1,4 +1,4 @@
-From b0c988b0d9cb0bc176a673ae96a0e717e58f2d5f Mon Sep 17 00:00:00 2001
+From 55d1e6272fa9fa96af4ab86d396b97d0b6fba6c5 Mon Sep 17 00:00:00 2001
 From: "Richard W.M. Jones" <rjones@redhat.com>
 Date: Sun, 12 Jan 2014 17:49:48 +0000
 Subject: [PATCH] builder: Fix virt-builder test.
@@ -36,5 +36,5 @@ index 7c96eb8..0537bd2 100755
  $g->mkdir_p ('/var/log/journal');
  
 -- 
-1.8.4.2
+1.8.5.3
 

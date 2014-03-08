@@ -1,4 +1,4 @@
-From 5b5b2fbc97d47741d1684afd6435f1484ea900af Mon Sep 17 00:00:00 2001
+From dda6462eba80da2b8806fb1980147c525fa81fb4 Mon Sep 17 00:00:00 2001
 From: "Richard W.M. Jones" <rjones@redhat.com>
 Date: Sat, 14 Dec 2013 15:49:25 +0000
 Subject: [PATCH] builder: planner: Handle no format= in source case correctly.
@@ -106,5 +106,5 @@ index 71dfe13..4176457 100644
        if debug then eprintf "%s\n%!" cmd;
        if Sys.command cmd <> 0 then exit 1
 -- 
-1.8.4.2
+1.8.5.3
 

@@ -1,4 +1,4 @@
-From 4842105b79ba74b18c926416e3dc02f978e7e80b Mon Sep 17 00:00:00 2001
+From e1c18deaa1bd4964430f9de546bc24fa06f54797 Mon Sep 17 00:00:00 2001
 From: "Richard W.M. Jones" <rjones@redhat.com>
 Date: Sat, 14 Dec 2013 16:43:40 +0000
 Subject: [PATCH] builder: Add a link to blog posting about the planner.
@@ -56,5 +56,5 @@ index 770a00f..8c77acd 100644
      Tags are described as OCaml association lists.  See the OCaml
      {!List} module.
 -- 
-1.8.4.2
+1.8.5.3
 

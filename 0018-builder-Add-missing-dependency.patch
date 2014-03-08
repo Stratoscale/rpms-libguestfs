@@ -1,4 +1,4 @@
-From 8c3b96d95efc6a91e99a7da6f1689adc2dcaa807 Mon Sep 17 00:00:00 2001
+From d23c5f8b33831724c9b0f067373fde48f897f439 Mon Sep 17 00:00:00 2001
 From: "Richard W.M. Jones" <rjones@redhat.com>
 Date: Tue, 5 Nov 2013 15:42:05 +0000
 Subject: [PATCH] builder: Add missing dependency.
@@ -29,5 +29,5 @@ index 1c469ac..30741a0 100644
  
  man_MANS += virt-builder.1
 -- 
-1.8.4.2
+1.8.5.3
 

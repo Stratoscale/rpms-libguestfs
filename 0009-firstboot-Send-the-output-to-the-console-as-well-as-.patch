@@ -1,4 +1,4 @@
-From 2bd65a4b80934dff8efaee2bfce6ccccc02e58e0 Mon Sep 17 00:00:00 2001
+From 0b19f922eecd5fe5b8274e0a6355ab323ce53920 Mon Sep 17 00:00:00 2001
 From: "Richard W.M. Jones" <rjones@redhat.com>
 Date: Sat, 26 Oct 2013 17:09:06 +0100
 Subject: [PATCH] firstboot: Send the output to the console as well as to the
@@ -58,5 +58,5 @@ index 0207cc1..9e4c7b6 100644
  [Install]
  WantedBy=default.target
 -- 
-1.8.4.2
+1.8.5.3
 

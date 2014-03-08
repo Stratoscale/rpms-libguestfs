@@ -1,0 +1,31 @@
+From ee214e1f750478cf76ae98997d1545a5fd70d6b2 Mon Sep 17 00:00:00 2001
+From: Pino Toscano <ptoscano@redhat.com>
+Date: Tue, 21 Jan 2014 10:54:19 +0100
+Subject: [PATCH] builder: add index-struct.h as dependency for
+ index-parser-c.c
+
+Just like with index-parse.h, also index-struct.h is a dependency of
+index-parser-c.c which automake cannot generate correctly.
+Thus, add it manually.
+
+(cherry picked from commit e2cc8b6465a400024fe2f0fcce0d0ff5f7e7719c)
+---
+ builder/Makefile.am | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/builder/Makefile.am b/builder/Makefile.am
+index d718c22..4777619 100644
+--- a/builder/Makefile.am
++++ b/builder/Makefile.am
+@@ -229,7 +229,7 @@ CLEANFILES += \
+ 
+ # Fix dependencies which automake doesn't generate correctly.
+ if HAVE_OCAML
+-index-parser-c.o: index-parse.h
++index-parser-c.o: index-parse.h index-struct.h
+ index-scan.o: index-parse.h
+ endif
+ index-validate.o: index-parse.h
+-- 
+1.8.5.3
+

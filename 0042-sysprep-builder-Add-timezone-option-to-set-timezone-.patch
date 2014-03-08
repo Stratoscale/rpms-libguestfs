@@ -1,4 +1,4 @@
-From 7d813866eeefe02646de7ff2c73a2e31076a5afd Mon Sep 17 00:00:00 2001
+From d3f306817fa180205d3be3d206a441478dfebe88 Mon Sep 17 00:00:00 2001
 From: "Richard W.M. Jones" <rjones@redhat.com>
 Date: Fri, 10 Jan 2014 12:12:30 +0000
 Subject: [PATCH] sysprep, builder: Add --timezone option to set timezone of
@@ -153,10 +153,10 @@ index 094f028..f98ffdb 100644
  =item *
  
 diff --git a/mllib/Makefile.am b/mllib/Makefile.am
-index 9719273..67f0a0a 100644
+index 62d0f68..f10efad 100644
 --- a/mllib/Makefile.am
 +++ b/mllib/Makefile.am
-@@ -49,6 +49,8 @@ SOURCES = \
+@@ -52,6 +52,8 @@ SOURCES = \
  	progress.ml \
  	random_seed.mli \
  	random_seed.ml \
@@ -165,7 +165,7 @@ index 9719273..67f0a0a 100644
  	tty-c.c \
  	tTY.mli \
  	tTY.ml \
-@@ -79,6 +81,7 @@ OBJECTS = \
+@@ -83,6 +85,7 @@ OBJECTS = \
  	urandom.cmx \
  	random_seed.cmx \
  	hostname.cmx \
@@ -247,10 +247,10 @@ index 0000000..ad0d4b2
 +    of the guest.  Returns [true] if it was able to set the
 +    timezone or [false] if not. *)
 diff --git a/po/POTFILES-ml b/po/POTFILES-ml
-index 84211b6..564404b 100644
+index 6372f7e..3b2f297 100644
 --- a/po/POTFILES-ml
 +++ b/po/POTFILES-ml
-@@ -21,6 +21,7 @@ mllib/planner.ml
+@@ -22,6 +22,7 @@ mllib/planner.ml
  mllib/progress.ml
  mllib/random_seed.ml
  mllib/tTY.ml
@@ -258,7 +258,7 @@ index 84211b6..564404b 100644
  mllib/uRI.ml
  mllib/urandom.ml
  resize/resize.ml
-@@ -62,6 +63,7 @@ sysprep/sysprep_operation_smolt_uuid.ml
+@@ -63,6 +64,7 @@ sysprep/sysprep_operation_smolt_uuid.ml
  sysprep/sysprep_operation_ssh_hostkeys.ml
  sysprep/sysprep_operation_ssh_userdir.ml
  sysprep/sysprep_operation_sssd_db_log.ml
@@ -267,7 +267,7 @@ index 84211b6..564404b 100644
  sysprep/sysprep_operation_udev_persistent_net.ml
  sysprep/sysprep_operation_user_account.ml
 diff --git a/sysprep/Makefile.am b/sysprep/Makefile.am
-index 24654cb..7ab2277 100644
+index 60572fe..8840ca8 100644
 --- a/sysprep/Makefile.am
 +++ b/sysprep/Makefile.am
 @@ -66,6 +66,7 @@ operations = \
@@ -285,7 +285,7 @@ index 24654cb..7ab2277 100644
 +	$(top_builddir)/mllib/timezone.cmx \
  	$(top_builddir)/mllib/firstboot.cmx \
  	$(top_builddir)/mllib/config.cmx \
- 	sysprep_operation.cmx \
+ 	$(top_builddir)/mllib/mkdtemp-c.o \
 diff --git a/sysprep/sysprep_operation_timezone.ml b/sysprep/sysprep_operation_timezone.ml
 new file mode 100644
 index 0000000..7557f44
@@ -359,5 +359,5 @@ index 0000000..7557f44
 +
 +let () = register_operation op
 -- 
-1.8.4.2
+1.8.5.3
 

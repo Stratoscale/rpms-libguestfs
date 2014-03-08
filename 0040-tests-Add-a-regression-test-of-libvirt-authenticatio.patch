@@ -1,4 +1,4 @@
-From aba8944fca9dbf366f64c0d9c41bf9a41ef0d0d4 Mon Sep 17 00:00:00 2001
+From ba28105660674addc4730985a08f885030a62c7c Mon Sep 17 00:00:00 2001
 From: "Richard W.M. Jones" <rjones@redhat.com>
 Date: Wed, 8 Jan 2014 19:36:00 +0000
 Subject: [PATCH] tests: Add a regression test of libvirt authentication
@@ -299,5 +299,5 @@ index 0000000..7c26bbe
 +  }
 +}
 -- 
-1.8.4.2
+1.8.5.3
 

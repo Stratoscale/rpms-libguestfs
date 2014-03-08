@@ -1,4 +1,4 @@
-From bc6de5b386ff250b9f5f5f1d703e7493283514cd Mon Sep 17 00:00:00 2001
+From 91dd1f49d573191a1e9f2d4eabaa5657e3309af7 Mon Sep 17 00:00:00 2001
 From: "Richard W.M. Jones" <rjones@redhat.com>
 Date: Mon, 13 Jan 2014 20:58:08 +0000
 Subject: [PATCH] builder: planner: Whitespace change.
@@ -38,5 +38,5 @@ index 8c77acd..7a502fb 100644
  val plan : ?max_depth:int -> ('name, 'value, 'task) transitions_function -> ('name, 'value) tags -> ('name, 'value) tags * ('name, 'value) tags -> ('name, 'value, 'task) plan
  (** Make a plan.
 -- 
-1.8.4.2
+1.8.5.3
 

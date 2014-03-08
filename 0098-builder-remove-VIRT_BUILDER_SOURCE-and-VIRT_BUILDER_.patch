@@ -1,0 +1,70 @@
+From 2c5349eff420febc91aa166ccd677142f39ec62a Mon Sep 17 00:00:00 2001
+From: Pino Toscano <ptoscano@redhat.com>
+Date: Tue, 25 Feb 2014 17:29:11 +0100
+Subject: [PATCH] builder: remove VIRT_BUILDER_SOURCE and
+ VIRT_BUILDER_FINGERPRINT
+
+Drop these two environment variables, and the implicit hardcoded source
+hosted at libguestfs.org.
+This means all the sources must be provided as .conf files, or at each
+invocation with --source.
+
+(cherry picked from commit 573cae45c3490ddbd04a39aaf63dbe0cd0518cb1)
+---
+ builder/cmdline.ml | 20 +-------------------
+ 1 file changed, 1 insertion(+), 19 deletions(-)
+
+diff --git a/builder/cmdline.ml b/builder/cmdline.ml
+index e9e47ae..6e8bfd8 100644
+--- a/builder/cmdline.ml
++++ b/builder/cmdline.ml
+@@ -30,8 +30,6 @@ open Printf
+ 
+ let prog = Filename.basename Sys.executable_name
+ 
+-let default_source = "http://libguestfs.org/download/builder/index.asc"
+-
+ let parse_cmdline () =
+   let display_version () =
+     printf "virt-builder %s\n" Config.package_version;
+@@ -407,27 +405,13 @@ read the man page virt-builder(1).
+         exit 1
+       ) in
+ 
+-  (* Check source(s) and fingerprint(s), or use environment or default. *)
++  (* Check source(s) and fingerprint(s). *)
+   let sources =
+-    let list_split = function "" -> [] | str -> string_nsplit "," str in
+     let rec repeat x = function
+       | 0 -> [] | 1 -> [x]
+       | n -> x :: repeat x (n-1)
+     in
+ 
+-    let sources =
+-      if sources <> [] then sources
+-      else (
+-        try list_split (Sys.getenv "VIRT_BUILDER_SOURCE")
+-        with Not_found -> [ default_source ]
+-      ) in
+-    let fingerprints =
+-      if fingerprints <> [] then fingerprints
+-      else (
+-        try list_split (Sys.getenv "VIRT_BUILDER_FINGERPRINT")
+-        with Not_found -> [ Sigchecker.default_fingerprint ]
+-      ) in
+-
+     let nr_sources = List.length sources in
+     let fingerprints =
+       match fingerprints with
+@@ -444,8 +428,6 @@ read the man page virt-builder(1).
+       exit 1
+     );
+ 
+-    assert (nr_sources > 0);
+-
+     (* Combine the sources and fingerprints into a single list of pairs. *)
+     List.combine sources fingerprints in
+ 
+-- 
+1.8.5.3
+

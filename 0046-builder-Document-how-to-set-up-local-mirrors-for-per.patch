@@ -1,4 +1,4 @@
-From bfa71840cebd0af88e727207268bf00cdf31dc5f Mon Sep 17 00:00:00 2001
+From 44f6623b89df42fdfbb7a70532eb70c1e941b6b8 Mon Sep 17 00:00:00 2001
 From: "Richard W.M. Jones" <rjones@redhat.com>
 Date: Fri, 10 Jan 2014 19:49:02 +0000
 Subject: [PATCH] builder: Document how to set up local mirrors for performance
@@ -82,5 +82,5 @@ index 4a86fd1..e539f2d 100644
  =head2 DIGITAL SIGNATURES
  
 -- 
-1.8.4.2
+1.8.5.3
 

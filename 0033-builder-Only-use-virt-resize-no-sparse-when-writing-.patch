@@ -1,4 +1,4 @@
-From 47b170768af8b09fb3185f1e21d129f06c44faff Mon Sep 17 00:00:00 2001
+From 6131ed03b3f3e66f26eb4b384fc1ab888db47f27 Mon Sep 17 00:00:00 2001
 From: "Richard W.M. Jones" <rjones@redhat.com>
 Date: Sat, 14 Dec 2013 18:53:20 +0000
 Subject: [PATCH] builder: Only use virt-resize --no-sparse when writing to a
@@ -29,5 +29,5 @@ index 8951be5..148c9bf 100644
            | None -> ""
            | Some iformat -> sprintf " --format %s" (quote iformat))
 -- 
-1.8.4.2
+1.8.5.3
 

@@ -1,4 +1,4 @@
-From 1fecdfb2a3f56bfc602d0cbcc489c04059cb672b Mon Sep 17 00:00:00 2001
+From 9187a6b7d94ec564cfe617faa7d0b3d34978349e Mon Sep 17 00:00:00 2001
 From: "Richard W.M. Jones" <rjones@redhat.com>
 Date: Tue, 5 Nov 2013 10:21:32 +0000
 Subject: [PATCH] builder: Internal implementation of parallel xzcat (pxzcat).
@@ -878,10 +878,10 @@ index ce22920..e84d87f 100644
  =head2 USER MODE LINUX
  
 diff --git a/configure.ac b/configure.ac
-index 732946f..56a7eb5 100644
+index 21d89a0..922ab6b 100644
 --- a/configure.ac
 +++ b/configure.ac
-@@ -701,9 +701,15 @@ fi
+@@ -707,9 +707,15 @@ fi
  dnl Check for xzcat (required).
  AC_PATH_PROGS([XZCAT],[xzcat],[no])
  test "x$XZCAT" = "xno" && AC_MSG_ERROR([xzcat must be installed])
@@ -914,7 +914,7 @@ index 5586c5c..d18bf7b 100644
 -  | "no" -> None
 -  | path -> Some path
 diff --git a/po/POTFILES b/po/POTFILES
-index 5418a6b..1e831ff 100644
+index ebbea3d..c743fa9 100644
 --- a/po/POTFILES
 +++ b/po/POTFILES
 @@ -4,6 +4,7 @@ builder/index-parser-c.c
@@ -926,7 +926,7 @@ index 5418a6b..1e831ff 100644
  cat/filesystems.c
  cat/ls.c
 diff --git a/po/POTFILES-ml b/po/POTFILES-ml
-index eff4de4..a63b69a 100644
+index 04b88be..c4ea888 100644
 --- a/po/POTFILES-ml
 +++ b/po/POTFILES-ml
 @@ -4,6 +4,7 @@ builder/downloader.ml
@@ -938,5 +938,5 @@ index eff4de4..a63b69a 100644
  mllib/common_gettext.ml
  mllib/common_utils.ml
 -- 
-1.8.4.2
+1.8.5.3
 

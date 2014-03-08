@@ -1,4 +1,4 @@
-From fc9329fe2c788a799c598b9c6f90ba9aeaf60082 Mon Sep 17 00:00:00 2001
+From 018ddf720665c8f7ddf6b4bba927939d075f6237 Mon Sep 17 00:00:00 2001
 From: Pino Toscano <ptoscano@redhat.com>
 Date: Mon, 13 Jan 2014 14:41:28 +0100
 Subject: [PATCH] New API: copy-attributes.
@@ -433,5 +433,5 @@ index d1b9f6a..21c8d99 100644
 -414
 +415
 -- 
-1.8.4.2
+1.8.5.3
 

@@ -1,4 +1,4 @@
-From 724d233849fe146761fe46b2499cec3a4aa9b729 Mon Sep 17 00:00:00 2001
+From 26e6121f4fd93e7d40b8281153986d510b63aaa3 Mon Sep 17 00:00:00 2001
 From: "Richard W.M. Jones" <rjones@redhat.com>
 Date: Fri, 10 Jan 2014 14:21:17 +0000
 Subject: [PATCH] builder: Document how to change keyboard layout.
@@ -65,5 +65,5 @@ index f98ffdb..fc6ad40 100644
  
  Scripts and package installation that runs at build time (I<--run>,
 -- 
-1.8.4.2
+1.8.5.3
 

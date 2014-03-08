@@ -1,4 +1,4 @@
-From 4769fd8c53a4a95313125995b36f65cc80facfdf Mon Sep 17 00:00:00 2001
+From 81690922dc99d84720c6a9a8fda7717c958611b7 Mon Sep 17 00:00:00 2001
 From: Pino Toscano <ptoscano@redhat.com>
 Date: Thu, 9 Jan 2014 18:59:19 +0100
 Subject: [PATCH] daemon: xattr: simplify the enabling of the linuxxattrs
@@ -138,5 +138,5 @@ index 7004566..2f642db 100644
 -#endif /* no xattr.h */
 +#endif /* no HAVE_LINUX_XATTRS */
 -- 
-1.8.4.2
+1.8.5.3
 

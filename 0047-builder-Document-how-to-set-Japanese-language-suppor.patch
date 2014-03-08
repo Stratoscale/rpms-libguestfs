@@ -1,4 +1,4 @@
-From 91c1ec932cbf768145c902a4da520d33c727ba16 Mon Sep 17 00:00:00 2001
+From ed116cd23b29b50ed12a2e5401d37d74f3f002e4 Mon Sep 17 00:00:00 2001
 From: "Richard W.M. Jones" <rjones@redhat.com>
 Date: Sun, 12 Jan 2014 17:06:02 +0000
 Subject: [PATCH] builder: Document how to set Japanese language support in
@@ -55,5 +55,5 @@ index e539f2d..38e26a8 100644
  =head2 LOG FILE
  
 -- 
-1.8.4.2
+1.8.5.3
 

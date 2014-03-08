@@ -1,4 +1,4 @@
-From 3deff9a2bceba2f1b14fbff316505a9ef9657698 Mon Sep 17 00:00:00 2001
+From 56a6b1ad64c0fa388406fa3064cc4abdf0159ca6 Mon Sep 17 00:00:00 2001
 From: "Richard W.M. Jones" <rjones@redhat.com>
 Date: Tue, 22 Oct 2013 14:22:46 +0100
 Subject: [PATCH] builder: Use pxzcat (optionally) to speed up xzcat step.
@@ -44,10 +44,10 @@ index b1cc1f0..4fc8a71 100644
  
    if not do_resize then (
 diff --git a/configure.ac b/configure.ac
-index a14d5d6..a378be7 100644
+index c10e7bb..da777d4 100644
 --- a/configure.ac
 +++ b/configure.ac
-@@ -702,6 +702,9 @@ dnl Check for xzcat (required).
+@@ -708,6 +708,9 @@ dnl Check for xzcat (required).
  AC_PATH_PROGS([XZCAT],[xzcat],[no])
  test "x$XZCAT" = "xno" && AC_MSG_ERROR([xzcat must be installed])
  
@@ -70,5 +70,5 @@ index 129741d..5586c5c 100644
 +  | "no" -> None
 +  | path -> Some path
 -- 
-1.8.4.2
+1.8.5.3
 

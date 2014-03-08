@@ -1,0 +1,214 @@
+From 765382e254aed95e3d402d3d0a8b9aebbce2b3db Mon Sep 17 00:00:00 2001
+From: Pino Toscano <ptoscano@redhat.com>
+Date: Tue, 21 Jan 2014 18:52:42 +0100
+Subject: [PATCH] builder: proper consider subkeys in index files
+
+The index files already allowed the 'key[subkey]=...' syntax for keys,
+but considering such string as whole key. Proper split the parsing and
+the handling of the subkeys, so they can be searched a bit easier.
+
+This causes no actual behaviour changes, it is just internal
+micro-refactoring. (Thanks Rich for the hints, too.)
+
+(cherry picked from commit 5cbdf35d651b6c730d62d9af4876039faa122efc)
+---
+ builder/index-parser-c.c | 15 +++++++++++----
+ builder/index-scan.l     |  9 ++++++++-
+ builder/index-struct.c   |  1 +
+ builder/index-struct.h   |  1 +
+ builder/index_parser.ml  | 44 +++++++++++++++++++++++++-------------------
+ 5 files changed, 46 insertions(+), 24 deletions(-)
+
+diff --git a/builder/index-parser-c.c b/builder/index-parser-c.c
+index 17e680b..fbbebff 100644
+--- a/builder/index-parser-c.c
++++ b/builder/index-parser-c.c
+@@ -49,7 +49,7 @@ value
+ virt_builder_parse_index (value filenamev)
+ {
+   CAMLparam1 (filenamev);
+-  CAMLlocal4 (rv, v, sv, fv);
++  CAMLlocal5 (rv, v, sv, sv2, fv);
+   struct section *sections;
+   size_t i, nr_sections;
+ 
+@@ -83,11 +83,18 @@ virt_builder_parse_index (value filenamev)
+ 
+     for (j = 0, fields = sections->fields; fields != NULL;
+          j++, fields = fields->next) {
+-      v = caml_alloc_tuple (2);
++      v = caml_alloc_tuple (3);
+       sv = caml_copy_string (fields->key);
+-      Store_field (v, 0, sv);   /* (key, value) */
+-      sv = caml_copy_string (fields->value);
++      Store_field (v, 0, sv);   /* (key, Some subkey, value) */
++      if (fields->subkey) {
++        sv2 = caml_copy_string (fields->subkey);
++        sv = caml_alloc (1, 0);
++        Store_field (sv, 0, sv2);
++      } else
++        sv = Val_int (0);
+       Store_field (v, 1, sv);
++      sv = caml_copy_string (fields->value);
++      Store_field (v, 2, sv);
+       Store_field (fv, j, v);   /* assign to return array of fields */
+     }
+ 
+diff --git a/builder/index-scan.l b/builder/index-scan.l
+index 9a6a0e3..7a9618f 100644
+--- a/builder/index-scan.l
++++ b/builder/index-scan.l
+@@ -58,10 +58,17 @@ extern void yyerror (const char *);
+ 
+   /* field=value or field[subfield]=value */
+ ^[A-Za-z0-9_.]+("["[A-Za-z0-9_,.]+"]")?"=".*\n {
+-                      size_t i = strcspn (yytext, "=");
++                      size_t i = strcspn (yytext, "=[");
+                       yylval.field = malloc (sizeof (struct field));
+                       yylval.field->next = NULL;
+                       yylval.field->key = strndup (yytext, i);
++                      if (yytext[i] == '[') {
++                        size_t j = strcspn (yytext+i+1, "]");
++                        yylval.field->subkey = strndup (yytext+i+1, j);
++                        i += 1+j+2;
++                      } else {
++                        yylval.field->subkey = NULL;
++                      }
+                       /* Note we chop the final \n off here. */
+                       yylval.field->value = strndup (yytext+i+1, yyleng-(i+2));
+                       return FIELD;
+diff --git a/builder/index-struct.c b/builder/index-struct.c
+index 26bed24..fe5b0e3 100644
+--- a/builder/index-struct.c
++++ b/builder/index-struct.c
+@@ -52,6 +52,7 @@ free_field (struct field *field)
+   if (field) {
+     free_field (field->next);
+     free (field->key);
++    free (field->subkey);
+     free (field->value);
+     free (field);
+   }
+diff --git a/builder/index-struct.h b/builder/index-struct.h
+index ac8a3dd..f92e01d 100644
+--- a/builder/index-struct.h
++++ b/builder/index-struct.h
+@@ -32,6 +32,7 @@ struct section {
+ struct field {
+   struct field *next;
+   char *key;
++  char *subkey;
+   char *value;
+ };
+ 
+diff --git a/builder/index_parser.ml b/builder/index_parser.ml
+index 453a3a1..da44b21 100644
+--- a/builder/index_parser.ml
++++ b/builder/index_parser.ml
+@@ -101,7 +101,7 @@ let print_entry chan (name, { printable_name = printable_name;
+ type sections = section array
+ and section = string * fields           (* [name] + fields *)
+ and fields = field array
+-and field = string * string             (* key + value *)
++and field = string * string option * string    (* key + subkey + value *)
+ 
+ (* Calls yyparse in the C code. *)
+ external parse_index : string -> sections = "virt_builder_parse_index"
+@@ -149,12 +149,17 @@ let get_index ~prog ~debug ~downloader ~sigchecker source =
+       fun (n, fields) ->
+         let fseen = Hashtbl.create 13 in
+         List.iter (
+-          fun (field, _) ->
+-            if Hashtbl.mem fseen field then (
+-              eprintf (f_"virt-builder: index is corrupt: %s: field '%s' appears two or more times\n") n field;
++          fun (field, subkey, _) ->
++            let hashkey = (field, subkey) in
++            if Hashtbl.mem fseen hashkey then (
++              (match subkey with
++              | Some value ->
++                eprintf (f_"virt-builder: index is corrupt: %s: field '%s[%s]' appears two or more times\n") n field value
++              | None ->
++                eprintf (f_"virt-builder: index is corrupt: %s: field '%s' appears two or more times\n") n field);
+               corrupt_file ()
+             );
+-            Hashtbl.add fseen field true
++            Hashtbl.add fseen hashkey true
+         ) fields
+     ) sections;
+ 
+@@ -162,25 +167,26 @@ let get_index ~prog ~debug ~downloader ~sigchecker source =
+     let entries =
+       List.map (
+         fun (n, fields) ->
++          let fields = List.map (fun (k, sk, v) -> (k, sk), v) fields in
+           let printable_name =
+-            try Some (List.assoc "name" fields) with Not_found -> None in
++            try Some (List.assoc ("name", None) fields) with Not_found -> None in
+           let osinfo =
+-            try Some (List.assoc "osinfo" fields) with Not_found -> None in
++            try Some (List.assoc ("osinfo", None) fields) with Not_found -> None in
+           let file_uri =
+-            try make_absolute_uri (List.assoc "file" fields)
++            try make_absolute_uri (List.assoc ("file", None) fields)
+             with Not_found ->
+               eprintf (f_"virt-builder: no 'file' (URI) entry for '%s'\n") n;
+             corrupt_file () in
+           let signature_uri =
+-            try Some (make_absolute_uri (List.assoc "sig" fields))
++            try Some (make_absolute_uri (List.assoc ("sig", None) fields))
+             with Not_found -> None in
+           let checksum_sha512 =
+-            try Some (List.assoc "checksum[sha512]" fields)
++            try Some (List.assoc ("checksum", Some "sha512") fields)
+             with Not_found ->
+-              try Some (List.assoc "checksum" fields)
++              try Some (List.assoc ("checksum", None) fields)
+               with Not_found -> None in
+           let revision =
+-            try int_of_string (List.assoc "revision" fields)
++            try int_of_string (List.assoc ("revision", None) fields)
+             with
+             | Not_found -> 1
+             | Failure "int_of_string" ->
+@@ -188,9 +194,9 @@ let get_index ~prog ~debug ~downloader ~sigchecker source =
+                 n;
+               corrupt_file () in
+           let format =
+-            try Some (List.assoc "format" fields) with Not_found -> None in
++            try Some (List.assoc ("format", None) fields) with Not_found -> None in
+           let size =
+-            try Int64.of_string (List.assoc "size" fields)
++            try Int64.of_string (List.assoc ("size", None) fields)
+             with
+             | Not_found ->
+               eprintf (f_"virt-builder: no 'size' field for '%s'\n") n;
+@@ -200,7 +206,7 @@ let get_index ~prog ~debug ~downloader ~sigchecker source =
+                 n;
+               corrupt_file () in
+           let compressed_size =
+-            try Some (Int64.of_string (List.assoc "compressed_size" fields))
++            try Some (Int64.of_string (List.assoc ("compressed_size", None) fields))
+             with
+             | Not_found ->
+               None
+@@ -209,13 +215,13 @@ let get_index ~prog ~debug ~downloader ~sigchecker source =
+                 n;
+               corrupt_file () in
+           let expand =
+-            try Some (List.assoc "expand" fields) with Not_found -> None in
++            try Some (List.assoc ("expand", None) fields) with Not_found -> None in
+           let lvexpand =
+-            try Some (List.assoc "lvexpand" fields) with Not_found -> None in
++            try Some (List.assoc ("lvexpand", None) fields) with Not_found -> None in
+           let notes =
+-            try Some (List.assoc "notes" fields) with Not_found -> None in
++            try Some (List.assoc ("notes", None) fields) with Not_found -> None in
+           let hidden =
+-            try bool_of_string (List.assoc "hidden" fields)
++            try bool_of_string (List.assoc ("hidden", None) fields)
+             with
+             | Not_found -> false
+             | Failure "bool_of_string" ->
+-- 
+1.8.5.3
+

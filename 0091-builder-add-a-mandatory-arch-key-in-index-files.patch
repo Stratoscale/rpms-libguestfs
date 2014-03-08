@@ -1,0 +1,297 @@
+From 05a998cb54d1f6cd83c2c12451f75bbe5976a6eb Mon Sep 17 00:00:00 2001
+From: Pino Toscano <ptoscano@redhat.com>
+Date: Mon, 24 Feb 2014 11:31:35 +0100
+Subject: [PATCH] builder: add a mandatory 'arch' key in index files
+
+Introduce a mandatory arch= key in all the entries of index files, to
+identify which architecture is each. Adapt the long and JSON list
+outputs to print also this new field.
+
+This introduces an incompatibility with index files created with
+virt-builder < 1.26, as they will be rejected until entries will have
+the arch= key added (which is ignored by older virt-builder, so adding
+it will not create backward-compatibility issues).
+
+(cherry picked from commit 61323fabafdcab10abaf6b7002e5e1bb38ddbc5e)
+---
+ builder/index_parser.ml           |  9 +++++++++
+ builder/index_parser.mli          |  1 +
+ builder/list_entries.ml           |  4 ++++
+ builder/test-index.in             |  7 +++++++
+ builder/test-virt-builder-list.sh | 14 ++++++++++++++
+ 5 files changed, 35 insertions(+)
+
+diff --git a/builder/index_parser.ml b/builder/index_parser.ml
+index 2d4a642..de4d72e 100644
+--- a/builder/index_parser.ml
++++ b/builder/index_parser.ml
+@@ -27,6 +27,7 @@ and entry = {
+   printable_name : string option;       (* the name= field *)
+   osinfo : string option;
+   file_uri : string;
++  arch : string;
+   signature_uri : string option;        (* deprecated, will be removed in 1.26 *)
+   checksum_sha512 : string option;
+   revision : int;
+@@ -43,6 +44,7 @@ and entry = {
+ 
+ let print_entry chan (name, { printable_name = printable_name;
+                               file_uri = file_uri;
++                              arch = arch;
+                               osinfo = osinfo;
+                               signature_uri = signature_uri;
+                               checksum_sha512 = checksum_sha512;
+@@ -65,6 +67,7 @@ let print_entry chan (name, { printable_name = printable_name;
+   | Some id -> fp "osinfo=%s\n" id
+   );
+   fp "file=%s\n" file_uri;
++  fp "arch=%s\n" arch;
+   (match signature_uri with
+   | None -> ()
+   | Some uri -> fp "sig=%s\n" uri
+@@ -179,6 +182,11 @@ let get_index ~prog ~debug ~downloader ~sigchecker source =
+             with Not_found ->
+               eprintf (f_"virt-builder: no 'file' (URI) entry for '%s'\n") n;
+             corrupt_file () in
++          let arch =
++            try List.assoc ("arch", None) fields
++            with Not_found ->
++              eprintf (f_"virt-builder: no 'arch' entry for '%s'\n") n;
++            corrupt_file () in
+           let signature_uri =
+             try Some (make_absolute_uri (List.assoc ("sig", None) fields))
+             with Not_found -> None in
+@@ -245,6 +253,7 @@ let get_index ~prog ~debug ~downloader ~sigchecker source =
+           let entry = { printable_name = printable_name;
+                         osinfo = osinfo;
+                         file_uri = file_uri;
++                        arch = arch;
+                         signature_uri = signature_uri;
+                         checksum_sha512 = checksum_sha512;
+                         revision = revision;
+diff --git a/builder/index_parser.mli b/builder/index_parser.mli
+index 3c679b3..0575dc4 100644
+--- a/builder/index_parser.mli
++++ b/builder/index_parser.mli
+@@ -21,6 +21,7 @@ and entry = {
+   printable_name : string option;       (* the name= field *)
+   osinfo : string option;
+   file_uri : string;
++  arch : string;
+   signature_uri : string option;        (* deprecated, will be removed in 1.26 *)
+   checksum_sha512 : string option;
+   revision : int;
+diff --git a/builder/list_entries.ml b/builder/list_entries.ml
+index 27ea95e..edf7dfb 100644
+--- a/builder/list_entries.ml
++++ b/builder/list_entries.ml
+@@ -73,6 +73,7 @@ and list_entries_long ~sources index =
+ 
+   List.iter (
+     fun (name, { Index_parser.printable_name = printable_name;
++                 arch = arch;
+                  size = size;
+                  compressed_size = compressed_size;
+                  notes = notes;
+@@ -83,6 +84,7 @@ and list_entries_long ~sources index =
+         | None -> ()
+         | Some name -> printf "%-24s %s\n" (s_"Full name:") name;
+         );
++        printf "%-24s %s\n" (s_"Architecture:") arch;
+         printf "%-24s %s\n" (s_"Minimum/default size:") (human_size size);
+         (match compressed_size with
+         | None -> ()
+@@ -168,6 +170,7 @@ and list_entries_json ~sources index =
+   printf "  \"templates\": [\n";
+   iteri (
+     fun i (name, { Index_parser.printable_name = printable_name;
++                   arch = arch;
+                    size = size;
+                    compressed_size = compressed_size;
+                    notes = notes;
+@@ -175,6 +178,7 @@ and list_entries_json ~sources index =
+       printf "  {\n";
+       printf "    \"os-version\": \"%s\",\n" name;
+       json_optional_printf_string "full-name" printable_name;
++      printf "    \"arch\": \"%s\",\n" arch;
+       printf "    \"size\": %Ld,\n" size;
+       json_optional_printf_int64 "compressed-size" compressed_size;
+       print_notes notes;
+diff --git a/builder/test-index.in b/builder/test-index.in
+index 1bca6b8..3efebc4 100644
+--- a/builder/test-index.in
++++ b/builder/test-index.in
+@@ -1,5 +1,6 @@
+ [phony-debian]
+ name=Phony Debian
++arch=x86_64
+ file=debian.xz
+ format=raw
+ size=536870912
+@@ -9,6 +10,7 @@ notes=Phony Debian look-alike used for testing.
+ 
+ [phony-fedora]
+ name=Phony Fedora
++arch=x86_64
+ file=fedora.xz
+ format=raw
+ size=1073741824
+@@ -18,6 +20,7 @@ notes=Phony Fedora look-alike used for testing.
+ 
+ [phony-fedora-qcow2]
+ name=Phony Fedora qcow2
++arch=x86_64
+ file=fedora.qcow2.xz
+ format=qcow2
+ size=1073741824
+@@ -27,6 +30,7 @@ notes=Phony Fedora look-alike used for testing.
+ 
+ [phony-fedora-qcow2-uncompressed]
+ name=Phony Fedora qcow2 uncompressed
++arch=x86_64
+ file=fedora.qcow2
+ format=qcow2
+ size=1073741824
+@@ -36,6 +40,7 @@ notes=Phony Fedora look-alike used for testing.
+ 
+ [phony-fedora-no-format]
+ name=Phony Fedora
++arch=x86_64
+ file=fedora.qcow2.xz
+ size=1073741824
+ expand=/dev/sda2
+@@ -44,6 +49,7 @@ notes=Phony Fedora look-alike used for testing.
+ 
+ [phony-ubuntu]
+ name=Phony Ubuntu
++arch=x86_64
+ file=ubuntu.xz
+ format=raw
+ size=536870912
+@@ -52,6 +58,7 @@ notes=Phony Ubuntu look-alike used for testing.
+ 
+ [phony-windows]
+ name=Phony Windows
++arch=x86_64
+ file=windows.xz
+ format=raw
+ size=536870912
+diff --git a/builder/test-virt-builder-list.sh b/builder/test-virt-builder-list.sh
+index 634254d..7174152 100755
+--- a/builder/test-virt-builder-list.sh
++++ b/builder/test-virt-builder-list.sh
+@@ -46,6 +46,7 @@ Fingerprint: F777 4FB1 AD07 4A7E 8C87 67EA 9173 8F73 E1B7 68A0
+ 
+ os-version:              phony-debian
+ Full name:               Phony Debian
++Architecture:            x86_64
+ Minimum/default size:    512.0M
+ 
+ Notes:
+@@ -54,6 +55,7 @@ Phony Debian look-alike used for testing.
+ 
+ os-version:              phony-fedora
+ Full name:               Phony Fedora
++Architecture:            x86_64
+ Minimum/default size:    1.0G
+ 
+ Notes:
+@@ -62,6 +64,7 @@ Phony Fedora look-alike used for testing.
+ 
+ os-version:              phony-fedora-qcow2
+ Full name:               Phony Fedora qcow2
++Architecture:            x86_64
+ Minimum/default size:    1.0G
+ 
+ Notes:
+@@ -70,6 +73,7 @@ Phony Fedora look-alike used for testing.
+ 
+ os-version:              phony-fedora-qcow2-uncompressed
+ Full name:               Phony Fedora qcow2 uncompressed
++Architecture:            x86_64
+ Minimum/default size:    1.0G
+ 
+ Notes:
+@@ -78,6 +82,7 @@ Phony Fedora look-alike used for testing.
+ 
+ os-version:              phony-fedora-no-format
+ Full name:               Phony Fedora
++Architecture:            x86_64
+ Minimum/default size:    1.0G
+ 
+ Notes:
+@@ -86,6 +91,7 @@ Phony Fedora look-alike used for testing.
+ 
+ os-version:              phony-ubuntu
+ Full name:               Phony Ubuntu
++Architecture:            x86_64
+ Minimum/default size:    512.0M
+ 
+ Notes:
+@@ -94,6 +100,7 @@ Phony Ubuntu look-alike used for testing.
+ 
+ os-version:              phony-windows
+ Full name:               Phony Windows
++Architecture:            x86_64
+ Minimum/default size:    512.0M
+ 
+ Notes:
+@@ -118,6 +125,7 @@ if [ "$json_list" != "{
+   {
+     \"os-version\": \"phony-debian\",
+     \"full-name\": \"Phony Debian\",
++    \"arch\": \"x86_64\",
+     \"size\": 536870912,
+     \"notes\": {
+       \"C\": \"Phony Debian look-alike used for testing.\"
+@@ -127,6 +135,7 @@ if [ "$json_list" != "{
+   {
+     \"os-version\": \"phony-fedora\",
+     \"full-name\": \"Phony Fedora\",
++    \"arch\": \"x86_64\",
+     \"size\": 1073741824,
+     \"notes\": {
+       \"C\": \"Phony Fedora look-alike used for testing.\"
+@@ -136,6 +145,7 @@ if [ "$json_list" != "{
+   {
+     \"os-version\": \"phony-fedora-qcow2\",
+     \"full-name\": \"Phony Fedora qcow2\",
++    \"arch\": \"x86_64\",
+     \"size\": 1073741824,
+     \"notes\": {
+       \"C\": \"Phony Fedora look-alike used for testing.\"
+@@ -145,6 +155,7 @@ if [ "$json_list" != "{
+   {
+     \"os-version\": \"phony-fedora-qcow2-uncompressed\",
+     \"full-name\": \"Phony Fedora qcow2 uncompressed\",
++    \"arch\": \"x86_64\",
+     \"size\": 1073741824,
+     \"notes\": {
+       \"C\": \"Phony Fedora look-alike used for testing.\"
+@@ -154,6 +165,7 @@ if [ "$json_list" != "{
+   {
+     \"os-version\": \"phony-fedora-no-format\",
+     \"full-name\": \"Phony Fedora\",
++    \"arch\": \"x86_64\",
+     \"size\": 1073741824,
+     \"notes\": {
+       \"C\": \"Phony Fedora look-alike used for testing.\"
+@@ -163,6 +175,7 @@ if [ "$json_list" != "{
+   {
+     \"os-version\": \"phony-ubuntu\",
+     \"full-name\": \"Phony Ubuntu\",
++    \"arch\": \"x86_64\",
+     \"size\": 536870912,
+     \"notes\": {
+       \"C\": \"Phony Ubuntu look-alike used for testing.\"
+@@ -172,6 +185,7 @@ if [ "$json_list" != "{
+   {
+     \"os-version\": \"phony-windows\",
+     \"full-name\": \"Phony Windows\",
++    \"arch\": \"x86_64\",
+     \"size\": 536870912,
+     \"notes\": {
+       \"C\": \"Phony Windows look-alike used for testing.\"
+-- 
+1.8.5.3
+

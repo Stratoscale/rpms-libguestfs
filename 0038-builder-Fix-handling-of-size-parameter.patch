@@ -1,4 +1,4 @@
-From 9f1e955555f460c9cf1f89fcd6f6fad46eebe0db Mon Sep 17 00:00:00 2001
+From 1745a756c962ec90a6418203098666bb5823ce3b Mon Sep 17 00:00:00 2001
 From: "Richard W.M. Jones" <rjones@redhat.com>
 Date: Tue, 7 Jan 2014 17:32:04 +0000
 Subject: [PATCH] builder: Fix handling of --size parameter.
@@ -92,5 +92,5 @@ index 1cd007f..0c1f1e0 100644
      (* MUST *)
      let goal_must = [
 -- 
-1.8.4.2
+1.8.5.3
 

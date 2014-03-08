@@ -1,4 +1,4 @@
-From 21eb78f2f655b34a6b55f0d3d76f2523732f2666 Mon Sep 17 00:00:00 2001
+From c1d06a3c80572dbdfdce91d0646f87284a3b5306 Mon Sep 17 00:00:00 2001
 From: "Richard W.M. Jones" <rjones@redhat.com>
 Date: Tue, 5 Nov 2013 22:25:59 +0000
 Subject: [PATCH] builder: Fail if bison is not installed.
@@ -11,10 +11,10 @@ This partially fixes commit a4800e2d4fc50f372a8b626333c4fbb9b8ca9633.
  1 file changed, 6 insertions(+), 1 deletion(-)
 
 diff --git a/configure.ac b/configure.ac
-index 56a7eb5..f6a08c9 100644
+index 922ab6b..e691542 100644
 --- a/configure.ac
 +++ b/configure.ac
-@@ -711,9 +711,14 @@ PKG_CHECK_MODULES([LIBLZMA], [liblzma],[
+@@ -717,9 +717,14 @@ PKG_CHECK_MODULES([LIBLZMA], [liblzma],[
  ],
  [AC_MSG_WARN([liblzma not found, virt-builder will be slower])])
  
@@ -31,5 +31,5 @@ index 56a7eb5..f6a08c9 100644
  dnl Check for QEMU for running binaries on this $host_cpu, fall
  dnl back to basic 'qemu'.  Allow the user to override it.
 -- 
-1.8.4.2
+1.8.5.3
 

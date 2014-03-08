@@ -1,4 +1,4 @@
-From 502027f0517a5ef6784dc09681ef1bca6cc35ad5 Mon Sep 17 00:00:00 2001
+From 476b858c15762d4e1bf04449c5c03385702f8ba3 Mon Sep 17 00:00:00 2001
 From: "Richard W.M. Jones" <rjones@redhat.com>
 Date: Fri, 1 Nov 2013 14:16:34 +0000
 Subject: [PATCH] builder: Allow multiple source paths to be specified.
@@ -446,5 +446,5 @@ index 66ed030..39729d6 100644
  =item C<XDG_CACHE_HOME>
  
 -- 
-1.8.4.2
+1.8.5.3
 

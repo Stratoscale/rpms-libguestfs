@@ -1,4 +1,4 @@
-From 0124cc39c8c82e5862898503f8b3e3c591404bff Mon Sep 17 00:00:00 2001
+From b61c9b9b639e321bf82b21b444fdcf6dacb972b1 Mon Sep 17 00:00:00 2001
 From: "Richard W.M. Jones" <rjones@redhat.com>
 Date: Mon, 13 Jan 2014 16:19:51 +0000
 Subject: [PATCH] builder: Document how to set Japanese in Debian 7.
@@ -41,5 +41,5 @@ index 38e26a8..ec41078 100644
  
  Scripts and package installation that runs at build time (I<--run>,
 -- 
-1.8.4.2
+1.8.5.3
 

@@ -1,4 +1,4 @@
-From d1660ab9ac97a4b173ee1a9dc5ce55a4144a00ff Mon Sep 17 00:00:00 2001
+From 1c2e356b705a9586ad3256d54f21b4d871d6852b Mon Sep 17 00:00:00 2001
 From: "Richard W.M. Jones" <rjones@redhat.com>
 Date: Fri, 10 Jan 2014 19:48:28 +0000
 Subject: [PATCH] builder: Document how to change the language/locale of a new
@@ -51,5 +51,5 @@ index 0fd865f..4a86fd1 100644
  
  Scripts and package installation that runs at build time (I<--run>,
 -- 
-1.8.4.2
+1.8.5.3
 

@@ -1,0 +1,92 @@
+From 9a636393a6f1e5444e9e4f74468f64161d19732e Mon Sep 17 00:00:00 2001
+From: Pino Toscano <ptoscano@redhat.com>
+Date: Thu, 16 Jan 2014 12:34:48 +0100
+Subject: [PATCH] builder: add --list-format
+
+Add a --list-format which allows to choose which in format should be the
+output of --list.
+
+(cherry picked from commit e45bfe0d36c9f50143b13921a498f00ee06ca27d)
+---
+ builder/cmdline.ml       | 11 ++++++++++-
+ builder/virt-builder.pod | 24 +++++++++++++++++++++---
+ 2 files changed, 31 insertions(+), 4 deletions(-)
+
+diff --git a/builder/cmdline.ml b/builder/cmdline.ml
+index f199f03..6d6439f 100644
+--- a/builder/cmdline.ml
++++ b/builder/cmdline.ml
+@@ -132,6 +132,13 @@ let parse_cmdline () =
+ 
+   let list_format = ref `Short in
+   let list_set_long () = list_format := `Long in
++  let list_set_format arg =
++    list_format := match arg with
++    | "short" -> `Short
++    | "long" -> `Long
++    | fmt ->
++      eprintf (f_"%s: invalid --list-format type '%s', see the man page.\n") prog fmt;
++      exit 1 in
+ 
+   let memsize = ref None in
+   let set_memsize arg = memsize := Some arg in
+@@ -256,7 +263,9 @@ let parse_cmdline () =
+     "--link",    Arg.String add_link,       "target:link.." ^ " " ^ s_"Create symbolic links";
+     "-l",        Arg.Unit list_mode,        " " ^ s_"List available templates";
+     "--list",    Arg.Unit list_mode,        ditto;
+-    "--long",    Arg.Unit list_set_long,    " " ^ s_"List available templates, in long textual form";
++    "--long",    Arg.Unit list_set_long,    " " ^ s_"Shortcut for --list-format short";
++    "--list-format", Arg.String list_set_format,
++                                            "short|long" ^ " " ^ s_"Set the format for --list (default: short)";
+     "--no-logfile", Arg.Set scrub_logfile,  " " ^ s_"Scrub build log file";
+     "--long-options", Arg.Unit display_long_options, " " ^ s_"List long options";
+     "-m",        Arg.Int set_memsize,       "mb" ^ " " ^ s_"Set memory size";
+diff --git a/builder/virt-builder.pod b/builder/virt-builder.pod
+index 0d9b33f..8e60d30 100644
+--- a/builder/virt-builder.pod
++++ b/builder/virt-builder.pod
+@@ -31,7 +31,7 @@ virt-builder - Build virtual machine images quickly
+     [--firstboot SCRIPT] [--firstboot-command 'CMD ARGS ...']
+     [--firstboot-install PKG,[PKG...]]
+ 
+- virt-builder -l|--list [--long]
++ virt-builder -l|--list [--long] [--list-format short|long]
+ 
+  virt-builder --notes os-version
+ 
+@@ -374,12 +374,30 @@ pointing at C<TARGET>.
+ 
+ =item B<--list>
+ 
++=item B<--list --format> format
++
+ =item B<--list --long>
+ 
+ List available templates.
+ 
+-The alternative I<--list --long> form shows lots more details about
+-each operating system option.
++It is possible to choose with I<--format> the output format for the list
++templates:
++
++=over 4
++
++=item B<short>
++
++The default format, prints only the template identifier and, next to it,
++its short description.
++
++=item B<long>
++
++Prints a textual list with the details of the available sources, followed
++by the details of the available templates.
++
++=back
++
++I<--long> is a shorthand for the C<long> format.
+ 
+ See also: I<--source>, I<--notes>, L</CREATING YOUR OWN TEMPLATES>.
+ 
+-- 
+1.8.5.3
+

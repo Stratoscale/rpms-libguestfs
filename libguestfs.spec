@@ -11,7 +11,7 @@
 Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
-Version:       1.24.6
+Version:       1.24.8
 Release:       1%{?dist}
 License:       LGPLv2+
 
@@ -81,30 +81,53 @@ Patch0053:     0053-daemon-xattr-simplify-the-enabling-of-the-linuxxattr.patch
 Patch0054:     0054-daemon-xattr-move-the-listxattrs-code-in-an-own-func.patch
 Patch0055:     0055-daemon-xattr-Remove-unused-variable.patch
 Patch0056:     0056-New-API-copy-attributes.patch
-Patch0057:     0057-Update-generated-files-for-new-copy-attributes-API.patch
-Patch0058:     0058-fish-Add-test-file-attrs.sh-to-EXTRA_DIST.patch
-Patch0059:     0059-builder-edit-fish-use-copy-attributes.patch
-Patch0060:     0060-builder-test-virt-builder-check-some-results.patch
-Patch0061:     0061-builder-small-refactor-of-the-list-output.patch
-Patch0062:     0062-builder-add-list-format.patch
-Patch0063:     0063-builder-add-a-JSON-output-for-list.patch
-Patch0064:     0064-builder-Fix-unterminated-I-.-in-man-page.patch
-Patch0065:     0065-builder-add-index-struct.h-as-dependency-for-index-p.patch
-Patch0066:     0066-builder-allow-more-empty-lines-in-index-files.patch
-Patch0067:     0067-builder-proper-consider-subkeys-in-index-files.patch
-Patch0068:     0068-builder-fix-small-regression-in-subkey-parsing.patch
-Patch0069:     0069-builder-small-code-simplification.patch
-Patch0070:     0070-builder-read-all-the-available-notes-from-the-index.patch
-Patch0071:     0071-builder-Add-selinux-relabel-option-to-perform-SELinu.patch
-Patch0072:     0072-builder-Add-documentation-for-enabling-Puppet-agent-.patch
-Patch0073:     0073-daemon-Bind-mount-sys-fs-selinux-into-sysroot-when-r.patch
-Patch0074:     0074-daemon-If-selinux-exists-in-the-guest-bind-mount-sys.patch
-Patch0075:     0075-daemon-Add-a-note-about-how-mount-rbind-doesn-t-work.patch
-Patch0076:     0076-builder-output-translated-notes.patch
-Patch0077:     0077-builder-remove-unused-variables.patch
-Patch0078:     0078-builder-isolate-C-libraries-in-an-own-OCAMLCLIBS.patch
-Patch0079:     0079-builder-prepare-for-different-per-protocol-download-.patch
-Patch0080:     0080-builder-do-a-copy-when-downloading-local-files.patch
+Patch0057:     0057-fish-Add-test-file-attrs.sh-to-EXTRA_DIST.patch
+Patch0058:     0058-builder-edit-fish-use-copy-attributes.patch
+Patch0059:     0059-builder-test-virt-builder-check-some-results.patch
+Patch0060:     0060-builder-small-refactor-of-the-list-output.patch
+Patch0061:     0061-builder-add-list-format.patch
+Patch0062:     0062-builder-add-a-JSON-output-for-list.patch
+Patch0063:     0063-builder-Fix-unterminated-I-.-in-man-page.patch
+Patch0064:     0064-builder-add-index-struct.h-as-dependency-for-index-p.patch
+Patch0065:     0065-builder-allow-more-empty-lines-in-index-files.patch
+Patch0066:     0066-builder-proper-consider-subkeys-in-index-files.patch
+Patch0067:     0067-builder-fix-small-regression-in-subkey-parsing.patch
+Patch0068:     0068-builder-small-code-simplification.patch
+Patch0069:     0069-builder-read-all-the-available-notes-from-the-index.patch
+Patch0070:     0070-builder-Add-selinux-relabel-option-to-perform-SELinu.patch
+Patch0071:     0071-builder-Add-documentation-for-enabling-Puppet-agent-.patch
+Patch0072:     0072-daemon-Bind-mount-sys-fs-selinux-into-sysroot-when-r.patch
+Patch0073:     0073-daemon-If-selinux-exists-in-the-guest-bind-mount-sys.patch
+Patch0074:     0074-daemon-Add-a-note-about-how-mount-rbind-doesn-t-work.patch
+Patch0075:     0075-builder-output-translated-notes.patch
+Patch0076:     0076-builder-remove-unused-variables.patch
+Patch0077:     0077-builder-isolate-C-libraries-in-an-own-OCAMLCLIBS.patch
+Patch0078:     0078-builder-prepare-for-different-per-protocol-download-.patch
+Patch0079:     0079-builder-do-a-copy-when-downloading-local-files.patch
+Patch0080:     0080-mllib-hostname-on-Debian-replace-it-also-in-etc-host.patch
+Patch0081:     0081-builder-pxzcat-Fix-char-signedness-warning.patch
+Patch0082:     0082-builder-Suppress-warning-about-unused-yyunput.patch
+Patch0083:     0083-Use-bindtextdomain-in-some-programs-where-it-was-mis.patch
+Patch0084:     0084-builder-Fix-dependencies-which-are-not-generated-cor.patch
+Patch0085:     0085-fish-use-XDG-paths-for-the-config-file.patch
+Patch0086:     0086-builder-move-the-XDG-path-handling-in-an-own-file.patch
+Patch0087:     0087-builder-accept-also-_-in-group-names.patch
+Patch0088:     0088-mllib-add-an-hook-to-cleanup-directories-on-exit.patch
+Patch0089:     0089-builder-use-a-disposable-GPG-keyring-for-every-Sigch.patch
+Patch0090:     0090-builder-allow-Sigchecker-to-import-keys-from-file.patch
+Patch0091:     0091-builder-add-a-mandatory-arch-key-in-index-files.patch
+Patch0092:     0092-builder-split-INI-C-OCaml-glue-code-in-own-module.patch
+Patch0093:     0093-builder-allow-no-key-as-key-in-Sigchecker.patch
+Patch0094:     0094-builder-use-Sigchecker.gpgkey_type-for-the-fingerpri.patch
+Patch0095:     0095-builder-add-functions-to-read-XDG_CONFIG_DIRS-and-XD.patch
+Patch0096:     0096-builder-extract-the-default-key-to-file.patch
+Patch0097:     0097-builder-switch-sources-to-.conf-files.patch
+Patch0098:     0098-builder-remove-VIRT_BUILDER_SOURCE-and-VIRT_BUILDER_.patch
+Patch0099:     0099-builder-remove-the-default-fingerprint-pubkey.patch
+Patch0100:     0100-builder-update-documentation.patch
+Patch0101:     0101-builder-add-libguestfs.gpg-to-EXTRA_DIST.patch
+Patch0102:     0102-builder-install-a-sysconfdir-virt-builder-xdg-virt-b.patch
+Patch0103:     0103-Update-generated-files.patch
 # Add any non-git patches here.
 
 # Use git for patch management.
@@ -1096,6 +1119,12 @@ mkdir -p $RPM_BUILD_ROOT%{_localstatedir}/run/libguestfs
 
 
 %changelog
+* Sat Mar  8 2014 Richard W.M. Jones <rjones@redhat.com> - 1:1.24.8-1
+- New stable branch version 1.24.8.
+- Backport more virt-builder patches from upstream to Fedora 20.
+- Fixes: RHBZ#1073906, RHBZ#1020806, RHBZ#1064008, RHBZ#1008417,
+  RHBZ#1054761, RHBZ#1056290.
+
 * Wed Feb 12 2014 Richard W.M. Jones <rjones@redhat.com> - 1:1.24.6-1
 - New stable branch version 1.24.6.
 
