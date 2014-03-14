@@ -1,0 +1,26 @@
+From accf1b66aa835714690a2979e990c49243875dab Mon Sep 17 00:00:00 2001
+From: "Richard W.M. Jones" <rjones@redhat.com>
+Date: Fri, 14 Mar 2014 10:09:47 +0000
+Subject: [PATCH 2/2] tests: fstrim: Remount the disk.
+
+This makes fstrim work.  It's not clear why exactly.
+---
+ tests/discard/test-fstrim.pl | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/tests/discard/test-fstrim.pl b/tests/discard/test-fstrim.pl
+index 30bb855..cec853f 100755
+--- a/tests/discard/test-fstrim.pl
++++ b/tests/discard/test-fstrim.pl
+@@ -113,6 +113,8 @@ die "$0: surprising result: full size <= original size\n"
+ # Remove the file and then try to trim the filesystem.
+ 
+ $g->rm ("/data");
++$g->umount ("/");
++$g->mount_options ("nodiscard", "/dev/sda", "/");
+ $g->fstrim ("/");
+ $g->sync ();
+ $g->close ();
+-- 
+1.8.5.3
+
