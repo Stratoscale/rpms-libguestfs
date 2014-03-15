@@ -4,12 +4,11 @@
 %if %{defined libguestfs_runtests}
 %global runtests %{libguestfs_runtests}
 %else
-%ifnarch %{arm} ppc ppc64 %{ix86}
+%ifnarch %{arm} ppc ppc64
 %global runtests 1
 %else
 # Disabled on arm, see RHBZ#1066581.
 # Disabled on ppc, ppc64 (secondary arches), see RHBZ#1036742.
-# Disabled on x86, bug to come.
 %global runtests 0
 %endif
 %endif
