@@ -27,9 +27,6 @@ License:       LGPLv2+
 URL:           http://libguestfs.org/
 Source0:       http://libguestfs.org/download/1.25-development/%{name}-%{version}.tar.gz
 
-Patch1:        0001-tests-discard-Ensure-a-significant-number-of-blocks-.patch
-Patch2:        0002-tests-fstrim-Remount-the-disk.patch
-
 # Basic build requirements:
 BuildRequires: perl(Pod::Simple)
 BuildRequires: perl(Pod::Man)
@@ -672,9 +669,6 @@ for %{name}.
 
 %prep
 %setup -q
-
-%patch1 -p1
-%patch2 -p1
 
 if [ "$(getenforce | tr '[A-Z]' '[a-z]')" != "disabled" ]; then
     # For sVirt to work, the local temporary directory we use in the
