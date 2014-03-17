@@ -18,8 +18,8 @@
 Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
-Version:       1.25.44
-Release:       2%{?dist}
+Version:       1.25.45
+Release:       1%{?dist}
 License:       LGPLv2+
 
 # Source and patches.
@@ -1132,6 +1132,9 @@ mkdir -p $RPM_BUILD_ROOT%{_localstatedir}/run/libguestfs
 
 
 %changelog
+* Mon Mar 17 2014 Richard W.M. Jones <rjones@redhat.com> - 1:1.25.45-1
+- New upstream version 1.25.45.
+
 * Fri Mar 14 2014 Richard W.M. Jones <rjones@redhat.com> - 1:1.25.44-2
 - Try to patch fstrim so it works in Koji/Rawhide.
 
