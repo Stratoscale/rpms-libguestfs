@@ -19,7 +19,7 @@ Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
 Version:       1.25.45
-Release:       1%{?dist}
+Release:       2%{?dist}
 License:       LGPLv2+
 
 # Source and patches.
@@ -198,7 +198,8 @@ To mount guest filesystems on the host using FUSE, install
 
 For extra features, install 'libguestfs-gfs2', 'libguestfs-hfsplus',
 'libguestfs-jfs', 'libguestfs-nilfs', 'libguestfs-reiserfs',
-'libguestfs-rsync', 'libguestfs-xfs', 'libguestfs-zfs'.
+'libguestfs-rescue', 'libguestfs-rsync', 'libguestfs-xfs',
+'libguestfs-zfs'.
 
 For Erlang bindings, install 'erlang-libguestfs'.
 
@@ -303,6 +304,21 @@ Requires:      rsync
 %description rsync
 This adds rsync support to %{name}.  Install it if you want to use
 rsync to upload or download files into disk images.
+
+
+%package rescue
+Summary:       Additional tools for virt-rescue
+License:       LGPLv2+
+Requires:      %{name}-tools-c = %{epoch}:%{version}-%{release}
+Requires:      iputils
+Requires:      lsof
+Requires:      openssh-clients
+Requires:      strace
+Requires:      vim-minimal
+
+%description rescue
+This adds additional tools to use inside the virt-rescue shell,
+such as ssh, network utilities, editors and debugging utilities.
 
 
 %package xfs
@@ -833,15 +849,23 @@ gzip --best installed-docs/*.xml
 # Split up the monolithic packages file in the supermin appliance so
 # we can install dependencies in subpackages.
 pushd $RPM_BUILD_ROOT%{_libdir}/guestfs/supermin.d
-for f in gfs2-utils hfsplus-tools jfsutils nilfs-utils \
-         reiserfs-utils rsync xfsprogs zfs-fuse; do
-    if grep -Esq "^$f\$" packages; then
-        mv packages packages~
-        grep -Ev "^$f\$" < packages~ > packages
-        rm packages~
-        echo $f > zz-packages-$f
-    fi
-done
+grep -Ev '^(gfs2-utils|hfsplus-tools|jfsutils|nilfs-utils|reiserfs-utils|iputils|lsof|openssh-clients|strace|vim-minimal|rsync|xfsprogs|zfs-fuse)$' < packages > packages.new
+mv packages.new packages
+echo gfs2-utils     > zz-packages-gfs2
+echo hfsplus-tools  > zz-packages-hfsplus
+echo jfsutils       > zz-packages-jfs
+echo nilfs-utils    > zz-packages-nilfs
+echo reiserfs-utils > zz-packages-reiserfs
+cat <<EOF           > zz-packages-rescue
+iputils
+lsof
+openssh-clients
+strace
+vim-minimal
+EOF
+echo rsync          > zz-packages-rsync
+echo xfsprogs       > zz-packages-xfs
+echo zfs-fuse       > zz-packages-zfs
 popd
 
 # For the libguestfs-live-service subpackage install the systemd
@@ -899,31 +923,34 @@ mkdir -p $RPM_BUILD_ROOT%{_localstatedir}/run/libguestfs
 %{_libdir}/pkgconfig/libguestfs.pc
 
 %files gfs2
-%{_libdir}/guestfs/supermin.d/zz-packages-gfs2-utils
+%{_libdir}/guestfs/supermin.d/zz-packages-gfs2
 
 %ifnarch %{arm} ppc
 %files hfsplus
-%{_libdir}/guestfs/supermin.d/zz-packages-hfsplus-tools
+%{_libdir}/guestfs/supermin.d/zz-packages-hfsplus
 %endif
 
 %files jfs
-%{_libdir}/guestfs/supermin.d/zz-packages-jfsutils
+%{_libdir}/guestfs/supermin.d/zz-packages-jfs
 
 %files nilfs
-%{_libdir}/guestfs/supermin.d/zz-packages-nilfs-utils
+%{_libdir}/guestfs/supermin.d/zz-packages-nilfs
 
 %files reiserfs
-%{_libdir}/guestfs/supermin.d/zz-packages-reiserfs-utils
+%{_libdir}/guestfs/supermin.d/zz-packages-reiserfs
 
 %files rsync
 %{_libdir}/guestfs/supermin.d/zz-packages-rsync
 
+%files rescue
+%{_libdir}/guestfs/supermin.d/zz-packages-rescue
+
 %files xfs
-%{_libdir}/guestfs/supermin.d/zz-packages-xfsprogs
+%{_libdir}/guestfs/supermin.d/zz-packages-xfs
 
 %ifnarch %{arm}
 %files zfs
-%{_libdir}/guestfs/supermin.d/zz-packages-zfs-fuse
+%{_libdir}/guestfs/supermin.d/zz-packages-zfs
 %endif
 
 %files tools-c
@@ -1132,6 +1159,9 @@ mkdir -p $RPM_BUILD_ROOT%{_localstatedir}/run/libguestfs
 
 
 %changelog
+* Thu Mar 20 2014 Richard W.M. Jones <rjones@redhat.com> - 1:1.25.45-2
+- Further split libguestfs appliance dependencies.
+
 * Mon Mar 17 2014 Richard W.M. Jones <rjones@redhat.com> - 1:1.25.45-1
 - New upstream version 1.25.45.
 
