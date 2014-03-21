@@ -747,6 +747,9 @@ gzip -9 ChangeLog
 
 
 %check
+
+%if %{runtests}
+
 # Enable debugging - very useful if a test does fail, although
 # it produces masses of output in the build.log.
 export LIBGUESTFS_DEBUG=1
@@ -780,6 +783,19 @@ export SKIP_TEST_MDADM_SH=1
 # Disable NBD test, buggy in qemu 1.7.0 (RHBZ#1034433).
 export SKIP_TEST_NBD_PL=1
 
+# On x86 (32 bit) only, virt-sparsify --in-place cannot sparsify as
+# much as it should.  The error is:
+#   test virt-sparsify: 343156 K -> 25716 K
+#   test virt-sparsify --in-place: size_after (25716) too large
+# (RHBZ#1079210).
+%ifarch %{ix86}
+export SKIP_TEST_VIRT_SPARSIFY_IN_PLACE_SH=1
+%endif
+
+# Disable parallel virt-alignment-scan & virt-df tests (RHBZ#1025942).
+export SKIP_TEST_VIRT_ALIGNMENT_SCAN_GUESTS_SH=1
+export SKIP_TEST_VIRT_DF_GUESTS_SH=1
+
 # Skip gnulib tests which fail (probably these are kernel/glibc bugs).
 pushd gnulib/tests
 make -k check ||:
@@ -790,12 +806,6 @@ for f in test-getaddrinfo test-utimens ; do
   chmod +x $f
 done
 popd
-
-# Disable parallel virt-alignment-scan & virt-df tests (RHBZ#1025942).
-export SKIP_TEST_VIRT_ALIGNMENT_SCAN_GUESTS_SH=1
-export SKIP_TEST_VIRT_DF_GUESTS_SH=1
-
-%if %{runtests}
 
 # Do make quickcheck first, to fail early if the appliance or libvirt
 # is obviously broken.  Also dump libvirt log files if this happens.
