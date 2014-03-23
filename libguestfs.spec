@@ -102,20 +102,22 @@ BuildRequires: golang
 %endif
 
 # Build requirements for the appliance.
-# sed 's/^ *//' < appliance/packagelist | sort
-%global appliance_buildreqs0 acl attr augeas-libs bash binutils btrfs-progs bzip2 coreutils cpio cryptsetup diffutils dosfstools e2fsprogs file findutils gawk gdisk gfs2-utils grep gzip hivex iproute iputils jfsutils kernel kmod less libcap libldm libselinux libxml2 lsof lsscsi lvm2 lzop mdadm nilfs-utils ntfs-3g openssh-clients parted pcre procps psmisc reiserfs-utils rsync scrub sed strace systemd tar udev util-linux vim-minimal xfsprogs xz yajl zerofree
+#
+# Get the initial list by doing:
+#   for f in `cat appliance/packagelist`; do echo $f; done | sort -u
+# However you have to edit the list down to packages which exist in
+# current Fedora, since supermin ignores non-existent packages.
+BuildRequires: acl attr augeas-libs bash binutils btrfs-progs bzip2 coreutils cpio cryptsetup diffutils dosfstools e2fsprogs file findutils gawk gdisk genisoimage gfs2-utils grep gzip hivex iproute iputils jfsutils kernel kmod less libcap libldm libselinux libxml2 lsof lsscsi lvm2 lzop mdadm nilfs-utils openssh-clients parted pcre procps psmisc reiserfs-utils rsync scrub sed strace systemd tar udev util-linux vim-minimal xfsprogs xz yajl zerofree zfs-fuse
 %ifnarch %{arm} ppc
-%global appliance_buildreqs1 hfsplus-tools
+BuildRequires: hfsplus-tools
 %endif
 %ifnarch %{arm}
 # http://zfs-fuse.net/issues/94
-%global appliance_buildreqs2 zfs-fuse
+BuildRequires: zfs-fuse
 %endif
 %ifarch %{ix86} x86_64
-%global appliance_buildreqs3 ntfsprogs syslinux syslinux-extlinux
+BuildRequires: ntfs-3g ntfsprogs syslinux syslinux-extlinux
 %endif
-%global appliance_buildreqs %{appliance_buildreqs0} %{?appliance_buildreqs1} %{?appliance_buildreqs2} %{?appliance_buildreqs3}
-BuildRequires: %{appliance_buildreqs}
 
 # For building the appliance.
 Requires:      supermin >= 5.1.0
