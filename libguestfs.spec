@@ -18,7 +18,7 @@
 Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
-Version:       1.25.46
+Version:       1.25.47
 Release:       1%{?dist}
 License:       LGPLv2+
 
@@ -411,6 +411,9 @@ virtual machine.
 
 Virt-copy-in and virt-copy-out are command line tools for uploading
 and downloading files and directories to and from virtual machines.
+
+Virt-customize is a command line tool for customizing virtual machine
+disk images.
 
 Virt-df is a command line tool to display free space on virtual
 machine filesystems.  Unlike other tools, it doesn’t just display the
@@ -990,6 +993,8 @@ mkdir -p $RPM_BUILD_ROOT%{_localstatedir}/run/libguestfs
 %{_mandir}/man1/virt-copy-in.1*
 %{_bindir}/virt-copy-out
 %{_mandir}/man1/virt-copy-out.1*
+%{_bindir}/virt-customize
+%{_mandir}/man1/virt-customize.1*
 %{_bindir}/virt-df
 %{_mandir}/man1/virt-df.1*
 %{_bindir}/virt-diff
@@ -1171,6 +1176,10 @@ mkdir -p $RPM_BUILD_ROOT%{_localstatedir}/run/libguestfs
 
 
 %changelog
+* Tue Mar 25 2014 Richard W.M. Jones <rjones@redhat.com> - 1:1.25.47-1
+- New upstream version 1.25.47.
+- Include new tool: virt-customize.
+
 * Thu Mar 20 2014 Richard W.M. Jones <rjones@redhat.com> - 1:1.25.46-1
 - New upstream version 1.25.46.
 
