@@ -788,14 +788,8 @@ export SKIP_TEST_MDADM_SH=1
 # Disable NBD test, buggy in qemu 1.7.0 (RHBZ#1034433).
 export SKIP_TEST_NBD_PL=1
 
-# On x86 (32 bit) only, virt-sparsify --in-place cannot sparsify as
-# much as it should.  The error is:
-#   test virt-sparsify: 343156 K -> 25716 K
-#   test virt-sparsify --in-place: size_after (25716) too large
-# (RHBZ#1079210).
-%ifarch %{ix86}
+# Virt-sparsify --in-place cannot sparsify as much as it should (RHBZ#1079210).
 export SKIP_TEST_VIRT_SPARSIFY_IN_PLACE_SH=1
-%endif
 
 # Disable parallel virt-alignment-scan & virt-df tests (RHBZ#1025942).
 export SKIP_TEST_VIRT_ALIGNMENT_SCAN_GUESTS_SH=1
