@@ -1,9 +1,16 @@
-# Enable to run tests during check
-# Default is enabled
+# Run tests during check.  Default is enabled on most architectures.
+# You can override this by putting '%libguestfs_runtests 0' into
+# '~/.rpmmacros'
 %if %{defined libguestfs_runtests}
 %global runtests %{libguestfs_runtests}
 %else
+%ifnarch %{arm} ppc ppc64
 %global runtests 1
+%else
+# Disabled on arm, see RHBZ#1066581.
+# Disabled on ppc, ppc64 (secondary arches), see RHBZ#1036742.
+%global runtests 0
+%endif
 %endif
 
 %global _hardened_build 1
@@ -11,136 +18,19 @@
 Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
-Version:       1.24.8
+Version:       1.26.0
 Release:       1%{?dist}
 License:       LGPLv2+
 
 # Source and patches.
 URL:           http://libguestfs.org/
-Source0:       http://libguestfs.org/download/1.24-stable/%{name}-%{version}.tar.gz
-
-# Note we use the fedora-20 branch from the upstream repo which
-# contains only upstream, backported patches, but conveniently manages
-# them in git.  In order to update this list, run the
-# 'copy-patches.sh' script.
-
-# Git-managed patches.
-Patch0001:     0001-builder-Don-t-run-virt-resize-when-not-necessary.patch
-Patch0002:     0002-builder-Make-xzcat-binary-configurable-and-use-AC_PA.patch
-Patch0003:     0003-builder-Use-pxzcat-optionally-to-speed-up-xzcat-step.patch
-Patch0004:     0004-builder-Add-no-sync-option-to-avoid-sync-on-exit.patch
-Patch0005:     0005-builder-Add-mkdir-option-to-create-directories.patch
-Patch0006:     0006-builder-Allow-upload-to-a-directory.patch
-Patch0007:     0007-builder-Add-write-option-to-write-a-literal-file.patch
-Patch0008:     0008-builder-Document-how-to-boot-VMs-directly-in-qemu-or.patch
-Patch0009:     0009-firstboot-Send-the-output-to-the-console-as-well-as-.patch
-Patch0010:     0010-builder-Add-a-section-on-performance-to-the-manual.patch
-Patch0011:     0011-builder-Add-m-memsize-and-smp-command-line-options.patch
-Patch0012:     0012-builder-Allow-multiple-source-paths-to-be-specified.patch
-Patch0013:     0013-builder-Add-a-real-scanner-parser-for-index-files.patch
-Patch0014:     0014-builder-Fix-missing-files-in-EXTRA_DIST.patch
-Patch0015:     0015-builder-website-Add-index-validation-test-script.patch
-Patch0016:     0016-builder-Internal-implementation-of-parallel-xzcat-px.patch
-Patch0017:     0017-builder-website-Add-validate.sh-test-script-to-EXTRA.patch
-Patch0018:     0018-builder-Add-missing-dependency.patch
-Patch0019:     0019-builder-Add-some-generated-files-to-CLEANFILES.patch
-Patch0020:     0020-builder-Add-dependency-from-index-parse.h-to-index-v.patch
-Patch0021:     0021-builder-Add-dependencies-which-automake-doesn-t-gene.patch
-Patch0022:     0022-builder-Fail-if-bison-is-not-installed.patch
-Patch0023:     0023-builder-Fail-if-lex-is-not-installed.patch
-Patch0024:     0024-builder-sysprep-Allow-random-as-a-password-selector.patch
-Patch0025:     0025-builder-sysprep-Allow-accounts-to-be-locked-RHBZ-102.patch
-Patch0026:     0026-builder-Use-a-planner-to-work-out-how-to-convert-the.patch
-Patch0027:     0027-builder-planner-Handle-no-format-in-source-case-corr.patch
-Patch0028:     0028-builder-Flush-debug-info-after-printing-it.patch
-Patch0029:     0029-builder-Add-a-test-of-the-planner.patch
-Patch0030:     0030-builder-tests-Fix-virt-builder-list-output.patch
-Patch0031:     0031-builder-tests-Add-test-virt-builder-planner.sh-to-EX.patch
-Patch0032:     0032-builder-Add-a-link-to-blog-posting-about-the-planner.patch
-Patch0033:     0033-builder-Only-use-virt-resize-no-sparse-when-writing-.patch
-Patch0034:     0034-builder-Refuse-to-write-to-a-char-device-or-dev-null.patch
-Patch0035:     0035-builder-Remove-blank-line.patch
-Patch0036:     0036-builder-Add-update-option-to-update-template-core-pa.patch
-Patch0037:     0037-launch-libvirt-Don-t-default-to-using-NULL-for-libvi.patch
-Patch0038:     0038-builder-Fix-handling-of-size-parameter.patch
-Patch0039:     0039-libvirt-auth-Provide-a-friendlier-wrapper-around-vir.patch
-Patch0040:     0040-tests-Add-a-regression-test-of-libvirt-authenticatio.patch
-Patch0041:     0041-tests-Add-a-regression-test-for-libvirt-authenticati.patch
-Patch0042:     0042-sysprep-builder-Add-timezone-option-to-set-timezone-.patch
-Patch0043:     0043-builder-Document-how-to-change-keyboard-layout.patch
-Patch0044:     0044-builder-Add-link-option-for-creating-symbolic-links.patch
-Patch0045:     0045-builder-Document-how-to-change-the-language-locale-o.patch
-Patch0046:     0046-builder-Document-how-to-set-up-local-mirrors-for-per.patch
-Patch0047:     0047-builder-Document-how-to-set-Japanese-language-suppor.patch
-Patch0048:     0048-builder-Fix-virt-builder-test.patch
-Patch0049:     0049-builder-Document-how-to-set-Japanese-in-Debian-7.patch
-Patch0050:     0050-builder-Add-no-delete-on-failure-option-to-aid-debug.patch
-Patch0051:     0051-builder-For-performance-recommend-using-the-no-sync-.patch
-Patch0052:     0052-builder-planner-Whitespace-change.patch
-Patch0053:     0053-daemon-xattr-simplify-the-enabling-of-the-linuxxattr.patch
-Patch0054:     0054-daemon-xattr-move-the-listxattrs-code-in-an-own-func.patch
-Patch0055:     0055-daemon-xattr-Remove-unused-variable.patch
-Patch0056:     0056-New-API-copy-attributes.patch
-Patch0057:     0057-fish-Add-test-file-attrs.sh-to-EXTRA_DIST.patch
-Patch0058:     0058-builder-edit-fish-use-copy-attributes.patch
-Patch0059:     0059-builder-test-virt-builder-check-some-results.patch
-Patch0060:     0060-builder-small-refactor-of-the-list-output.patch
-Patch0061:     0061-builder-add-list-format.patch
-Patch0062:     0062-builder-add-a-JSON-output-for-list.patch
-Patch0063:     0063-builder-Fix-unterminated-I-.-in-man-page.patch
-Patch0064:     0064-builder-add-index-struct.h-as-dependency-for-index-p.patch
-Patch0065:     0065-builder-allow-more-empty-lines-in-index-files.patch
-Patch0066:     0066-builder-proper-consider-subkeys-in-index-files.patch
-Patch0067:     0067-builder-fix-small-regression-in-subkey-parsing.patch
-Patch0068:     0068-builder-small-code-simplification.patch
-Patch0069:     0069-builder-read-all-the-available-notes-from-the-index.patch
-Patch0070:     0070-builder-Add-selinux-relabel-option-to-perform-SELinu.patch
-Patch0071:     0071-builder-Add-documentation-for-enabling-Puppet-agent-.patch
-Patch0072:     0072-daemon-Bind-mount-sys-fs-selinux-into-sysroot-when-r.patch
-Patch0073:     0073-daemon-If-selinux-exists-in-the-guest-bind-mount-sys.patch
-Patch0074:     0074-daemon-Add-a-note-about-how-mount-rbind-doesn-t-work.patch
-Patch0075:     0075-builder-output-translated-notes.patch
-Patch0076:     0076-builder-remove-unused-variables.patch
-Patch0077:     0077-builder-isolate-C-libraries-in-an-own-OCAMLCLIBS.patch
-Patch0078:     0078-builder-prepare-for-different-per-protocol-download-.patch
-Patch0079:     0079-builder-do-a-copy-when-downloading-local-files.patch
-Patch0080:     0080-mllib-hostname-on-Debian-replace-it-also-in-etc-host.patch
-Patch0081:     0081-builder-pxzcat-Fix-char-signedness-warning.patch
-Patch0082:     0082-builder-Suppress-warning-about-unused-yyunput.patch
-Patch0083:     0083-Use-bindtextdomain-in-some-programs-where-it-was-mis.patch
-Patch0084:     0084-builder-Fix-dependencies-which-are-not-generated-cor.patch
-Patch0085:     0085-fish-use-XDG-paths-for-the-config-file.patch
-Patch0086:     0086-builder-move-the-XDG-path-handling-in-an-own-file.patch
-Patch0087:     0087-builder-accept-also-_-in-group-names.patch
-Patch0088:     0088-mllib-add-an-hook-to-cleanup-directories-on-exit.patch
-Patch0089:     0089-builder-use-a-disposable-GPG-keyring-for-every-Sigch.patch
-Patch0090:     0090-builder-allow-Sigchecker-to-import-keys-from-file.patch
-Patch0091:     0091-builder-add-a-mandatory-arch-key-in-index-files.patch
-Patch0092:     0092-builder-split-INI-C-OCaml-glue-code-in-own-module.patch
-Patch0093:     0093-builder-allow-no-key-as-key-in-Sigchecker.patch
-Patch0094:     0094-builder-use-Sigchecker.gpgkey_type-for-the-fingerpri.patch
-Patch0095:     0095-builder-add-functions-to-read-XDG_CONFIG_DIRS-and-XD.patch
-Patch0096:     0096-builder-extract-the-default-key-to-file.patch
-Patch0097:     0097-builder-switch-sources-to-.conf-files.patch
-Patch0098:     0098-builder-remove-VIRT_BUILDER_SOURCE-and-VIRT_BUILDER_.patch
-Patch0099:     0099-builder-remove-the-default-fingerprint-pubkey.patch
-Patch0100:     0100-builder-update-documentation.patch
-Patch0101:     0101-builder-add-libguestfs.gpg-to-EXTRA_DIST.patch
-Patch0102:     0102-builder-install-a-sysconfdir-virt-builder-xdg-virt-b.patch
-Patch0103:     0103-Update-generated-files.patch
-# Add any non-git patches here.
-
-# Use git for patch management.
-BuildRequires: git
-
-# Run autotools after applying the patches.
-BuildRequires: autoconf, automake, libtool, gettext-devel
+Source0:       http://libguestfs.org/download/1.26-stable/%{name}-%{version}.tar.gz
 
 # Basic build requirements:
 BuildRequires: perl(Pod::Simple)
 BuildRequires: perl(Pod::Man)
 BuildRequires: /usr/bin/pod2text
-BuildRequires: supermin >= 4.1.5
+BuildRequires: supermin >= 5.1.0
 BuildRequires: hivex-devel >= 1.2.7-7
 BuildRequires: perl(Win::Hivex)
 BuildRequires: perl(Win::Hivex::Regedit)
@@ -192,7 +82,6 @@ BuildRequires: perl(Test::More)
 BuildRequires: perl(Test::Pod) >= 1.00
 BuildRequires: perl(Test::Pod::Coverage) >= 1.00
 BuildRequires: perl(ExtUtils::MakeMaker)
-BuildRequires: perl(String::ShellQuote)
 BuildRequires: perl(Locale::TextDomain)
 BuildRequires: python-devel
 BuildRequires: ruby-devel
@@ -213,24 +102,25 @@ BuildRequires: golang
 %endif
 
 # Build requirements for the appliance.
-# sed 's/^ *//' < appliance/packagelist | sort
-%global appliance_buildreqs0 acl attr augeas-libs bash binutils btrfs-progs bzip2 coreutils cpio cryptsetup diffutils dosfstools e2fsprogs file findutils gawk gdisk gfs2-utils grep gzip hivex iproute iputils jfsutils kernel kmod less libcap libldm libselinux libxml2 lsof lsscsi lvm2 lzop mdadm nilfs-utils ntfs-3g openssh-clients parted pcre procps psmisc reiserfs-utils rsync scrub sed strace systemd tar udev util-linux vim-minimal xfsprogs xz yajl zerofree
+#
+# Get the initial list by doing:
+#   for f in `cat appliance/packagelist`; do echo $f; done | sort -u
+# However you have to edit the list down to packages which exist in
+# current Fedora, since supermin ignores non-existent packages.
+BuildRequires: acl attr augeas-libs bash binutils btrfs-progs bzip2 coreutils cpio cryptsetup diffutils dosfstools e2fsprogs file findutils gawk gdisk genisoimage gfs2-utils grep gzip hivex iproute iputils jfsutils kernel kmod less libcap libldm libselinux libxml2 lsof lsscsi lvm2 lzop mdadm nilfs-utils openssh-clients parted pcre procps psmisc reiserfs-utils rsync scrub sed strace systemd tar udev util-linux vim-minimal xfsprogs xz yajl zerofree
 %ifnarch %{arm} ppc
-%global appliance_buildreqs1 hfsplus-tools
+BuildRequires: hfsplus-tools
 %endif
 %ifnarch %{arm}
 # http://zfs-fuse.net/issues/94
-%global appliance_buildreqs2 zfs-fuse
+BuildRequires: zfs-fuse
 %endif
 %ifarch %{ix86} x86_64
-%global appliance_buildreqs3 ntfsprogs syslinux syslinux-extlinux
+BuildRequires: ntfs-3g ntfsprogs syslinux syslinux-extlinux
 %endif
-%global appliance_buildreqs %{appliance_buildreqs0} %{?appliance_buildreqs1} %{?appliance_buildreqs2} %{?appliance_buildreqs3}
-BuildRequires: %{appliance_buildreqs}
-Requires:      %{appliance_buildreqs}
 
 # For building the appliance.
-Requires:      supermin-helper >= 4.1.5
+Requires:      supermin >= 5.1.0
 
 # For core inspection API.
 Requires:      libdb-utils
@@ -240,6 +130,9 @@ Requires:      libosinfo
 
 # For core mount-local (FUSE) API.
 Requires:      fuse
+
+# For core disk-create API.
+Requires:      /usr/bin/qemu-img
 
 # For libvirt backend.
 %ifarch %{ix86} x86_64
@@ -266,8 +159,6 @@ Source3:       99-guestfsd.rules
 
 # Replacement README file for Fedora users.
 Source4:       README-replacement.in
-
-Source5:       copy-patches.sh
 
 # https://fedoraproject.org/wiki/Packaging:No_Bundled_Libraries#Packages_granted_exceptions
 Provides:      bundled(gnulib)
@@ -307,6 +198,11 @@ For shell scripting and command line access, install 'guestfish'.
 To mount guest filesystems on the host using FUSE, install
 '%{name}-mount'.
 
+For extra features, install 'libguestfs-gfs2', 'libguestfs-hfsplus',
+'libguestfs-jfs', 'libguestfs-nilfs', 'libguestfs-reiserfs',
+'libguestfs-rescue', 'libguestfs-rsync', 'libguestfs-xfs',
+'libguestfs-zfs'.
+
 For Erlang bindings, install 'erlang-libguestfs'.
 
 For GObject bindings and GObject Introspection, install
@@ -344,6 +240,113 @@ Requires:      %{name}-tools-c = %{epoch}:%{version}-%{release}
 for %{name}.
 
 
+%package gfs2
+Summary:       GFS2 support for %{name}
+License:       LGPLv2+
+Requires:      %{name} = %{epoch}:%{version}-%{release}
+Requires:      gfs2-utils
+
+%description gfs2
+This adds GFS2 support to %{name}.  Install it if you want to process
+disk images containing GFS2.
+
+
+%ifnarch %{arm} ppc
+%package hfsplus
+Summary:       HFS+ support for %{name}
+License:       LGPLv2+
+Requires:      %{name} = %{epoch}:%{version}-%{release}
+Requires:      hfsplus-tools
+
+%description hfsplus
+This adds HFS+ support to %{name}.  Install it if you want to process
+disk images containing HFS+ / Mac OS Extended filesystems.
+%endif
+
+
+%package jfs
+Summary:       JFS support for %{name}
+License:       LGPLv2+
+Requires:      %{name} = %{epoch}:%{version}-%{release}
+Requires:      jfsutils
+
+%description jfs
+This adds JFS support to %{name}.  Install it if you want to process
+disk images containing JFS.
+
+
+%package nilfs
+Summary:       NILFS support for %{name}
+License:       LGPLv2+
+Requires:      %{name} = %{epoch}:%{version}-%{release}
+Requires:      nilfs-utils
+
+%description nilfs
+This adds NILFS v2 support to %{name}.  Install it if you want to process
+disk images containing NILFS v2.
+
+
+%package reiserfs
+Summary:       ReiserFS support for %{name}
+License:       LGPLv2+
+Requires:      %{name} = %{epoch}:%{version}-%{release}
+Requires:      reiserfs-utils
+
+%description reiserfs
+This adds ReiserFS support to %{name}.  Install it if you want to process
+disk images containing ReiserFS.
+
+
+%package rsync
+Summary:       rsync support for %{name}
+License:       LGPLv2+
+Requires:      %{name} = %{epoch}:%{version}-%{release}
+Requires:      rsync
+
+%description rsync
+This adds rsync support to %{name}.  Install it if you want to use
+rsync to upload or download files into disk images.
+
+
+%package rescue
+Summary:       Additional tools for virt-rescue
+License:       LGPLv2+
+Requires:      %{name}-tools-c = %{epoch}:%{version}-%{release}
+Requires:      iputils
+Requires:      lsof
+Requires:      openssh-clients
+Requires:      strace
+Requires:      vim-minimal
+
+%description rescue
+This adds additional tools to use inside the virt-rescue shell,
+such as ssh, network utilities, editors and debugging utilities.
+
+
+%package xfs
+Summary:       XFS support for %{name}
+License:       LGPLv2+
+Requires:      %{name} = %{epoch}:%{version}-%{release}
+Requires:      xfsprogs
+
+%description xfs
+This adds XFS support to %{name}.  Install it if you want to process
+disk images containing XFS.
+
+
+%ifnarch %{arm}
+%package zfs
+Summary:       ZFS support for %{name}
+License:       LGPLv2+
+Requires:      %{name} = %{epoch}:%{version}-%{release}
+Requires:      zfs-fuse
+
+%description zfs
+This adds ZFS support to %{name}.  Install it if you want to process
+disk images containing ZFS.
+%endif
+
+
 %package tools-c
 Summary:       System administration tools for virtual machines
 License:       GPLv2+
@@ -356,20 +359,11 @@ Requires:      /usr/bin/less
 Requires:      /usr/bin/man
 Requires:      /usr/bin/vi
 
-# for virt-sparsify:
-Requires:      /usr/bin/qemu-img
-
 # for virt-builder:
 Requires:      curl
 Requires:      gnupg
 Requires:      xz
 #Requires:     nbdkit, nbdkit-plugin-xz
-
-# Obsolete and replace earlier packages.
-Provides:      guestfish = %{epoch}:%{version}-%{release}
-Obsoletes:     guestfish < %{epoch}:%{version}-%{release}
-Provides:      libguestfs-mount = %{epoch}:%{version}-%{release}
-Obsoletes:     libguestfs-mount < %{epoch}:%{version}-%{release}
 
 
 %description tools-c
@@ -393,9 +387,6 @@ Requires:      perl(Sys::Virt)
 Requires:      perl(String::ShellQuote)
 Requires:      perl(XML::Writer)
 Requires:      perl(Win::Hivex) >= 1.2.7
-
-# for virt-make-fs:
-Requires:      /usr/bin/qemu-img
 
 
 %description tools
@@ -421,12 +412,17 @@ virtual machine.
 Virt-copy-in and virt-copy-out are command line tools for uploading
 and downloading files and directories to and from virtual machines.
 
+Virt-customize is a command line tool for customizing virtual machine
+disk images.
+
 Virt-df is a command line tool to display free space on virtual
 machine filesystems.  Unlike other tools, it doesn’t just display the
 amount of space allocated to a virtual machine, but can look inside
 the virtual machine to see how much space is really being used.  It is
 like the df(1) command, but for virtual machines, except that it also
 works for Windows virtual machines.
+
+Virt-diff shows the differences between virtual machines.
 
 Virt-edit is a command line tool to edit the contents of a file in a
 virtual machine.
@@ -530,9 +526,6 @@ Requires:      %{name} = %{epoch}:%{version}-%{release}
 Requires:      perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $version))
 # RHBZ#523547
 Requires:      perl(XML::XPath)
-# RHBZ#652587 - for backwards compat with the old name
-Provides:      perl-%{name} = %{epoch}:%{version}-%{release}
-Obsoletes:     perl-%{name} < %{epoch}:%{version}-%{release}
 
 
 %description -n perl-Sys-Guestfs
@@ -664,8 +657,10 @@ Requires:      %{name}-gobject-devel = %{epoch}:%{version}-%{release}
 %ifarch %{arm} %{ix86} x86_64
 %package -n golang-guestfs
 Summary:       Golang bindings for %{name}
+BuildArch:     noarch
 Requires:      %{name} = %{epoch}:%{version}-%{release}
 Requires:      golang
+Provides:      golang(libguestfs.org) = %{epoch}:%{version}-%{release}
 
 %description -n golang-guestfs
 golang-%{name} contains Go language bindings for %{name}.
@@ -695,19 +690,6 @@ for %{name}.
 %prep
 %setup -q
 
-# Use git to manage patches.
-# http://rwmj.wordpress.com/2011/08/09/nice-rpm-git-patch-management-trick/
-git init
-git config user.email "libguestfs@redhat.com"
-git config user.name "libguestfs"
-git add .
-git commit -a -q -m "%{version} baseline"
-git am %{patches}
-
-# Patches affect Makefile.am and configure.ac, so rerun autotools.
-autoreconf -i
-autoconf
-
 if [ "$(getenforce | tr '[A-Z]' '[a-z]')" != "disabled" ]; then
     # For sVirt to work, the local temporary directory we use in the
     # tests must be labelled the same way as /tmp.
@@ -720,12 +702,6 @@ mkdir -p daemon/m4
 # our replacement file.
 mv README README.orig
 sed 's/@VERSION@/%{version}/g' < %{SOURCE4} > README
-
-# Remove udev from the packagelist.  systemd now 'obsoletes' udev, but
-# supermin doesn't get this relationship right.  When udev disappears
-# from the repository we can stop doing this.
-cp appliance/packagelist.in appliance/packagelist.in.orig
-grep -Ev '\budev\b' < appliance/packagelist.in.orig > appliance/packagelist.in
 
 
 %build
@@ -765,9 +741,6 @@ fi
   --enable-install-daemon \
   $extra
 
-# Patches above add man pages, so this is needed.
-make -C po-docs update-po
-
 # 'INSTALLDIRS' ensures that Perl and Ruby libs are installed in the
 # vendor dir not the site dir.
 make V=1 INSTALLDIRS=vendor %{?_smp_mflags}
@@ -779,6 +752,9 @@ gzip -9 ChangeLog
 
 
 %check
+
+%if %{runtests}
+
 # Enable debugging - very useful if a test does fail, although
 # it produces masses of output in the build.log.
 export LIBGUESTFS_DEBUG=1
@@ -806,6 +782,19 @@ export SKIP_TEST_SET_LABEL=1
 export SKIP_TEST_BTRFS_DEVICES_SH=1
 %endif
 
+# Disable mdadm test, buggy in kernel 3.13 (RHBZ#1033971).
+export SKIP_TEST_MDADM_SH=1
+
+# Disable NBD test, buggy in qemu 1.7.0 (RHBZ#1034433).
+export SKIP_TEST_NBD_PL=1
+
+# Virt-sparsify --in-place cannot sparsify as much as it should (RHBZ#1079210).
+export SKIP_TEST_VIRT_SPARSIFY_IN_PLACE_SH=1
+
+# Disable parallel virt-alignment-scan & virt-df tests (RHBZ#1025942).
+export SKIP_TEST_VIRT_ALIGNMENT_SCAN_GUESTS_SH=1
+export SKIP_TEST_VIRT_DF_GUESTS_SH=1
+
 # Skip gnulib tests which fail (probably these are kernel/glibc bugs).
 pushd gnulib/tests
 make -k check ||:
@@ -817,17 +806,17 @@ for f in test-getaddrinfo test-utimens ; do
 done
 popd
 
-# Disable parallel virt-alignment-scan & virt-df tests (RHBZ#1025942).
-export SKIP_TEST_VIRT_ALIGNMENT_SCAN_GUESTS_SH=1
-export SKIP_TEST_VIRT_DF_GUESTS_SH=1
+# Do make quickcheck first, to fail early if the appliance or libvirt
+# is obviously broken.  Also dump libvirt log files if this happens.
+# Since it's most likely libvirt which is broken, make sure libvirt
+# debugging is enabled here.
+if ! make quickcheck LIBVIRT_DEBUG=1; then
+    cat $HOME/.cache/libvirt/qemu/log/*
+    exit 1
+fi
 
-# Disabled on ARM because of RHBZ#990258.
-# Disabled on 32 bit x86 because of RHBZ#998722 & RHBZ#998692.
-# Disabled on ppc, ppc64 (secondary arches), see RHBZ#1036742.
-%ifnarch armv7hl %{ix86} ppc ppc64
-%if %{runtests}
 make check -k
-%endif
+
 %endif
 
 
@@ -848,22 +837,45 @@ find $RPM_BUILD_ROOT -name .packlist -delete
 find $RPM_BUILD_ROOT -name '*.bs' -delete
 find $RPM_BUILD_ROOT -name 'bindtests.pl' -delete
 
-# Move Python libraries to sitelib.
-if [ "$RPM_BUILD_ROOT%{python_sitearch}" != "$RPM_BUILD_ROOT%{python_sitelib}" ]; then
-   mkdir -p $RPM_BUILD_ROOT%{python_sitelib}
-   mv $RPM_BUILD_ROOT%{python_sitearch}/guestfs.py* \
-     $RPM_BUILD_ROOT%{python_sitelib}/
-fi
-
 # Don't use versioned jar file (RHBZ#1022133).
 # See: https://bugzilla.redhat.com/show_bug.cgi?id=1022184#c4
 mv $RPM_BUILD_ROOT%{_datadir}/java/%{name}-%{version}.jar \
   $RPM_BUILD_ROOT%{_datadir}/java/%{name}.jar
 
+# golang: Ignore what libguestfs upstream installs, and just copy the
+# source files to %{_datadir}/gocode/src.
+%ifarch %{arm} %{ix86} x86_64
+rm -r $RPM_BUILD_ROOT%{_libdir}/golang
+mkdir -p $RPM_BUILD_ROOT%{_datadir}/gocode/src
+cp -a golang/src/libguestfs.org $RPM_BUILD_ROOT%{_datadir}/gocode/src
+%endif
+
 # Move installed documentation back to the source directory so
 # we can install it using a %%doc rule.
 mv $RPM_BUILD_ROOT%{_docdir}/libguestfs installed-docs
 gzip --best installed-docs/*.xml
+
+# Split up the monolithic packages file in the supermin appliance so
+# we can install dependencies in subpackages.
+pushd $RPM_BUILD_ROOT%{_libdir}/guestfs/supermin.d
+grep -Ev '^(gfs2-utils|hfsplus-tools|jfsutils|nilfs-utils|reiserfs-utils|iputils|lsof|openssh-clients|strace|vim-minimal|rsync|xfsprogs|zfs-fuse)$' < packages > packages.new
+mv packages.new packages
+echo gfs2-utils     > zz-packages-gfs2
+echo hfsplus-tools  > zz-packages-hfsplus
+echo jfsutils       > zz-packages-jfs
+echo nilfs-utils    > zz-packages-nilfs
+echo reiserfs-utils > zz-packages-reiserfs
+cat <<EOF           > zz-packages-rescue
+iputils
+lsof
+openssh-clients
+strace
+vim-minimal
+EOF
+echo rsync          > zz-packages-rsync
+echo xfsprogs       > zz-packages-xfs
+echo zfs-fuse       > zz-packages-zfs
+popd
 
 # For the libguestfs-live-service subpackage install the systemd
 # service and udev rules.
@@ -895,6 +907,7 @@ mkdir -p $RPM_BUILD_ROOT%{_localstatedir}/run/libguestfs
 %doc COPYING README
 %{_bindir}/libguestfs-test-tool
 %{_libdir}/guestfs/
+%exclude %{_libdir}/guestfs/supermin.d/zz-packages-*
 %{_libdir}/libguestfs.so.*
 %{_mandir}/man1/guestfs-faq.1*
 %{_mandir}/man1/guestfs-performance.1*
@@ -918,6 +931,36 @@ mkdir -p $RPM_BUILD_ROOT%{_localstatedir}/run/libguestfs
 %{_includedir}/guestfs.h
 %{_libdir}/pkgconfig/libguestfs.pc
 
+%files gfs2
+%{_libdir}/guestfs/supermin.d/zz-packages-gfs2
+
+%ifnarch %{arm} ppc
+%files hfsplus
+%{_libdir}/guestfs/supermin.d/zz-packages-hfsplus
+%endif
+
+%files jfs
+%{_libdir}/guestfs/supermin.d/zz-packages-jfs
+
+%files nilfs
+%{_libdir}/guestfs/supermin.d/zz-packages-nilfs
+
+%files reiserfs
+%{_libdir}/guestfs/supermin.d/zz-packages-reiserfs
+
+%files rsync
+%{_libdir}/guestfs/supermin.d/zz-packages-rsync
+
+%files rescue
+%{_libdir}/guestfs/supermin.d/zz-packages-rescue
+
+%files xfs
+%{_libdir}/guestfs/supermin.d/zz-packages-xfs
+
+%ifnarch %{arm}
+%files zfs
+%{_libdir}/guestfs/supermin.d/zz-packages-zfs
+%endif
 
 %files tools-c
 %doc README
@@ -944,8 +987,12 @@ mkdir -p $RPM_BUILD_ROOT%{_localstatedir}/run/libguestfs
 %{_mandir}/man1/virt-copy-in.1*
 %{_bindir}/virt-copy-out
 %{_mandir}/man1/virt-copy-out.1*
+%{_bindir}/virt-customize
+%{_mandir}/man1/virt-customize.1*
 %{_bindir}/virt-df
 %{_mandir}/man1/virt-df.1*
+%{_bindir}/virt-diff
+%{_mandir}/man1/virt-diff.1*
 %{_bindir}/virt-edit
 %{_mandir}/man1/virt-edit.1*
 %{_bindir}/virt-filesystems
@@ -958,6 +1005,8 @@ mkdir -p $RPM_BUILD_ROOT%{_localstatedir}/run/libguestfs
 %{_mandir}/man1/virt-inspector.1*
 %{_bindir}/virt-ls
 %{_mandir}/man1/virt-ls.1*
+%{_bindir}/virt-make-fs
+%{_mandir}/man1/virt-make-fs.1*
 %{_bindir}/virt-rescue
 %{_mandir}/man1/virt-rescue.1*
 %{_bindir}/virt-resize
@@ -978,8 +1027,6 @@ mkdir -p $RPM_BUILD_ROOT%{_localstatedir}/run/libguestfs
 %{_mandir}/man1/virt-list-filesystems.1*
 %{_bindir}/virt-list-partitions
 %{_mandir}/man1/virt-list-partitions.1*
-%{_bindir}/virt-make-fs
-%{_mandir}/man1/virt-make-fs.1*
 %{_bindir}/virt-tar
 %{_mandir}/man1/virt-tar.1*
 %{_bindir}/virt-win-reg
@@ -1030,10 +1077,10 @@ mkdir -p $RPM_BUILD_ROOT%{_localstatedir}/run/libguestfs
 
 %files -n python-%{name}
 %doc python/examples/*.py
-%{python_sitearch}/*
-%{python_sitelib}/*.py
-%{python_sitelib}/*.pyc
-%{python_sitelib}/*.pyo
+%{python_sitearch}/libguestfsmod.so
+%{python_sitearch}/guestfs.py
+%{python_sitearch}/guestfs.pyc
+%{python_sitearch}/guestfs.pyo
 %{_mandir}/man3/guestfs-python.3*
 
 
@@ -1105,8 +1152,7 @@ mkdir -p $RPM_BUILD_ROOT%{_localstatedir}/run/libguestfs
 %files -n golang-guestfs
 %doc golang/examples/*.go
 %doc golang/examples/LICENSE
-%{_libdir}/golang/pkg/linux_*/libguestfs.org
-%{_libdir}/golang/src/pkg/libguestfs.org
+%{_datadir}/gocode/src/libguestfs.org
 %{_mandir}/man3/guestfs-golang.3*
 %endif
 
@@ -1124,6 +1170,10 @@ mkdir -p $RPM_BUILD_ROOT%{_localstatedir}/run/libguestfs
 
 
 %changelog
+* Thu Mar 27 2014 Richard W.M. Jones <rjones@redhat.com> - 1:1.26.0-1
+- New stable branch version 1.26.0.
+- New features are covered in the release notes.
+
 * Sat Mar  8 2014 Richard W.M. Jones <rjones@redhat.com> - 1:1.24.8-1
 - New stable branch version 1.24.8.
 - Backport more virt-builder patches from upstream to Fedora 20.
