@@ -919,7 +919,7 @@ mkdir -p $RPM_BUILD_ROOT%{_localstatedir}/run/libguestfs
 
 
 %files devel
-%doc AUTHORS BUGS ChangeLog.gz HACKING TODO README ROADMAP
+%doc AUTHORS BUGS ChangeLog.gz HACKING TODO README
 %doc examples/*.c
 %doc installed-docs/*
 %{_libdir}/libguestfs.so
