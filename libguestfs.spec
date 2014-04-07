@@ -86,7 +86,7 @@ BuildRequires: perl(Locale::TextDomain)
 BuildRequires: python-devel
 BuildRequires: ruby-devel
 BuildRequires: rubygem-rake
-BuildRequires: rubygem(unit-test)
+BuildRequires: rubygem(test-unit)
 BuildRequires: ruby-irb
 BuildRequires: java-1.7.0-openjdk
 BuildRequires: java-1.7.0-openjdk-devel
