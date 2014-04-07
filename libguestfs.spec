@@ -19,7 +19,7 @@ Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
 Version:       1.27.3
-Release:       1%{?dist}
+Release:       2%{?dist}
 License:       LGPLv2+
 
 # Source and patches.
@@ -86,7 +86,7 @@ BuildRequires: perl(Locale::TextDomain)
 BuildRequires: python-devel
 BuildRequires: ruby-devel
 BuildRequires: rubygem-rake
-BuildRequires: rubygem(minitest)
+BuildRequires: rubygem(unit-test)
 BuildRequires: ruby-irb
 BuildRequires: java-1.7.0-openjdk
 BuildRequires: java-1.7.0-openjdk-devel
@@ -1170,6 +1170,10 @@ mkdir -p $RPM_BUILD_ROOT%{_localstatedir}/run/libguestfs
 
 
 %changelog
+* Mon Apr 07 2014 Richard W.M. Jones <rjones@redhat.com> - 1:1.27.3-2
+- Do not use rubygem-minitest.  Temporary workaround, see:
+  https://bugzilla.redhat.com/show_bug.cgi?id=1085029#c2
+
 * Sun Apr 06 2014 Richard W.M. Jones <rjones@redhat.com> - 1:1.27.3-1
 - New upstream version 1.27.3.
 
