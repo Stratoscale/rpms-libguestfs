@@ -19,7 +19,7 @@ Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
 Version:       1.27.3
-Release:       2%{?dist}
+Release:       3%{?dist}
 License:       LGPLv2+
 
 # Source and patches.
@@ -788,9 +788,6 @@ export SKIP_TEST_MDADM_SH=1
 # Disable NBD test, buggy in qemu 1.7.0 (RHBZ#1034433).
 export SKIP_TEST_NBD_PL=1
 
-# Virt-sparsify --in-place cannot sparsify as much as it should (RHBZ#1079210).
-export SKIP_TEST_VIRT_SPARSIFY_IN_PLACE_SH=1
-
 # Disable parallel virt-alignment-scan & virt-df tests (RHBZ#1025942).
 export SKIP_TEST_VIRT_ALIGNMENT_SCAN_GUESTS_SH=1
 export SKIP_TEST_VIRT_DF_GUESTS_SH=1
@@ -1170,6 +1167,10 @@ mkdir -p $RPM_BUILD_ROOT%{_localstatedir}/run/libguestfs
 
 
 %changelog
+* Tue Apr  8 2014 Richard W.M. Jones <rjones@redhat.com> - 1:1.27.3-3
+- Re-enable virt-sparsify --in-place test, see:
+  https://bugzilla.redhat.com/show_bug.cgi?id=1079210#c4
+
 * Mon Apr 07 2014 Richard W.M. Jones <rjones@redhat.com> - 1:1.27.3-2
 - Do not use rubygem-minitest.  Temporary workaround, see:
   https://bugzilla.redhat.com/show_bug.cgi?id=1085029#c2
