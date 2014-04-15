@@ -169,60 +169,53 @@ Conflicts:     libguestfs-winsupport
 
 
 %description
-Libguestfs is a library for accessing and modifying guest disk images.
-Amongst the things this is good for: making batch configuration
-changes to guests, getting disk used/free statistics (see also:
-virt-df), migrating between virtualization systems (see also:
-virt-p2v), performing partial backups, performing partial guest
-clones, cloning guests and changing registry/UUID/hostname info, and
-much else besides.
+Libguestfs is a library for accessing and modifying virtual machine
+disk images.  http://libguestfs.org
+
+It can be used to make batch configuration changes to guests, get
+disk used/free statistics (virt-df), migrate between hypervisors
+(virt-p2v, virt-v2v), perform backups and guest clones, change
+registry/UUID/hostname info, build guests from scratch (virt-builder)
+and much more.
 
 Libguestfs uses Linux kernel and qemu code, and can access any type of
 guest filesystem that Linux and qemu can, including but not limited
 to: ext2/3/4, btrfs, FAT and NTFS, LVM, many different disk partition
 schemes, qcow, qcow2, vmdk.
 
-Libguestfs provides ways to enumerate guest storage (eg. partitions,
-LVs, what filesystem is in each LV, etc.).  It can also run commands
-in the context of the guest.
+Libguestfs for Fedora is split into several subpackages.  The basic
+subpackages are:
 
-Libguestfs is a library that can be linked with C and C++ management
-programs.
+               libguestfs  C library
+         libguestfs-tools  virt-* tools, guestfish and guestmount (FUSE)
+       libguestfs-tools-c  only the subset of virt tools written in C
+                             (for reduced dependencies)
 
-For high level virt tools, guestfish (shell scripting and command line
-access), and guestmount (mount guest filesystems using FUSE), install
-'%{name}-tools'.
+For enhanced features, install:
 
-For shell scripting and command line access, install 'guestfish'.
+          libguestfs-gfs2  adds Global Filesystem (GFS2) support
+       libguestfs-hfsplus  adds HFS+ (Mac filesystem) support
+           libguestfs-jfs  adds JFS support
+         libguestfs-nilfs  adds NILFS v2 support
+      libguestfs-reiserfs  adds ReiserFS support
+        libguestfs-rescue  enhances virt-rescue shell with more tools
+         libguestfs-rsync  rsync to/from guest filesystems
+           libguestfs-xfs  adds XFS support
+           libguestfs-zfs  adds ZFS support
 
-To mount guest filesystems on the host using FUSE, install
-'%{name}-mount'.
+Language bindings:
 
-For extra features, install 'libguestfs-gfs2', 'libguestfs-hfsplus',
-'libguestfs-jfs', 'libguestfs-nilfs', 'libguestfs-reiserfs',
-'libguestfs-rescue', 'libguestfs-rsync', 'libguestfs-xfs',
-'libguestfs-zfs'.
-
-For Erlang bindings, install 'erlang-libguestfs'.
-
-For GObject bindings and GObject Introspection, install
-'libguestfs-gobject-devel'.
-
-For Golang bindings, install 'golang-guestfs'.
-
-For Java bindings, install 'libguestfs-java-devel'.
-
-For Lua bindings, install 'lua-guestfs'
-
-For OCaml bindings, install 'ocaml-libguestfs-devel'.
-
-For Perl bindings, install 'perl-Sys-Guestfs'.
-
-For PHP bindings, install 'php-libguestfs'.
-
-For Python bindings, install 'python-libguestfs'.
-
-For Ruby bindings, install 'ruby-libguestfs'.
+         libguestfs-devel  C/C++ header files and library
+        erlang-libguestfs  Erlang bindings
+ libguestfs-gobject-devel  GObject bindings and GObject Introspection
+           golang-guestfs  Go language bindings
+    libguestfs-java-devel  Java bindings
+              lua-guestfs  Lua bindings
+   ocaml-libguestfs-devel  OCaml bindings
+         perl-Sys-Guestfs  Perl bindings
+           php-libguestfs  PHP bindings
+        python-libguestfs  Python bindings
+          ruby-libguestfs  Ruby bindings
 
 
 %package devel
