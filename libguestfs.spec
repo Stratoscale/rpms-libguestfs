@@ -18,8 +18,8 @@
 Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
-Version:       1.27.3
-Release:       3%{?dist}
+Version:       1.27.4
+Release:       1%{?dist}
 License:       LGPLv2+
 
 # Source and patches.
@@ -1160,6 +1160,9 @@ mkdir -p $RPM_BUILD_ROOT%{_localstatedir}/run/libguestfs
 
 
 %changelog
+* Tue Apr 15 2014 Richard W.M. Jones <rjones@redhat.com> - 1:1.27.4-1
+- New upstream version 1.27.4.
+
 * Tue Apr  8 2014 Richard W.M. Jones <rjones@redhat.com> - 1:1.27.3-3
 - Re-enable virt-sparsify --in-place test, see:
   https://bugzilla.redhat.com/show_bug.cgi?id=1079210#c4
