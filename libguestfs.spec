@@ -19,7 +19,7 @@ Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
 Version:       1.27.5
-Release:       1%{?dist}
+Release:       2%{?dist}
 License:       LGPLv2+
 
 # Source and patches.
@@ -877,9 +877,6 @@ install -m 0644 %{SOURCE3} $RPM_BUILD_ROOT%{_prefix}/lib/udev/rules.d
 mv $RPM_BUILD_ROOT/lib/udev/rules.d/99-guestfs-serial.rules \
   $RPM_BUILD_ROOT%{_prefix}/lib/udev/rules.d
 
-# For SELinux to work with the libvirt backend.
-mkdir -p $RPM_BUILD_ROOT%{_localstatedir}/run/libguestfs
-
 # Find locale files.
 %find_lang %{name}
 
@@ -905,7 +902,6 @@ mkdir -p $RPM_BUILD_ROOT%{_localstatedir}/run/libguestfs
 %{_mandir}/man1/guestfs-release-notes.1*
 %{_mandir}/man1/guestfs-testing.1*
 %{_mandir}/man1/libguestfs-test-tool.1*
-%dir %attr(0755,root,root) %{_localstatedir}/run/libguestfs
 
 
 %files devel
@@ -1160,6 +1156,9 @@ mkdir -p $RPM_BUILD_ROOT%{_localstatedir}/run/libguestfs
 
 
 %changelog
+* Wed Apr 16 2014 Richard W.M. Jones <rjones@redhat.com> - 1:1.27.5-2
+- Remove /var/run/libguestfs, which is not used.
+
 * Wed Apr 16 2014 Richard W.M. Jones <rjones@redhat.com> - 1:1.27.5-1
 - New upstream version 1.27.5.
 
