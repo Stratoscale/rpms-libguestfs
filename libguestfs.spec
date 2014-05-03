@@ -20,7 +20,7 @@ Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
 Version:       1.27.8
-Release:       1%{?dist}
+Release:       2%{?dist}
 License:       LGPLv2+
 
 # Source and patches.
@@ -541,7 +541,7 @@ python-%{name} contains Python bindings for %{name}.
 Summary:       Ruby bindings for %{name}
 Requires:      %{name} = %{epoch}:%{version}-%{release}
 %if 0%{?fedora} >= 19
-Requires:      ruby(release) = 2.0.0
+Requires:      ruby(release)
 %else
 Requires:      ruby(abi) = 1.9.1
 %endif
@@ -1157,6 +1157,9 @@ mv $RPM_BUILD_ROOT/lib/udev/rules.d/99-guestfs-serial.rules \
 
 
 %changelog
+* Sat May  3 2014 Richard W.M. Jones <rjones@redhat.com> - 1:1.27.8-2
+- Remove ruby(release) version.  Fix for Ruby 2.1.
+
 * Fri May 02 2014 Richard W.M. Jones <rjones@redhat.com> - 1:1.27.8-1
 - New upstream version 1.27.8.
 
