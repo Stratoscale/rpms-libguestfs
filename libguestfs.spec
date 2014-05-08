@@ -19,8 +19,8 @@
 Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
-Version:       1.27.8
-Release:       2%{?dist}
+Version:       1.27.9
+Release:       1%{?dist}
 License:       LGPLv2+
 
 # Source and patches.
@@ -1157,6 +1157,9 @@ mv $RPM_BUILD_ROOT/lib/udev/rules.d/99-guestfs-serial.rules \
 
 
 %changelog
+* Thu May 08 2014 Richard W.M. Jones <rjones@redhat.com> - 1:1.27.9-1
+- New upstream version 1.27.9.
+
 * Sat May  3 2014 Richard W.M. Jones <rjones@redhat.com> - 1:1.27.8-2
 - Remove ruby(release) version.  Fix for Ruby 2.1.
 
