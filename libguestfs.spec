@@ -77,6 +77,7 @@ BuildRequires: /usr/bin/ping
 BuildRequires: /usr/bin/wget
 BuildRequires: curl
 BuildRequires: xz
+BuildRequires: gtk2-devel
 BuildRequires: perl(Sys::Virt)
 BuildRequires: /usr/bin/qemu-img
 BuildRequires: perl(Test::More)
@@ -451,6 +452,9 @@ preparation for cloning them.
 
 Virt-tar-in and virt-tar-out are archive, backup and upload tools
 for virtual machines.  These replace the deprecated program virt-tar.
+
+Virt-v2v and virt-p2v and tools that convert virtual machines from
+non-KVM hypervisors, or physical machines, to run under KVM.
 
 Virt-win-reg lets you look at and modify the Windows Registry of
 Windows virtual machines.
@@ -1006,6 +1010,8 @@ mv $RPM_BUILD_ROOT/lib/udev/rules.d/99-guestfs-serial.rules \
 %{_mandir}/man1/virt-tar-in.1*
 %{_bindir}/virt-tar-out
 %{_mandir}/man1/virt-tar-out.1*
+%{_bindir}/virt-v2v
+%{_mandir}/man1/virt-v2v.1*
 
 
 %files tools
