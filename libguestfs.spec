@@ -471,13 +471,6 @@ Windows virtual machines.
 %package pvhelper
 Summary:       pvhelper
 
-Requires:      /usr/bin/xinit
-Requires:      /usr/bin/ssh
-Requires:      /usr/bin/qemu-nbd
-Requires:      /usr/bin/Xorg
-Requires:      xorg-x11-drv-*
-Requires:      xorg-x11-fonts-Type1
-
 
 %description pvhelper
 This helper is used when creating a Spin.
