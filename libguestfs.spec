@@ -17,7 +17,7 @@
 # Architectures on which golang is not broken.
 # Broken on all of them for now, see RHBZ#1097663
 #%global golang_arches %{arm} %{ix86} x86_64
-%global golang_arches %{nil}
+%global golang_arches not_a_real_architecture
 
 %global _hardened_build 1
 
