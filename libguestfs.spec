@@ -458,7 +458,7 @@ preparation for cloning them.
 Virt-tar-in and virt-tar-out are archive, backup and upload tools
 for virtual machines.  These replace the deprecated program virt-tar.
 
-Virt-v2v and virt-p2v and tools that convert virtual machines from
+Virt-v2v and virt-p2v are tools that convert virtual machines from
 non-KVM hypervisors, or physical machines, to run under KVM.
 
 Virt-win-reg lets you look at and modify the Windows Registry of
