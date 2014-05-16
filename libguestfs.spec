@@ -14,6 +14,11 @@
 %endif
 %endif
 
+# Architectures on which golang is not broken.
+# Broken on all of them for now, see RHBZ#1097663
+#%global golang_arches %{arm} %{ix86} x86_64
+%global golang_arches %{nil}
+
 %global _hardened_build 1
 
 Summary:       Access and modify virtual machine disk images
@@ -99,7 +104,7 @@ BuildRequires: erlang-erl_interface
 BuildRequires: glib2-devel
 BuildRequires: gobject-introspection-devel
 BuildRequires: gjs
-%ifarch %{arm} %{ix86} x86_64
+%ifarch %{golang_arches}
 BuildRequires: golang
 %endif
 
@@ -652,7 +657,7 @@ Requires:      %{name}-gobject-devel = %{epoch}:%{version}-%{release}
 %{name} GObject bindings.
 
 
-%ifarch %{arm} %{ix86} x86_64
+%ifarch %{golang_arches}
 %package -n golang-guestfs
 Summary:       Golang bindings for %{name}
 BuildArch:     noarch
@@ -839,7 +844,7 @@ mv $RPM_BUILD_ROOT%{_datadir}/java/%{name}-%{version}.jar \
 
 # golang: Ignore what libguestfs upstream installs, and just copy the
 # source files to %{_datadir}/gocode/src.
-%ifarch %{arm} %{ix86} x86_64
+%ifarch %{golang_arches}
 rm -r $RPM_BUILD_ROOT%{_libdir}/golang
 mkdir -p $RPM_BUILD_ROOT%{_datadir}/gocode/src
 cp -a golang/src/libguestfs.org $RPM_BUILD_ROOT%{_datadir}/gocode/src
@@ -1141,7 +1146,7 @@ mv $RPM_BUILD_ROOT/lib/udev/rules.d/99-guestfs-serial.rules \
 %{_datadir}/gtk-doc/html/guestfs
 
 
-%ifarch %{arm} %{ix86} x86_64
+%ifarch %{golang_arches}
 %files -n golang-guestfs
 %doc golang/examples/*.go
 %doc golang/examples/LICENSE
