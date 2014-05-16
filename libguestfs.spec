@@ -871,23 +871,25 @@ gzip --best installed-docs/*.xml
 # Split up the monolithic packages file in the supermin appliance so
 # we can install dependencies in subpackages.
 pushd $RPM_BUILD_ROOT%{_libdir}/guestfs/supermin.d
-grep -Ev '^(gfs2-utils|hfsplus-tools|jfsutils|nilfs-utils|reiserfs-utils|iputils|lsof|openssh-clients|strace|vim-minimal|rsync|xfsprogs|zfs-fuse)$' < packages > packages.new
-mv packages.new packages
-echo gfs2-utils     > zz-packages-gfs2
-echo hfsplus-tools  > zz-packages-hfsplus
-echo jfsutils       > zz-packages-jfs
-echo nilfs-utils    > zz-packages-nilfs
-echo reiserfs-utils > zz-packages-reiserfs
-cat <<EOF           > zz-packages-rescue
-iputils
-lsof
-openssh-clients
-strace
-vim-minimal
-EOF
-echo rsync          > zz-packages-rsync
-echo xfsprogs       > zz-packages-xfs
-echo zfs-fuse       > zz-packages-zfs
+function move_to
+{
+    grep -Ev "^$1$" < packages > packages-t
+    mv packages-t packages
+    echo "$1" >> "$2"
+}
+move_to gfs2-utils      zz-packages-gfs2
+move_to hfsplus-tools   zz-packages-hfsplus
+move_to jfsutils        zz-packages-jfs
+move_to nilfs-utils     zz-packages-nilfs
+move_to reiserfs-utils  zz-packages-reiserfs
+move_to iputils         zz-packages-rescue
+move_to lsof            zz-packages-rescue
+move_to openssh-clients zz-packages-rescue
+move_to strace          zz-packages-rescue
+move_to vim-minimal     zz-packages-rescue
+move_to rsync           zz-packages-rsync
+move_to xfsprogs        zz-packages-xfs
+move_to zfs-fuse        zz-packages-zfs
 popd
 
 # For the libguestfs-live-service subpackage install the systemd
