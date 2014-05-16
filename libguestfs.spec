@@ -4,7 +4,7 @@
 %if %{defined libguestfs_runtests}
 %global runtests %{libguestfs_runtests}
 %else
-%ifnarch %{arm} %{ix86} ppc ppc64 x86-64
+%ifnarch %{arm} %{ix86} ppc ppc64 x86_64
 %global runtests 1
 %else
 # Disabled on 32 bit x86.  Fails with current rawhide, unclear why.
