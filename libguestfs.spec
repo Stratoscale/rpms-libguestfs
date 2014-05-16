@@ -4,11 +4,10 @@
 %if %{defined libguestfs_runtests}
 %global runtests %{libguestfs_runtests}
 %else
-%ifnarch %{arm} %{ix86} ppc ppc64 x86_64
+%ifnarch %{arm} %{ix86} ppc ppc64
 %global runtests 1
 %else
 # Disabled on 32 bit x86.  Fails with current rawhide, unclear why.
-# Disabled on x86-64, pending xz-static change in supermin: RHBZ#547011.
 # Disabled on arm, see RHBZ#1066581.
 # Disabled on ppc, ppc64 (secondary arches), see RHBZ#1036742.
 %global runtests 0
@@ -26,7 +25,7 @@ Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
 Version:       1.27.11
-Release:       2%{?dist}
+Release:       3%{?dist}
 License:       LGPLv2+
 
 # Source and patches.
@@ -37,7 +36,7 @@ Source0:       http://libguestfs.org/download/1.25-development/%{name}-%{version
 BuildRequires: perl(Pod::Simple)
 BuildRequires: perl(Pod::Man)
 BuildRequires: /usr/bin/pod2text
-BuildRequires: supermin >= 5.1.0
+BuildRequires: supermin >= 5.1.8-3
 BuildRequires: hivex-devel >= 1.2.7-7
 BuildRequires: perl(Win::Hivex)
 BuildRequires: perl(Win::Hivex::Regedit)
@@ -128,7 +127,7 @@ BuildRequires: ntfs-3g ntfsprogs syslinux syslinux-extlinux
 %endif
 
 # For building the appliance.
-Requires:      supermin >= 5.1.0
+Requires:      supermin >= 5.1.8-3
 
 # For core inspection API.
 Requires:      libdb-utils
@@ -1189,6 +1188,10 @@ mv $RPM_BUILD_ROOT/lib/udev/rules.d/99-guestfs-serial.rules \
 
 
 %changelog
+* Fri May 16 2014 Richard W.M. Jones <rjones@redhat.com> - 1:1.27.11-3
+- Try re-enabling x86-64 tests.
+  Requires supermin >= 5.1.8-3 which supports xz-compressed kernel modules.
+
 * Fri May 16 2014 Richard W.M. Jones <rjones@redhat.com> - 1:1.27.11-2
 - New upstream version 1.27.11.
 
