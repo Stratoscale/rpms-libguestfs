@@ -465,6 +465,26 @@ Virt-win-reg lets you look at and modify the Windows Registry of
 Windows virtual machines.
 
 
+# The Name and Summary of this package is deliberately obscure to
+# discourage end users from installing and running it.  Instead they
+# need to get the P2V ISO which is a Fedora/RHEL Spin.
+%package pvhelper
+Summary:       pvhelper
+
+Requires:      /usr/bin/xinit
+Requires:      /usr/bin/ssh
+Requires:      /usr/bin/qemu-nbd
+Requires:      /usr/bin/Xorg
+Requires:      xorg-x11-drv-*
+Requires:      xorg-x11-fonts-Type1
+
+
+%description pvhelper
+This helper is used when creating a Spin.
+
+End users *should not* install this package.
+
+
 %package bash-completion
 Summary:       Bash tab-completion scripts for %{name} tools
 BuildArch:     noarch
@@ -1015,6 +1035,7 @@ mv $RPM_BUILD_ROOT/lib/udev/rules.d/99-guestfs-serial.rules \
 %{_mandir}/man1/virt-tar-in.1*
 %{_bindir}/virt-tar-out
 %{_mandir}/man1/virt-tar-out.1*
+%{_mandir}/man1/virt-p2v.1*
 %{_bindir}/virt-v2v
 %{_mandir}/man1/virt-v2v.1*
 
@@ -1029,6 +1050,12 @@ mv $RPM_BUILD_ROOT/lib/udev/rules.d/99-guestfs-serial.rules \
 %{_mandir}/man1/virt-tar.1*
 %{_bindir}/virt-win-reg
 %{_mandir}/man1/virt-win-reg.1*
+
+
+%files pvhelper
+%doc COPYING README
+%{_libexecdir}/virt-p2v
+# NB: man page does NOT go here.
 
 
 %files bash-completion
