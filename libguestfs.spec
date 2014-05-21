@@ -30,7 +30,7 @@ License:       LGPLv2+
 
 # Source and patches.
 URL:           http://libguestfs.org/
-Source0:       http://libguestfs.org/download/1.25-development/%{name}-%{version}.tar.gz
+Source0:       http://libguestfs.org/download/1.27-development/%{name}-%{version}.tar.gz
 
 # Basic build requirements:
 BuildRequires: perl(Pod::Simple)
