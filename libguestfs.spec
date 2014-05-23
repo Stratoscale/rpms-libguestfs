@@ -23,7 +23,7 @@ Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
 Version:       1.27.12
-Release:       1%{?dist}
+Release:       2%{?dist}
 License:       LGPLv2+
 
 # Source and patches.
@@ -848,6 +848,11 @@ find $RPM_BUILD_ROOT -name .packlist -delete
 find $RPM_BUILD_ROOT -name '*.bs' -delete
 find $RPM_BUILD_ROOT -name 'bindtests.pl' -delete
 
+# Delete guestfs-p2v-iso(1) because it is internal documentation.
+# We might include it in future if it says something useful for end
+# users about how to create the ISO.
+rm $RPM_BUILD_ROOT%{_mandir}/man1/guestfs-p2v-iso.1*
+
 # Don't use versioned jar file (RHBZ#1022133).
 # See: https://bugzilla.redhat.com/show_bug.cgi?id=1022184#c4
 mv $RPM_BUILD_ROOT%{_datadir}/java/%{name}-%{version}.jar \
@@ -856,7 +861,7 @@ mv $RPM_BUILD_ROOT%{_datadir}/java/%{name}-%{version}.jar \
 # golang: Ignore what libguestfs upstream installs, and just copy the
 # source files to %{_datadir}/gocode/src.
 %ifarch %{golang_arches}
-rm -r $RPM_BUILD_ROOT%{_libdir}/golang
+rm -r $RPM_BUILD_ROOT/usr/lib/golang
 mkdir -p $RPM_BUILD_ROOT%{_datadir}/gocode/src
 cp -a golang/src/libguestfs.org $RPM_BUILD_ROOT%{_datadir}/gocode/src
 %endif
@@ -1188,8 +1193,11 @@ mv $RPM_BUILD_ROOT/lib/udev/rules.d/99-guestfs-serial.rules \
 
 
 %changelog
-* Fri May 23 2014 Richard W.M. Jones <rjones@redhat.com> - 1:1.27.12-1
+* Fri May 23 2014 Richard W.M. Jones <rjones@redhat.com> - 1:1.27.12-2
 - New upstream version 1.27.12.
+- Enable golang since it is now working on Rawhide.
+- Fix golang installation again.
+- Delete guestfs-p2v-iso(1) (internal documentation).
 
 * Fri May 16 2014 Richard W.M. Jones <rjones@redhat.com> - 1:1.27.11-3
 - Try re-enabling x86-64 tests.
