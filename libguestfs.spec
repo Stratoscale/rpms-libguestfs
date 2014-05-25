@@ -20,7 +20,7 @@ Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
 Version:       1.26.3
-Release:       1%{?dist}
+Release:       2%{?dist}
 License:       LGPLv2+
 
 # Source and patches.
@@ -846,7 +846,7 @@ mv $RPM_BUILD_ROOT%{_datadir}/java/%{name}-%{version}.jar \
 # golang: Ignore what libguestfs upstream installs, and just copy the
 # source files to %{_datadir}/gocode/src.
 %ifarch %{arm} %{ix86} x86_64
-rm -r $RPM_BUILD_ROOT%{_libdir}/golang
+rm -r $RPM_BUILD_ROOT/usr/lib/golang
 mkdir -p $RPM_BUILD_ROOT%{_datadir}/gocode/src
 cp -a golang/src/libguestfs.org $RPM_BUILD_ROOT%{_datadir}/gocode/src
 %endif
@@ -1173,6 +1173,7 @@ mkdir -p $RPM_BUILD_ROOT%{_localstatedir}/run/libguestfs
 %changelog
 * Sun May 25 2014 Richard W.M. Jones <rjones@redhat.com> - 1:1.26.3-1
 - New upstream version 1.26.3.
+- Fix golang installation again.
 
 * Thu May 08 2014 Richard W.M. Jones <rjones@redhat.com> - 1:1.26.2-1
 - New upstream version 1.26.2.
