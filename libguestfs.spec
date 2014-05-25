@@ -22,8 +22,8 @@
 Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
-Version:       1.27.12
-Release:       2%{?dist}
+Version:       1.27.13
+Release:       1%{?dist}
 License:       LGPLv2+
 
 # Source and patches.
@@ -1193,6 +1193,9 @@ mv $RPM_BUILD_ROOT/lib/udev/rules.d/99-guestfs-serial.rules \
 
 
 %changelog
+* Sun May 25 2014 Richard W.M. Jones <rjones@redhat.com> - 1:1.27.13-1
+- New upstream version 1.27.13.
+
 * Fri May 23 2014 Richard W.M. Jones <rjones@redhat.com> - 1:1.27.12-2
 - New upstream version 1.27.12.
 - Enable golang since it is now working on Rawhide.
