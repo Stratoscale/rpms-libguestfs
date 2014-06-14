@@ -23,7 +23,7 @@ Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
 Version:       1.27.16
-Release:       1%{?dist}
+Release:       2%{?dist}
 License:       LGPLv2+
 
 # Source and patches.
@@ -164,6 +164,9 @@ Source3:       99-guestfsd.rules
 
 # Replacement README file for Fedora users.
 Source4:       README-replacement.in
+
+# Guestfish colour prompts.
+Source5:       guestfish.sh
 
 # https://fedoraproject.org/wiki/Packaging:No_Bundled_Libraries#Packages_granted_exceptions
 Provides:      bundled(gnulib)
@@ -905,6 +908,10 @@ install -m 0644 %{SOURCE3} $RPM_BUILD_ROOT%{_prefix}/lib/udev/rules.d
 mv $RPM_BUILD_ROOT/lib/udev/rules.d/99-guestfs-serial.rules \
   $RPM_BUILD_ROOT%{_prefix}/lib/udev/rules.d
 
+# Guestfish colour prompts.
+mkdir -p $RPM_BUILD_ROOT%{_sysconfdir}/profile.d
+install -m 0644 %{SOURCE5} $RPM_BUILD_ROOT%{_sysconfdir}/profile.d
+
 # Find locale files.
 %find_lang %{name}
 
@@ -984,6 +991,7 @@ mv $RPM_BUILD_ROOT/lib/udev/rules.d/99-guestfs-serial.rules \
 %dir %{_sysconfdir}/xdg/virt-builder/repos.d
 %config %{_sysconfdir}/xdg/virt-builder/repos.d/libguestfs.conf
 %config %{_sysconfdir}/xdg/virt-builder/repos.d/libguestfs.gpg
+%config %{_sysconfdir}/profile.d/guestfish.sh
 %{_mandir}/man5/libguestfs-tools.conf.5*
 %{_bindir}/guestfish
 %{_mandir}/man1/guestfish.1*
@@ -1193,6 +1201,9 @@ mv $RPM_BUILD_ROOT/lib/udev/rules.d/99-guestfs-serial.rules \
 
 
 %changelog
+* Sat Jun 14 2014 Richard W.M. Jones <rjones@redhat.com> - 1:1.27.16-2
+- Install guestfish colour prompts.
+
 * Sat Jun 14 2014 Richard W.M. Jones <rjones@redhat.com> - 1:1.27.16-1
 - New upstream version 1.27.16.
 
