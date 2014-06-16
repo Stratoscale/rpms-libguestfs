@@ -22,8 +22,8 @@
 Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
-Version:       1.27.16
-Release:       2%{?dist}
+Version:       1.27.18
+Release:       1%{?dist}
 License:       LGPLv2+
 
 # Source and patches.
@@ -440,6 +440,9 @@ Virt-inspector examines a virtual machine and tries to determine the
 version of the OS, the kernel version, what drivers are installed,
 whether the virtual machine is fully virtualized (FV) or
 para-virtualized (PV), what applications are installed and more.
+
+Virt-log is a command line tool to display the log files from a
+virtual machine.
 
 Virt-ls is a command line tool to list out files in a virtual machine.
 
@@ -1025,6 +1028,8 @@ install -m 0644 %{SOURCE5} $RPM_BUILD_ROOT%{_sysconfdir}/profile.d
 %{_mandir}/man1/virt-index-validate.1*
 %{_bindir}/virt-inspector
 %{_mandir}/man1/virt-inspector.1*
+%{_bindir}/virt-log
+%{_mandir}/man1/virt-log.1*
 %{_bindir}/virt-ls
 %{_mandir}/man1/virt-ls.1*
 %{_bindir}/virt-make-fs
@@ -1201,6 +1206,9 @@ install -m 0644 %{SOURCE5} $RPM_BUILD_ROOT%{_sysconfdir}/profile.d
 
 
 %changelog
+* Mon Jun 16 2014 Richard W.M. Jones <rjones@redhat.com> - 1:1.27.18-1
+- New upstream version 1.27.18.
+
 * Sat Jun 14 2014 Richard W.M. Jones <rjones@redhat.com> - 1:1.27.16-2
 - Install guestfish colour prompts.
 
