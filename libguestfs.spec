@@ -389,6 +389,9 @@ Requires:      perl(String::ShellQuote)
 Requires:      perl(XML::Writer)
 Requires:      perl(Win::Hivex) >= 1.2.7
 
+# For rhsrvany.exe, used to install firstboot scripts in Windows guests.
+Requires:      mingw32-srvany
+
 
 %description tools
 This package contains miscellaneous system administrator command line
@@ -915,6 +918,13 @@ mv $RPM_BUILD_ROOT/lib/udev/rules.d/99-guestfs-serial.rules \
 mkdir -p $RPM_BUILD_ROOT%{_sysconfdir}/profile.d
 install -m 0644 %{SOURCE5} $RPM_BUILD_ROOT%{_sysconfdir}/profile.d
 
+# Virt-tools data directory.  This contains a symlink to rhsrvany.exe
+# which is satisfied by the dependency on mingw32-srvany.
+mkdir -p $RPM_BUILD_ROOT%{_datadir}/virt-tools
+pushd $RPM_BUILD_ROOT%{_datadir}/virt-tools
+ln -sf /usr/i686-w64-mingw32/sys-root/mingw/bin/rhsrvany.exe
+popd
+
 # Find locale files.
 %find_lang %{name}
 
@@ -995,6 +1005,7 @@ install -m 0644 %{SOURCE5} $RPM_BUILD_ROOT%{_sysconfdir}/profile.d
 %config %{_sysconfdir}/xdg/virt-builder/repos.d/libguestfs.conf
 %config %{_sysconfdir}/xdg/virt-builder/repos.d/libguestfs.gpg
 %config %{_sysconfdir}/profile.d/guestfish.sh
+%{_datadir}/virt-tools
 %{_mandir}/man5/libguestfs-tools.conf.5*
 %{_bindir}/guestfish
 %{_mandir}/man1/guestfish.1*
@@ -1034,6 +1045,7 @@ install -m 0644 %{SOURCE5} $RPM_BUILD_ROOT%{_sysconfdir}/profile.d
 %{_mandir}/man1/virt-ls.1*
 %{_bindir}/virt-make-fs
 %{_mandir}/man1/virt-make-fs.1*
+%{_mandir}/man1/virt-p2v.1*
 %{_bindir}/virt-rescue
 %{_mandir}/man1/virt-rescue.1*
 %{_bindir}/virt-resize
@@ -1046,7 +1058,6 @@ install -m 0644 %{SOURCE5} $RPM_BUILD_ROOT%{_sysconfdir}/profile.d
 %{_mandir}/man1/virt-tar-in.1*
 %{_bindir}/virt-tar-out
 %{_mandir}/man1/virt-tar-out.1*
-%{_mandir}/man1/virt-p2v.1*
 %{_bindir}/virt-v2v
 %{_mandir}/man1/virt-v2v.1*
 
