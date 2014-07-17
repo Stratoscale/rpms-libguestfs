@@ -4,7 +4,7 @@
 %if %{defined libguestfs_runtests}
 %global runtests %{libguestfs_runtests}
 %else
-%ifnarch %{arm} %{ix86} ppc ppc64
+%ifnarch %{arm} aarch64 %{ix86} ppc %{power64}
 %global runtests 1
 %else
 # Disabled on 32 bit x86.  Fails with current rawhide, unclear why.
@@ -23,7 +23,7 @@ Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
 Version:       1.27.21
-Release:       1%{?dist}
+Release:       2%{?dist}
 License:       LGPLv2+
 
 # Source and patches.
@@ -113,15 +113,16 @@ BuildRequires: golang
 # However you have to edit the list down to packages which exist in
 # current Fedora, since supermin ignores non-existent packages.
 BuildRequires: acl attr augeas-libs bash binutils btrfs-progs bzip2 coreutils cpio cryptsetup diffutils dosfstools e2fsprogs file findutils gawk gdisk genisoimage gfs2-utils grep gzip hivex iproute iputils jfsutils kernel kmod less libcap libldm libselinux libxml2 lsof lsscsi lvm2 lzop mdadm nilfs-utils openssh-clients parted pcre procps psmisc reiserfs-utils rsync scrub sed strace systemd tar udev util-linux vim-minimal xfsprogs xz yajl zerofree
-%ifnarch %{arm} ppc
+%ifnarch ppc
 BuildRequires: hfsplus-tools
 %endif
-%ifnarch %{arm}
+%ifnarch %{arm} aarch64
 # http://zfs-fuse.net/issues/94
 BuildRequires: zfs-fuse
 %endif
+BuildRequires: ntfs-3g ntfsprogs
 %ifarch %{ix86} x86_64
-BuildRequires: ntfs-3g ntfsprogs syslinux syslinux-extlinux
+BuildRequires: syslinux syslinux-extlinux
 %endif
 
 # For building the appliance.
@@ -140,7 +141,7 @@ Requires:      fuse
 Requires:      /usr/bin/qemu-img
 
 # For libvirt backend.
-%ifarch %{ix86} x86_64
+%ifarch %{ix86} x86_64 %{arm} aarch64
 Requires:      libvirt-daemon-kvm >= 0.10.2-3
 %else
 Requires:      libvirt-daemon-qemu >= 0.10.2-3
@@ -252,7 +253,7 @@ This adds GFS2 support to %{name}.  Install it if you want to process
 disk images containing GFS2.
 
 
-%ifnarch %{arm} ppc
+%ifnarch ppc
 %package hfsplus
 Summary:       HFS+ support for %{name}
 License:       LGPLv2+
@@ -335,7 +336,7 @@ This adds XFS support to %{name}.  Install it if you want to process
 disk images containing XFS.
 
 
-%ifnarch %{arm}
+%ifnarch %{arm} aarch64
 %package zfs
 Summary:       ZFS support for %{name}
 License:       LGPLv2+
@@ -968,7 +969,7 @@ popd
 %files gfs2
 %{_libdir}/guestfs/supermin.d/zz-packages-gfs2
 
-%ifnarch %{arm} ppc
+%ifnarch ppc
 %files hfsplus
 %{_libdir}/guestfs/supermin.d/zz-packages-hfsplus
 %endif
@@ -991,7 +992,7 @@ popd
 %files xfs
 %{_libdir}/guestfs/supermin.d/zz-packages-xfs
 
-%ifnarch %{arm}
+%ifnarch %{arm} aarch64
 %files zfs
 %{_libdir}/guestfs/supermin.d/zz-packages-zfs
 %endif
@@ -1217,6 +1218,12 @@ popd
 
 
 %changelog
+* Wed Jul 16 2014 Peter Robinson <pbrobinson@fedoraproject.org> 1:1.27.21-2
+- Disable tests on aarch64
+- ntfs-3g available on all arches
+- hfsplus-tools on all arches
+- KVM available on ARMv7 and aarch64
+
 * Tue Jul 08 2014 Richard W.M. Jones <rjones@redhat.com> - 1:1.27.21-1
 - New upstream version 1.27.21.
 
