@@ -14,6 +14,9 @@
 %endif
 %endif
 
+# Architectures on which golang works.
+%global golang_arches NONE
+
 %global _hardened_build 1
 
 Summary:       Access and modify virtual machine disk images
@@ -98,7 +101,7 @@ BuildRequires: erlang-erl_interface
 BuildRequires: glib2-devel
 BuildRequires: gobject-introspection-devel
 BuildRequires: gjs
-%ifarch %{arm} %{ix86} x86_64
+%ifarch %{golang_arches}
 BuildRequires: golang
 %endif
 
@@ -655,7 +658,7 @@ Requires:      %{name}-gobject-devel = %{epoch}:%{version}-%{release}
 %{name} GObject bindings.
 
 
-%ifarch %{arm} %{ix86} x86_64
+%ifarch %{golang_arches}
 %package -n golang-guestfs
 Summary:       Golang bindings for %{name}
 BuildArch:     noarch
@@ -740,6 +743,9 @@ fi
   --with-extra="fedora=%{fedora},release=%{release},libvirt" \
   --with-qemu="qemu-kvm qemu-system-%{_build_arch} qemu" \
   --enable-install-daemon \
+%ifnarch %{golang_arches}
+  --disable-golang \
+%endif
   $extra
 
 # 'INSTALLDIRS' ensures that Perl and Ruby libs are installed in the
@@ -845,7 +851,7 @@ mv $RPM_BUILD_ROOT%{_datadir}/java/%{name}-%{version}.jar \
 
 # golang: Ignore what libguestfs upstream installs, and just copy the
 # source files to %{_datadir}/gocode/src.
-%ifarch %{arm} %{ix86} x86_64
+%ifarch %{golang_arches}
 rm -r $RPM_BUILD_ROOT/usr/lib/golang
 mkdir -p $RPM_BUILD_ROOT%{_datadir}/gocode/src
 cp -a golang/src/libguestfs.org $RPM_BUILD_ROOT%{_datadir}/gocode/src
@@ -1149,7 +1155,7 @@ mkdir -p $RPM_BUILD_ROOT%{_localstatedir}/run/libguestfs
 %{_datadir}/gtk-doc/html/guestfs
 
 
-%ifarch %{arm} %{ix86} x86_64
+%ifarch %{golang_arches}
 %files -n golang-guestfs
 %doc golang/examples/*.go
 %doc golang/examples/LICENSE
@@ -1173,6 +1179,7 @@ mkdir -p $RPM_BUILD_ROOT%{_localstatedir}/run/libguestfs
 %changelog
 * Sun Jul 27 2014 Richard W.M. Jones <rjones@redhat.com> - 1:1.26.6-1
 - New upstream version 1.26.6.
+- Disable golang since the Fedora package is broken again.
 
 * Fri Jul 04 2014 Richard W.M. Jones <rjones@redhat.com> - 1:1.26.5-1
 - New upstream version 1.26.5.
