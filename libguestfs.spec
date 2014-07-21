@@ -15,7 +15,7 @@
 %endif
 
 # Architectures on which golang works.
-%global golang_arches %{arm} %{ix86} x86_64
+%global golang_arches NONE
 
 %global _hardened_build 1
 
@@ -23,7 +23,7 @@ Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
 Version:       1.27.22
-Release:       1%{?dist}
+Release:       2%{?dist}
 License:       LGPLv2+
 
 # Source and patches.
@@ -1218,8 +1218,9 @@ popd
 
 
 %changelog
-* Mon Jul 21 2014 Richard W.M. Jones <rjones@redhat.com> - 1:1.27.22-1
+* Mon Jul 21 2014 Richard W.M. Jones <rjones@redhat.com> - 1:1.27.22-2
 - New upstream version 1.27.22.
+- Disable golang since the Fedora package is broken again.
 
 * Wed Jul 16 2014 Peter Robinson <pbrobinson@fedoraproject.org> 1:1.27.21-2
 - Disable tests on aarch64
