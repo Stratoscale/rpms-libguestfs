@@ -22,8 +22,8 @@
 Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
-Version:       1.27.21
-Release:       2%{?dist}
+Version:       1.27.22
+Release:       1%{?dist}
 License:       LGPLv2+
 
 # Source and patches.
@@ -1218,6 +1218,9 @@ popd
 
 
 %changelog
+* Mon Jul 21 2014 Richard W.M. Jones <rjones@redhat.com> - 1:1.27.22-1
+- New upstream version 1.27.22.
+
 * Wed Jul 16 2014 Peter Robinson <pbrobinson@fedoraproject.org> 1:1.27.21-2
 - Disable tests on aarch64
 - ntfs-3g available on all arches
