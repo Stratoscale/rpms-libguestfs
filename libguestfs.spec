@@ -23,7 +23,7 @@ Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
 Version:       1.27.22
-Release:       2%{?dist}
+Release:       3%{?dist}
 License:       LGPLv2+
 
 # Source and patches.
@@ -1218,6 +1218,9 @@ popd
 
 
 %changelog
+* Tue Jul 22 2014 Kalev Lember <kalevlember@gmail.com> - 1:1.27.22-3
+- Rebuilt for gobject-introspection 1.41.4
+
 * Mon Jul 21 2014 Richard W.M. Jones <rjones@redhat.com> - 1:1.27.22-2
 - New upstream version 1.27.22.
 - Disable golang since the Fedora package is broken again.
