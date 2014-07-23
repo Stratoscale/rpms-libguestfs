@@ -763,6 +763,9 @@ fi
   --with-extra="fedora=%{fedora},release=%{release},libvirt" \
   --with-qemu="qemu-kvm qemu-system-%{_build_arch} qemu" \
   --enable-install-daemon \
+%ifnarch %{golang_arches}
+  --disable-golang \
+%endif
   $extra
 
 # 'INSTALLDIRS' ensures that Perl and Ruby libs are installed in the
