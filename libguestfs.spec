@@ -4,7 +4,7 @@
 %if %{defined libguestfs_runtests}
 %global runtests %{libguestfs_runtests}
 %else
-%ifnarch %{arm} aarch64 %{ix86} ppc %{power64}
+%ifnarch %{arm} %{ix86} ppc %{power64}
 %global runtests 1
 %else
 # Disabled on 32 bit x86.  Fails with current rawhide, unclear why.
@@ -23,7 +23,7 @@ Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
 Version:       1.27.23
-Release:       1%{?dist}
+Release:       2%{?dist}
 License:       LGPLv2+
 
 # Source and patches.
@@ -1221,6 +1221,9 @@ popd
 
 
 %changelog
+* Thu Jul 24 2014 Richard W.M. Jones <rjones@redhat.com> - 1:1.27.23-2
+- Enable tests on aarch64, in order to study which tests fail.
+
 * Wed Jul 23 2014 Richard W.M. Jones <rjones@redhat.com> - 1:1.27.23-1
 - New upstream version 1.27.23.
 
