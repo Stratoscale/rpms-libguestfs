@@ -23,12 +23,15 @@ Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
 Version:       1.27.23
-Release:       2%{?dist}
+Release:       3%{?dist}
 License:       LGPLv2+
 
 # Source and patches.
 URL:           http://libguestfs.org/
 Source0:       http://libguestfs.org/download/1.27-development/%{name}-%{version}.tar.gz
+
+# Upstream in 1.27.24.
+Patch1:        0001-tests-lvm-Allow-test-to-be-skipped.patch
 
 # Basic build requirements:
 BuildRequires: perl(Pod::Simple)
@@ -720,6 +723,8 @@ if [ "$(getenforce | tr '[A-Z]' '[a-z]')" != "disabled" ]; then
     chcon --reference=/tmp tmp
 fi
 
+%patch1 -p1
+
 mkdir -p daemon/m4
 
 # Replace developer-centric README that ships with libguestfs, with
@@ -818,6 +823,9 @@ export SKIP_TEST_NBD_PL=1
 # Disable parallel virt-alignment-scan & virt-df tests (RHBZ#1025942).
 export SKIP_TEST_VIRT_ALIGNMENT_SCAN_GUESTS_SH=1
 export SKIP_TEST_VIRT_DF_GUESTS_SH=1
+
+# LVM filter broken in Rawhide, but only on Koji (RHBZ#1123281).
+export SKIP_TEST_LVM_FILTERING_SH=1
 
 # Skip gnulib tests which fail (probably these are kernel/glibc bugs).
 pushd gnulib/tests
@@ -1221,6 +1229,9 @@ popd
 
 
 %changelog
+* Fri Jul 25 2014 Richard W.M. Jones <rjones@redhat.com> - 1:1.27.23-3
+- Skip LVM test which is failing.
+
 * Thu Jul 24 2014 Richard W.M. Jones <rjones@redhat.com> - 1:1.27.23-2
 - Enable tests on aarch64, in order to study which tests fail.
 
