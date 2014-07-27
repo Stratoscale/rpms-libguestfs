@@ -23,14 +23,12 @@ Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
 Version:       1.27.24
-Release:       1%{?dist}
+Release:       2%{?dist}
 License:       LGPLv2+
 
 # Source and patches.
 URL:           http://libguestfs.org/
 Source0:       http://libguestfs.org/download/1.27-development/%{name}-%{version}.tar.gz
-
-Patch1:        0001-tests-lvm-Allow-test-to-be-skipped.patch
 
 # Basic build requirements:
 BuildRequires: perl(Pod::Simple)
@@ -722,8 +720,6 @@ if [ "$(getenforce | tr '[A-Z]' '[a-z]')" != "disabled" ]; then
     chcon --reference=/tmp tmp
 fi
 
-%patch1 -p1
-
 mkdir -p daemon/m4
 
 # Replace developer-centric README that ships with libguestfs, with
@@ -1228,8 +1224,9 @@ popd
 
 
 %changelog
-* Sun Jul 27 2014 Richard W.M. Jones <rjones@redhat.com> - 1:1.27.24-1
+* Sun Jul 27 2014 Richard W.M. Jones <rjones@redhat.com> - 1:1.27.24-2
 - New upstream version 1.27.24.
+- Remove patch now upstream.
 
 * Fri Jul 25 2014 Richard W.M. Jones <rjones@redhat.com> - 1:1.27.23-3
 - Skip LVM test which is failing.
