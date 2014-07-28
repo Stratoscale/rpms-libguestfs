@@ -4,11 +4,13 @@
 %if %{defined libguestfs_runtests}
 %global runtests %{libguestfs_runtests}
 %else
-%ifnarch %{arm} %{ix86} ppc %{power64}
+%ifnarch aarch64 %{arm} %{ix86} ppc %{power64}
 %global runtests 1
 %else
 # Disabled on 32 bit x86.  Fails with current rawhide, unclear why.
 # Disabled on arm, see RHBZ#1066581.
+# Disabled on aarch64 because it requires qemu or supermin to uncompress
+# the kernel.
 # Disabled on ppc, ppc64 (secondary arches), see RHBZ#1036742.
 %global runtests 0
 %endif
