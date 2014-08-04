@@ -1,0 +1,172 @@
+From 1cbf5d9ced2413c2b08966a171a7024cdc4c987c Mon Sep 17 00:00:00 2001
+From: "Richard W.M. Jones" <rjones@redhat.com>
+Date: Fri, 11 Jul 2014 10:21:39 +0100
+Subject: [PATCH 2/2] sparsify: Add --tmp prebuilt:file option.
+
+This option allows oVirt to pass a prebuilt qcow2 file to use as the
+temporary overlay.  The file must be qcow2, and must have indisk as a
+backing file - the code does minimal checks to ensure this is correct.
+
+Example usage:
+
+  qemu-img create -f qcow2 -b indisk overlay.qcow2
+  virt-sparsify indisk --tmp prebuilt:overlay.qcow2 outdisk
+
+Note this only applies in copying mode.
+
+(cherry picked from commit 9b47a53a4b5c34095efb297b12867b42752786d4)
+---
+ sparsify/cmdline.ml        |  2 +-
+ sparsify/copying.ml        | 54 ++++++++++++++++++++++++++++++++--------------
+ sparsify/virt-sparsify.pod | 27 +++++++++++++++++++++++
+ 3 files changed, 66 insertions(+), 17 deletions(-)
+
+diff --git a/sparsify/cmdline.ml b/sparsify/cmdline.ml
+index 3595467..b1fb83f 100644
+--- a/sparsify/cmdline.ml
++++ b/sparsify/cmdline.ml
+@@ -80,7 +80,7 @@ let parse_cmdline () =
+     "-o",        Arg.Set_string option,     s_"option" ^ " " ^ s_"Add qemu-img options";
+     "-q",        Arg.Set quiet,             " " ^ s_"Quiet output";
+     "--quiet",   Arg.Set quiet,             ditto;
+-    "--tmp",     Arg.Set_string tmp,        s_"block|dir" ^ " " ^ s_"Set temporary block device or directory";
++    "--tmp",     Arg.Set_string tmp,        s_"block|dir|prebuilt:file" ^ " " ^ s_"Set temporary block device, directory or prebuilt file";
+     "-v",        Arg.Set verbose,           " " ^ s_"Enable debugging messages";
+     "--verbose", Arg.Set verbose,           ditto;
+     "-V",        Arg.Unit display_version,  " " ^ s_"Display version and exit";
+diff --git a/sparsify/copying.ml b/sparsify/copying.ml
+index 5afb22f..b167b0c 100644
+--- a/sparsify/copying.ml
++++ b/sparsify/copying.ml
+@@ -33,7 +33,8 @@ open Cmdline
+ external statvfs_free_space : string -> int64 =
+   "virt_sparsify_statvfs_free_space"
+ 
+-type tmp_place = Directory of string | Block_device of string
++type tmp_place =
++| Directory of string | Block_device of string | Prebuilt_file of string
+ 
+ let run indisk outdisk check_tmpdir compress convert
+     format ignores machine_readable option tmp_param
+@@ -74,12 +75,26 @@ let run indisk outdisk check_tmpdir compress convert
+     | None -> Directory Filename.temp_dir_name (* $TMPDIR or /tmp *)
+     | Some dir when is_directory dir -> Directory dir
+     | Some dev when is_block_device dev -> Block_device dev
++    | Some file when string_prefix file "prebuilt:" ->
++      let file = String.sub file 9 (String.length file - 9) in
++      if not (Sys.file_exists file) then
++        error (f_"--tmp prebuilt:file: %s: file does not exist") file;
++      let g = new G.guestfs () in
++      if trace then g#set_trace true;
++      if verbose then g#set_verbose true;
++      if g#disk_format file <> "qcow2" then
++        error (f_"--tmp prebuilt:file: %s: file format is not qcow2") file;
++      if not (g#disk_has_backing_file file) then
++        error (f_"--tmp prebuilt:file: %s: file does not have backing file")
++          file;
++      Prebuilt_file file
+     | Some path ->
+-      error (f_"--tmp parameter must point to a directory or a block device") in
++      error (f_"--tmp parameter must point to a directory, block device or prebuilt file") in
+ 
+   (* Check there is enough space in temporary directory. *)
+   (match tmp_place with
+-  | Block_device _ -> ()
++  | Block_device _
++  | Prebuilt_file _ -> ()
+   | Directory tmpdir ->
+     (* Get virtual size of the input disk. *)
+     let virtual_size = (new G.guestfs ())#disk_virtual_size indisk in
+@@ -136,31 +151,38 @@ You can ignore this warning or change it to a hard failure using the
+       | Block_device device ->
+         printf (f_"Create overlay device %s to protect source disk ...\n%!")
+           device
++      | Prebuilt_file file ->
++        printf (f_"Using prebuilt file %s as overlay ...\n%!") file
+     );
+ 
+-    let tmp =
+-      match tmp_place with
+-      | Directory temp_dir ->
+-        let tmp = Filename.temp_file ~temp_dir "sparsify" ".qcow2" in
+-        unlink_on_exit tmp;
+-        tmp
+-
+-      | Block_device device -> device in
+-
+-    (* Create it with the indisk as the backing file. *)
++    (* Create 'tmp' with the indisk as the backing file. *)
+     (* XXX Old code used to:
+      * - detect if compat=1.1 was supported
+      * - add lazy_refcounts option
+      *)
+-    let () =
++    let create tmp =
+       let g = new G.guestfs () in
+       if trace then g#set_trace true;
+       if verbose then g#set_verbose true;
+       g#disk_create
+         ~backingfile:indisk ?backingformat:format ~compat:"1.1"
+-        tmp "qcow2" Int64.minus_one in
++        tmp "qcow2" Int64.minus_one
++    in
+ 
+-    tmp in
++    match tmp_place with
++    | Directory temp_dir ->
++      let tmp = Filename.temp_file ~temp_dir "sparsify" ".qcow2" in
++      unlink_on_exit tmp;
++      create tmp;
++      tmp
++
++    | Block_device device ->
++      create device;
++      device
++
++    | Prebuilt_file file ->
++      (* Don't create anything, use the prebuilt file as overlay. *)
++      file in
+ 
+   if not quiet then
+     printf (f_"Examine source disk ...\n%!");
+diff --git a/sparsify/virt-sparsify.pod b/sparsify/virt-sparsify.pod
+index bb7dbae..3b6cebd 100644
+--- a/sparsify/virt-sparsify.pod
++++ b/sparsify/virt-sparsify.pod
+@@ -262,6 +262,33 @@ L</TMPDIR> environment variable.
+ 
+ You cannot use this option and I<--in-place> together.
+ 
++=item B<--tmp> prebuilt:file
++
++In copying mode only, the specialized option I<--tmp prebuilt:file>
++(where C<prebuilt:> is a literal string) causes virt-sparsify to use
++the qcow2 C<file> as temporary space.
++
++=over 4
++
++=item *
++
++The file B<must> be freshly formatted as qcow2, with indisk as the
++backing file.
++
++=item *
++
++If you rerun virt-sparsify, you B<must> recreate the file before
++each run.
++
++=item *
++
++Virt-sparsify does not delete the file.
++
++=back
++
++This option is used by oVirt which requires a specially formatted
++temporary file.
++
+ =item B<-v>
+ 
+ =item B<--verbose>
+-- 
+1.9.3
+

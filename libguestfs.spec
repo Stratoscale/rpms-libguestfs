@@ -23,12 +23,17 @@ Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
 Version:       1.26.7
-Release:       1%{?dist}
+Release:       2%{?dist}
 License:       LGPLv2+
 
 # Source and patches.
 URL:           http://libguestfs.org/
 Source0:       http://libguestfs.org/download/1.26-stable/%{name}-%{version}.tar.gz
+
+# Upstream patches which add virt-sparsify --tmp option.
+# This is for oVirt.
+Patch1:        0001-sparsify-Add-tmp-option-to-allow-specifying-temp-dir.patch
+Patch2:        0002-sparsify-Add-tmp-prebuilt-file-option.patch
 
 # Basic build requirements:
 BuildRequires: perl(Pod::Simple)
@@ -694,6 +699,9 @@ for %{name}.
 %prep
 %setup -q
 
+%patch1 -p1
+%patch2 -p1
+
 if [ "$(getenforce | tr '[A-Z]' '[a-z]')" != "disabled" ]; then
     # For sVirt to work, the local temporary directory we use in the
     # tests must be labelled the same way as /tmp.
@@ -1177,6 +1185,9 @@ mkdir -p $RPM_BUILD_ROOT%{_localstatedir}/run/libguestfs
 
 
 %changelog
+* Mon Aug  4 2014 Richard W.M. Jones <rjones@redhat.com> - 1:1.26.7-2
+- Add virt-sparsify --tmp option, for oVirt.
+
 * Thu Jul 31 2014 Richard W.M. Jones <rjones@redhat.com> - 1:1.26.7-1
 - New upstream version 1.26.7.
 
