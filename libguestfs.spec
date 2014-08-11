@@ -15,7 +15,7 @@
 %endif
 
 # Architectures on which golang works.
-%global golang_arches NONE
+%global golang_arches %{arm} %{ix86} x86_64
 
 %global _hardened_build 1
 
@@ -23,7 +23,7 @@ Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
 Version:       1.26.7
-Release:       2%{?dist}
+Release:       3%{?dist}
 License:       LGPLv2+
 
 # Source and patches.
@@ -107,7 +107,7 @@ BuildRequires: glib2-devel
 BuildRequires: gobject-introspection-devel
 BuildRequires: gjs
 %ifarch %{golang_arches}
-BuildRequires: golang
+BuildRequires: golang >= 1.2.2-22
 %endif
 
 # Build requirements for the appliance.
@@ -1185,6 +1185,9 @@ mkdir -p $RPM_BUILD_ROOT%{_localstatedir}/run/libguestfs
 
 
 %changelog
+* Mon Aug 11 2014 Richard W.M. Jones <rjones@redhat.com> - 1:1.26.7-3
+- Enable golang again, it may be fixed now in Fedora 20.
+
 * Mon Aug  4 2014 Richard W.M. Jones <rjones@redhat.com> - 1:1.26.7-2
 - Add virt-sparsify --tmp option, for oVirt.
 
