@@ -828,6 +828,8 @@ export SKIP_TEST_LVM_FILTERING_SH=1
 # to be installed, which would in practice mean depending on the
 # previous version of libguestfs to be installed, and we don't want to
 # do that.
+# NB: Can be removed in libguestfs >= 1.27.27 since there is an upstream
+# workaround for this.
 export SKIP_TEST_V2V_NO_COPY_SH=1
 export SKIP_TEST_V2V_OF_OPTION_SH=1
 export SKIP_TEST_V2V_ON_OPTION_SH=1
