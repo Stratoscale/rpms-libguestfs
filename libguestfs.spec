@@ -24,8 +24,8 @@
 Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
-Version:       1.27.25
-Release:       2%{?dist}
+Version:       1.27.26
+Release:       1%{?dist}
 License:       LGPLv2+
 
 # Source and patches.
@@ -1240,6 +1240,9 @@ popd
 
 
 %changelog
+* Thu Aug 14 2014 Richard W.M. Jones <rjones@redhat.com> - 1:1.27.26-1
+- New upstream version 1.27.26.
+
 * Thu Aug 14 2014 Richard W.M. Jones <rjones@redhat.com> - 1:1.27.25-2
 - Require mingw32-srvany >= 1.0-13 because otherwise we have a broken symlink.
 - Skip virt-v2v tests since they require rhsrvany.exe which is not
