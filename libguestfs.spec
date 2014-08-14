@@ -25,7 +25,7 @@ Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
 Version:       1.27.25
-Release:       1%{?dist}
+Release:       2%{?dist}
 License:       LGPLv2+
 
 # Source and patches.
@@ -393,7 +393,7 @@ Requires:      perl(XML::Writer)
 Requires:      perl(Win::Hivex) >= 1.2.7
 
 # For rhsrvany.exe, used to install firstboot scripts in Windows guests.
-Requires:      mingw32-srvany
+Requires:      mingw32-srvany >= 1.0-13
 
 
 %description tools
@@ -824,6 +824,18 @@ export SKIP_TEST_VIRT_DF_GUESTS_SH=1
 # LVM filter broken in Rawhide, but only on Koji (RHBZ#1123281).
 export SKIP_TEST_LVM_FILTERING_SH=1
 
+# virt-v2v tests use a phony Windows guest, but this requires rhsrvany
+# to be installed, which would in practice mean depending on the
+# previous version of libguestfs to be installed, and we don't want to
+# do that.
+export SKIP_TEST_V2V_NO_COPY_SH=1
+export SKIP_TEST_V2V_OF_OPTION_SH=1
+export SKIP_TEST_V2V_ON_OPTION_SH=1
+export SKIP_TEST_V2V_REAL_CONVERSIONS_SH=1
+export SKIP_TEST_V2V_RHEV_OPTIONS_SH=1
+export SKIP_TEST_V2V_RHEV_SH=1
+export SKIP_TEST_V2V_WINDOWS_CONVERSION_SH=1
+
 # Skip gnulib tests which fail (probably these are kernel/glibc bugs).
 pushd gnulib/tests
 make -k check ||:
@@ -1226,6 +1238,11 @@ popd
 
 
 %changelog
+* Thu Aug 14 2014 Richard W.M. Jones <rjones@redhat.com> - 1:1.27.25-2
+- Require mingw32-srvany >= 1.0-13 because otherwise we have a broken symlink.
+- Skip virt-v2v tests since they require rhsrvany.exe which is not
+  available during the tests.
+
 * Tue Aug 05 2014 Richard W.M. Jones <rjones@redhat.com> - 1:1.27.25-1
 - New upstream version 1.27.25.
 
