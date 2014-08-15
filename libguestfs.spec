@@ -25,7 +25,7 @@ Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
 Version:       1.27.26
-Release:       1%{?dist}
+Release:       2%{?dist}
 License:       LGPLv2+
 
 # Source and patches.
@@ -95,8 +95,13 @@ BuildRequires: ruby-devel
 BuildRequires: rubygem-rake
 BuildRequires: rubygem(test-unit)
 BuildRequires: ruby-irb
+%if 0%{?fedora} >= 22
+BuildRequires: java-1.8.0-openjdk
+BuildRequires: java-1.8.0-openjdk-devel
+%else
 BuildRequires: java-1.7.0-openjdk
 BuildRequires: java-1.7.0-openjdk-devel
+%endif
 BuildRequires: jpackage-utils
 BuildRequires: php-devel
 BuildRequires: erlang-erts
@@ -1240,6 +1245,9 @@ popd
 
 
 %changelog
+* Fri Aug 15 2014 Richard W.M. Jones <rjones@redhat.com> - 1:1.27.26-2
+- Java is now java-1.8.0-openjdk in Rawhide.
+
 * Thu Aug 14 2014 Richard W.M. Jones <rjones@redhat.com> - 1:1.27.26-1
 - New upstream version 1.27.26.
 
