@@ -95,7 +95,7 @@ BuildRequires: ruby-devel
 BuildRequires: rubygem-rake
 BuildRequires: rubygem(test-unit)
 BuildRequires: ruby-irb
-%if 0%{?fedora} >= 22
+%if 0%{?fedora} >= 21
 BuildRequires: java-1.8.0-openjdk
 BuildRequires: java-1.8.0-openjdk-devel
 %else
