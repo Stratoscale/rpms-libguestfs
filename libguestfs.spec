@@ -24,8 +24,8 @@
 Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
-Version:       1.27.25
-Release:       2%{?dist}
+Version:       1.27.27
+Release:       1%{?dist}
 License:       LGPLv2+
 
 # Source and patches.
@@ -95,8 +95,13 @@ BuildRequires: ruby-devel
 BuildRequires: rubygem-rake
 BuildRequires: rubygem(test-unit)
 BuildRequires: ruby-irb
+%if 0%{?fedora} >= 21
+BuildRequires: java-1.8.0-openjdk
+BuildRequires: java-1.8.0-openjdk-devel
+%else
 BuildRequires: java-1.7.0-openjdk
 BuildRequires: java-1.7.0-openjdk-devel
+%endif
 BuildRequires: jpackage-utils
 BuildRequires: php-devel
 BuildRequires: erlang-erts
@@ -393,7 +398,7 @@ Requires:      perl(XML::Writer)
 Requires:      perl(Win::Hivex) >= 1.2.7
 
 # For rhsrvany.exe, used to install firstboot scripts in Windows guests.
-Requires:      mingw32-srvany
+Requires:      mingw32-srvany >= 1.0-13
 
 
 %description tools
@@ -1226,8 +1231,19 @@ popd
 
 
 %changelog
-* Sun Aug 17 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1:1.27.25-2
-- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_22_Mass_Rebuild
+* Fri Aug 15 2014 Richard W.M. Jones <rjones@redhat.com> - 1:1.27.27-1
+- New upstream version 1.27.27.
+
+* Fri Aug 15 2014 Richard W.M. Jones <rjones@redhat.com> - 1:1.27.26-2
+- Java is now java-1.8.0-openjdk in Rawhide.
+
+* Thu Aug 14 2014 Richard W.M. Jones <rjones@redhat.com> - 1:1.27.26-1
+- New upstream version 1.27.26.
+
+* Thu Aug 14 2014 Richard W.M. Jones <rjones@redhat.com> - 1:1.27.25-2
+- Require mingw32-srvany >= 1.0-13 because otherwise we have a broken symlink.
+- Skip virt-v2v tests since they require rhsrvany.exe which is not
+  available during the tests.
 
 * Tue Aug 05 2014 Richard W.M. Jones <rjones@redhat.com> - 1:1.27.25-1
 - New upstream version 1.27.25.
