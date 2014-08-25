@@ -22,8 +22,8 @@
 Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
-Version:       1.26.7
-Release:       3%{?dist}
+Version:       1.26.8
+Release:       1%{?dist}
 License:       LGPLv2+
 
 # Source and patches.
@@ -1185,6 +1185,9 @@ mkdir -p $RPM_BUILD_ROOT%{_localstatedir}/run/libguestfs
 
 
 %changelog
+* Mon Aug 25 2014 Richard W.M. Jones <rjones@redhat.com> - 1:1.26.8-1
+- New upstream version 1.26.8.
+
 * Mon Aug 11 2014 Richard W.M. Jones <rjones@redhat.com> - 1:1.26.7-3
 - Enable golang again, it may be fixed now in Fedora 20.
 
