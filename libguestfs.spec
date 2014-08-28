@@ -369,10 +369,15 @@ Requires:      /usr/bin/man
 Requires:      /usr/bin/vi
 
 # for virt-builder:
-Requires:      curl
 Requires:      gnupg
 Requires:      xz
 #Requires:     nbdkit, nbdkit-plugin-xz
+
+# for virt-builder and virt-v2v:
+Requires:      curl
+
+# for virt-v2v
+Requires:      /usr/bin/virsh
 
 
 %description tools-c
