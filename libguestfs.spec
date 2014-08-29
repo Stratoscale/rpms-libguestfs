@@ -25,7 +25,7 @@ Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
 Version:       1.27.33
-Release:       1%{?dist}
+Release:       2%{?dist}
 License:       LGPLv2+
 
 # Source and patches.
@@ -831,9 +831,6 @@ export SKIP_TEST_NBD_PL=1
 export SKIP_TEST_VIRT_ALIGNMENT_SCAN_GUESTS_SH=1
 export SKIP_TEST_VIRT_DF_GUESTS_SH=1
 
-# LVM filter broken in Rawhide, but only on Koji (RHBZ#1123281).
-export SKIP_TEST_LVM_FILTERING_SH=1
-
 # Skip gnulib tests which fail (probably these are kernel/glibc bugs).
 pushd gnulib/tests
 make -k check ||:
@@ -1236,8 +1233,9 @@ popd
 
 
 %changelog
-* Fri Aug 29 2014 Richard W.M. Jones <rjones@redhat.com> - 1:1.27.33-1
+* Fri Aug 29 2014 Richard W.M. Jones <rjones@redhat.com> - 1:1.27.33-2
 - New upstream version 1.27.33.
+- Enable LVM filtering test (thanks Pino Toscano).
 
 * Mon Aug 25 2014 Richard W.M. Jones <rjones@redhat.com> - 1:1.27.31-1
 - New upstream version 1.27.31.
