@@ -842,6 +842,9 @@ for f in test-getaddrinfo test-utimens ; do
 done
 popd
 
+# Workaround for broken libvirt (RHBZ#1138604).
+mkdir -p $HOME/.cache/libvirt
+
 # Do make quickcheck first, to fail early if the appliance or libvirt
 # is obviously broken.  Also dump libvirt log files if this happens.
 # Since it's most likely libvirt which is broken, make sure libvirt
