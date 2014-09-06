@@ -24,7 +24,7 @@
 Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
-Version:       1.27.38
+Version:       1.27.39
 Release:       1%{?dist}
 License:       LGPLv2+
 
@@ -372,12 +372,7 @@ Requires:      /usr/bin/vi
 Requires:      gnupg
 Requires:      xz
 #Requires:     nbdkit, nbdkit-plugin-xz
-
-# for virt-builder and virt-v2v:
 Requires:      curl
-
-# for virt-v2v
-Requires:      /usr/bin/virsh
 
 
 %description tools-c
@@ -401,9 +396,6 @@ Requires:      perl(Sys::Virt)
 Requires:      perl(String::ShellQuote)
 Requires:      perl(XML::Writer)
 Requires:      perl(Win::Hivex) >= 1.2.7
-
-# For rhsrvany.exe, used to install firstboot scripts in Windows guests.
-Requires:      mingw32-srvany >= 1.0-13
 
 
 %description tools
@@ -478,24 +470,31 @@ preparation for cloning them.
 Virt-tar-in and virt-tar-out are archive, backup and upload tools
 for virtual machines.  These replace the deprecated program virt-tar.
 
-Virt-v2v and virt-p2v are tools that convert virtual machines from
-non-KVM hypervisors, or physical machines, to run under KVM.
-
 Virt-win-reg lets you look at and modify the Windows Registry of
 Windows virtual machines.
 
 
-# The Name and Summary of this package is deliberately obscure to
-# discourage end users from installing and running it.  Instead they
-# need to get the P2V ISO which is a Fedora/RHEL Spin.
-%package pvhelper
-Summary:       pvhelper
+%package -n virt-v2v
+Summary:       virt-v2v
+
+Requires:      %{name} = %{epoch}:%{version}-%{release}
+Requires:      %{name}-tools-c = %{epoch}:%{version}-%{release}
+
+Requires:      gawk
+Requires:      gzip
+Requires:      curl
+Requires:      /usr/bin/virsh
+# 'strip' binary is required by virt-p2v-make-kickstart.
+Requires:      binutils
+
+# For rhsrvany.exe, used to install firstboot scripts in Windows guests.
+Requires:      mingw32-srvany >= 1.0-13
 
 
-%description pvhelper
-This helper is used when creating a Spin.
+%description -n virt-v2v
+Virt-v2v and virt-p2v are tools that convert virtual machines from
+non-KVM hypervisors, or physical machines, to run under KVM.
 
-End users *should not* install this package.
 
 
 %package bash-completion
@@ -876,11 +875,6 @@ find $RPM_BUILD_ROOT -name .packlist -delete
 find $RPM_BUILD_ROOT -name '*.bs' -delete
 find $RPM_BUILD_ROOT -name 'bindtests.pl' -delete
 
-# Delete guestfs-p2v-iso(1) because it is internal documentation.
-# We might include it in future if it says something useful for end
-# users about how to create the ISO.
-rm $RPM_BUILD_ROOT%{_mandir}/man1/guestfs-p2v-iso.1*
-
 # Don't use versioned jar file (RHBZ#1022133).
 # See: https://bugzilla.redhat.com/show_bug.cgi?id=1022184#c4
 mv $RPM_BUILD_ROOT%{_datadir}/java/%{name}-%{version}.jar \
@@ -1024,7 +1018,6 @@ popd
 %config %{_sysconfdir}/xdg/virt-builder/repos.d/libguestfs.conf
 %config %{_sysconfdir}/xdg/virt-builder/repos.d/libguestfs.gpg
 %config %{_sysconfdir}/profile.d/guestfish.sh
-%{_datadir}/virt-tools
 %{_mandir}/man5/libguestfs-tools.conf.5*
 %{_bindir}/guestfish
 %{_mandir}/man1/guestfish.1*
@@ -1064,7 +1057,6 @@ popd
 %{_mandir}/man1/virt-ls.1*
 %{_bindir}/virt-make-fs
 %{_mandir}/man1/virt-make-fs.1*
-%{_mandir}/man1/virt-p2v.1*
 %{_bindir}/virt-rescue
 %{_mandir}/man1/virt-rescue.1*
 %{_bindir}/virt-resize
@@ -1077,8 +1069,6 @@ popd
 %{_mandir}/man1/virt-tar-in.1*
 %{_bindir}/virt-tar-out
 %{_mandir}/man1/virt-tar-out.1*
-%{_bindir}/virt-v2v
-%{_mandir}/man1/virt-v2v.1*
 
 
 %files tools
@@ -1093,10 +1083,18 @@ popd
 %{_mandir}/man1/virt-win-reg.1*
 
 
-%files pvhelper
-%doc COPYING README
+%files -n virt-v2v
+%doc COPYING README v2v/TODO
 %{_libexecdir}/virt-p2v
-# NB: man page does NOT go here.
+%{_bindir}/virt-p2v-make-disk
+%{_bindir}/virt-p2v-make-kickstart
+%{_bindir}/virt-v2v
+%{_mandir}/man1/virt-p2v.1*
+%{_mandir}/man1/virt-p2v-make-disk.1*
+%{_mandir}/man1/virt-p2v-make-kickstart.1*
+%{_mandir}/man1/virt-v2v.1*
+%{_datadir}/virt-p2v
+%{_datadir}/virt-tools
 
 
 %files bash-completion
@@ -1236,6 +1234,11 @@ popd
 
 
 %changelog
+* Sat Sep 06 2014 Richard W.M. Jones <rjones@redhat.com> - 1:1.27.39-1
+- New upstream version 1.27.39.
+- Package virt-p2v ISO build tools together with virt-v2v in
+  a separate virt-v2v subpackage.
+
 * Fri Sep 05 2014 Richard W.M. Jones <rjones@redhat.com> - 1:1.27.38-1
 - New upstream version 1.27.38.
 
