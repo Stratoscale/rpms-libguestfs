@@ -497,7 +497,6 @@ Virt-v2v and virt-p2v are tools that convert virtual machines from
 non-KVM hypervisors, or physical machines, to run under KVM.
 
 
-
 %package bash-completion
 Summary:       Bash tab-completion scripts for %{name} tools
 BuildArch:     noarch
