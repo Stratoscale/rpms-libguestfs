@@ -475,7 +475,8 @@ Windows virtual machines.
 
 
 %package -n virt-v2v
-Summary:       virt-v2v
+Summary:       Convert a virtual machine to run on KVM
+License:       GPLv2+
 
 Requires:      %{name} = %{epoch}:%{version}-%{release}
 Requires:      %{name}-tools-c = %{epoch}:%{version}-%{release}
