@@ -1236,6 +1236,7 @@ popd
 %changelog
 * Thu Sep 18 2014 Richard W.M. Jones <rjones@redhat.com> - 1:1.27.49-1
 - New upstream version 1.27.49.
+- Fix guestfish colour prompts when using white-on-black terminal (RHBZ#1144201).
 
 * Wed Sep 17 2014 Richard W.M. Jones <rjones@redhat.com> - 1:1.27.48-1
 - New upstream version 1.27.48.
