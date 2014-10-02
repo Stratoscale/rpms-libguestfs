@@ -741,6 +741,8 @@ sed 's/@VERSION@/%{version}/g' < %{SOURCE4} > README
 
 %build
 # Test if network is available.
+ip addr list ||:
+ip route list ||:
 if ping -c 3 -w 20 8.8.8.8 && wget http://libguestfs.org -O /dev/null; then
   extra=
 else
