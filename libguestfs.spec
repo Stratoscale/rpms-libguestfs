@@ -815,25 +815,8 @@ export SKIP_TEST_CHECKSUM_DEVICE=1
 export SKIP_TEST_VIRT_BUILDER_SH=1
 export SKIP_TEST_NETWORK_SH=1
 
-# Disable virt-format test (RHBZ#872831).
-export SKIP_TEST_VIRT_FORMAT_SH=1
-
 # Disable set_label tests (RHBZ#906777).
 export SKIP_TEST_SET_LABEL=1
-
-# Disable test-btrfs-devices on ix86 only.  It fails on Fedora 19 (but not
-# Fedora 18 nor Fedora 20) with:
-# guestfsd: error: tar subcommand failed on directory: /data3: tar: ./10/q/4: Cannot open: No space left on device
-# This seems to be a transient kernel problem, fixed in F20.
-%ifarch %{ix86}
-export SKIP_TEST_BTRFS_DEVICES_SH=1
-%endif
-
-# Disable mdadm test, buggy in kernel 3.13 (RHBZ#1033971).
-export SKIP_TEST_MDADM_SH=1
-
-# Disable NBD test, buggy in qemu 1.7.0 (RHBZ#1034433).
-export SKIP_TEST_NBD_PL=1
 
 # Disable parallel virt-alignment-scan & virt-df tests (RHBZ#1025942).
 export SKIP_TEST_VIRT_ALIGNMENT_SCAN_GUESTS_SH=1
@@ -849,9 +832,6 @@ for f in test-getaddrinfo test-utimens ; do
   chmod +x $f
 done
 popd
-
-# Workaround for broken libvirt (RHBZ#1138604).
-mkdir -p $HOME/.cache/libvirt
 
 # Do make quickcheck first, to fail early if the appliance or libvirt
 # is obviously broken.  Also dump libvirt log files if this happens.
