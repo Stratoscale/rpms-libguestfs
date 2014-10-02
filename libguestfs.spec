@@ -808,6 +808,13 @@ export LIBGUESTFS_TRACE=1
 # checksum at runtime.
 export SKIP_TEST_CHECKSUM_DEVICE=1
 
+# Disable tests that need or test the network.  These won't work with
+# the new libvirt network since virbr0 is not connected in Koji, so
+# libvirt fails with ENOTCONN 'Transport endpoint not connected'
+# (RHBZ#1148972).
+export SKIP_TEST_VIRT_BUILDER_SH=1
+export SKIP_TEST_NETWORK_SH=1
+
 # Disable virt-format test (RHBZ#872831).
 export SKIP_TEST_VIRT_FORMAT_SH=1
 
