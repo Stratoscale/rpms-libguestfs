@@ -814,8 +814,6 @@ export SKIP_TEST_CHECKSUM_DEVICE=1
 # (RHBZ#1148972).
 export SKIP_TEST_VIRT_BUILDER_SH=1
 export SKIP_TEST_NETWORK_SH=1
-# Remove in >= 1.27.59:
-export SKIP_TEST_RHBZ690819_SH=1
 
 # Disable set_label tests (RHBZ#906777).
 export SKIP_TEST_SET_LABEL=1
