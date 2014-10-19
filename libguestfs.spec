@@ -60,6 +60,8 @@ BuildRequires: libdb-utils
 BuildRequires: cpio
 BuildRequires: libconfig-devel
 BuildRequires: xz-devel
+BuildRequires: zip
+BuildRequires: unzip
 BuildRequires: ocaml
 BuildRequires: ocaml-findlib-devel
 BuildRequires: ocaml-gettext-devel
@@ -483,6 +485,7 @@ Requires:      %{name}-tools-c = %{epoch}:%{version}-%{release}
 
 Requires:      gawk
 Requires:      gzip
+Requires:      unzip
 Requires:      curl
 Requires:      /usr/bin/virsh
 # 'strip' binary is required by virt-p2v-make-kickstart.
