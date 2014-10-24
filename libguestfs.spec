@@ -25,12 +25,18 @@ Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
 Version:       1.28.1
-Release:       1%{?dist}
+Release:       2%{?dist}
 License:       LGPLv2+
 
 # Source and patches.
 URL:           http://libguestfs.org/
 Source0:       http://libguestfs.org/download/1.28-stable/%{name}-%{version}.tar.gz
+
+# ppc64le support (RHBZ#1156449).  Upstream, will be added in 1.28.2.
+Patch1:        0001-ppc64le-configure-Look-for-qemu-system-ppc64-binary-.patch
+Patch2:        0002-ppc64le-test-tool-Use-correct-qemu-system-ppc64-bina.patch
+Patch3:        0003-test-tool-Handle-mapping-other-architectures-to-qemu.patch
+BuildRequires: autoconf
 
 # Basic build requirements:
 BuildRequires: perl(Pod::Simple)
@@ -728,6 +734,11 @@ for %{name}.
 %prep
 %setup -q
 
+%patch1 -p1
+%patch2 -p1
+%patch3 -p1
+autoconf
+
 if [ "$(getenforce | tr '[A-Z]' '[a-z]')" != "disabled" ]; then
     # For sVirt to work, the local temporary directory we use in the
     # tests must be labelled the same way as /tmp.
@@ -1226,6 +1237,9 @@ popd
 
 
 %changelog
+* Fri Oct 24 2014 Richard W.M. Jones <rjones@redhat.com> - 1:1.28.1-2
+- Include upstream patches to fix ppc64le builds (RHBZ#1156449).
+
 * Sat Oct 18 2014 Richard W.M. Jones <rjones@redhat.com> - 1:1.28.1-1
 - New upstream version 1.28.1.
 

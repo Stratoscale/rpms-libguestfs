@@ -1,0 +1,39 @@
+From 4ff6ba35502736a2aed1f17eda67728f624c3390 Mon Sep 17 00:00:00 2001
+From: "Richard W.M. Jones" <rjones@redhat.com>
+Date: Fri, 24 Oct 2014 16:55:36 +0100
+Subject: [PATCH 3/3] test-tool: Handle mapping other architectures to
+ qemu-system-* binaries.
+
+---
+ test-tool/test-tool.c | 15 ++++++++++-----
+ 1 file changed, 10 insertions(+), 5 deletions(-)
+
+diff --git a/test-tool/test-tool.c b/test-tool/test-tool.c
+index c0c4798..848571d 100644
+--- a/test-tool/test-tool.c
++++ b/test-tool/test-tool.c
+@@ -388,11 +388,16 @@ set_qemu (guestfs_h *g, const char *path, int use_wrapper)
+            "#!/bin/sh -\n"
+            "host_cpu=%s\n"
+            "qemudir='%s'\n"
+-           "if [ $host_cpu != \"ppc64le\" ]; then \n"
+-           "qemu=\"$qemudir/$host_cpu-softmmu/qemu-system-$host_cpu\"\n"
+-           "else"
+-           "qemu=\"$qemudir/$host_cpu-softmmu/qemu-system-ppc64\"\n"
+-           "fi"
++           "case $host_cpu in\n"
++           "    amd64*) qemu=\"$qemudir/$host_cpu-softmmu/qemu-system-x86_64\"\n"
++           "            ;;\n"
++           "    arm*) qemu=\"$qemudir/$host_cpu-softmmu/qemu-system-arm\"\n"
++           "          ;;\n"
++           "    ppc64le) qemu=\"$qemudir/$host_cpu-softmmu/qemu-system-ppc64\"\n"
++           "             ;;\n"
++           "    *) qemu=\"$qemudir/$host_cpu-softmmu/qemu-system-$host_cpu\"\n"
++           "       ;;\n"
++           "esac\n"
+            "exec \"$qemu\" -L \"$qemudir/pc-bios\" \"$@\"\n",
+            host_cpu, path);
+   fclose (fp);
+-- 
+2.0.4
+

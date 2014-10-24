@@ -1,0 +1,12 @@
+--- libguestfs-1.28.1.old/configure.ac	2014-10-18 10:50:54.000000000 +0100
++++ libguestfs-1.28.1/configure.ac	2014-10-24 21:42:04.534071112 +0100
+@@ -725,7 +725,8 @@
+ qemu_system="$(
+     echo qemu-system-$host_cpu |
+     $SED -e 's/-i@<:@456@:>@86/-i386/g' \
+-         -e 's/-arm.*/-arm/g'
++         -e 's/-arm.*/-arm/g' \
++         -e 's/-ppc64le/-ppc64/g'
+     )"
+ default_qemu="qemu-kvm kvm $qemu_system qemu"
+ AC_ARG_WITH([qemu],
