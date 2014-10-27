@@ -24,8 +24,8 @@
 Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
-Version:       1.28.1
-Release:       2%{?dist}
+Version:       1.28.2
+Release:       1%{?dist}
 License:       LGPLv2+
 
 # Source and patches.
@@ -1226,6 +1226,9 @@ popd
 
 
 %changelog
+* Mon Oct 27 2014 Richard W.M. Jones <rjones@redhat.com> - 1:1.28.2-1
+- New upstream version 1.28.2.
+
 * Fri Oct 24 2014 Richard W.M. Jones <rjones@redhat.com> - 1:1.28.1-2
 - Include upstream patches to fix ppc64le builds (RHBZ#1156449).
 
