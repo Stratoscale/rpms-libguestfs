@@ -32,12 +32,6 @@ License:       LGPLv2+
 URL:           http://libguestfs.org/
 Source0:       http://libguestfs.org/download/1.28-stable/%{name}-%{version}.tar.gz
 
-# ppc64le support (RHBZ#1156449).  Upstream, will be added in 1.28.2.
-Patch1:        0001-ppc64le-configure-Look-for-qemu-system-ppc64-binary-.patch
-Patch2:        0002-ppc64le-test-tool-Use-correct-qemu-system-ppc64-bina.patch
-Patch3:        0003-test-tool-Handle-mapping-other-architectures-to-qemu.patch
-BuildRequires: autoconf
-
 # Basic build requirements:
 BuildRequires: perl(Pod::Simple)
 BuildRequires: perl(Pod::Man)
@@ -733,11 +727,6 @@ for %{name}.
 
 %prep
 %setup -q
-
-%patch1 -p1
-%patch2 -p1
-%patch3 -p1
-autoconf
 
 if [ "$(getenforce | tr '[A-Z]' '[a-z]')" != "disabled" ]; then
     # For sVirt to work, the local temporary directory we use in the
