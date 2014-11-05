@@ -25,7 +25,7 @@ Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
 Version:       1.28.2
-Release:       2%{?dist}
+Release:       3%{?dist}
 License:       LGPLv2+
 
 # Source and patches.
@@ -789,7 +789,6 @@ fi
 %{configure} \
   --with-default-backend=libvirt \
   --with-extra="fedora=%{fedora},release=%{release},libvirt" \
-  --with-qemu="qemu-kvm qemu-system-%{_build_arch} qemu" \
   --enable-install-daemon \
 %ifnarch %{golang_arches}
   --disable-golang \
@@ -1238,6 +1237,9 @@ popd
 
 
 %changelog
+* Wed Nov  5 2014 Richard W.M. Jones <rjones@redhat.com> - 1:1.29.4-2
+- configure: Don't override upstream's qemu selection.
+
 * Fri Oct 31 2014 Richard W.M. Jones <rjones@redhat.com> - 1:1.28.2-2
 - Fix: libvirt backend does not set RBD password (RHBZ#1159016).
 
