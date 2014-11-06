@@ -1,0 +1,24 @@
+From a550ecb5f198ff7179df097ffc7847ff576115ee Mon Sep 17 00:00:00 2001
+From: David Sommerseth <davids@redhat.com>
+Date: Thu, 6 Nov 2014 15:14:04 +0000
+Subject: [PATCH] configure: Map powerpc64 -> ppc64.
+
+---
+ configure.ac | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/configure.ac b/configure.ac
+index 8916ebd..fd12431 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -760,6 +760,7 @@ qemu_system="$(
+     $SED -e 's/-i@<:@456@:>@86/-i386/g' \
+          -e 's/-arm.*/-arm/g' \
+          -e 's/-amd64/-x86_64/g' \
++         -e 's/-powerpc64/-ppc64/g' \
+          -e 's/-ppc64le/-ppc64/g'
+     )"
+ default_qemu="qemu-kvm kvm $qemu_system qemu"
+-- 
+2.1.0
+
