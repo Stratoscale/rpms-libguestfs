@@ -40,6 +40,9 @@ Patch1:        0001-launch-libvirt-Implement-drive-secrets-RHBZ-1159016.patch
 Patch2:        add-base64-to-gnulib.patch
 BuildRequires: autoconf, automake, libtool
 
+# Another fix for ppc64/ppc64le.
+Patch3:        0001-configure-Map-powerpc64-ppc64.patch
+
 # Basic build requirements:
 BuildRequires: perl(Pod::Simple)
 BuildRequires: perl(Pod::Man)
@@ -738,6 +741,7 @@ for %{name}.
 
 %patch1 -p1
 %patch2 -p1
+%patch3 -p1
 autoreconf -i
 
 if [ "$(getenforce | tr '[A-Z]' '[a-z]')" != "disabled" ]; then
