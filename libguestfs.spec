@@ -32,9 +32,6 @@ License:       LGPLv2+
 URL:           http://libguestfs.org/
 Source0:       http://libguestfs.org/download/1.29-development/%{name}-%{version}.tar.gz
 
-# Another fix for ppc64/ppc64le.
-Patch1:        0001-configure-Map-powerpc64-ppc64.patch
-
 # Basic build requirements:
 BuildRequires: perl(Pod::Simple)
 BuildRequires: perl(Pod::Man)
@@ -731,8 +728,6 @@ for %{name}.
 %prep
 %setup -q
 
-%patch1 -p1
-
 if [ "$(getenforce | tr '[A-Z]' '[a-z]')" != "disabled" ]; then
     # For sVirt to work, the local temporary directory we use in the
     # tests must be labelled the same way as /tmp.
@@ -1232,6 +1227,7 @@ popd
 %changelog
 * Fri Nov 07 2014 Richard W.M. Jones <rjones@redhat.com> - 1:1.29.6-1
 - New upstream version 1.29.6.
+- Remove patch which is now upstream.
 
 * Wed Nov 05 2014 Richard W.M. Jones <rjones@redhat.com> - 1:1.29.5-1
 - New upstream version 1.29.5.
