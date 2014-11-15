@@ -25,23 +25,12 @@ Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
 Version:       1.28.3
-Release:       1%{?dist}
+Release:       2%{?dist}
 License:       LGPLv2+
 
 # Source and patches.
 URL:           http://libguestfs.org/
 Source0:       http://libguestfs.org/download/1.28-stable/%{name}-%{version}.tar.gz
-
-# Fix for https://bugzilla.redhat.com/show_bug.cgi?id=1159016
-#  libvirt backend does not set RBD password
-Patch1:        0001-launch-libvirt-Implement-drive-secrets-RHBZ-1159016.patch
-# Unfortunately because patch1 patches gnulib configuration, we
-# also need:
-Patch2:        add-base64-to-gnulib.patch
-BuildRequires: autoconf, automake, libtool
-
-# Another fix for ppc64/ppc64le.
-Patch3:        0001-configure-Map-powerpc64-ppc64.patch
 
 # Basic build requirements:
 BuildRequires: perl(Pod::Simple)
@@ -739,11 +728,6 @@ for %{name}.
 %prep
 %setup -q
 
-%patch1 -p1
-%patch2 -p1
-%patch3 -p1
-autoreconf -i
-
 if [ "$(getenforce | tr '[A-Z]' '[a-z]')" != "disabled" ]; then
     # For sVirt to work, the local temporary directory we use in the
     # tests must be labelled the same way as /tmp.
@@ -1241,8 +1225,9 @@ popd
 
 
 %changelog
-* Sat Nov 15 2014 Richard W.M. Jones <rjones@redhat.com> - 1:1.28.3-1
+* Sat Nov 15 2014 Richard W.M. Jones <rjones@redhat.com> - 1:1.28.3-2
 - New upstream version 1.28.3.
+- Remove patches which are now upstream.
 
 * Wed Nov  5 2014 Richard W.M. Jones <rjones@redhat.com> - 1:1.29.4-2
 - configure: Don't override upstream's qemu selection.
