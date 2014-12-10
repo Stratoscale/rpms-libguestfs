@@ -93,6 +93,7 @@ BuildRequires: perl(Test::Pod::Coverage) >= 1.00
 BuildRequires: perl(ExtUtils::MakeMaker)
 BuildRequires: perl(Locale::TextDomain)
 BuildRequires: python-devel
+BuildRequires: libvirt-python
 BuildRequires: ruby-devel
 BuildRequires: rubygem-rake
 BuildRequires: rubygem(test-unit)
