@@ -32,10 +32,6 @@ License:       LGPLv2+
 URL:           http://libguestfs.org/
 Source0:       http://libguestfs.org/download/1.28-stable/%{name}-%{version}.tar.gz
 
-# Upstream patch to fix ./configure qemu detection on powerpc64le:
-Patch1:        0001-build-Map-host-CPU-powerpc64le-to-qemu-system-ppc64.patch
-BuildRequires: autoconf, automake, libtool
-
 # Basic build requirements:
 BuildRequires: perl(Pod::Simple)
 BuildRequires: perl(Pod::Man)
@@ -732,9 +728,6 @@ for %{name}.
 %prep
 %setup -q
 
-%patch1 -p1
-autoconf
-
 if [ "$(getenforce | tr '[A-Z]' '[a-z]')" != "disabled" ]; then
     # For sVirt to work, the local temporary directory we use in the
     # tests must be labelled the same way as /tmp.
@@ -1234,6 +1227,7 @@ popd
 %changelog
 * Thu Dec 18 2014 Richard W.M. Jones <rjones@redhat.com> - 1:1.28.5-1
 - New upstream version 1.28.5.
+- Remove patch which is now upstream.
 
 * Tue Dec  2 2014 Richard W.M. Jones <rjones@redhat.com> - 1:1.28.4-2
 - Add upstream patch to fix ./configure qemu detection on powerpc64le.
