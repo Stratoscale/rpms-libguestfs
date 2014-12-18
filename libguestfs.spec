@@ -24,8 +24,8 @@
 Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
-Version:       1.28.4
-Release:       2%{?dist}
+Version:       1.28.5
+Release:       1%{?dist}
 License:       LGPLv2+
 
 # Source and patches.
@@ -1232,6 +1232,9 @@ popd
 
 
 %changelog
+* Thu Dec 18 2014 Richard W.M. Jones <rjones@redhat.com> - 1:1.28.5-1
+- New upstream version 1.28.5.
+
 * Tue Dec  2 2014 Richard W.M. Jones <rjones@redhat.com> - 1:1.28.4-2
 - Add upstream patch to fix ./configure qemu detection on powerpc64le.
 
