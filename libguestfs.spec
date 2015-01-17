@@ -1237,7 +1237,6 @@ popd
 %changelog
 * Sat Jan 17 2015 Richard W.M. Jones <rjones@redhat.com> - 1:1.29.20-1
 - New upstream version 1.29.20.
-
 - Rebuild upstream with automake 1.15.
 - Add upstream patch to allow LVM test to be skipped.
 - Skip a couple of tests which are broken by changes in Rawhide.
