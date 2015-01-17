@@ -24,13 +24,16 @@
 Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
-Version:       1.29.19
+Version:       1.29.20
 Release:       1%{?dist}
 License:       LGPLv2+
 
 # Source and patches.
 URL:           http://libguestfs.org/
 Source0:       http://libguestfs.org/download/1.29-development/%{name}-%{version}.tar.gz
+
+# Upstream patch to allow LVM test to be skipped in check section.
+Patch1:        0001-tests-lvm-Allow-test-lvm-mapping.pl-to-be-skipped.patch
 
 # Basic build requirements:
 BuildRequires: perl(Pod::Simple)
@@ -729,13 +732,13 @@ for %{name}.
 %prep
 %setup -q
 
+%patch1 -p1
+
 if [ "$(getenforce | tr '[A-Z]' '[a-z]')" != "disabled" ]; then
     # For sVirt to work, the local temporary directory we use in the
     # tests must be labelled the same way as /tmp.
     chcon --reference=/tmp tmp
 fi
-
-mkdir -p daemon/m4
 
 # Replace developer-centric README that ships with libguestfs, with
 # our replacement file.
@@ -824,6 +827,12 @@ export SKIP_TEST_SET_LABEL=1
 # Disable parallel virt-alignment-scan & virt-df tests (RHBZ#1025942).
 export SKIP_TEST_VIRT_ALIGNMENT_SCAN_GUESTS_SH=1
 export SKIP_TEST_VIRT_DF_GUESTS_SH=1
+
+# Disable sfdisk test (RHBZ#1183234).
+export SKIP_TEST_PART_GET_MBR_ID_0=1
+
+# Disable a test which uses sfdisk (RHBZ#1183236).
+export SKIP_TEST_LVM_MAPPING_PL=1
 
 # Skip gnulib tests which fail (probably these are kernel/glibc bugs).
 pushd gnulib/tests
@@ -1226,6 +1235,14 @@ popd
 
 
 %changelog
+* Sat Jan 17 2015 Richard W.M. Jones <rjones@redhat.com> - 1:1.29.20-1
+- New upstream version 1.29.20.
+
+- Rebuild upstream with automake 1.15.
+- Add upstream patch to allow LVM test to be skipped.
+- Skip a couple of tests which are broken by changes in Rawhide.
+- Remove bogus daemon/m4 directory which has not existed for years.
+
 * Tue Dec 23 2014 Richard W.M. Jones <rjones@redhat.com> - 1:1.29.19-1
 - New upstream version 1.29.19.
 
