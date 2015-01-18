@@ -35,6 +35,9 @@ Source0:       http://libguestfs.org/download/1.29-development/%{name}-%{version
 # Upstream patch to allow LVM test to be skipped in check section.
 Patch1:        0001-tests-lvm-Allow-test-lvm-mapping.pl-to-be-skipped.patch
 
+# Upstream patch which fixes LUA 5.3 (beta) in Rawhide.
+Patch2:        0001-lua-Define-luaL_checkint-which-was-deprecated-in-lua.patch
+
 # Basic build requirements:
 BuildRequires: perl(Pod::Simple)
 BuildRequires: perl(Pod::Man)
@@ -733,6 +736,7 @@ for %{name}.
 %setup -q
 
 %patch1 -p1
+%patch2 -p1
 
 if [ "$(getenforce | tr '[A-Z]' '[a-z]')" != "disabled" ]; then
     # For sVirt to work, the local temporary directory we use in the
@@ -1235,10 +1239,11 @@ popd
 
 
 %changelog
-* Sat Jan 17 2015 Richard W.M. Jones <rjones@redhat.com> - 1:1.29.20-1
+* Sun Jan 18 2015 Richard W.M. Jones <rjones@redhat.com> - 1:1.29.20-1
 - New upstream version 1.29.20.
 - Rebuild upstream with automake 1.15.
 - Add upstream patch to allow LVM test to be skipped.
+- Add upstream patch which fixes LUA 5.3 (beta) in Rawhide.
 - Skip a couple of tests which are broken by changes in Rawhide.
 - Remove bogus daemon/m4 directory which has not existed for years.
 
