@@ -835,9 +835,6 @@ export SKIP_TEST_VIRT_DF_GUESTS_SH=1
 # Disable sfdisk test (RHBZ#1183234).
 export SKIP_TEST_PART_GET_MBR_ID_0=1
 
-# Disable a test which uses sfdisk (RHBZ#1183236).
-export SKIP_TEST_LVM_MAPPING_PL=1
-
 # Skip gnulib tests which fail (probably these are kernel/glibc bugs).
 pushd gnulib/tests
 make -k check ||:
