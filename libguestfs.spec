@@ -24,8 +24,8 @@
 Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
-Version:       1.29.20
-Release:       2%{?dist}
+Version:       1.29.22
+Release:       1%{?dist}
 License:       LGPLv2+
 
 # Source and patches.
@@ -71,6 +71,7 @@ BuildRequires: unzip
 BuildRequires: ocaml
 BuildRequires: ocaml-findlib-devel
 BuildRequires: ocaml-gettext-devel
+BuildRequires: ocaml-ounit-devel
 BuildRequires: systemd-units
 BuildRequires: netpbm-progs
 BuildRequires: icoutils
@@ -835,6 +836,9 @@ export SKIP_TEST_VIRT_DF_GUESTS_SH=1
 # Disable sfdisk test (RHBZ#1183234).
 export SKIP_TEST_PART_GET_MBR_ID_0=1
 
+# Disable fuse test (RHBZ#1184762).
+export SKIP_TEST_FUSE_SH=1
+
 # Skip gnulib tests which fail (probably these are kernel/glibc bugs).
 pushd gnulib/tests
 make -k check ||:
@@ -1236,6 +1240,11 @@ popd
 
 
 %changelog
+* Thu Jan 22 2015 Richard W.M. Jones <rjones@redhat.com> - 1:1.29.22-1
+- New upstream version 1.29.22.
+- BR ounit (will be required for building >= 1.29.23).
+- Disable FUSE tests because of a bug in Rawhide.
+
 * Mon Jan 19 2015 Richard W.M. Jones <rjones@redhat.com> - 1:1.29.20-2
 - Bump release for f22-ruby.
 
