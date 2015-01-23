@@ -25,18 +25,12 @@ Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
 Version:       1.29.22
-Release:       1%{?dist}
+Release:       2%{?dist}
 License:       LGPLv2+
 
 # Source and patches.
 URL:           http://libguestfs.org/
 Source0:       http://libguestfs.org/download/1.29-development/%{name}-%{version}.tar.gz
-
-# Upstream patch to allow LVM test to be skipped in check section.
-Patch1:        0001-tests-lvm-Allow-test-lvm-mapping.pl-to-be-skipped.patch
-
-# Upstream patch which fixes LUA 5.3 (beta) in Rawhide.
-Patch2:        0001-lua-Define-luaL_checkint-which-was-deprecated-in-lua.patch
 
 # Basic build requirements:
 BuildRequires: perl(Pod::Simple)
@@ -736,9 +730,6 @@ for %{name}.
 %prep
 %setup -q
 
-%patch1 -p1
-%patch2 -p1
-
 if [ "$(getenforce | tr '[A-Z]' '[a-z]')" != "disabled" ]; then
     # For sVirt to work, the local temporary directory we use in the
     # tests must be labelled the same way as /tmp.
@@ -1240,7 +1231,7 @@ popd
 
 
 %changelog
-* Thu Jan 22 2015 Richard W.M. Jones <rjones@redhat.com> - 1:1.29.22-1
+* Thu Jan 22 2015 Richard W.M. Jones <rjones@redhat.com> - 1:1.29.22-2
 - New upstream version 1.29.22.
 - BR ounit (will be required for building >= 1.29.23).
 - Disable FUSE tests because of a bug in Rawhide.
