@@ -95,6 +95,8 @@ BuildRequires: perl(ExtUtils::MakeMaker)
 BuildRequires: perl(Locale::TextDomain)
 BuildRequires: python-devel
 BuildRequires: libvirt-python
+BuildRequires: python3-devel
+BuildRequires: libvirt-python3
 BuildRequires: ruby-devel
 BuildRequires: rubygem-rake
 BuildRequires: rubygem(test-unit)
@@ -234,7 +236,8 @@ Language bindings:
    ocaml-libguestfs-devel  OCaml bindings
          perl-Sys-Guestfs  Perl bindings
            php-libguestfs  PHP bindings
-        python-libguestfs  Python bindings
+        python-libguestfs  Python 2 bindings
+       python3-libguestfs  Python 3 bindings
           ruby-libguestfs  Ruby bindings
 
 
@@ -573,14 +576,29 @@ perl-Sys-Guestfs contains Perl bindings for %{name} (Sys::Guestfs).
 
 
 %package -n python-%{name}
-Summary:       Python bindings for %{name}
+Summary:       Python 2 bindings for %{name}
 Requires:      %{name} = %{epoch}:%{version}-%{release}
 
 %{!?python_sitelib: %global python_sitelib %(%{__python} -c "from distutils.sysconfig import get_python_lib; print get_python_lib()")}
 %{!?python_sitearch: %global python_sitearch %(%{__python} -c "from distutils.sysconfig import get_python_lib; print get_python_lib(1)")}
 
 %description -n python-%{name}
-python-%{name} contains Python bindings for %{name}.
+python-%{name} contains Python 2 bindings for %{name}.
+
+For Python 3 bindings, install python3-%{name}.
+
+
+%package -n python3-%{name}
+Summary:       Python 3 bindings for %{name}
+Requires:      %{name} = %{epoch}:%{version}-%{release}
+
+%{!?python3_sitelib: %global python3_sitelib %(%{__python3} -c "from distutils.sysconfig import get_python_lib; print (get_python_lib())")}
+%{!?python3_sitearch: %global python3_sitearch %(%{__python3} -c "from distutils.sysconfig import get_python_lib; print (get_python_lib(1))")}
+
+%description -n python3-%{name}
+python-%{name} contains Python 3 bindings for %{name}.
+
+For Python 2 bindings, install python-%{name}.
 
 
 %package -n ruby-%{name}
@@ -728,7 +746,13 @@ for %{name}.
 
 
 %prep
+# For Python 3 we must build libguestfs twice.  This creates:
+#   %{name}-%{version}/
+#   %{name}-%{version}/python3/
+# with a second copy of the sources in the python3 subdir.
 %setup -q
+%setup -q -T -D -a 0
+mv %{name}-%{version} python3
 
 if [ "$(getenforce | tr '[A-Z]' '[a-z]')" != "disabled" ]; then
     # For sVirt to work, the local temporary directory we use in the
@@ -774,24 +798,30 @@ EOF
   extra=--with-supermin-packager-config=$(pwd)/yum.conf
 fi
 
-%{configure} \
-  --with-default-backend=libvirt \
-  --with-extra="fedora=%{fedora},release=%{release},libvirt" \
-  --enable-install-daemon \
+%global localconfigure \
+  %{configure} \\\
+    --with-default-backend=libvirt \\\
+    --with-extra="fedora=%{fedora},release=%{release},libvirt" \\\
+    --enable-install-daemon \\\
+    $extra
 %ifnarch %{golang_arches}
-  --disable-golang \
+%global localconfigure %{localconfigure} --disable-golang
 %endif
-  $extra
 
 # 'INSTALLDIRS' ensures that Perl and Ruby libs are installed in the
 # vendor dir not the site dir.
-make V=1 INSTALLDIRS=vendor %{?_smp_mflags}
+%global localmake \
+  make V=1 INSTALLDIRS=vendor %{?_smp_mflags}
 
-# This file is creeping over 1 MB uncompressed, and since it is
-# included in the -devel subpackage, compress it to reduce
-# installation size.
-gzip -9 ChangeLog
+%{localconfigure}
+%{localmake}
 
+# For Python 3 we must compile libguestfs a second time.
+pushd python3
+export PYTHON=%{__python3}
+%{localconfigure}
+%{localmake}
+popd
 
 %check
 
@@ -859,9 +889,19 @@ make check -k
 
 
 %install
+# This file is creeping over 1 MB uncompressed, and since it is
+# included in the -devel subpackage, compress it to reduce
+# installation size.
+gzip -9 ChangeLog
+
 # 'INSTALLDIRS' ensures that Perl and Ruby libs are installed in the
 # vendor dir not the site dir.
 make DESTDIR=$RPM_BUILD_ROOT INSTALLDIRS=vendor install
+
+# Install Python 3 bindings which were built in a subdirectory.
+pushd python3
+make DESTDIR=$RPM_BUILD_ROOT INSTALLDIRS=vendor -C python install
+popd
 
 # Delete static libraries, libtool files.
 rm $(
@@ -1145,6 +1185,15 @@ popd
 %{python_sitearch}/guestfs.py
 %{python_sitearch}/guestfs.pyc
 %{python_sitearch}/guestfs.pyo
+%{_mandir}/man3/guestfs-python.3*
+
+
+%files -n python3-%{name}
+%doc python/examples/*.py
+%{python3_sitearch}/libguestfsmod*.so
+%{python3_sitearch}/guestfs.py
+%{python3_sitearch}/__pycache__/guestfs*.pyc
+%{python3_sitearch}/__pycache__/guestfs*.pyo
 %{_mandir}/man3/guestfs-python.3*
 
 
