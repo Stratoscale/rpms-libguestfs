@@ -830,6 +830,9 @@ export SKIP_TEST_PART_GET_MBR_ID_0=1
 # Disable fuse test (RHBZ#1184762).
 export SKIP_TEST_FUSE_SH=1
 
+# Disable btrfs-qgroup-show (RHBZ#1188553).
+export SKIP_TEST_BTRFS_QGROUP_SHOW=1
+
 # Skip gnulib tests which fail (probably these are kernel/glibc bugs).
 pushd gnulib/tests
 make -k check ||:
