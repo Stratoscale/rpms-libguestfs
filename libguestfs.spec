@@ -1285,6 +1285,8 @@ popd
 %changelog
 * Tue Feb 03 2015 Richard W.M. Jones <rjones@redhat.com> - 1:1.29.24-1
 - New upstream version 1.29.24.
+- Add Python 3 bindings.
+- Disable btrfs-qgroup-show test.
 
 * Tue Jan 27 2015 Richard W.M. Jones <rjones@redhat.com> - 1:1.29.23-1
 - New upstream version 1.29.23.
