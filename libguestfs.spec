@@ -25,12 +25,15 @@ Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
 Version:       1.29.24
-Release:       1%{?dist}
+Release:       2%{?dist}
 License:       LGPLv2+
 
 # Source and patches.
 URL:           http://libguestfs.org/
 Source0:       http://libguestfs.org/download/1.29-development/%{name}-%{version}.tar.gz
+
+# Upstream patch to fix performance regression in virt-builder (RHBZ#1188866).
+Patch0001:     0001-builder-Fix-large-performance-regression-in-pxzcat-R.patch
 
 # Basic build requirements:
 BuildRequires: perl(Pod::Simple)
@@ -746,13 +749,18 @@ for %{name}.
 
 
 %prep
+%setup -q
+
+%patch0001 -p1
+
 # For Python 3 we must build libguestfs twice.  This creates:
 #   %{name}-%{version}/
 #   %{name}-%{version}/python3/
 # with a second copy of the sources in the python3 subdir.
-%setup -q
-%setup -q -T -D -a 0
-mv %{name}-%{version} python3
+pushd ..
+cp -a %{name}-%{version} tmp-python3
+mv tmp-python3 %{name}-%{version}/python3
+popd
 
 if [ "$(getenforce | tr '[A-Z]' '[a-z]')" != "disabled" ]; then
     # For sVirt to work, the local temporary directory we use in the
@@ -1283,6 +1291,11 @@ popd
 
 
 %changelog
+* Wed Feb 04 2015 Richard W.M. Jones <rjones@redhat.com> - 1:1.29.24-2
+- Upstream patch to fix performance regression in virt-builder (RHBZ#1188866).
+- Change the way Python double-build is done so we only have to
+  apply patches in one place.
+
 * Tue Feb 03 2015 Richard W.M. Jones <rjones@redhat.com> - 1:1.29.24-1
 - New upstream version 1.29.24.
 - Add Python 3 bindings.

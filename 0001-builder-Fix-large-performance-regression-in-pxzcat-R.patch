@@ -1,0 +1,63 @@
+From ff1cf989fd49cfb82db428e66034c7b2d6bebe8a Mon Sep 17 00:00:00 2001
+From: "Richard W.M. Jones" <rjones@redhat.com>
+Date: Wed, 4 Feb 2015 13:17:40 +0000
+Subject: [PATCH] builder: Fix large performance regression in pxzcat
+ (RHBZ#1188866).
+
+Commit 9135129b0f6e8eb171131ea0f7d729a960b74cb3 changed
+two stack buffers to pointers:
+
+-  uint8_t buf[BUFFER_SIZE];
+-  unsigned char outbuf[BUFFER_SIZE];
++  CLEANUP_FREE uint8_t *buf = NULL;
++  CLEANUP_FREE uint8_t *outbuf = NULL;
+
+but we were still using sizeof buf to calculate the size of the
+buffer.  sizeof buf == 8 so the original code which used large buffers
+for reading/writing the file changed to using 8 byte buffers.
+---
+ builder/pxzcat-c.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/builder/pxzcat-c.c b/builder/pxzcat-c.c
+index bd4c0a8..0bbd296 100644
+--- a/builder/pxzcat-c.c
++++ b/builder/pxzcat-c.c
+@@ -640,14 +640,14 @@ worker_thread (void *vp)
+     strm.next_in = NULL;
+     strm.avail_in = 0;
+     strm.next_out = outbuf;
+-    strm.avail_out = sizeof outbuf;
++    strm.avail_out = BUFFER_SIZE;
+ 
+     for (;;) {
+       lzma_action action = LZMA_RUN;
+ 
+       if (strm.avail_in == 0) {
+         strm.next_in = buf;
+-        n = pread (global->fd, buf, sizeof buf, position);
++        n = pread (global->fd, buf, BUFFER_SIZE, position);
+         if (n == -1) {
+           perror (global->filename);
+           return &state->status;
+@@ -661,7 +661,7 @@ worker_thread (void *vp)
+       r = lzma_code (&strm, action);
+ 
+       if (strm.avail_out == 0 || r == LZMA_STREAM_END) {
+-        size_t wsz = sizeof outbuf - strm.avail_out;
++        size_t wsz = BUFFER_SIZE - strm.avail_out;
+ 
+         /* Don't write if the block is all zero, to preserve output file
+          * sparseness.  However we have to update oposition.
+@@ -675,7 +675,7 @@ worker_thread (void *vp)
+         oposition += wsz;
+ 
+         strm.next_out = outbuf;
+-        strm.avail_out = sizeof outbuf;
++        strm.avail_out = BUFFER_SIZE;
+       }
+ 
+       if (r == LZMA_STREAM_END)
+-- 
+2.1.0
+
