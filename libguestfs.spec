@@ -25,7 +25,7 @@ Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
 Version:       1.29.24
-Release:       2%{?dist}
+Release:       3%{?dist}
 License:       LGPLv2+
 
 # Source and patches.
@@ -33,7 +33,12 @@ URL:           http://libguestfs.org/
 Source0:       http://libguestfs.org/download/1.29-development/%{name}-%{version}.tar.gz
 
 # Upstream patch to fix performance regression in virt-builder (RHBZ#1188866).
-Patch0001:     0001-builder-Fix-large-performance-regression-in-pxzcat-R.patch
+Patch1:        0001-builder-Fix-large-performance-regression-in-pxzcat-R.patch
+
+# Upstream patch to fix virt-resize/virt-builder on aarch64 (RHBZ#1189284).
+Patch2:        0001-daemon-Fix-whitespace.patch
+Patch3:        0002-New-APIs-part-set-gpt-guid-and-part-get-gpt-guid.patch
+Patch4:        0003-resize-Preserve-GPT-GUID-so-we-don-t-break-EFI-bootl.patch
 
 # Basic build requirements:
 BuildRequires: perl(Pod::Simple)
@@ -751,7 +756,10 @@ for %{name}.
 %prep
 %setup -q
 
-%patch0001 -p1
+%patch1 -p1
+%patch2 -p1
+%patch3 -p1
+%patch4 -p1
 
 # For Python 3 we must build libguestfs twice.  This creates:
 #   %{name}-%{version}/
@@ -1291,6 +1299,9 @@ popd
 
 
 %changelog
+* Thu Feb 05 2015 Richard W.M. Jones <rjones@redhat.com> - 1:1.29.24-3
+- Upstream patch to fix virt-resize/virt-builder on aarch64 (RHBZ#1189284).
+
 * Wed Feb 04 2015 Richard W.M. Jones <rjones@redhat.com> - 1:1.29.24-2
 - Upstream patch to fix performance regression in virt-builder (RHBZ#1188866).
 - Change the way Python double-build is done so we only have to
