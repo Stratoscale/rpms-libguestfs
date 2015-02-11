@@ -32,14 +32,6 @@ License:       LGPLv2+
 URL:           http://libguestfs.org/
 Source0:       http://libguestfs.org/download/1.29-development/%{name}-%{version}.tar.gz
 
-# Upstream patch to fix performance regression in virt-builder (RHBZ#1188866).
-Patch1:        0001-builder-Fix-large-performance-regression-in-pxzcat-R.patch
-
-# Upstream patch to fix virt-resize/virt-builder on aarch64 (RHBZ#1189284).
-Patch2:        0001-daemon-Fix-whitespace.patch
-Patch3:        0002-New-APIs-part-set-gpt-guid-and-part-get-gpt-guid.patch
-Patch4:        0003-resize-Preserve-GPT-GUID-so-we-don-t-break-EFI-bootl.patch
-
 # Basic build requirements:
 BuildRequires: perl(Pod::Simple)
 BuildRequires: perl(Pod::Man)
@@ -755,11 +747,6 @@ for %{name}.
 
 %prep
 %setup -q
-
-%patch1 -p1
-%patch2 -p1
-%patch3 -p1
-%patch4 -p1
 
 # For Python 3 we must build libguestfs twice.  This creates:
 #   %{name}-%{version}/
