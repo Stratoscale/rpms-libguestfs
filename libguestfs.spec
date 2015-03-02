@@ -888,6 +888,9 @@ export SKIP_TEST_FUSE_SH=1
 # Disable btrfs-qgroup-show (RHBZ#1188553).
 export SKIP_TEST_BTRFS_QGROUP_SHOW=1
 
+# mdadm --stop hangs (RHBZ#1197305).
+SKIP_TEST_MDADM_SH
+
 # Skip gnulib tests which fail (probably these are kernel/glibc bugs).
 pushd gnulib/tests
 make -k check ||:
@@ -1319,6 +1322,7 @@ popd
 - Remove dependency on uml_utilities, since UML is currently broken.
 - Speed python3 build by copying over the generator pod2text cache and
   disabling non-Python language bindings.
+- Disable mdadm test because of mdadm hangs (RHBZ#1197305).
 
 * Wed Feb 18 2015 Richard W.M. Jones <rjones@redhat.com> - 1:1.29.26-1
 - New upstream version 1.29.26.
