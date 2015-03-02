@@ -25,7 +25,7 @@ Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
 Version:       1.29.26
-Release:       1%{?dist}
+Release:       4%{?dist}
 License:       LGPLv2+
 
 # Source and patches.
@@ -143,8 +143,6 @@ Requires:      supermin >= 5.1.8-3
 
 # For core inspection API.
 Requires:      libdb-utils
-Requires:      netpbm-progs
-Requires:      icoutils
 Requires:      libosinfo
 
 # For core mount-local (FUSE) API.
@@ -162,9 +160,11 @@ Requires:      libvirt-daemon-qemu >= 0.10.2-3
 Requires:      selinux-policy >= 3.11.1-63
 
 # For UML backend (this backend only works on x86).
-%ifarch %{ix86} x86_64
-Requires:      uml_utilities
-%endif
+# UML has been broken upstream (in the kernel) for a while, so don't
+# include this.  Note that uml_utilities also depends on Perl.
+#%ifarch %{ix86} x86_64
+#Requires:      uml_utilities
+#%endif
 
 # Provide our own custom requires for the supermin appliance.
 Source1:       libguestfs-find-requires.sh
@@ -361,6 +361,26 @@ Requires:      zfs-fuse
 This adds ZFS support to %{name}.  Install it if you want to process
 disk images containing ZFS.
 %endif
+
+
+%package inspect-icons
+Summary:       Additional dependencies for inspecting guest icons
+License:       LGPLv2+
+BuildArch:     noarch
+Requires:      %{name} = %{epoch}:%{version}-%{release}
+
+Requires:      netpbm-progs
+Requires:      icoutils
+
+
+%description inspect-icons
+%{name}-inspect-icons is a metapackage that pulls in additional
+dependencies required by libguestfs to pull icons out of non-Linux
+guests.  Install this package if you want libguestfs to be able to
+inspect non-Linux guests and display icons from them.
+
+The only reason this is a separate package is to avoid core libguestfs
+having to depend on Perl.  See https://bugzilla.redhat.com/1194158
 
 
 %package tools-c
@@ -822,7 +842,9 @@ fi
 # For Python 3 we must compile libguestfs a second time.
 pushd python3
 export PYTHON=%{__python3}
-%{localconfigure}
+# Copy the cache to speed the build:
+cp ../generator/.pod2text* generator/
+%{localconfigure} --enable-python --disable-perl --disable-ruby --disable-haskell --disable-php --disable-erlang --disable-lua --disable-golang --disable-gobject
 %{localmake}
 popd
 
@@ -1021,6 +1043,7 @@ popd
 %{_includedir}/guestfs.h
 %{_libdir}/pkgconfig/libguestfs.pc
 
+
 %files gfs2
 %{_libdir}/guestfs/supermin.d/zz-packages-gfs2
 
@@ -1051,6 +1074,11 @@ popd
 %files zfs
 %{_libdir}/guestfs/supermin.d/zz-packages-zfs
 %endif
+
+
+%files inspect-icons
+# no files
+
 
 %files tools-c
 %doc README
@@ -1286,6 +1314,12 @@ popd
 
 
 %changelog
+* Mon Mar  2 2015 Richard W.M. Jones <rjones@redhat.com> - 1:1.29.26-3
+- Add new subpackage libguestfs-inspect-icons (RHBZ#1194158).
+- Remove dependency on uml_utilities, since UML is currently broken.
+- Speed python3 build by copying over the generator pod2text cache and
+  disabling non-Python language bindings.
+
 * Wed Feb 18 2015 Richard W.M. Jones <rjones@redhat.com> - 1:1.29.26-1
 - New upstream version 1.29.26.
 - ocaml-4.02.1 rebuild.
