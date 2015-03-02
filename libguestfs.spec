@@ -889,7 +889,7 @@ export SKIP_TEST_FUSE_SH=1
 export SKIP_TEST_BTRFS_QGROUP_SHOW=1
 
 # mdadm --stop hangs (RHBZ#1197305).
-SKIP_TEST_MDADM_SH
+export SKIP_TEST_MDADM_SH=1
 
 # Skip gnulib tests which fail (probably these are kernel/glibc bugs).
 pushd gnulib/tests
