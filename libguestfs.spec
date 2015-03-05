@@ -24,8 +24,8 @@
 Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
-Version:       1.29.26
-Release:       4%{?dist}
+Version:       1.29.29
+Release:       1%{?dist}
 License:       LGPLv2+
 
 # Source and patches.
@@ -1317,6 +1317,9 @@ popd
 
 
 %changelog
+* Thu Mar  5 2015 Richard W.M. Jones <rjones@redhat.com> - 1:1.29.29-1
+- New upstream version 1.29.29.
+
 * Mon Mar  2 2015 Richard W.M. Jones <rjones@redhat.com> - 1:1.29.26-3
 - Add new subpackage libguestfs-inspect-icons (RHBZ#1194158).
 - Remove dependency on uml_utilities, since UML is currently broken.
