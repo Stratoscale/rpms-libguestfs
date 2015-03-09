@@ -25,12 +25,15 @@ Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
 Version:       1.28.6
-Release:       1%{?dist}
+Release:       2%{?dist}
 License:       LGPLv2+
 
 # Source and patches.
 URL:           http://libguestfs.org/
 Source0:       http://libguestfs.org/download/1.28-stable/%{name}-%{version}.tar.gz
+
+# Upstream patch to use -M virt on 32 bit ARM (RHBZ#1199733).
+Patch1:        0001-arm-Use-M-virt-on-32-bit-ARM-don-t-pass-dtb-paramete.patch
 
 # Basic build requirements:
 BuildRequires: perl(Pod::Simple)
@@ -728,6 +731,8 @@ for %{name}.
 %prep
 %setup -q
 
+%patch1 -p1
+
 if [ "$(getenforce | tr '[A-Z]' '[a-z]')" != "disabled" ]; then
     # For sVirt to work, the local temporary directory we use in the
     # tests must be labelled the same way as /tmp.
@@ -1225,6 +1230,9 @@ popd
 
 
 %changelog
+* Mon Mar  9 2015 Richard W.M. Jones <rjones@redhat.com> - 1:1.28.6-2
+- Upstream patch to use -M virt on 32 bit ARM (RHBZ#1199733).
+
 * Tue Feb 03 2015 Richard W.M. Jones <rjones@redhat.com> - 1:1.28.6-1
 - New upstream version 1.28.6.
 
