@@ -25,7 +25,7 @@ Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
 Version:       1.29.30
-Release:       2%{?dist}
+Release:       3%{?dist}
 License:       LGPLv2+
 
 # Source and patches.
@@ -51,7 +51,7 @@ BuildRequires: createrepo
 BuildRequires: glibc-static
 BuildRequires: libselinux-utils
 BuildRequires: libselinux-devel
-BuildRequires: fuse-devel
+BuildRequires: fuse, fuse-devel
 BuildRequires: pcre-devel
 BuildRequires: file-devel
 BuildRequires: libvirt-devel
@@ -1362,10 +1362,11 @@ popd
 
 
 %changelog
-* Thu Mar 12 2015 Richard W.M. Jones <rjones@redhat.com> - 1:1.29.30-2
+* Thu Mar 12 2015 Richard W.M. Jones <rjones@redhat.com> - 1:1.29.30-3
 - Add virt-v2v-test-harness subpackage.
 - Add a couple of upstream patches to fix the virt-v2v test harness.
 - Remove external dependency generator.  Use supermin RPM deps instead.
+- Depend on fuse (for testing with fusermount etc) (RHBZ#1201507).
 
 * Wed Mar 11 2015 Richard W.M. Jones <rjones@redhat.com> - 1:1.29.30-1
 - New upstream version 1.29.30.
