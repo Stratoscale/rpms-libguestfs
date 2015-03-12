@@ -25,12 +25,15 @@ Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
 Version:       1.29.30
-Release:       1%{?dist}
+Release:       2%{?dist}
 License:       LGPLv2+
 
 # Source and patches.
 URL:           http://libguestfs.org/
 Source0:       http://libguestfs.org/download/1.29-development/%{name}-%{version}.tar.gz
+
+Patch1:        0001-v2v-test-harness-Measure-similarity-between-images-w.patch
+Patch2:        0002-v2v-test-harness-Fix-boot-loop-so-it-detects-disk-in.patch
 
 # Basic build requirements:
 BuildRequires: perl(Pod::Simple)
@@ -66,6 +69,7 @@ BuildRequires: ocaml
 BuildRequires: ocaml-findlib-devel
 BuildRequires: ocaml-gettext-devel
 BuildRequires: ocaml-ounit-devel
+BuildRequires: ocaml-libvirt-devel >= 0.6.1.4-5
 BuildRequires: systemd-units
 BuildRequires: netpbm-progs
 BuildRequires: icoutils
@@ -188,6 +192,12 @@ Provides:      bundled(gnulib)
 # Someone managed to install libguestfs-winsupport (from RHEL!)  on
 # Fedora, which breaks everything.  Thus:
 Conflicts:     libguestfs-winsupport
+
+# virt-v2v-test-harness uses an internal module called 'Xml' which
+# conflicts with an OCaml module of the same name.  Ignore the
+# internal module when generating requires & provides.
+%global __ocaml_requires_opts -i Xml
+%global __ocaml_provides_opts -i Xml
 
 
 %description
@@ -525,6 +535,37 @@ Virt-v2v and virt-p2v are tools that convert virtual machines from
 non-KVM hypervisors, or physical machines, to run under KVM.
 
 
+%package -n virt-v2v-test-harness
+Summary:       Library used to write test cases for virt-v2v
+License:       LGPLv2+
+
+Requires:      %{name} = %{epoch}:%{version}-%{release}
+Requires:      virt-v2v = %{epoch}:%{version}-%{release}
+Requires:      ocaml-libguestfs-devel = %{epoch}:%{version}-%{release}
+
+Requires:      ocaml-libvirt-devel >= 0.6.1.4-5
+Requires:      /usr/bin/virsh
+Requires:      /usr/bin/compare
+Requires:      /usr/bin/unxz
+
+
+%description -n virt-v2v-test-harness
+Virt-v2v-test-harness is a small library (module name: V2v_test_harness)
+used to run virt-v2v against a set of test cases consisting of real
+virtual machines.
+
+It acts as a test harness, taking a test case, running virt-v2v on it,
+then test-booting the result.  It can ensure that the test case
+converts successfully, boots successfully, and reaches a milestone
+(such as a particular screenshot).  It can also test that the
+conversion created, modified or deleted the expected files from within
+the guest.
+
+Note that this package includes only the test harness and not the test
+cases, which are distributed separately.  See the
+virt-v2v-test-harness(1) manual page for details.
+
+
 %package bash-completion
 Summary:       Bash tab-completion scripts for %{name} tools
 BuildArch:     noarch
@@ -767,6 +808,10 @@ for %{name}.
 
 %prep
 %setup -q
+
+# Apply patches, if any, here.
+%patch1 -p1
+%patch2 -p1
 
 # For Python 3 we must build libguestfs twice.  This creates:
 #   %{name}-%{version}/
@@ -1171,6 +1216,14 @@ popd
 %{_datadir}/virt-tools
 
 
+%files -n virt-v2v-test-harness
+%doc COPYING.LIB
+%{_mandir}/man1/virt-v2v-test-harness.1*
+%{_libdir}/ocaml/v2v_test_harness
+%{_libdir}/ocaml/stublibs/dllv2v_test_harness.so
+%{_libdir}/ocaml/stublibs/dllv2v_test_harness.so.owner
+
+
 %files bash-completion
 %dir %{_datadir}/bash-completion/completions
 %{_datadir}/bash-completion/completions/guestfish
@@ -1193,8 +1246,8 @@ popd
 %exclude %{_libdir}/ocaml/guestfs/*.cmxa
 %exclude %{_libdir}/ocaml/guestfs/*.cmx
 %exclude %{_libdir}/ocaml/guestfs/*.mli
-%{_libdir}/ocaml/stublibs/*.so
-%{_libdir}/ocaml/stublibs/*.so.owner
+%{_libdir}/ocaml/stublibs/dllmlguestfs.so
+%{_libdir}/ocaml/stublibs/dllmlguestfs.so.owner
 
 
 %files -n ocaml-%{name}-devel
@@ -1317,6 +1370,10 @@ popd
 
 
 %changelog
+* Thu Mar 12 2015 Richard W.M. Jones <rjones@redhat.com> - 1:1.29.30-2
+- Add virt-v2v-test-harness subpackage.
+- Add a couple of upstream patches to fix the virt-v2v test harness.
+
 * Wed Mar 11 2015 Richard W.M. Jones <rjones@redhat.com> - 1:1.29.30-1
 - New upstream version 1.29.30.
 

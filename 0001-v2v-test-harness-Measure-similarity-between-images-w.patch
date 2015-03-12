@@ -1,0 +1,60 @@
+From a3beda8b77363e13f652104b06efaee33ecfe67c Mon Sep 17 00:00:00 2001
+From: "Richard W.M. Jones" <rjones@redhat.com>
+Date: Wed, 11 Mar 2015 15:02:58 +0000
+Subject: [PATCH 1/2] v2v: test-harness: Measure similarity between images when
+ comparing screenshots.
+
+Since wallclock time differs between boots, we cannot just compare two
+screenshots by checking if they are identical -- if the screenshot
+contains any time information, then that will be different, and it
+turns out that VMs print the current time at boot.
+
+Therefore parse out and use the "similarity" metric printed by the
+ImageMagick "compare" command when it compares the screenshots, and
+allow a small epsilon for the case where a few oixels are different.
+---
+ v2v/test-harness/v2v_test_harness.ml | 26 +++++++++++++++++++++-----
+ 1 file changed, 21 insertions(+), 5 deletions(-)
+
+diff --git a/v2v/test-harness/v2v_test_harness.ml b/v2v/test-harness/v2v_test_harness.ml
+index cd08cd0..998903a 100644
+--- a/v2v/test-harness/v2v_test_harness.ml
++++ b/v2v/test-harness/v2v_test_harness.ml
+@@ -196,13 +196,29 @@ let run ~test ?input_disk ?input_xml ?(test_plan = default_plan) () =
+ 
+     let display_matches_screenshot screenshot1 screenshot2 =
+       let cmd =
+-        sprintf "compare -metric MAE %s %s null:"
++        (* Grrr compare sends its normal output to stderr. *)
++        sprintf "compare -metric MAE %s %s null: 2>&1"
+           (quote screenshot1) (quote screenshot2) in
+       printf "%s\n%!" cmd;
+-      let r = Sys.command cmd in
+-      if r < 0 || r > 1 then
+-        failwith "compare command failed";
+-      r = 0
++      let chan = Unix.open_process_in cmd in
++      let lines = ref [] in
++      (try while true do lines := input_line chan :: !lines done
++       with End_of_file -> ());
++      let lines = List.rev !lines in
++      let stat = Unix.close_process_in chan in
++      let similarity =
++        match stat with
++        | Unix.WEXITED 0 -> 0.0 (* exact match *)
++        | Unix.WEXITED 1 ->
++          Scanf.sscanf (List.hd lines) "%f" (fun f -> f)
++        | Unix.WEXITED i ->
++          failwithf "external command '%s' exited with error %d" cmd i
++        | Unix.WSIGNALED i ->
++          failwithf "external command '%s' killed by signal %d" cmd i
++        | Unix.WSTOPPED i ->
++          failwithf "external command '%s' stopped by signal %d" cmd i in
++      printf "%s %s have similarity %f\n" screenshot1 screenshot2 similarity;
++      similarity <= 60.0
+     in
+ 
+     let dom_is_alive () =
+-- 
+2.3.1
+
