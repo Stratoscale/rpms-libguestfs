@@ -39,7 +39,7 @@ Patch2:        0002-v2v-test-harness-Fix-boot-loop-so-it-detects-disk-in.patch
 BuildRequires: perl(Pod::Simple)
 BuildRequires: perl(Pod::Man)
 BuildRequires: /usr/bin/pod2text
-BuildRequires: supermin >= 5.1.8-3
+BuildRequires: supermin-devel >= 5.1.12-4
 BuildRequires: hivex-devel >= 1.2.7-7
 BuildRequires: perl(Win::Hivex)
 BuildRequires: perl(Win::Hivex::Regedit)
@@ -143,7 +143,18 @@ BuildRequires: syslinux syslinux-extlinux
 %endif
 
 # For building the appliance.
-Requires:      supermin >= 5.1.8-3
+Requires:      supermin >= 5.1.12
+
+# The daemon dependencies are not included automatically, because it
+# is buried inside the appliance, so list them here.
+Requires:      augeas-libs
+Requires:      libacl
+Requires:      libcap
+Requires:      hivex
+Requires:      pcre
+Requires:      libselinux
+Requires:      systemd-libs
+Requires:      yajl
 
 # For core inspection API.
 Requires:      libdb-utils
@@ -169,12 +180,6 @@ Requires:      selinux-policy >= 3.11.1-63
 #%ifarch %{ix86} x86_64
 #Requires:      uml_utilities
 #%endif
-
-# Provide our own custom requires for the supermin appliance.
-Source1:       libguestfs-find-requires.sh
-%global _use_internal_dependency_generator 0
-%global __find_provides %{_rpmconfigdir}/find-provides
-%global __find_requires %{SOURCE1} %{_rpmconfigdir}/find-requires
 
 # libguestfs live service
 Source2:       guestfsd.service
@@ -270,7 +275,6 @@ for %{name}.
 Summary:       GFS2 support for %{name}
 License:       LGPLv2+
 Requires:      %{name} = %{epoch}:%{version}-%{release}
-Requires:      gfs2-utils
 
 %description gfs2
 This adds GFS2 support to %{name}.  Install it if you want to process
@@ -282,7 +286,6 @@ disk images containing GFS2.
 Summary:       HFS+ support for %{name}
 License:       LGPLv2+
 Requires:      %{name} = %{epoch}:%{version}-%{release}
-Requires:      hfsplus-tools
 
 %description hfsplus
 This adds HFS+ support to %{name}.  Install it if you want to process
@@ -294,7 +297,6 @@ disk images containing HFS+ / Mac OS Extended filesystems.
 Summary:       JFS support for %{name}
 License:       LGPLv2+
 Requires:      %{name} = %{epoch}:%{version}-%{release}
-Requires:      jfsutils
 
 %description jfs
 This adds JFS support to %{name}.  Install it if you want to process
@@ -305,7 +307,6 @@ disk images containing JFS.
 Summary:       NILFS support for %{name}
 License:       LGPLv2+
 Requires:      %{name} = %{epoch}:%{version}-%{release}
-Requires:      nilfs-utils
 
 %description nilfs
 This adds NILFS v2 support to %{name}.  Install it if you want to process
@@ -316,44 +317,36 @@ disk images containing NILFS v2.
 Summary:       ReiserFS support for %{name}
 License:       LGPLv2+
 Requires:      %{name} = %{epoch}:%{version}-%{release}
-Requires:      reiserfs-utils
 
 %description reiserfs
 This adds ReiserFS support to %{name}.  Install it if you want to process
 disk images containing ReiserFS.
 
 
-%package rsync
-Summary:       rsync support for %{name}
-License:       LGPLv2+
-Requires:      %{name} = %{epoch}:%{version}-%{release}
-Requires:      rsync
-
-%description rsync
-This adds rsync support to %{name}.  Install it if you want to use
-rsync to upload or download files into disk images.
-
-
 %package rescue
 Summary:       Additional tools for virt-rescue
 License:       LGPLv2+
 Requires:      %{name}-tools-c = %{epoch}:%{version}-%{release}
-Requires:      iputils
-Requires:      lsof
-Requires:      openssh-clients
-Requires:      strace
-Requires:      vim-minimal
 
 %description rescue
 This adds additional tools to use inside the virt-rescue shell,
 such as ssh, network utilities, editors and debugging utilities.
 
 
+%package rsync
+Summary:       rsync support for %{name}
+License:       LGPLv2+
+Requires:      %{name} = %{epoch}:%{version}-%{release}
+
+%description rsync
+This adds rsync support to %{name}.  Install it if you want to use
+rsync to upload or download files into disk images.
+
+
 %package xfs
 Summary:       XFS support for %{name}
 License:       LGPLv2+
 Requires:      %{name} = %{epoch}:%{version}-%{release}
-Requires:      xfsprogs
 
 %description xfs
 This adds XFS support to %{name}.  Install it if you want to process
@@ -365,7 +358,6 @@ disk images containing XFS.
 Summary:       ZFS support for %{name}
 License:       LGPLv2+
 Requires:      %{name} = %{epoch}:%{version}-%{release}
-Requires:      zfs-fuse
 
 %description zfs
 This adds ZFS support to %{name}.  Install it if you want to process
@@ -1373,6 +1365,7 @@ popd
 * Thu Mar 12 2015 Richard W.M. Jones <rjones@redhat.com> - 1:1.29.30-2
 - Add virt-v2v-test-harness subpackage.
 - Add a couple of upstream patches to fix the virt-v2v test harness.
+- Remove external dependency generator.  Use supermin RPM deps instead.
 
 * Wed Mar 11 2015 Richard W.M. Jones <rjones@redhat.com> - 1:1.29.30-1
 - New upstream version 1.29.30.
