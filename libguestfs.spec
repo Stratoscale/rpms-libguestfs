@@ -17,7 +17,7 @@
 %endif
 
 # Architectures on which golang works.
-%global golang_arches NONE
+%global golang_arches aarch64 %{arm} %{ix86} x86_64
 
 %global _hardened_build 1
 
@@ -25,7 +25,7 @@ Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
 Version:       1.29.30
-Release:       3%{?dist}
+Release:       4%{?dist}
 License:       LGPLv2+
 
 # Source and patches.
@@ -121,6 +121,10 @@ BuildRequires: gobject-introspection-devel
 BuildRequires: gjs
 %ifarch %{golang_arches}
 BuildRequires: golang
+# This version is required for aarch64 to be supported by gcc-go.
+%ifarch aarch64
+BuildRequires: gcc >= 5.0.0-0.19.fc23
+%endif
 %endif
 
 # Build requirements for the appliance.
@@ -1362,6 +1366,9 @@ popd
 
 
 %changelog
+* Sun Mar 15 2015 Richard W.M. Jones <rjones@redhat.com> - 1:1.29.30-4
+- Enable golang on various arches.
+
 * Thu Mar 12 2015 Richard W.M. Jones <rjones@redhat.com> - 1:1.29.30-3
 - Add virt-v2v-test-harness subpackage.
 - Add a couple of upstream patches to fix the virt-v2v test harness.
