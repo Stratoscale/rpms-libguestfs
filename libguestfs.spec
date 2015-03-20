@@ -25,15 +25,17 @@ Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
 Version:       1.29.30
-Release:       4%{?dist}
+Release:       5%{?dist}
 License:       LGPLv2+
 
 # Source and patches.
 URL:           http://libguestfs.org/
 Source0:       http://libguestfs.org/download/1.29-development/%{name}-%{version}.tar.gz
 
+# Upstream patches to add/fix the virt-v2v test harness.
 Patch1:        0001-v2v-test-harness-Measure-similarity-between-images-w.patch
 Patch2:        0002-v2v-test-harness-Fix-boot-loop-so-it-detects-disk-in.patch
+Patch3:        0001-v2v-test-harness-Add-support-for-OVA.patch
 
 # Basic build requirements:
 BuildRequires: perl(Pod::Simple)
@@ -808,6 +810,7 @@ for %{name}.
 # Apply patches, if any, here.
 %patch1 -p1
 %patch2 -p1
+%patch3 -p1
 
 # For Python 3 we must build libguestfs twice.  This creates:
 #   %{name}-%{version}/
@@ -972,10 +975,10 @@ pushd python3
 make DESTDIR=$RPM_BUILD_ROOT INSTALLDIRS=vendor -C python install
 popd
 
-# Delete static libraries, libtool files.
-rm $(
-  find $RPM_BUILD_ROOT -path '*/ocaml/guestfs' -prune -o -name '*.a' -print
-)
+# Delete static libraries.
+rm $( find $RPM_BUILD_ROOT -name '*.a' | grep -v /ocaml/ )
+
+# Delete libtool files.
 find $RPM_BUILD_ROOT -name '*.la' -delete
 
 # Delete some bogus Perl files.
@@ -1366,6 +1369,10 @@ popd
 
 
 %changelog
+* Fri Mar 20 2015 Richard W.M. Jones <rjones@redhat.com> - 1:1.29.30-5
+- More upstream patches to fix virt-v2v test harness.
+- Do not delete OCaml *.a files, including ones in the virt-v2v test harness.
+
 * Sun Mar 15 2015 Richard W.M. Jones <rjones@redhat.com> - 1:1.29.30-4
 - Enable golang on various arches.
 
