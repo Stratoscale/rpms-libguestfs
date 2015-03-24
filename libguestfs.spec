@@ -24,8 +24,8 @@
 Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
-Version:       1.29.30
-Release:       5%{?dist}
+Version:       1.29.31
+Release:       1%{?dist}
 License:       LGPLv2+
 
 # Source and patches.
@@ -1373,6 +1373,9 @@ popd
 
 
 %changelog
+* Tue Mar 24 2015 Richard W.M. Jones <rjones@redhat.com> - 1:1.29.31-1
+- New upstream version 1.29.31.
+
 * Fri Mar 20 2015 Richard W.M. Jones <rjones@redhat.com> - 1:1.29.30-5
 - More upstream patches to fix virt-v2v test harness.
 - Do not delete OCaml *.a files, including ones in the virt-v2v test harness.
