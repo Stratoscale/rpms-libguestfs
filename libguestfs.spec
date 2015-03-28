@@ -928,10 +928,6 @@ export SKIP_TEST_BTRFS_QGROUP_SHOW=1
 # mdadm --stop hangs (RHBZ#1197305).
 export SKIP_TEST_MDADM_SH=1
 
-# Hotplugging causes qemu to segfault (RHBZ#1204884).
-export SKIP_TEST_HOT_ADD_PL=1
-export SKIP_TEST_HOT_REMOVE_PL=1
-
 # Skip gnulib tests which fail (probably these are kernel/glibc bugs).
 pushd gnulib/tests
 make -k check ||:
