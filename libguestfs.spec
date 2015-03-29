@@ -32,9 +32,6 @@ License:       LGPLv2+
 URL:           http://libguestfs.org/
 Source0:       http://libguestfs.org/download/1.28-stable/%{name}-%{version}.tar.gz
 
-# Upstream patch to use -M virt on 32 bit ARM (RHBZ#1199733).
-Patch1:        0001-arm-Use-M-virt-on-32-bit-ARM-don-t-pass-dtb-paramete.patch
-
 # Basic build requirements:
 BuildRequires: perl(Pod::Simple)
 BuildRequires: perl(Pod::Man)
@@ -731,8 +728,6 @@ for %{name}.
 %prep
 %setup -q
 
-%patch1 -p1
-
 if [ "$(getenforce | tr '[A-Z]' '[a-z]')" != "disabled" ]; then
     # For sVirt to work, the local temporary directory we use in the
     # tests must be labelled the same way as /tmp.
@@ -1232,6 +1227,7 @@ popd
 %changelog
 * Sun Mar 29 2015 Richard W.M. Jones <rjones@redhat.com> - 1:1.28.7-1
 - New upstream version 1.28.7.
+- Remove patch which is now upstream (RHBZ#1199733).
 
 * Mon Mar  9 2015 Richard W.M. Jones <rjones@redhat.com> - 1:1.28.6-2
 - Upstream patch to use -M virt on 32 bit ARM (RHBZ#1199733).
