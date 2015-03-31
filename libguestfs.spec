@@ -25,12 +25,15 @@ Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
 Version:       1.28.7
-Release:       1%{?dist}
+Release:       2%{?dist}
 License:       LGPLv2+
 
 # Source and patches.
 URL:           http://libguestfs.org/
 Source0:       http://libguestfs.org/download/1.28-stable/%{name}-%{version}.tar.gz
+
+# Upstream fix for inspection of UEFI guests (RHBZ#1171666).
+Patch1:        0001-inspection-Not-an-installer-if-there-are-multiple-pa.patch
 
 # Basic build requirements:
 BuildRequires: perl(Pod::Simple)
@@ -728,6 +731,8 @@ for %{name}.
 %prep
 %setup -q
 
+%patch1 -p1
+
 if [ "$(getenforce | tr '[A-Z]' '[a-z]')" != "disabled" ]; then
     # For sVirt to work, the local temporary directory we use in the
     # tests must be labelled the same way as /tmp.
@@ -1225,6 +1230,9 @@ popd
 
 
 %changelog
+* Tue Mar 31 2015 Richard W.M. Jones <rjones@redhat.com> - 1:1.28.7-2
+- Backport fix for inspection of UEFI guests (RHBZ#1171666).
+
 * Sun Mar 29 2015 Richard W.M. Jones <rjones@redhat.com> - 1:1.28.7-1
 - New upstream version 1.28.7.
 - Remove patch which is now upstream (RHBZ#1199733).
