@@ -17,7 +17,10 @@
 %endif
 
 # Architectures on which golang works.
-%global golang_arches aarch64 %{arm} %{ix86} x86_64
+#%global golang_arches aarch64 %{arm} %{ix86} x86_64
+# In theory the above, in practice golang is so often broken that
+# I now disable it:
+%global golang_arches NONE
 
 %global _hardened_build 1
 
