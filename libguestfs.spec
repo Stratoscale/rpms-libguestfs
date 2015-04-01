@@ -28,12 +28,15 @@ Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
 Version:       1.29.33
-Release:       1%{?dist}
+Release:       2%{?dist}
 License:       LGPLv2+
 
 # Source and patches.
 URL:           http://libguestfs.org/
 Source0:       http://libguestfs.org/download/1.29-development/%{name}-%{version}.tar.gz
+
+# Upstream patch for virt-v2v test harness.
+Patch1:        0001-v2v-test-harness-Send-different-shift-keys-to-wake-u.patch
 
 # Basic build requirements:
 BuildRequires: perl(Pod::Simple)
@@ -806,7 +809,7 @@ for %{name}.
 %setup -q
 
 # Apply patches, if any, here.
-# (no patches)
+%patch1 -p1
 
 # For Python 3 we must build libguestfs twice.  This creates:
 #   %{name}-%{version}/
@@ -1365,7 +1368,7 @@ popd
 
 
 %changelog
-* Wed Apr 01 2015 Richard W.M. Jones <rjones@redhat.com> - 1:1.29.33-1
+* Wed Apr 01 2015 Richard W.M. Jones <rjones@redhat.com> - 1:1.29.33-2
 - New upstream version 1.29.33.
 
 * Fri Mar 27 2015 Richard W.M. Jones <rjones@redhat.com> - 1:1.29.32-1

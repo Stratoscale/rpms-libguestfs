@@ -1,0 +1,41 @@
+From 3034f9a658a39783cf7c99d0b00b3c7b39b061f8 Mon Sep 17 00:00:00 2001
+From: "Richard W.M. Jones" <rjones@redhat.com>
+Date: Wed, 1 Apr 2015 13:24:42 +0100
+Subject: [PATCH] v2v: test-harness: Send different shift keys to wake up
+ guests from screen blank.
+
+See:
+https://rwmj.wordpress.com/2015/03/30/tip-wake-up-a-guest-from-screen-blank/
+---
+ v2v/test-harness/v2v_test_harness.ml | 14 ++++++++++++--
+ 1 file changed, 12 insertions(+), 2 deletions(-)
+
+diff --git a/v2v/test-harness/v2v_test_harness.ml b/v2v/test-harness/v2v_test_harness.ml
+index 3bcea62..178eae8 100644
+--- a/v2v/test-harness/v2v_test_harness.ml
++++ b/v2v/test-harness/v2v_test_harness.ml
+@@ -176,9 +176,19 @@ let run ~test ?input_disk ?input_xml ?(test_plan = default_plan) () =
+       sprintf "%04d%02d%02d-%02d%02d%02d" y mo d h m s
+     in
+ 
++    let keys = [| "KEY_LEFTSHIFT"; "KEY_LEFTALT"; "KEY_LEFTCTRL" |] in
++    let next_key = ref 0 in
++
+     let take_screenshot t =
+-      (* Send a left shift key to wake up the screen from blanking. *)
+-      let cmd = sprintf "virsh send-key %s KEY_LEFTSHIFT" (quote domname) in
++      (* Send a key to wake up the screen from blanking.  But don't
++       * keep on hitting the shift key as that causes Windows to get in
++       * a muddle.
++       * https://rwmj.wordpress.com/2015/03/30/tip-wake-up-a-guest-from-screen-blank/ *)
++      let key = keys.(!next_key) in
++      next_key := !next_key+1;
++      if !next_key >= Array.length keys then next_key := 0;
++
++      let cmd = sprintf "virsh send-key %s %s" (quote domname) key in
+       printf "%s\n%!" cmd;
+       ignore (Sys.command cmd);
+       sleep 2;
+-- 
+2.3.4
+
