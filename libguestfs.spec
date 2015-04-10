@@ -202,12 +202,6 @@ Provides:      bundled(gnulib)
 # Fedora, which breaks everything.  Thus:
 Conflicts:     libguestfs-winsupport
 
-# virt-v2v-test-harness uses an internal module called 'Xml' which
-# conflicts with an OCaml module of the same name.  Ignore the
-# internal module when generating requires & provides.
-%global __ocaml_requires_opts -i Xml
-%global __ocaml_provides_opts -i Xml
-
 
 %description
 Libguestfs is a library for accessing and modifying virtual machine
@@ -529,37 +523,6 @@ Requires:      mingw32-srvany >= 1.0-13
 %description -n virt-v2v
 Virt-v2v and virt-p2v are tools that convert virtual machines from
 non-KVM hypervisors, or physical machines, to run under KVM.
-
-
-%package -n virt-v2v-test-harness
-Summary:       Library used to write test cases for virt-v2v
-License:       LGPLv2+
-
-Requires:      %{name} = %{epoch}:%{version}-%{release}
-Requires:      virt-v2v = %{epoch}:%{version}-%{release}
-Requires:      ocaml-libguestfs-devel = %{epoch}:%{version}-%{release}
-
-Requires:      ocaml-libvirt-devel >= 0.6.1.4-5
-Requires:      /usr/bin/virsh
-Requires:      /usr/bin/compare
-Requires:      /usr/bin/unxz
-
-
-%description -n virt-v2v-test-harness
-Virt-v2v-test-harness is a small library (module name: V2v_test_harness)
-used to run virt-v2v against a set of test cases consisting of real
-virtual machines.
-
-It acts as a test harness, taking a test case, running virt-v2v on it,
-then test-booting the result.  It can ensure that the test case
-converts successfully, boots successfully, and reaches a milestone
-(such as a particular screenshot).  It can also test that the
-conversion created, modified or deleted the expected files from within
-the guest.
-
-Note that this package includes only the test harness and not the test
-cases, which are distributed separately.  See the
-virt-v2v-test-harness(1) manual page for details.
 
 
 %package bash-completion
@@ -1045,6 +1008,10 @@ pushd $RPM_BUILD_ROOT%{_datadir}/virt-tools
 ln -sf /usr/i686-w64-mingw32/sys-root/mingw/bin/rhsrvany.exe
 popd
 
+# Delete the v2v test harness (except for the man page).
+rm -r $RPM_BUILD_ROOT%{_libdir}/ocaml/v2v_test_harness
+rm -r $RPM_BUILD_ROOT%{_libdir}/ocaml/stublibs/dllv2v_test_harness*
+
 # Find locale files.
 %find_lang %{name}
 
@@ -1206,17 +1173,9 @@ popd
 %{_mandir}/man1/virt-p2v-make-disk.1*
 %{_mandir}/man1/virt-p2v-make-kickstart.1*
 %{_mandir}/man1/virt-v2v.1*
+%{_mandir}/man1/virt-v2v-test-harness.1*
 %{_datadir}/virt-p2v
 %{_datadir}/virt-tools
-
-
-%files -n virt-v2v-test-harness
-%doc COPYING.LIB
-%{_mandir}/man1/virt-v2v-test-harness.1*
-%{_libdir}/ocaml/v2v_test_harness
-%{_libdir}/ocaml/stublibs/dllv2v_test_harness.so
-%{_libdir}/ocaml/stublibs/dllv2v_test_harness.so.owner
-
 
 %files bash-completion
 %dir %{_datadir}/bash-completion/completions
@@ -1364,6 +1323,8 @@ popd
 
 
 %changelog
+- Drop the virt-v2v test harness subpackage.
+
 * Wed Apr 01 2015 Richard W.M. Jones <rjones@redhat.com> - 1:1.29.33-2
 - New upstream version 1.29.33.
 
