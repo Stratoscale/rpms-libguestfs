@@ -1325,7 +1325,6 @@ rm -r $RPM_BUILD_ROOT%{_libdir}/ocaml/stublibs/dllv2v_test_harness*
 %changelog
 * Fri Apr 10 2015 Richard W.M. Jones <rjones@redhat.com> - 1:1.29.34-1
 - New upstream version 1.29.34.
-
 - Drop the virt-v2v test harness subpackage.
 
 * Wed Apr 01 2015 Richard W.M. Jones <rjones@redhat.com> - 1:1.29.33-2
