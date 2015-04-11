@@ -225,11 +225,14 @@ subpackages are:
          libguestfs-tools  virt-* tools, guestfish and guestmount (FUSE)
        libguestfs-tools-c  only the subset of virt tools written in C
                              (for reduced dependencies)
+                 virt-v2v  convert virtual or physical machines to run
+                             on KVM (also known as V2V and P2V)
 
 For enhanced features, install:
 
           libguestfs-gfs2  adds Global Filesystem (GFS2) support
        libguestfs-hfsplus  adds HFS+ (Mac filesystem) support
+ libguestfs-inspect-icons  adds support for inspecting guest icons
            libguestfs-jfs  adds JFS support
          libguestfs-nilfs  adds NILFS v2 support
       libguestfs-reiserfs  adds ReiserFS support
