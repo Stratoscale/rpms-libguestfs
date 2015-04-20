@@ -28,7 +28,7 @@ Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
 Version:       1.29.36
-Release:       1%{?dist}
+Release:       2%{?dist}
 License:       LGPLv2+
 
 # Source and patches.
@@ -948,6 +948,14 @@ find $RPM_BUILD_ROOT -name .packlist -delete
 find $RPM_BUILD_ROOT -name '*.bs' -delete
 find $RPM_BUILD_ROOT -name 'bindtests.pl' -delete
 
+# Remove obsolete binaries (RHBZ#1213298).
+rm $RPM_BUILD_ROOT%{_bindir}/virt-list-filesystems
+rm $RPM_BUILD_ROOT%{_bindir}/virt-list-partitions
+rm $RPM_BUILD_ROOT%{_bindir}/virt-tar
+rm $RPM_BUILD_ROOT%{_mandir}/man1/virt-list-filesystems.1*
+rm $RPM_BUILD_ROOT%{_mandir}/man1/virt-list-partitions.1*
+rm $RPM_BUILD_ROOT%{_mandir}/man1/virt-tar.1*
+
 # Don't use versioned jar file (RHBZ#1022133).
 # See: https://bugzilla.redhat.com/show_bug.cgi?id=1022184#c4
 mv $RPM_BUILD_ROOT%{_datadir}/java/%{name}-%{version}.jar \
@@ -1156,12 +1164,6 @@ rm -r $RPM_BUILD_ROOT%{_libdir}/ocaml/stublibs/dllv2v_test_harness*
 
 %files tools
 %doc README
-%{_bindir}/virt-list-filesystems
-%{_mandir}/man1/virt-list-filesystems.1*
-%{_bindir}/virt-list-partitions
-%{_mandir}/man1/virt-list-partitions.1*
-%{_bindir}/virt-tar
-%{_mandir}/man1/virt-tar.1*
 %{_bindir}/virt-win-reg
 %{_mandir}/man1/virt-win-reg.1*
 
@@ -1326,6 +1328,10 @@ rm -r $RPM_BUILD_ROOT%{_libdir}/ocaml/stublibs/dllv2v_test_harness*
 
 
 %changelog
+* Mon Apr 20 2015 Richard W.M. Jones <rjones@redhat.com> - 1:1.29.36-2
+- Remove deprecated programs: virt-list-partitions, virt-list-filesystems,
+  virt-tar (RHBZ#1213298).
+
 * Thu Apr 16 2015 Richard W.M. Jones <rjones@redhat.com> - 1:1.29.36-1
 - New upstream version 1.29.36.
 
