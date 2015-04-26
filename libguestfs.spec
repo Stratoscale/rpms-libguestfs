@@ -32,9 +32,6 @@ License:       LGPLv2+
 URL:           http://libguestfs.org/
 Source0:       http://libguestfs.org/download/1.28-stable/%{name}-%{version}.tar.gz
 
-# Upstream fix for inspection of UEFI guests (RHBZ#1171666).
-Patch1:        0001-inspection-Not-an-installer-if-there-are-multiple-pa.patch
-
 # Basic build requirements:
 BuildRequires: perl(Pod::Simple)
 BuildRequires: perl(Pod::Man)
@@ -730,8 +727,6 @@ for %{name}.
 
 %prep
 %setup -q
-
-%patch1 -p1
 
 if [ "$(getenforce | tr '[A-Z]' '[a-z]')" != "disabled" ]; then
     # For sVirt to work, the local temporary directory we use in the
