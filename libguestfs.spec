@@ -28,7 +28,7 @@ Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
 Version:       1.29.40
-Release:       1%{?dist}
+Release:       2%{?dist}
 License:       LGPLv2+
 
 # Source and patches.
@@ -836,9 +836,14 @@ fi
 %global localconfigure %{localconfigure} --disable-golang
 %endif
 
+# Building index-parse.c by hand works around a race condition in the
+# autotools cruft, where two or more copies of yacc race with each
+# other, resulting in a corrupted file.
+#
 # 'INSTALLDIRS' ensures that Perl and Ruby libs are installed in the
 # vendor dir not the site dir.
 %global localmake \
+  make -j1 -C builder index-parse.c \
   make V=1 INSTALLDIRS=vendor %{?_smp_mflags}
 
 %{localconfigure}
@@ -1328,6 +1333,9 @@ rm -r $RPM_BUILD_ROOT%{_libdir}/ocaml/stublibs/dllv2v_test_harness*
 
 
 %changelog
+* Thu May 07 2015 Richard W.M. Jones <rjones@redhat.com> - 1:1.29.40-2
+- Add workaround for builder/index-parse.c autotools race.
+
 * Wed May 06 2015 Richard W.M. Jones <rjones@redhat.com> - 1:1.29.40-1
 - New upstream version 1.29.40.
 
