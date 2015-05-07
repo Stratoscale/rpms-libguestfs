@@ -916,12 +916,8 @@ popd
 # is obviously broken.  Also dump libvirt log files if this happens.
 # Since it's most likely libvirt which is broken, make sure libvirt
 # debugging is enabled here.
-mkdir -p $HOME/.config/libvirt
-echo 'log_filters="1:qemu"' > $HOME/.config/libvirt/libvirtd.conf
-echo 'log_outputs="1:file:/tmp/libvirtd.log"' >> $HOME/.config/libvirt/libvirtd.conf
 if ! make quickcheck LIBVIRT_DEBUG=1; then
     cat $HOME/.cache/libvirt/qemu/log/*
-    cat /tmp/libvirtd.log
     exit 1
 fi
 
