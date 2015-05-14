@@ -27,7 +27,7 @@
 Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
-Version:       1.29.41
+Version:       1.29.42
 Release:       1%{?dist}
 License:       LGPLv2+
 
@@ -895,6 +895,10 @@ export SKIP_TEST_PART_GET_MBR_ID_0=1
 # Disable fuse test (RHBZ#1184762).
 export SKIP_TEST_FUSE_SH=1
 
+# fusermount behaviour seems to have broken the test (RHBZ#1220751).
+export SKIP_TEST_FUSE_UMOUNT_RACE_SH=1
+export SKIP_TEST_GUESTMOUNT_FD=1
+
 # Disable btrfs-qgroup-show (RHBZ#1188553).
 export SKIP_TEST_BTRFS_QGROUP_SHOW=1
 
@@ -1333,6 +1337,9 @@ rm -r $RPM_BUILD_ROOT%{_libdir}/ocaml/stublibs/dllv2v_test_harness*
 
 
 %changelog
+* Thu May 14 2015 Richard W.M. Jones <rjones@redhat.com> - 1:1.29.42-1
+- New upstream version 1.29.42.
+
 * Mon May 11 2015 Richard W.M. Jones <rjones@redhat.com> - 1:1.29.41-1
 - New upstream version 1.29.41.
 
