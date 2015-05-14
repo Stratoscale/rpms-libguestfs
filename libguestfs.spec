@@ -146,6 +146,12 @@ BuildRequires: ntfs-3g ntfsprogs
 BuildRequires: syslinux syslinux-extlinux
 %endif
 
+# For complicated reasons, this is required so that
+# /bin/kernel-install puts the kernel directly into /boot, instead of
+# into a /boot/<machine-id> subdirectory (in Fedora >= 23).  Read the
+# kernel-install script to understand why.
+BuildRequires: grubby
+
 # For building the appliance.
 Requires:      supermin >= 5.1.12
 
