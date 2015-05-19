@@ -28,7 +28,7 @@ Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
 Version:       1.29.43
-Release:       1%{?dist}
+Release:       2%{?dist}
 License:       LGPLv2+
 
 # Source and patches.
@@ -895,21 +895,12 @@ export SKIP_TEST_SET_LABEL=1
 export SKIP_TEST_VIRT_ALIGNMENT_SCAN_GUESTS_SH=1
 export SKIP_TEST_VIRT_DF_GUESTS_SH=1
 
-# Disable sfdisk test (RHBZ#1183234).
-export SKIP_TEST_PART_GET_MBR_ID_0=1
-
 # Disable fuse test (RHBZ#1184762).
 export SKIP_TEST_FUSE_SH=1
 
 # fusermount behaviour seems to have broken the test (RHBZ#1220751).
 export SKIP_TEST_FUSE_UMOUNT_RACE_SH=1
 export SKIP_TEST_GUESTMOUNT_FD=1
-
-# Disable btrfs-qgroup-show (RHBZ#1188553).
-export SKIP_TEST_BTRFS_QGROUP_SHOW=1
-
-# mdadm --stop hangs (RHBZ#1197305).
-export SKIP_TEST_MDADM_SH=1
 
 # Skip gnulib tests which fail (probably these are kernel/glibc bugs).
 pushd gnulib/tests
@@ -1343,6 +1334,10 @@ rm -r $RPM_BUILD_ROOT%{_libdir}/ocaml/stublibs/dllv2v_test_harness*
 
 
 %changelog
+* Tue May 19 2015 Richard W.M. Jones <rjones@redhat.com> - 1:1.29.43-2
+- Remove several test SKIP_* variables related to bugs which have
+  since been fixed.
+
 * Sat May 16 2015 Richard W.M. Jones <rjones@redhat.com> - 1:1.29.43-1
 - New upstream version 1.29.43.
 
