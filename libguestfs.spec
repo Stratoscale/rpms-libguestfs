@@ -902,6 +902,10 @@ export SKIP_TEST_FUSE_SH=1
 export SKIP_TEST_FUSE_UMOUNT_RACE_SH=1
 export SKIP_TEST_GUESTMOUNT_FD=1
 
+# Hotplugging is broken in Rawhide (RHBZ#1225837).
+export SKIP_TEST_HOT_ADD_PL=1
+export SKIP_TEST_HOT_REMOVE_PL=1
+
 # Skip gnulib tests which fail (probably these are kernel/glibc bugs).
 pushd gnulib/tests
 make -k check ||:
