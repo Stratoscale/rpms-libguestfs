@@ -73,8 +73,6 @@ BuildRequires: ocaml-libvirt-devel >= 0.6.1.4-5
 BuildRequires: systemd-units
 BuildRequires: netpbm-progs
 BuildRequires: icoutils
-BuildRequires: perl(XML::XPath)
-BuildRequires: perl(XML::XPath::XMLParser)
 BuildRequires: libvirt-daemon-qemu
 BuildRequires: perl(Expect)
 BuildRequires: lua
@@ -429,8 +427,6 @@ Requires:      %{name}-tools-c = %{epoch}:%{version}-%{release}
 
 # NB: Only list deps here which are not picked up automatically.
 Requires:      perl(Sys::Virt)
-Requires:      perl(String::ShellQuote)
-Requires:      perl(XML::Writer)
 Requires:      perl(Win::Hivex) >= 1.2.7
 
 
@@ -596,8 +592,6 @@ required to use the OCaml bindings for %{name}.
 Summary:       Perl bindings for %{name} (Sys::Guestfs)
 Requires:      %{name} = %{epoch}:%{version}-%{release}
 Requires:      perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $version))
-# RHBZ#523547
-Requires:      perl(XML::XPath)
 
 
 %description -n perl-Sys-Guestfs
