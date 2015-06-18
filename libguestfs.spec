@@ -471,6 +471,8 @@ capable tool.
 
 Virt-format is a command line tool to erase and make blank disks.
 
+Virt-get-kernel extracts a kernel/initrd from a disk image.
+
 Virt-inspector examines a virtual machine and tries to determine the
 version of the OS, the kernel version, what drivers are installed,
 whether the virtual machine is fully virtualized (FV) or
@@ -1126,6 +1128,8 @@ popd
 %{_mandir}/man1/virt-filesystems.1*
 %{_bindir}/virt-format
 %{_mandir}/man1/virt-format.1*
+%{_bindir}/virt-get-kernel
+%{_mandir}/man1/virt-get-kernel.1*
 %{_bindir}/virt-index-validate
 %{_mandir}/man1/virt-index-validate.1*
 %{_bindir}/virt-inspector
@@ -1324,6 +1328,7 @@ popd
 %changelog
 * Tue Jul 07 2015 Richard W.M. Jones <rjones@redhat.com> - 1:1.29.49-1
 - New upstream version 1.29.49.
+- New tool: virt-get-kernel.
 
 * Mon Jun 08 2015 Richard W.M. Jones <rjones@redhat.com> - 1:1.29.46-1
 - New upstream version 1.29.46.
