@@ -27,8 +27,8 @@
 Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
-Version:       1.29.46
-Release:       6%{?dist}
+Version:       1.29.47
+Release:       1%{?dist}
 License:       LGPLv2+
 
 # Source and patches.
@@ -476,6 +476,8 @@ capable tool.
 
 Virt-format is a command line tool to erase and make blank disks.
 
+Virt-get-kernel extracts a kernel/initrd from a disk image.
+
 Virt-inspector examines a virtual machine and tries to determine the
 version of the OS, the kernel version, what drivers are installed,
 whether the virtual machine is fully virtualized (FV) or
@@ -900,6 +902,10 @@ export SKIP_TEST_GUESTMOUNT_FD=1
 export SKIP_TEST_HOT_ADD_PL=1
 export SKIP_TEST_HOT_REMOVE_PL=1
 
+# xfs_admin has no effect in Rawhide (RHBZ#1233220).
+export SKIP_TEST_XFS_ADMIN=1
+export SKIP_TEST_XFS_MISC_PL=1
+
 # Skip gnulib tests which fail (probably these are kernel/glibc bugs).
 pushd gnulib/tests
 make -k check ||:
@@ -1142,6 +1148,8 @@ rm -r $RPM_BUILD_ROOT%{_libdir}/ocaml/stublibs/dllv2v_test_harness*
 %{_mandir}/man1/virt-filesystems.1*
 %{_bindir}/virt-format
 %{_mandir}/man1/virt-format.1*
+%{_bindir}/virt-get-kernel
+%{_mandir}/man1/virt-get-kernel.1*
 %{_bindir}/virt-index-validate
 %{_mandir}/man1/virt-index-validate.1*
 %{_bindir}/virt-inspector
@@ -1332,11 +1340,10 @@ rm -r $RPM_BUILD_ROOT%{_libdir}/ocaml/stublibs/dllv2v_test_harness*
 
 
 %changelog
-* Thu Jun 18 2015 Richard W.M. Jones <rjones@redhat.com> - 1:1.29.46-6
-- Bump release and rebuild.
-
-* Thu Jun 18 2015 Richard W.M. Jones <rjones@redhat.com> - 1:1.29.46-5
-- Bump release and rebuild.
+* Thu Jun 18 2015 Richard W.M. Jones <rjones@redhat.com> - 1:1.29.47-1
+- New upstream version 1.29.47.
+- New tool: virt-get-kernel.
+- Skip xfs_admin tests because of RHBZ#1233220.
 
 * Wed Jun 17 2015 Richard W.M. Jones <rjones@redhat.com> - 1:1.29.46-4
 - ocaml-4.02.2 rebuild.
