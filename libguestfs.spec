@@ -912,6 +912,8 @@ export SKIP_TEST_PVREMOVE=1
 export SKIP_TEST_VGREMOVE=1
 export SKIP_TEST_VGRENAME=1
 export SKIP_TEST_LUKS_SH=1
+export SKIP_TEST_MDADM_SH=1
+export SKIP_TEST_VIRT_INSPECTOR_SH=1
 
 # Skip gnulib tests which fail (probably these are kernel/glibc bugs).
 pushd gnulib/tests
