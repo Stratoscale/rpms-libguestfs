@@ -906,6 +906,12 @@ export SKIP_TEST_HOT_REMOVE_PL=1
 export SKIP_TEST_XFS_ADMIN=1
 export SKIP_TEST_XFS_MISC_PL=1
 
+# LVM/DM broken in Rawhide (RHBZ#1237136, RHBZ#1237137).
+export SKIP_TEST_VGREMOVE_0=1
+export SKIP_TEST_LVREMOVE_1=1
+export SKIP_TEST_LVREMOVE_2=1
+export SKIP_TEST_LUKS_SH=1
+
 # Skip gnulib tests which fail (probably these are kernel/glibc bugs).
 pushd gnulib/tests
 make -k check ||:
