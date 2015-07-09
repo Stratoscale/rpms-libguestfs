@@ -212,6 +212,9 @@ subpackages are:
          libguestfs-tools  virt-* tools, guestfish and guestmount (FUSE)
        libguestfs-tools-c  only the subset of virt tools written in C
                              (for reduced dependencies)
+                 virt-dib  safe and secure diskimage-builder replacement
+                 virt-v2v  convert virtual or physical machines to run
+                             on KVM (also known as V2V and P2V)
 
 For enhanced features, install:
 
@@ -501,6 +504,19 @@ for virtual machines.  These replace the deprecated program virt-tar.
 
 Virt-win-reg lets you look at and modify the Windows Registry of
 Windows virtual machines.
+
+
+%package -n virt-dib
+Summary:       Safe and secure diskimage-builder replacement
+License:       GPLv2+
+
+Requires:      %{name} = %{epoch}:%{version}-%{release}
+
+
+%description -n virt-dib
+Virt-dib is a safe and secure alternative to the OpenStack
+diskimage-builder command.  It is compatible with most
+diskimage-builder elements.
 
 
 %package -n virt-v2v
@@ -977,6 +993,9 @@ function move_to
     mv packages-t packages
     echo "$1" >> "$2"
 }
+move_to curl            zz-packages-dib
+move_to debootstrap     zz-packages-dib
+move_to which           zz-packages-dib
 move_to gfs2-utils      zz-packages-gfs2
 move_to hfsplus-tools   zz-packages-hfsplus
 move_to jfsutils        zz-packages-jfs
@@ -1166,6 +1185,13 @@ popd
 %{_mandir}/man1/virt-win-reg.1*
 
 
+%files -n virt-dib
+%doc COPYING README
+%{_bindir}/virt-dib
+%{_mandir}/man1/virt-dib.1*
+%{_libdir}/guestfs/supermin.d/zz-packages-dib
+
+
 %files -n virt-v2v
 %doc COPYING README v2v/TODO
 %{_libexecdir}/virt-p2v
@@ -1328,6 +1354,7 @@ popd
 %changelog
 * Fri Jul 10 2015 Richard W.M. Jones <rjones@redhat.com> - 1:1.29.50-1
 - New upstream version 1.29.50.
+- Add virt-dib.
 
 * Tue Jul 07 2015 Richard W.M. Jones <rjones@redhat.com> - 1:1.29.49-1
 - New upstream version 1.29.49.
