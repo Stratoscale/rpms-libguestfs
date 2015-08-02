@@ -28,12 +28,15 @@ Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
 Version:       1.31.1
-Release:       1%{?dist}
+Release:       2%{?dist}
 License:       LGPLv2+
 
 # Source and patches.
 URL:           http://libguestfs.org/
 Source0:       http://libguestfs.org/download/1.29-development/%{name}-%{version}.tar.gz
+
+# Upstream commit d9c63708311f9b5c309dd1a17b25329f99bac710.
+Patch1:        0001-sysprep-Allow-test-virt-sysprep.sh-to-be-skipped.patch
 
 # Basic build requirements:
 BuildRequires: perl(Pod::Simple)
@@ -788,6 +791,7 @@ for %{name}.
 %setup -q
 
 # Apply patches, if any, here.
+%patch1 -p1
 
 # For Python 3 we must build libguestfs twice.  This creates:
 #   %{name}-%{version}/
@@ -928,6 +932,7 @@ export SKIP_TEST_VGRENAME=1
 export SKIP_TEST_LUKS_SH=1
 export SKIP_TEST_MDADM_SH=1
 export SKIP_TEST_VIRT_INSPECTOR_SH=1
+export SKIP_TEST_VIRT_SYSPREP_SH=1
 
 # Skip gnulib tests which fail (probably these are kernel/glibc bugs).
 pushd gnulib/tests
@@ -1373,6 +1378,9 @@ rm -r $RPM_BUILD_ROOT%{_libdir}/ocaml/stublibs/dllv2v_test_harness*
 
 
 %changelog
+* Sun Aug  2 2015 Richard W.M. Jones <rjones@redhat.com> - 1:1.31.1-2
+- Skip virt-sysprep test.
+
 * Fri Jul 31 2015 Richard W.M. Jones <rjones@redhat.com> - 1:1.31.1-1
 - New upstream version 1.31.1.
 

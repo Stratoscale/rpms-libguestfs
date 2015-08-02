@@ -1,0 +1,29 @@
+From d9c63708311f9b5c309dd1a17b25329f99bac710 Mon Sep 17 00:00:00 2001
+From: "Richard W.M. Jones" <rjones@redhat.com>
+Date: Sun, 2 Aug 2015 17:33:07 +0100
+Subject: [PATCH] sysprep: Allow test-virt-sysprep.sh to be skipped.
+
+It fails in Fedora Rawhide because LVM is broken (RHBZ#1237136).
+---
+ sysprep/test-virt-sysprep.sh | 5 +++++
+ 1 file changed, 5 insertions(+)
+
+diff --git a/sysprep/test-virt-sysprep.sh b/sysprep/test-virt-sysprep.sh
+index 7ec96d0..14cd492 100755
+--- a/sysprep/test-virt-sysprep.sh
++++ b/sysprep/test-virt-sysprep.sh
+@@ -19,6 +19,11 @@
+ export LANG=C
+ set -e
+ 
++if [ -n "$SKIP_TEST_VIRT_SYSPREP_SH" ]; then
++    echo "$0: test skipped because environment variable is set."
++    exit 77
++fi
++
+ # Get a comma-separated list of the enabled-by-default operations.
+ operations=$(
+   virt-sysprep --list-operations |
+-- 
+2.5.0
+
