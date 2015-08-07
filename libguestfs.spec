@@ -28,7 +28,7 @@ Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
 Version:       1.31.1
-Release:       2%{?dist}
+Release:       3%{?dist}
 License:       LGPLv2+
 
 # Source and patches.
@@ -184,6 +184,10 @@ Requires:      libvirt-daemon-kvm >= 0.10.2-3
 Requires:      libvirt-daemon-qemu >= 0.10.2-3
 %endif
 Requires:      selinux-policy >= 3.11.1-63
+
+%if 0%{?fedora} >= 23
+Recommends:    libguestfs-xfs
+%endif
 
 # For UML backend (this backend only works on x86).
 # UML has been broken upstream (in the kernel) for a while, so don't
@@ -1378,6 +1382,10 @@ rm -r $RPM_BUILD_ROOT%{_libdir}/ocaml/stublibs/dllv2v_test_harness*
 
 
 %changelog
+* Fri Aug  7 2015 Pino Toscano <ptoscano@redhat.com> - 1:1.31.1-3
+- Make libguestfs recommend libguestfs-xfs, as the default filesystem is XFS
+  so we want tools to work on XFS by default.
+
 * Sun Aug  2 2015 Richard W.M. Jones <rjones@redhat.com> - 1:1.31.1-2
 - Skip virt-sysprep test.
 
