@@ -1385,6 +1385,7 @@ rm -r $RPM_BUILD_ROOT%{_libdir}/ocaml/stublibs/dllv2v_test_harness*
 * Fri Aug  7 2015 Pino Toscano <ptoscano@redhat.com> - 1:1.31.1-3
 - Make libguestfs recommend libguestfs-xfs, as the default filesystem is XFS
   so we want tools to work on XFS by default.
+- Remove version suffix from the docdir mentioned in the installed README.
 
 * Sun Aug  2 2015 Richard W.M. Jones <rjones@redhat.com> - 1:1.31.1-2
 - Skip virt-sysprep test.

@@ -20,7 +20,7 @@ The first place to start are the manual pages.  Type:
   man virt-cat   # and other virt-* tools
 
 If you install the libguestfs-devel package, then in the
-/usr/share/doc/libguestfs-devel-@VERSION@/ directory you will also
+/usr/share/doc/libguestfs-devel/ directory you will also
 find:
 
  - BUGS: list of open bugs in this version
