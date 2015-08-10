@@ -185,10 +185,6 @@ Requires:      libvirt-daemon-qemu >= 0.10.2-3
 %endif
 Requires:      selinux-policy >= 3.11.1-63
 
-%if 0%{?fedora} >= 23
-Recommends:    libguestfs-xfs
-%endif
-
 # For UML backend (this backend only works on x86).
 # UML has been broken upstream (in the kernel) for a while, so don't
 # include this.  Note that uml_utilities also depends on Perl.
@@ -415,6 +411,10 @@ Requires:      gnupg
 Requires:      xz
 #Requires:     nbdkit, nbdkit-plugin-xz
 Requires:      curl
+
+%if 0%{?fedora} >= 23
+Recommends:    libguestfs-xfs
+%endif
 
 
 %description tools-c
@@ -1383,8 +1383,8 @@ rm -r $RPM_BUILD_ROOT%{_libdir}/ocaml/stublibs/dllv2v_test_harness*
 
 %changelog
 * Fri Aug  7 2015 Pino Toscano <ptoscano@redhat.com> - 1:1.31.1-3
-- Make libguestfs recommend libguestfs-xfs, as the default filesystem is XFS
-  so we want tools to work on XFS by default.
+- Make libguestfs-tools-c recommend libguestfs-xfs, as the default filesystem
+  is XFS so we want tools to work on XFS by default.
 - Remove version suffix from the docdir mentioned in the installed README.
 
 * Sun Aug  2 2015 Richard W.M. Jones <rjones@redhat.com> - 1:1.31.1-2
