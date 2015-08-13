@@ -1380,7 +1380,6 @@ rm -r $RPM_BUILD_ROOT%{_libdir}/ocaml/stublibs/dllv2v_test_harness*
 %changelog
 * Thu Aug 13 2015 Richard W.M. Jones <rjones@redhat.com> - 1:1.31.2-1
 - New upstream version 1.31.2.
-
 - Enable tests on i686, arm and aarch64.
 
 * Fri Aug  7 2015 Pino Toscano <ptoscano@redhat.com> - 1:1.31.1-3
