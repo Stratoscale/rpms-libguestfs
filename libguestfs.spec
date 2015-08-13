@@ -31,9 +31,6 @@ License:       LGPLv2+
 URL:           http://libguestfs.org/
 Source0:       http://libguestfs.org/download/1.29-development/%{name}-%{version}.tar.gz
 
-# Upstream commit d9c63708311f9b5c309dd1a17b25329f99bac710.
-Patch1:        0001-sysprep-Allow-test-virt-sysprep.sh-to-be-skipped.patch
-
 # Basic build requirements:
 BuildRequires: perl(Pod::Simple)
 BuildRequires: perl(Pod::Man)
@@ -791,7 +788,6 @@ for %{name}.
 %setup -q
 
 # Apply patches, if any, here.
-%patch1 -p1
 
 # For Python 3 we must build libguestfs twice.  This creates:
 #   %{name}-%{version}/
@@ -1381,6 +1377,7 @@ rm -r $RPM_BUILD_ROOT%{_libdir}/ocaml/stublibs/dllv2v_test_harness*
 * Thu Aug 13 2015 Richard W.M. Jones <rjones@redhat.com> - 1:1.31.2-1
 - New upstream version 1.31.2.
 - Enable tests on i686, arm and aarch64.
+- Remove patch which is now upstream.
 
 * Fri Aug  7 2015 Pino Toscano <ptoscano@redhat.com> - 1:1.31.1-3
 - Make libguestfs-tools-c recommend libguestfs-xfs, as the default filesystem
