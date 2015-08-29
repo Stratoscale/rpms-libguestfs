@@ -1,0 +1,66 @@
+From d875346ad441d4762455ea1b41d57ad6174d9b63 Mon Sep 17 00:00:00 2001
+From: "Richard W.M. Jones" <rjones@redhat.com>
+Date: Thu, 27 Aug 2015 17:14:49 +0100
+Subject: [PATCH] customize: Use setarch when running commands on i686 guest
+ (RHBZ#1256405).
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+When running (eg) dnf on a 32 bit i686 guest when the host is 64 bit
+x86_64, dnf believes it is running on a 64 bit machine and so tries to
+install x86_64 packages.  We can 'trick' dnf into believing it's a 32
+bit machine using the setarch program.
+
+$ virt-builder fedora-22 --arch i686 --install 'gperf'
+...
+[  27.4] Installing packages: gperf
+...
+Running transaction test
+Error: Transaction check error:
+  package libgcc-5.1.1-4.fc22.x86_64 is intended for a different architecture
+...
+
+The use of a heredoc to solve quoting issues comes from:
+http://stackoverflow.com/a/3435460
+
+Thanks: Jan Sedlák for finding the solution.
+---
+ customize/customize_run.ml | 10 +++++++++-
+ 1 file changed, 9 insertions(+), 1 deletion(-)
+
+diff --git a/customize/customize_run.ml b/customize/customize_run.ml
+index 828c711..2283272 100644
+--- a/customize/customize_run.ml
++++ b/customize/customize_run.ml
+@@ -59,6 +59,7 @@ let run (g : Guestfs.guestfs) root (ops : ops) =
+      * - Pass environment variables through from the host.
+      * - Send stdout and stderr to a log file so we capture all output
+      *   in error messages.
++     * - Use setarch when running x86_64 host + i686 guest.
+      * Also catch errors and dump the log file completely on error.
+      *)
+     let env_vars =
+@@ -69,11 +70,18 @@ let run (g : Guestfs.guestfs) root (ops : ops) =
+       ) [ "http_proxy"; "https_proxy"; "ftp_proxy"; "no_proxy" ] in
+     let env_vars = String.concat "\n" env_vars ^ "\n" in
+ 
++    let setarch =
++      match Config.host_cpu, guest_arch with
++      | "x86_64", ("i386"|"i486"|"i586"|"i686") -> "setarch i686"
++      | _ -> "" in
++
+     let cmd = sprintf "\
+ exec >>%s 2>&1
+ %s
++%s <<\"__EOCMD\"
+ %s
+-" (quote logfile) env_vars cmd in
++__EOCMD
++" (quote logfile) env_vars setarch cmd in
+ 
+     if verbose () then printf "running command:\n%s\n%!" cmd;
+     try ignore (g#sh cmd)
+-- 
+2.5.0
+
