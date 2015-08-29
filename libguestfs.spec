@@ -25,12 +25,16 @@ Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
 Version:       1.30.1
-Release:       1%{?dist}
+Release:       2%{?dist}
 License:       LGPLv2+
 
 # Source and patches.
 URL:           http://libguestfs.org/
 Source0:       http://libguestfs.org/download/1.29-development/%{name}-%{version}.tar.gz
+
+# Fix running commands on 32 bit virt-builder guests (RHBZ#1256405).
+# Upstream commit d875346ad441d4762455ea1b41d57ad6174d9b63.
+Patch1:        0001-customize-Use-setarch-when-running-commands-on-i686-.patch
 
 # Basic build requirements:
 BuildRequires: perl(Pod::Simple)
@@ -786,6 +790,9 @@ for %{name}.
 %prep
 %setup -q
 
+# Apply patches, if any, here.
+%patch1 -p1
+
 # For Python 3 we must build libguestfs twice.  This creates:
 #   %{name}-%{version}/
 #   %{name}-%{version}/python3/
@@ -1352,6 +1359,9 @@ popd
 
 
 %changelog
+* Sat Aug 29 2015 Richard W.M. Jones <rjones@redhat.com> - 1:1.30.1-2
+- Fix running commands on 32 bit virt-builder guests (RHBZ#1256405).
+
 * Fri Aug 14 2015 Richard W.M. Jones <rjones@redhat.com> - 1:1.30.1-1
 - New upstream version 1.30.1.
 
