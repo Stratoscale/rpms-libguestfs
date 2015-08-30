@@ -4,10 +4,11 @@
 %if %{defined libguestfs_runtests}
 %global runtests %{libguestfs_runtests}
 %else
-%ifnarch ppc %{power64}
+# Disabled on armv7 because they take nearly 24 hours to run.
+# Disabled on ppc, ppc64 (secondary arches), see RHBZ#1036742.
+%ifnarch %{arm} ppc %{power64}
 %global runtests 1
 %else
-# Disabled on ppc, ppc64 (secondary arches), see RHBZ#1036742.
 %global runtests 0
 %endif
 %endif
@@ -1376,6 +1377,7 @@ rm -r $RPM_BUILD_ROOT%{_libdir}/ocaml/stublibs/dllv2v_test_harness*
 %changelog
 * Sat Aug 29 2015 Richard W.M. Jones <rjones@redhat.com> - 1:1.31.3-1
 - New upstream version 1.31.3.
+- Disable tests on armv7 because they take nearly 24 hours to run.
 
 * Thu Aug 13 2015 Richard W.M. Jones <rjones@redhat.com> - 1:1.31.2-1
 - New upstream version 1.31.2.
