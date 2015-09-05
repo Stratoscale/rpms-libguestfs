@@ -6,7 +6,8 @@
 %else
 # Disabled on armv7 because they take nearly 24 hours to run.
 # Disabled on ppc, ppc64 (secondary arches), see RHBZ#1036742.
-%ifnarch %{arm} ppc %{power64}
+# Disabled on x86, because of RHBZ#1258223
+%ifnarch %{arm} %{ix86} ppc %{power64}
 %global runtests 1
 %else
 %global runtests 0
