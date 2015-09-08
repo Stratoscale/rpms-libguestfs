@@ -35,10 +35,6 @@ License:       LGPLv2+
 URL:           http://libguestfs.org/
 Source0:       http://libguestfs.org/download/1.29-development/%{name}-%{version}.tar.gz
 
-# Fix running commands on 32 bit virt-builder guests (RHBZ#1256405).
-# Upstream commit d875346ad441d4762455ea1b41d57ad6174d9b63.
-Patch1:        0001-customize-Use-setarch-when-running-commands-on-i686-.patch
-
 # Basic build requirements:
 BuildRequires: perl(Pod::Simple)
 BuildRequires: perl(Pod::Man)
@@ -792,7 +788,6 @@ for %{name}.
 %setup -q
 
 # Apply patches, if any, here.
-%patch1 -p1
 
 # For Python 3 we must build libguestfs twice.  This creates:
 #   %{name}-%{version}/
