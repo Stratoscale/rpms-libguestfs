@@ -1,19 +1,3 @@
-# Run tests during check.  Default is enabled on most architectures.
-# You can override this by putting '%libguestfs_runtests 0' into
-# '~/.rpmmacros'
-%if %{defined libguestfs_runtests}
-%global runtests %{libguestfs_runtests}
-%else
-# Disabled on armv7 because they take nearly 24 hours to run.
-# Disabled on ppc, ppc64 (secondary arches), see RHBZ#1036742.
-# Disabled on x86, because of RHBZ#1258223
-%ifnarch %{arm} %{ix86} ppc %{power64}
-%global runtests 1
-%else
-%global runtests 0
-%endif
-%endif
-
 # Architectures on which golang works.
 #%global golang_arches aarch64 %{arm} %{ix86} x86_64
 # In theory the above, in practice golang is so often broken that
@@ -26,7 +10,7 @@ Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
 Version:       1.31.7
-Release:       1%{?dist}
+Release:       2%{?dist}
 License:       LGPLv2+
 
 # Source and patches.
@@ -878,83 +862,22 @@ popd
 
 %check
 
-%if %{runtests}
+# Note that the major tests are done after the package has been built.
+#
+# Here we only do a sanity check that kernel/qemu/libvirt/appliance is
+# not broken.
+#
+# To perform the full test suite, see instructions here:
+# https://www.redhat.com/archives/libguestfs/2015-September/msg00078.html
 
-# Enable debugging - very useful if a test does fail, although
-# it produces masses of output in the build.log.
 export LIBGUESTFS_DEBUG=1
-
-# Enable trace.  Since libguestfs 1.9.7 this produces 'greppable'
-# output even when combined with trace (see RHBZ#673477).
 export LIBGUESTFS_TRACE=1
+export LIBVIRT_DEBUG=1
 
-# This test fails because we build the ISO after encoding the checksum
-# of the ISO in the test itself.  Need to fix the test to work out the
-# checksum at runtime.
-export SKIP_TEST_CHECKSUM_DEVICE=1
-
-# Disable tests that need or test the network.  These won't work with
-# the new libvirt network since virbr0 is not connected in Koji, so
-# libvirt fails with ENOTCONN 'Transport endpoint not connected'
-# (RHBZ#1148972).
-export SKIP_TEST_VIRT_BUILDER_SH=1
-export SKIP_TEST_NETWORK_SH=1
-
-# Disable set_label tests (RHBZ#906777).
-export SKIP_TEST_SET_LABEL=1
-
-# Disable parallel virt-alignment-scan & virt-df tests (RHBZ#1025942).
-export SKIP_TEST_VIRT_ALIGNMENT_SCAN_GUESTS_SH=1
-export SKIP_TEST_VIRT_DF_GUESTS_SH=1
-
-# Disable fuse test (RHBZ#1184762).
-export SKIP_TEST_FUSE_SH=1
-
-# fusermount behaviour seems to have broken the test (RHBZ#1220751).
-export SKIP_TEST_FUSE_UMOUNT_RACE_SH=1
-export SKIP_TEST_GUESTMOUNT_FD=1
-
-# Hotplugging is broken in Rawhide (RHBZ#1225837).
-export SKIP_TEST_HOT_ADD_PL=1
-export SKIP_TEST_HOT_REMOVE_PL=1
-
-# xfs_admin has no effect in Rawhide (RHBZ#1233220).
-export SKIP_TEST_XFS_ADMIN=1
-export SKIP_TEST_XFS_MISC_PL=1
-
-# LVM/DM broken in Rawhide (RHBZ#1237136, RHBZ#1237137).
-export SKIP_TEST_LVREMOVE=1
-export SKIP_TEST_PVREMOVE=1
-export SKIP_TEST_VGREMOVE=1
-export SKIP_TEST_VGRENAME=1
-export SKIP_TEST_LUKS_SH=1
-export SKIP_TEST_MDADM_SH=1
-export SKIP_TEST_VIRT_INSPECTOR_SH=1
-export SKIP_TEST_VIRT_SYSPREP_SH=1
-
-# Skip gnulib tests which fail (probably these are kernel/glibc bugs).
-pushd gnulib/tests
-make -k check ||:
-for f in test-getaddrinfo test-utimens ; do
-  rm -f $f $f.o
-  touch $f.o
-  echo 'exit 77' > $f
-  chmod +x $f
-done
-popd
-
-# Do make quickcheck first, to fail early if the appliance or libvirt
-# is obviously broken.  Also dump libvirt log files if this happens.
-# Since it's most likely libvirt which is broken, make sure libvirt
-# debugging is enabled here.
-if ! make quickcheck LIBVIRT_DEBUG=1; then
+if ! make quickcheck; then
     cat $HOME/.cache/libvirt/qemu/log/*
     exit 1
 fi
-
-make check -k
-
-%endif
 
 
 %install
@@ -1376,6 +1299,10 @@ rm -r $RPM_BUILD_ROOT%{_libdir}/ocaml/stublibs/dllv2v_test_harness*
 
 
 %changelog
+* Mon Sep 21 2015 Richard W.M. Jones <rjones@redhat.com> - 1:1.31.7-2
+- Remove tests, except sanity check.  Testing is now done after the
+  package has been built.
+
 * Sun Sep 20 2015 Richard W.M. Jones <rjones@redhat.com> - 1:1.31.7-1
 - New upstream version 1.31.7.
 
