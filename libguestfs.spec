@@ -784,9 +784,12 @@ cp -a %{name}-%{version} tmp-python3
 mv tmp-python3 %{name}-%{version}/python3
 popd
 
-if [ "$(getenforce | tr '[A-Z]' '[a-z]')" != "disabled" ]; then
-    # For sVirt to work, the local temporary directory we use in the
-    # tests must be labelled the same way as /tmp.
+# For sVirt to work, the local temporary directory we use in the tests
+# must be labelled the same way as /tmp.  This doesn't work if either
+# the directory is on NFS (no SELinux labels) or if SELinux is
+# disabled, hence the tests.
+if [ "$(stat -f -L -c %T .)" != "nfs" ] && \
+   [ "$(getenforce | tr '[A-Z]' '[a-z]')" != "disabled" ]; then
     chcon --reference=/tmp tmp
 fi
 
