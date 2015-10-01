@@ -10,7 +10,7 @@ Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
 Version:       1.31.9
-Release:       3%{?dist}
+Release:       4%{?dist}
 License:       LGPLv2+
 
 # Source and patches.
@@ -1072,8 +1072,7 @@ rm -r $RPM_BUILD_ROOT%{_libdir}/ocaml/stublibs/dllv2v_test_harness*
 %{_sysconfdir}/virt-builder
 %dir %{_sysconfdir}/xdg/virt-builder
 %dir %{_sysconfdir}/xdg/virt-builder/repos.d
-%config %{_sysconfdir}/xdg/virt-builder/repos.d/libguestfs.conf
-%config %{_sysconfdir}/xdg/virt-builder/repos.d/libguestfs.gpg
+%config %{_sysconfdir}/xdg/virt-builder/repos.d/*
 %config %{_sysconfdir}/profile.d/guestfish.sh
 %{_mandir}/man5/libguestfs-tools.conf.5*
 %{_bindir}/guestfish
@@ -1303,12 +1302,13 @@ rm -r $RPM_BUILD_ROOT%{_libdir}/ocaml/stublibs/dllv2v_test_harness*
 
 
 %changelog
-* Thu Oct 01 2015 Richard W.M. Jones <rjones@redhat.com> - 1:1.31.9-3
+* Thu Oct 01 2015 Richard W.M. Jones <rjones@redhat.com> - 1:1.31.9-4
 - New upstream version 1.31.9.
 - Include patch which fixes 'make install' in OCaml directory.
 - Switch to using RPM autopatch directive.
 - Fix a few RPM "macro expanded in comment" warnings.
 - Include OCaml bindings documentation in ocaml-libguestfs-devel package.
+- Add opensuse virt-builder files.
 
 * Tue Sep 29 2015 Richard W.M. Jones <rjones@redhat.com> - 1:1.31.8-1
 - New upstream version 1.31.8.
