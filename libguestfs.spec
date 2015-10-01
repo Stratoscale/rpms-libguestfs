@@ -10,7 +10,7 @@ Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
 Version:       1.31.9
-Release:       2%{?dist}
+Release:       3%{?dist}
 License:       LGPLv2+
 
 # Source and patches.
@@ -1184,7 +1184,7 @@ rm -r $RPM_BUILD_ROOT%{_libdir}/ocaml/stublibs/dllv2v_test_harness*
 
 
 %files -n ocaml-%{name}-devel
-%doc ocaml/examples/*.ml
+%doc ocaml/examples/*.ml ocaml/html
 %{_libdir}/ocaml/guestfs/*.a
 %{_libdir}/ocaml/guestfs/*.cmxa
 %{_libdir}/ocaml/guestfs/*.cmx
@@ -1303,11 +1303,12 @@ rm -r $RPM_BUILD_ROOT%{_libdir}/ocaml/stublibs/dllv2v_test_harness*
 
 
 %changelog
-* Thu Oct 01 2015 Richard W.M. Jones <rjones@redhat.com> - 1:1.31.9-2
+* Thu Oct 01 2015 Richard W.M. Jones <rjones@redhat.com> - 1:1.31.9-3
 - New upstream version 1.31.9.
 - Include patch which fixes 'make install' in OCaml directory.
 - Switch to using RPM autopatch directive.
 - Fix a few RPM "macro expanded in comment" warnings.
+- Include OCaml bindings documentation in ocaml-libguestfs-devel package.
 
 * Tue Sep 29 2015 Richard W.M. Jones <rjones@redhat.com> - 1:1.31.8-1
 - New upstream version 1.31.8.
