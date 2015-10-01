@@ -1,0 +1,36 @@
+From 4414de775ad11624a6263bdbaa200fe5695caebb Mon Sep 17 00:00:00 2001
+From: "Richard W.M. Jones" <rjones@redhat.com>
+Date: Thu, 1 Oct 2015 14:17:52 +0100
+Subject: [PATCH] ocaml: Conditionally remove bindtests.* when doing 'make
+ install'.
+
+Commit f6a790b67d7c8f79532f61d20d11ec8d3a4e003b changed the Makefile
+so it only builds the tests when you run 'make check'.
+
+If you didn't run 'make check' then (in particular) bindtests won't be
+built, and so when you install it cannot be removed.
+
+The simple fix for this is to make the removal of bindtests.*
+conditional.
+
+This fixes commit f6a790b67d7c8f79532f61d20d11ec8d3a4e003b.
+---
+ ocaml/Makefile.am | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/ocaml/Makefile.am b/ocaml/Makefile.am
+index b9828e1..d838561 100644
+--- a/ocaml/Makefile.am
++++ b/ocaml/Makefile.am
+@@ -201,7 +201,7 @@ install-data-hook:
+ 	  -ldconf ignore -destdir $(DESTDIR)$(OCAMLLIB) \
+ 	  guestfs \
+ 	  $(data_hook_files)
+-	rm $(DESTDIR)$(OCAMLLIB)/guestfs/bindtests.*
++	rm -f $(DESTDIR)$(OCAMLLIB)/guestfs/bindtests.*
+ 	rm $(DESTDIR)$(OCAMLLIB)/guestfs/libguestfsocaml.a
+ 
+ CLEANFILES += $(noinst_DATA) $(check_DATA)
+-- 
+2.5.0
+

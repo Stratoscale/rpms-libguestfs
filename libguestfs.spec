@@ -1,5 +1,5 @@
 # Architectures on which golang works.
-#%global golang_arches aarch64 %{arm} %{ix86} x86_64
+#% global golang_arches aarch64 % {arm} % {ix86} x86_64
 # In theory the above, in practice golang is so often broken that
 # I now disable it:
 %global golang_arches NONE
@@ -10,12 +10,14 @@ Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
 Version:       1.31.9
-Release:       1%{?dist}
+Release:       2%{?dist}
 License:       LGPLv2+
 
 # Source and patches.
 URL:           http://libguestfs.org/
 Source0:       http://libguestfs.org/download/1.31-development/%{name}-%{version}.tar.gz
+
+Patch1:        0001-ocaml-Conditionally-remove-bindtests.-when-doing-mak.patch
 
 # Basic build requirements:
 BuildRequires: perl(Pod::Simple)
@@ -167,9 +169,9 @@ Requires:      selinux-policy >= 3.11.1-63
 # For UML backend (this backend only works on x86).
 # UML has been broken upstream (in the kernel) for a while, so don't
 # include this.  Note that uml_utilities also depends on Perl.
-#%ifarch %{ix86} x86_64
+#% ifarch % {ix86} x86_64
 #Requires:      uml_utilities
-#%endif
+#% endif
 
 # libguestfs live service
 Source2:       guestfsd.service
@@ -772,8 +774,7 @@ for %{name}.
 
 %prep
 %setup -q
-
-# Apply patches, if any, here.
+%autopatch -p1
 
 # For Python 3 we must build libguestfs twice.  This creates:
 #   %{name}-%{version}/
@@ -1302,8 +1303,11 @@ rm -r $RPM_BUILD_ROOT%{_libdir}/ocaml/stublibs/dllv2v_test_harness*
 
 
 %changelog
-* Thu Oct 01 2015 Richard W.M. Jones <rjones@redhat.com> - 1:1.31.9-1
+* Thu Oct 01 2015 Richard W.M. Jones <rjones@redhat.com> - 1:1.31.9-2
 - New upstream version 1.31.9.
+- Include patch which fixes 'make install' in OCaml directory.
+- Switch to using RPM autopatch directive.
+- Fix a few RPM "macro expanded in comment" warnings.
 
 * Tue Sep 29 2015 Richard W.M. Jones <rjones@redhat.com> - 1:1.31.8-1
 - New upstream version 1.31.8.
