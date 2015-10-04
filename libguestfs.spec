@@ -17,8 +17,6 @@ License:       LGPLv2+
 URL:           http://libguestfs.org/
 Source0:       http://libguestfs.org/download/1.31-development/%{name}-%{version}.tar.gz
 
-Patch1:        0001-ocaml-Conditionally-remove-bindtests.-when-doing-mak.patch
-
 # Basic build requirements:
 BuildRequires: perl(Pod::Simple)
 BuildRequires: perl(Pod::Man)
