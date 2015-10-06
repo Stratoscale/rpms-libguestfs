@@ -988,6 +988,9 @@ popd
 rm -r $RPM_BUILD_ROOT%{_libdir}/ocaml/v2v_test_harness
 rm -r $RPM_BUILD_ROOT%{_libdir}/ocaml/stublibs/dllv2v_test_harness*
 
+# Remove the .gitignore file from ocaml/html which will be copied to docdir.
+rm ocaml/html/.gitignore
+
 # Find locale files.
 %find_lang %{name}
 
