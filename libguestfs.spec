@@ -9,8 +9,8 @@
 Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
-Version:       1.31.11
-Release:       2%{?dist}
+Version:       1.31.13
+Release:       1%{?dist}
 License:       LGPLv2+
 
 # Source and patches.
@@ -1304,6 +1304,9 @@ rm ocaml/html/.gitignore
 
 
 %changelog
+* Wed Oct 07 2015 Richard W.M. Jones <rjones@redhat.com> - 1:1.31.13-1
+- New upstream version 1.31.13.
+
 * Tue Oct 06 2015 Richard W.M. Jones <rjones@redhat.com> - 1:1.31.11-2
 - BR ocamldoc so that we build the OCaml documentation.
 
