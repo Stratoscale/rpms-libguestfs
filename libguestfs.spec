@@ -10,7 +10,7 @@ Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
 Version:       1.31.16
-Release:       1%{?dist}
+Release:       2%{?dist}
 License:       LGPLv2+
 
 # Source and patches.
@@ -829,6 +829,10 @@ enabled=1
 gpgcheck=0
 EOF
   extra=--with-supermin-packager-config=$(pwd)/yum.conf
+  # Temporarily until https://fedorahosted.org/rel-eng/ticket/6274
+  # is fixed in Koji.  This isn't a permanent solution because the
+  # non-root build process cannot read all /etc files.
+  extra="$extra --with-supermin-extra-options=--use-installed"
 fi
 
 %global localconfigure \
@@ -1304,6 +1308,9 @@ rm ocaml/html/.gitignore
 
 
 %changelog
+* Tue Oct 13 2015 Richard W.M. Jones <rjones@redhat.com> - 1:1.31.16-2
+- Add hack to supermin to get builds working temporarily.
+
 * Fri Oct 09 2015 Richard W.M. Jones <rjones@redhat.com> - 1:1.31.16-1
 - New upstream version 1.31.16.
 
