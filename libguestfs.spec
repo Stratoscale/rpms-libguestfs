@@ -9,7 +9,7 @@
 Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
-Version:       1.31.19
+Version:       1.31.20
 Release:       1%{?dist}
 License:       LGPLv2+
 
@@ -76,7 +76,8 @@ BuildRequires: /usr/bin/qemu-img
 BuildRequires: perl(Test::More)
 BuildRequires: perl(Test::Pod) >= 1.00
 BuildRequires: perl(Test::Pod::Coverage) >= 1.00
-BuildRequires: perl(ExtUtils::MakeMaker)
+BuildRequires: perl(Module::Build)
+BuildRequires: perl(ExtUtils::CBuilder)
 BuildRequires: perl(Locale::TextDomain)
 BuildRequires: python-devel
 BuildRequires: libvirt-python
@@ -1308,6 +1309,11 @@ rm ocaml/html/.gitignore
 
 
 %changelog
+* Sun Oct 25 2015 Richard W.M. Jones <rjones@redhat.com> - 1:1.31.20-1
+- New upstream version 1.31.20.
+
+- Perl bindings switched from ExtUtils::MakeMaker to Module::Build.
+
 * Wed Oct 21 2015 Richard W.M. Jones <rjones@redhat.com> - 1:1.31.19-1
 - New upstream version 1.31.19.
 
