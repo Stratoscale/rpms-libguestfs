@@ -1311,7 +1311,6 @@ rm ocaml/html/.gitignore
 %changelog
 * Sun Oct 25 2015 Richard W.M. Jones <rjones@redhat.com> - 1:1.31.20-1
 - New upstream version 1.31.20.
-
 - Perl bindings switched from ExtUtils::MakeMaker to Module::Build.
 
 * Wed Oct 21 2015 Richard W.M. Jones <rjones@redhat.com> - 1:1.31.19-1
