@@ -1016,9 +1016,12 @@ rm ocaml/html/.gitignore
 %exclude %{_libdir}/guestfs/supermin.d/zz-packages-*
 %{_libdir}/libguestfs.so.*
 %{_mandir}/man1/guestfs-faq.1*
+%{_mandir}/man1/guestfs-hacking.1*
+%{_mandir}/man1/guestfs-internals.1*
 %{_mandir}/man1/guestfs-performance.1*
 %{_mandir}/man1/guestfs-recipes.1*
 %{_mandir}/man1/guestfs-release-notes.1*
+%{_mandir}/man1/guestfs-security.1*
 %{_mandir}/man1/guestfs-testing.1*
 %{_mandir}/man1/libguestfs-test-tool.1*
 
@@ -1311,6 +1314,7 @@ rm ocaml/html/.gitignore
 %changelog
 * Fri Oct 30 2015 Richard W.M. Jones <rjones@redhat.com> - 1:1.31.22-1
 - New upstream version 1.31.22.
+- Add new manual pages guestfs-{hacking,internals,security}(1).
 
 * Sun Oct 25 2015 Richard W.M. Jones <rjones@redhat.com> - 1:1.31.20-1
 - New upstream version 1.31.20.
