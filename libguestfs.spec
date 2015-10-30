@@ -864,7 +864,7 @@ pushd python3
 export PYTHON=%{__python3}
 # Copy the cache to speed the build:
 cp ../generator/.pod2text* generator/
-%{localconfigure} --enable-python --disable-perl --disable-ruby --disable-haskell --disable-php --disable-erlang --disable-lua --disable-golang --disable-gobject
+%{localconfigure} --enable-python --enable-perl --disable-ruby --disable-haskell --disable-php --disable-erlang --disable-lua --disable-golang --disable-gobject
 %{localmake}
 popd
 
