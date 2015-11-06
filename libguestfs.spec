@@ -10,7 +10,7 @@ Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
 Version:       1.31.24
-Release:       1%{?dist}
+Release:       2%{?dist}
 License:       LGPLv2+
 
 # Source and patches.
@@ -79,7 +79,7 @@ BuildRequires: perl(Test::Pod::Coverage) >= 1.00
 BuildRequires: perl(Module::Build)
 BuildRequires: perl(ExtUtils::CBuilder)
 BuildRequires: perl(Locale::TextDomain)
-BuildRequires: python-devel
+BuildRequires: python2-devel
 BuildRequires: libvirt-python
 BuildRequires: python3-devel
 BuildRequires: libvirt-python3
@@ -241,7 +241,7 @@ Language bindings:
    ocaml-libguestfs-devel  OCaml bindings
          perl-Sys-Guestfs  Perl bindings
            php-libguestfs  PHP bindings
-        python-libguestfs  Python 2 bindings
+       python2-libguestfs  Python 2 bindings
        python3-libguestfs  Python 3 bindings
           ruby-libguestfs  Ruby bindings
 
@@ -602,15 +602,16 @@ Requires:      perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $versio
 perl-Sys-Guestfs contains Perl bindings for %{name} (Sys::Guestfs).
 
 
-%package -n python-%{name}
+%package -n python2-%{name}
 Summary:       Python 2 bindings for %{name}
 Requires:      %{name} = %{epoch}:%{version}-%{release}
+%{?python_provide:%python_provide python2-%{name}}
 
-%{!?python_sitelib: %global python_sitelib %(%{__python} -c "from distutils.sysconfig import get_python_lib; print get_python_lib()")}
-%{!?python_sitearch: %global python_sitearch %(%{__python} -c "from distutils.sysconfig import get_python_lib; print get_python_lib(1)")}
+%{!?python2_sitelib: %global python2_sitelib %(%{__python2} -c "from distutils.sysconfig import get_python_lib; print get_python_lib()")}
+%{!?python2_sitearch: %global python2_sitearch %(%{__python2} -c "from distutils.sysconfig import get_python_lib; print get_python_lib(1)")}
 
-%description -n python-%{name}
-python-%{name} contains Python 2 bindings for %{name}.
+%description -n python2-%{name}
+python2-%{name} contains Python 2 bindings for %{name}.
 
 For Python 3 bindings, install python3-%{name}.
 
@@ -618,14 +619,15 @@ For Python 3 bindings, install python3-%{name}.
 %package -n python3-%{name}
 Summary:       Python 3 bindings for %{name}
 Requires:      %{name} = %{epoch}:%{version}-%{release}
+%{?python_provide:%python_provide python3-%{name}}
 
 %{!?python3_sitelib: %global python3_sitelib %(%{__python3} -c "from distutils.sysconfig import get_python_lib; print (get_python_lib())")}
 %{!?python3_sitearch: %global python3_sitearch %(%{__python3} -c "from distutils.sysconfig import get_python_lib; print (get_python_lib(1))")}
 
 %description -n python3-%{name}
-python-%{name} contains Python 3 bindings for %{name}.
+python3-%{name} contains Python 3 bindings for %{name}.
 
-For Python 2 bindings, install python-%{name}.
+For Python 2 bindings, install python2-%{name}.
 
 
 %package -n ruby-%{name}
@@ -1208,12 +1210,12 @@ rm ocaml/html/.gitignore
 %{_mandir}/man3/guestfs-perl.3*
 
 
-%files -n python-%{name}
+%files -n python2-%{name}
 %doc python/examples/*.py
-%{python_sitearch}/libguestfsmod.so
-%{python_sitearch}/guestfs.py
-%{python_sitearch}/guestfs.pyc
-%{python_sitearch}/guestfs.pyo
+%{python2_sitearch}/libguestfsmod.so
+%{python2_sitearch}/guestfs.py
+%{python2_sitearch}/guestfs.pyc
+%{python2_sitearch}/guestfs.pyo
 %{_mandir}/man3/guestfs-python.3*
 
 
@@ -1312,6 +1314,10 @@ rm ocaml/html/.gitignore
 
 
 %changelog
+* Fri Nov 06 2015 Richard W.M. Jones <rjones@redhat.com> - 1:1.31.24-2
+- Rename python-libguestfs -> python2-libguestfs.
+  See: https://fedoraproject.org/wiki/Packaging:Python
+
 * Thu Nov 05 2015 Richard W.M. Jones <rjones@redhat.com> - 1:1.31.24-1
 - New upstream version 1.31.24.
 
