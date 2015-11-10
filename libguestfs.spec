@@ -10,7 +10,7 @@ Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
 Version:       1.31.25
-Release:       1%{?dist}
+Release:       2%{?dist}
 License:       LGPLv2+
 
 # Source and patches.
@@ -1314,6 +1314,9 @@ rm ocaml/html/.gitignore
 
 
 %changelog
+* Tue Nov 10 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1:1.31.25-2
+- Rebuilt for https://fedoraproject.org/wiki/Changes/python3.5
+
 * Fri Nov 06 2015 Richard W.M. Jones <rjones@redhat.com> - 1:1.31.25-1
 - New upstream version 1.31.25.
 
