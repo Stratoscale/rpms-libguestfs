@@ -9,7 +9,7 @@
 Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
-Version:       1.31.26
+Version:       1.31.27
 Release:       1%{?dist}
 License:       LGPLv2+
 
@@ -1160,10 +1160,12 @@ rm ocaml/html/.gitignore
 %{_bindir}/virt-p2v-make-disk
 %{_bindir}/virt-p2v-make-kickstart
 %{_bindir}/virt-v2v
+%{_bindir}/virt-v2v-copy-to-local
 %{_mandir}/man1/virt-p2v.1*
 %{_mandir}/man1/virt-p2v-make-disk.1*
 %{_mandir}/man1/virt-p2v-make-kickstart.1*
 %{_mandir}/man1/virt-v2v.1*
+%{_mandir}/man1/virt-v2v-copy-to-local.1*
 %{_mandir}/man1/virt-v2v-test-harness.1*
 %{_datadir}/virt-p2v
 %{_datadir}/virt-tools
@@ -1313,6 +1315,11 @@ rm ocaml/html/.gitignore
 
 
 %changelog
+* Fri Nov 20 2015 Richard W.M. Jones <rjones@redhat.com> - 1:1.31.27-1
+- New upstream version 1.31.27.
+
+- Add new tool: virt-v2v-copy-to-local.
+
 * Sat Nov 14 2015 Richard W.M. Jones <rjones@redhat.com> - 1:1.31.26-1
 - New upstream version 1.31.26.
 
