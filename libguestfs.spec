@@ -1317,7 +1317,6 @@ rm ocaml/html/.gitignore
 %changelog
 * Fri Nov 20 2015 Richard W.M. Jones <rjones@redhat.com> - 1:1.31.27-1
 - New upstream version 1.31.27.
-
 - Add new tool: virt-v2v-copy-to-local.
 
 * Sat Nov 14 2015 Richard W.M. Jones <rjones@redhat.com> - 1:1.31.26-1
