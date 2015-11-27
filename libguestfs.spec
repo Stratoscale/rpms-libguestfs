@@ -794,13 +794,7 @@ for %{name}.
 
 %prep
 %setup -q
-
-# Apply patches, if any, here.
-%patch1 -p1
-%patch2 -p1
-%patch3 -p1
-%patch4 -p1
-%patch5 -p1
+%autopatch -p1
 
 # For Python 3 we must build libguestfs twice.  This creates:
 #   %{name}-%{version}/
