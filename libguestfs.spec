@@ -28,12 +28,20 @@ Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
 Version:       1.30.5
-Release:       1%{?dist}
+Release:       2%{?dist}
 License:       LGPLv2+
 
 # Source and patches.
 URL:           http://libguestfs.org/
 Source0:       http://libguestfs.org/download/1.29-development/%{name}-%{version}.tar.gz
+
+# RHBZ#1280029
+Patch1:        0001-daemon-always-provide-stdin-when-running-chroot-comm.patch
+# RHBZ#1285847
+Patch2:        0002-mllib-Add-Common_utils-may-function.patch
+Patch3:        0003-resize-Use-may-pattern-in-various-places.patch
+Patch4:        0004-resize-Work-around-regression-in-sfdisk-RHBZ-1285847.patch
+Patch5:        0005-resize-Add-a-regression-test-for-RHBZ-1285847.patch
 
 # Basic build requirements:
 BuildRequires: perl(Pod::Simple)
@@ -788,6 +796,11 @@ for %{name}.
 %setup -q
 
 # Apply patches, if any, here.
+%patch1 -p1
+%patch2 -p1
+%patch3 -p1
+%patch4 -p1
+%patch5 -p1
 
 # For Python 3 we must build libguestfs twice.  This creates:
 #   %{name}-%{version}/
@@ -1373,6 +1386,10 @@ rm -r $RPM_BUILD_ROOT%{_libdir}/ocaml/stublibs/dllv2v_test_harness*
 
 
 %changelog
+* Fri Nov 27 2015 Richard W.M. Jones <rjones@redhat.com> - 1:1.30.5-2
+- Fix data loss bug in virt-resize (RHBZ#1285847, RHBZ#1266658).
+- Fix dnf failing when Sys.stdin == None (RHBZ#1280029).
+
 * Thu Nov 19 2015 Richard W.M. Jones <rjones@redhat.com> - 1:1.30.5-1
 - New upstream version 1.30.5.
 
