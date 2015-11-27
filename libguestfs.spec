@@ -795,6 +795,9 @@ for %{name}.
 %setup -q
 %autopatch -p1
 
+# XXX Stupid patch program doesn't set executable bit.
+chmod +x tests/regressions/rhbz1285847.sh
+
 # For Python 3 we must build libguestfs twice.  This creates:
 #   %{name}-%{version}/
 #   %{name}-%{version}/python3/
