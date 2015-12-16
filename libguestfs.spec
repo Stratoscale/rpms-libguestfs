@@ -27,8 +27,8 @@
 Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
-Version:       1.30.5
-Release:       2%{?dist}
+Version:       1.30.6
+Release:       1%{?dist}
 License:       LGPLv2+
 
 # Source and patches.
@@ -1375,6 +1375,9 @@ rm -r $RPM_BUILD_ROOT%{_libdir}/ocaml/stublibs/dllv2v_test_harness*
 
 
 %changelog
+* Wed Dec 16 2015 Richard W.M. Jones <rjones@redhat.com> - 1:1.30.6-1
+- New upstream version 1.30.6.
+
 * Fri Nov 27 2015 Richard W.M. Jones <rjones@redhat.com> - 1:1.30.5-2
 - Fix data loss bug in virt-resize (RHBZ#1285847, RHBZ#1266658).
 - Fix dnf failing when Sys.stdin == None (RHBZ#1280029).
