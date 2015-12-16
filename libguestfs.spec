@@ -34,11 +34,6 @@ Source0:       http://libguestfs.org/download/1.29-development/%{name}-%{version
 
 # RHBZ#1280029
 Patch1:        0001-daemon-always-provide-stdin-when-running-chroot-comm.patch
-# RHBZ#1285847
-Patch2:        0002-mllib-Add-Common_utils-may-function.patch
-Patch3:        0003-resize-Use-may-pattern-in-various-places.patch
-Patch4:        0004-resize-Work-around-regression-in-sfdisk-RHBZ-1285847.patch
-Patch5:        0005-resize-Add-a-regression-test-for-RHBZ-1285847.patch
 
 # Basic build requirements:
 BuildRequires: perl(Pod::Simple)
@@ -794,9 +789,6 @@ for %{name}.
 %prep
 %setup -q
 %autopatch -p1
-
-# XXX Stupid patch program doesn't set executable bit.
-chmod +x tests/regressions/rhbz1285847.sh
 
 # For Python 3 we must build libguestfs twice.  This creates:
 #   %{name}-%{version}/
