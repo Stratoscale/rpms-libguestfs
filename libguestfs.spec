@@ -6,6 +6,10 @@
 
 %global _hardened_build 1
 
+# Trim changelog entries older than one year in binary packages.
+# https://lists.fedoraproject.org/pipermail/devel/2013-April/thread.html#181627
+%global _changelog_trimtime %(date +%s -d "2 years ago")
+
 Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
