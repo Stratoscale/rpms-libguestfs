@@ -1314,7 +1314,7 @@ rm ocaml/html/.gitignore
 
 
 %changelog
-* Wed Jan  6 2015 Richard W.M. Jones <rjones@redhat.com> - 1:1.32.0-1
+* Wed Jan  6 2016 Richard W.M. Jones <rjones@redhat.com> - 1:1.32.0-1
 - Include multiple changes from Rawhide in preparation for 1.32.0.
 
 * Wed Dec 16 2015 Richard W.M. Jones <rjones@redhat.com> - 1:1.30.6-1
