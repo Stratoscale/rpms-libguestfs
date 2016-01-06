@@ -813,33 +813,29 @@ ip route list ||:
 if ping -c 3 -w 20 8.8.8.8 && wget http://libguestfs.org -O /dev/null; then
   extra=
 else
-  # Temporarily until https://fedorahosted.org/rel-eng/ticket/6274
-  # is fixed in Koji.  This isn't a permanent solution because the
-  # non-root build process cannot read all /etc files.
-  extra="--with-supermin-extra-options=--use-installed"
-#   mkdir repo
-#   # -n 1 because of RHBZ#980502.
-#   find /var/cache/yum -type f -name '*.rpm' -print0 | xargs -0 -n 1 cp -t repo
-#   createrepo repo
-#   cat > yum.conf <<EOF
-# [main]
-# cachedir=/var/cache/yum
-# debuglevel=1
-# logfile=/var/log/yum.log
-# retries=20
-# obsoletes=1
-# gpgcheck=0
-# assumeyes=1
-# reposdir=/dev/null
+  mkdir repo
+  # -n 1 because of RHBZ#980502.
+  find /var/cache/yum -type f -name '*.rpm' -print0 | xargs -0 -n 1 cp -t repo
+  createrepo repo
+  cat > yum.conf <<EOF
+[main]
+cachedir=/var/cache/yum
+debuglevel=1
+logfile=/var/log/yum.log
+retries=20
+obsoletes=1
+gpgcheck=0
+assumeyes=1
+reposdir=/dev/null
 
-# [local]
-# name=local
-# baseurl=file://$(pwd)/repo
-# failovermethod=priority
-# enabled=1
-# gpgcheck=0
-# EOF
-#   extra=--with-supermin-packager-config=$(pwd)/yum.conf
+[local]
+name=local
+baseurl=file://$(pwd)/repo
+failovermethod=priority
+enabled=1
+gpgcheck=0
+EOF
+  extra=--with-supermin-packager-config=$(pwd)/yum.conf
 fi
 
 %global localconfigure \
