@@ -1,21 +1,3 @@
-# Run tests during check.  Default is enabled on most architectures.
-# You can override this by putting '%libguestfs_runtests 0' into
-# '~/.rpmmacros'
-%if %{defined libguestfs_runtests}
-%global runtests %{libguestfs_runtests}
-%else
-%ifnarch aarch64 %{arm} %{ix86} ppc %{power64}
-%global runtests 1
-%else
-# Disabled on 32 bit x86.  Fails with current rawhide, unclear why.
-# Disabled on arm, see RHBZ#1066581.
-# Disabled on aarch64 because it requires qemu or supermin to uncompress
-# the kernel.
-# Disabled on ppc, ppc64 (secondary arches), see RHBZ#1036742.
-%global runtests 0
-%endif
-%endif
-
 # Architectures on which golang works.
 #%global golang_arches aarch64 %{arm} %{ix86} x86_64
 # In theory the above, in practice golang is so often broken that
@@ -24,19 +6,20 @@
 
 %global _hardened_build 1
 
+# Trim older changelog entries.
+# https://lists.fedoraproject.org/pipermail/devel/2013-April/thread.html#181627
+%global _changelog_trimtime %(date +%s -d "2 years ago")
+
 Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
-Version:       1.30.6
+Version:       1.32.0
 Release:       1%{?dist}
 License:       LGPLv2+
 
 # Source and patches.
 URL:           http://libguestfs.org/
-Source0:       http://libguestfs.org/download/1.29-development/%{name}-%{version}.tar.gz
-
-# RHBZ#1280029
-Patch1:        0001-daemon-always-provide-stdin-when-running-chroot-comm.patch
+Source0:       http://libguestfs.org/download/1.32-stable/%{name}-%{version}.tar.gz
 
 # Basic build requirements:
 BuildRequires: perl(Pod::Simple)
@@ -69,6 +52,7 @@ BuildRequires: xz-devel
 BuildRequires: zip
 BuildRequires: unzip
 BuildRequires: ocaml
+BuildRequires: ocaml-ocamldoc
 BuildRequires: ocaml-findlib-devel
 BuildRequires: ocaml-gettext-devel
 BuildRequires: ocaml-ounit-devel
@@ -96,7 +80,8 @@ BuildRequires: /usr/bin/qemu-img
 BuildRequires: perl(Test::More)
 BuildRequires: perl(Test::Pod) >= 1.00
 BuildRequires: perl(Test::Pod::Coverage) >= 1.00
-BuildRequires: perl(ExtUtils::MakeMaker)
+BuildRequires: perl(Module::Build)
+BuildRequires: perl(ExtUtils::CBuilder)
 BuildRequires: perl(Locale::TextDomain)
 BuildRequires: python-devel
 BuildRequires: libvirt-python
@@ -411,6 +396,10 @@ Requires:      gnupg
 Requires:      xz
 #Requires:     nbdkit, nbdkit-plugin-xz
 Requires:      curl
+
+%if 0%{?fedora} >= 23
+Recommends:    libguestfs-xfs
+%endif
 
 
 %description tools-c
@@ -800,9 +789,12 @@ cp -a %{name}-%{version} tmp-python3
 mv tmp-python3 %{name}-%{version}/python3
 popd
 
-if [ "$(getenforce | tr '[A-Z]' '[a-z]')" != "disabled" ]; then
-    # For sVirt to work, the local temporary directory we use in the
-    # tests must be labelled the same way as /tmp.
+# For sVirt to work, the local temporary directory we use in the tests
+# must be labelled the same way as /tmp.  This doesn't work if either
+# the directory is on NFS (no SELinux labels) or if SELinux is
+# disabled, hence the tests.
+if [ "$(stat -f -L -c %T .)" != "nfs" ] && \
+   [ "$(getenforce | tr '[A-Z]' '[a-z]')" != "disabled" ]; then
     chcon --reference=/tmp tmp
 fi
 
@@ -872,88 +864,28 @@ pushd python3
 export PYTHON=%{__python3}
 # Copy the cache to speed the build:
 cp ../generator/.pod2text* generator/
-%{localconfigure} --enable-python --disable-perl --disable-ruby --disable-haskell --disable-php --disable-erlang --disable-lua --disable-golang --disable-gobject
+%{localconfigure} --enable-python --enable-perl --disable-ruby --disable-haskell --disable-php --disable-erlang --disable-lua --disable-golang --disable-gobject
 %{localmake}
 popd
 
 %check
 
-%if %{runtests}
+# Note that the major tests are done after the package has been built.
+#
+# Here we only do a sanity check that kernel/qemu/libvirt/appliance is
+# not broken.
+#
+# To perform the full test suite, see instructions here:
+# https://www.redhat.com/archives/libguestfs/2015-September/msg00078.html
 
-# Enable debugging - very useful if a test does fail, although
-# it produces masses of output in the build.log.
 export LIBGUESTFS_DEBUG=1
-
-# Enable trace.  Since libguestfs 1.9.7 this produces 'greppable'
-# output even when combined with trace (see RHBZ#673477).
 export LIBGUESTFS_TRACE=1
+export LIBVIRT_DEBUG=1
 
-# This test fails because we build the ISO after encoding the checksum
-# of the ISO in the test itself.  Need to fix the test to work out the
-# checksum at runtime.
-export SKIP_TEST_CHECKSUM_DEVICE=1
-
-# Disable tests that need or test the network.  These won't work with
-# the new libvirt network since virbr0 is not connected in Koji, so
-# libvirt fails with ENOTCONN 'Transport endpoint not connected'
-# (RHBZ#1148972).
-export SKIP_TEST_VIRT_BUILDER_SH=1
-export SKIP_TEST_NETWORK_SH=1
-
-# Disable set_label tests (RHBZ#906777).
-export SKIP_TEST_SET_LABEL=1
-
-# Disable parallel virt-alignment-scan & virt-df tests (RHBZ#1025942).
-export SKIP_TEST_VIRT_ALIGNMENT_SCAN_GUESTS_SH=1
-export SKIP_TEST_VIRT_DF_GUESTS_SH=1
-
-# Disable fuse test (RHBZ#1184762).
-export SKIP_TEST_FUSE_SH=1
-
-# fusermount behaviour seems to have broken the test (RHBZ#1220751).
-export SKIP_TEST_FUSE_UMOUNT_RACE_SH=1
-export SKIP_TEST_GUESTMOUNT_FD=1
-
-# Hotplugging is broken in Rawhide (RHBZ#1225837).
-export SKIP_TEST_HOT_ADD_PL=1
-export SKIP_TEST_HOT_REMOVE_PL=1
-
-# xfs_admin has no effect in Rawhide (RHBZ#1233220).
-export SKIP_TEST_XFS_ADMIN=1
-export SKIP_TEST_XFS_MISC_PL=1
-
-# LVM/DM broken in Rawhide (RHBZ#1237136, RHBZ#1237137).
-export SKIP_TEST_LVREMOVE=1
-export SKIP_TEST_PVREMOVE=1
-export SKIP_TEST_VGREMOVE=1
-export SKIP_TEST_VGRENAME=1
-export SKIP_TEST_LUKS_SH=1
-export SKIP_TEST_MDADM_SH=1
-export SKIP_TEST_VIRT_INSPECTOR_SH=1
-
-# Skip gnulib tests which fail (probably these are kernel/glibc bugs).
-pushd gnulib/tests
-make -k check ||:
-for f in test-getaddrinfo test-utimens ; do
-  rm -f $f $f.o
-  touch $f.o
-  echo 'exit 77' > $f
-  chmod +x $f
-done
-popd
-
-# Do make quickcheck first, to fail early if the appliance or libvirt
-# is obviously broken.  Also dump libvirt log files if this happens.
-# Since it's most likely libvirt which is broken, make sure libvirt
-# debugging is enabled here.
-if ! make quickcheck LIBVIRT_DEBUG=1; then
+if ! make quickcheck; then
     cat $HOME/.cache/libvirt/qemu/log/*
     exit 1
 fi
-
-make check -k
-
-%endif
 
 
 %install
@@ -1061,6 +993,9 @@ popd
 rm -r $RPM_BUILD_ROOT%{_libdir}/ocaml/v2v_test_harness
 rm -r $RPM_BUILD_ROOT%{_libdir}/ocaml/stublibs/dllv2v_test_harness*
 
+# Remove the .gitignore file from ocaml/html which will be copied to docdir.
+rm ocaml/html/.gitignore
+
 # Find locale files.
 %find_lang %{name}
 
@@ -1081,9 +1016,12 @@ rm -r $RPM_BUILD_ROOT%{_libdir}/ocaml/stublibs/dllv2v_test_harness*
 %exclude %{_libdir}/guestfs/supermin.d/zz-packages-*
 %{_libdir}/libguestfs.so.*
 %{_mandir}/man1/guestfs-faq.1*
+%{_mandir}/man1/guestfs-hacking.1*
+%{_mandir}/man1/guestfs-internals.1*
 %{_mandir}/man1/guestfs-performance.1*
 %{_mandir}/man1/guestfs-recipes.1*
 %{_mandir}/man1/guestfs-release-notes.1*
+%{_mandir}/man1/guestfs-security.1*
 %{_mandir}/man1/guestfs-testing.1*
 %{_mandir}/man1/libguestfs-test-tool.1*
 
@@ -1144,8 +1082,7 @@ rm -r $RPM_BUILD_ROOT%{_libdir}/ocaml/stublibs/dllv2v_test_harness*
 %{_sysconfdir}/virt-builder
 %dir %{_sysconfdir}/xdg/virt-builder
 %dir %{_sysconfdir}/xdg/virt-builder/repos.d
-%config %{_sysconfdir}/xdg/virt-builder/repos.d/libguestfs.conf
-%config %{_sysconfdir}/xdg/virt-builder/repos.d/libguestfs.gpg
+%config %{_sysconfdir}/xdg/virt-builder/repos.d/*
 %config %{_sysconfdir}/profile.d/guestfish.sh
 %{_mandir}/man5/libguestfs-tools.conf.5*
 %{_bindir}/guestfish
@@ -1221,10 +1158,12 @@ rm -r $RPM_BUILD_ROOT%{_libdir}/ocaml/stublibs/dllv2v_test_harness*
 %{_bindir}/virt-p2v-make-disk
 %{_bindir}/virt-p2v-make-kickstart
 %{_bindir}/virt-v2v
+%{_bindir}/virt-v2v-copy-to-local
 %{_mandir}/man1/virt-p2v.1*
 %{_mandir}/man1/virt-p2v-make-disk.1*
 %{_mandir}/man1/virt-p2v-make-kickstart.1*
 %{_mandir}/man1/virt-v2v.1*
+%{_mandir}/man1/virt-v2v-copy-to-local.1*
 %{_mandir}/man1/virt-v2v-test-harness.1*
 %{_datadir}/virt-p2v
 %{_datadir}/virt-tools
@@ -1256,7 +1195,7 @@ rm -r $RPM_BUILD_ROOT%{_libdir}/ocaml/stublibs/dllv2v_test_harness*
 
 
 %files -n ocaml-%{name}-devel
-%doc ocaml/examples/*.ml
+%doc ocaml/examples/*.ml ocaml/html
 %{_libdir}/ocaml/guestfs/*.a
 %{_libdir}/ocaml/guestfs/*.cmxa
 %{_libdir}/ocaml/guestfs/*.cmx
@@ -1375,6 +1314,9 @@ rm -r $RPM_BUILD_ROOT%{_libdir}/ocaml/stublibs/dllv2v_test_harness*
 
 
 %changelog
+* Wed Jan  6 2015 Richard W.M. Jones <rjones@redhat.com> - 1:1.32.0-1
+- Include multiple changes from Rawhide in preparation for 1.32.0.
+
 * Wed Dec 16 2015 Richard W.M. Jones <rjones@redhat.com> - 1:1.30.6-1
 - New upstream version 1.30.6.
 
