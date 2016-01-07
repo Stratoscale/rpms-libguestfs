@@ -815,7 +815,8 @@ if ping -c 3 -w 20 8.8.8.8 && wget http://libguestfs.org -O /dev/null; then
 else
   mkdir repo
   # -n 1 because of RHBZ#980502.
-  find /var/cache/yum -type f -name '*.rpm' -print0 | xargs -0 -n 1 cp -t repo
+  find /var/cache/{dnf,yum} -type f -name '*.rpm' -print0 | \
+    xargs -0 -n 1 cp -t repo
   createrepo repo
   cat > yum.conf <<EOF
 [main]
