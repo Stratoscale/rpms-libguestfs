@@ -187,6 +187,9 @@ Source4:       README-replacement.in
 # Guestfish colour prompts.
 Source5:       guestfish.sh
 
+# Used to build the supermin appliance in Koji.
+Source6:       yum.conf.in
+
 # https://fedoraproject.org/wiki/Packaging:No_Bundled_Libraries#Packages_granted_exceptions
 Provides:      bundled(gnulib)
 
@@ -818,24 +821,7 @@ else
   find /var/cache/{dnf,yum} -type f -name '*.rpm' -print0 | \
     xargs -0 -n 1 cp -t repo
   createrepo repo
-  cat > yum.conf <<EOF
-[main]
-cachedir=/var/cache/yum
-debuglevel=1
-logfile=/var/log/yum.log
-retries=20
-obsoletes=1
-gpgcheck=0
-assumeyes=1
-reposdir=/dev/null
-
-[local]
-name=local
-baseurl=file://$(pwd)/repo
-failovermethod=priority
-enabled=1
-gpgcheck=0
-EOF
+  sed -e "s|@PWD@|$(pwd)|" %{SOURCE6} > yum.conf
   extra=--with-supermin-packager-config=$(pwd)/yum.conf
 fi
 
