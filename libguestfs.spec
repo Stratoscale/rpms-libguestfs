@@ -857,6 +857,7 @@ cp ../generator/.pod2text* generator/
 %{localmake}
 popd
 
+
 %check
 
 # Note that the major tests are done after the package has been built.
