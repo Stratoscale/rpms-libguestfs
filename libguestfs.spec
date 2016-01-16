@@ -14,7 +14,7 @@ Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
 Version:       1.33.1
-Release:       1%{?dist}
+Release:       2%{?dist}
 License:       LGPLv2+
 
 # Source and patches.
@@ -1303,6 +1303,9 @@ rm ocaml/html/.gitignore
 
 
 %changelog
+* Sat Jan 16 2016 Richard Jones <rjones@redhat.com> - 1:1.33.1-2
+- Rebuild for updated Ruby in Rawhide.
+
 * Mon Jan 11 2016 Richard W.M. Jones <rjones@redhat.com> - 1:1.33.1-1
 - New upstream version 1.33.1.
 
