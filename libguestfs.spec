@@ -14,7 +14,7 @@ Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
 Version:       1.33.1
-Release:       2%{?dist}
+Release:       3%{?dist}
 License:       LGPLv2+
 
 # Source and patches.
@@ -614,8 +614,6 @@ Summary:       Python 2 bindings for %{name}
 Requires:      %{name} = %{epoch}:%{version}-%{release}
 %{?python_provide:%python_provide python2-%{name}}
 
-%{!?python2_sitelib: %global python2_sitelib %(%{__python2} -c "from distutils.sysconfig import get_python_lib; print get_python_lib()")}
-%{!?python2_sitearch: %global python2_sitearch %(%{__python2} -c "from distutils.sysconfig import get_python_lib; print get_python_lib(1)")}
 
 %description -n python2-%{name}
 python2-%{name} contains Python 2 bindings for %{name}.
@@ -628,8 +626,6 @@ Summary:       Python 3 bindings for %{name}
 Requires:      %{name} = %{epoch}:%{version}-%{release}
 %{?python_provide:%python_provide python3-%{name}}
 
-%{!?python3_sitelib: %global python3_sitelib %(%{__python3} -c "from distutils.sysconfig import get_python_lib; print (get_python_lib())")}
-%{!?python3_sitearch: %global python3_sitearch %(%{__python3} -c "from distutils.sysconfig import get_python_lib; print (get_python_lib(1))")}
 
 %description -n python3-%{name}
 python3-%{name} contains Python 3 bindings for %{name}.
@@ -1213,7 +1209,7 @@ rm ocaml/html/.gitignore
 %doc python/examples/*.py
 %{python3_sitearch}/libguestfsmod*.so
 %{python3_sitearch}/guestfs.py
-%{python3_sitearch}/__pycache__/guestfs*.pyc
+%{python3_sitearch}/__pycache__/guestfs*.py*
 %{_mandir}/man3/guestfs-python.3*
 
 
@@ -1303,6 +1299,10 @@ rm ocaml/html/.gitignore
 
 
 %changelog
+* Thu Jan 21 2016 Richard Jones <rjones@redhat.com> - 1:1.33.1-3
+- Remove useless python*_site* macros.
+- Package python3 pyo files if present.
+
 * Sat Jan 16 2016 Richard Jones <rjones@redhat.com> - 1:1.33.1-2
 - Rebuild for updated Ruby in Rawhide.
 
