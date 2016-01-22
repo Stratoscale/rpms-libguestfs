@@ -13,8 +13,8 @@
 Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
-Version:       1.33.1
-Release:       3%{?dist}
+Version:       1.33.4
+Release:       1%{?dist}
 License:       LGPLv2+
 
 # Source and patches.
@@ -1299,6 +1299,9 @@ rm ocaml/html/.gitignore
 
 
 %changelog
+* Fri Jan 22 2016 Richard W.M. Jones <rjones@redhat.com> - 1:1.33.4-1
+- New upstream version 1.33.4.
+
 * Thu Jan 21 2016 Richard Jones <rjones@redhat.com> - 1:1.33.1-3
 - Remove useless python*_site* macros.
 - Package python3 pyo files if present.
