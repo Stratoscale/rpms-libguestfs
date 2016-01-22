@@ -1001,6 +1001,7 @@ rm ocaml/html/.gitignore
 %{_libdir}/guestfs/
 %exclude %{_libdir}/guestfs/supermin.d/zz-packages-*
 %{_libdir}/libguestfs.so.*
+%{_mandir}/man1/guestfs-building.1*
 %{_mandir}/man1/guestfs-faq.1*
 %{_mandir}/man1/guestfs-hacking.1*
 %{_mandir}/man1/guestfs-internals.1*
@@ -1301,6 +1302,7 @@ rm ocaml/html/.gitignore
 %changelog
 * Fri Jan 22 2016 Richard W.M. Jones <rjones@redhat.com> - 1:1.33.4-1
 - New upstream version 1.33.4.
+- Add guestfs-building(1), new man page.
 
 * Thu Jan 21 2016 Richard Jones <rjones@redhat.com> - 1:1.33.1-3
 - Remove useless python*_site* macros.
