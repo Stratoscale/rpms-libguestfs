@@ -856,6 +856,9 @@ popd
 
 %check
 
+# https://bugzilla.redhat.com/show_bug.cgi?id=1302071
+%ifnarch %{ix86}
+
 # Note that the major tests are done after the package has been built.
 #
 # Here we only do a sanity check that kernel/qemu/libvirt/appliance is
@@ -872,6 +875,8 @@ if ! make quickcheck QUICKCHECK_TEST_TOOL_ARGS="-t 1200"; then
     cat $HOME/.cache/libvirt/qemu/log/*
     exit 1
 fi
+
+%endif
 
 
 %install
