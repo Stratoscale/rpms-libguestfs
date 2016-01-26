@@ -868,7 +868,7 @@ export LIBGUESTFS_DEBUG=1
 export LIBGUESTFS_TRACE=1
 export LIBVIRT_DEBUG=1
 
-if ! make quickcheck; then
+if ! make quickcheck QUICKCHECK_TEST_TOOL_ARGS="-t 1200"; then
     cat $HOME/.cache/libvirt/qemu/log/*
     exit 1
 fi
