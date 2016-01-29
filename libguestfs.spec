@@ -857,7 +857,8 @@ popd
 %check
 
 # https://bugzilla.redhat.com/show_bug.cgi?id=1302071
-%ifnarch %{ix86}
+# https://bugzilla.redhat.com/show_bug.cgi?id=1303147
+%ifnarch %{ix86} %{arm}
 
 # Note that the major tests are done after the package has been built.
 #
