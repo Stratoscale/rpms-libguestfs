@@ -14,12 +14,15 @@ Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
 Version:       1.33.10
-Release:       1%{?dist}
+Release:       2%{?dist}
 License:       LGPLv2+
 
 # Source and patches.
 URL:           http://libguestfs.org/
 Source0:       http://libguestfs.org/download/1.33-development/%{name}-%{version}.tar.gz
+
+# Not upstream, but fixes `ssh root@remote virt-xyz ...'.
+Patch1:        0001-lib-Remove-references-to-XDG_RUNTIME_DIR.patch
 
 # Basic build requirements:
 BuildRequires: perl(Pod::Simple)
@@ -1306,8 +1309,9 @@ rm ocaml/html/.gitignore
 
 
 %changelog
-* Mon Feb 08 2016 Richard W.M. Jones <rjones@redhat.com> - 1:1.33.10-1
+* Mon Feb 08 2016 Richard W.M. Jones <rjones@redhat.com> - 1:1.33.10-2
 - New upstream version 1.33.10.
+- Add non-upstream patch to fix 'ssh root@remote virt-xyz ...'
 
 * Fri Feb 05 2016 Richard W.M. Jones <rjones@redhat.com> - 1:1.33.9-1
 - New upstream version 1.33.9.
