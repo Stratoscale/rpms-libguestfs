@@ -21,9 +21,6 @@ License:       LGPLv2+
 URL:           http://libguestfs.org/
 Source0:       http://libguestfs.org/download/1.33-development/%{name}-%{version}.tar.gz
 
-# Not upstream, but fixes `ssh root@remote virt-xyz ...'.
-Patch1:        0001-lib-Remove-references-to-XDG_RUNTIME_DIR.patch
-
 # Basic build requirements:
 BuildRequires: perl(Pod::Simple)
 BuildRequires: perl(Pod::Man)
