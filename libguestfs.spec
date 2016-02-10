@@ -13,8 +13,8 @@
 Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
-Version:       1.33.10
-Release:       2%{?dist}
+Version:       1.33.11
+Release:       1%{?dist}
 License:       LGPLv2+
 
 # Source and patches.
@@ -1306,6 +1306,9 @@ rm ocaml/html/.gitignore
 
 
 %changelog
+* Wed Feb 10 2016 Richard W.M. Jones <rjones@redhat.com> - 1:1.33.11-1
+- New upstream version 1.33.11.
+
 * Mon Feb 08 2016 Richard W.M. Jones <rjones@redhat.com> - 1:1.33.10-2
 - New upstream version 1.33.10.
 - Add non-upstream patch to fix 'ssh root@remote virt-xyz ...'
