@@ -25,7 +25,7 @@ Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
 Version:       1.30.6
-Release:       1%{?dist}
+Release:       2%{?dist}
 License:       LGPLv2+
 
 # Source and patches.
@@ -34,6 +34,10 @@ Source0:       http://libguestfs.org/download/1.29-development/%{name}-%{version
 
 # RHBZ#1280029
 Patch1:        0001-daemon-always-provide-stdin-when-running-chroot-comm.patch
+
+# Upstream commit 2e16e3e99 for RHBZ#1306666.
+Patch2:        0001-lvm-support-lvm2-older-than-2.02.107.patch
+Patch3:        0002-daemon-lvm-Ignore-LVs-with-the-activationskip-flag-s.patch
 
 # Basic build requirements:
 BuildRequires: perl(Pod::Simple)
@@ -1356,6 +1360,10 @@ popd
 
 
 %changelog
+* Fri Feb 12 2016 Richard W.M. Jones <rjones@redhat.com> - 1:1.30.6-2
+- Fix failure when disk contains LV with activationskip=yes
+  Upstream commit 2e16e3e99 (RHBZ#1306666).
+
 * Wed Dec 16 2015 Richard W.M. Jones <rjones@redhat.com> - 1:1.30.6-1
 - New upstream version 1.30.6.
 
