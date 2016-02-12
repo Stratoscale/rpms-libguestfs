@@ -922,6 +922,10 @@ export SKIP_TEST_BTRFS_QGROUP_SHOW=1
 # mdadm --stop hangs (RHBZ#1197305).
 export SKIP_TEST_MDADM_SH=1
 
+# This test fails with "error: /dev/sda1: not enough free space".
+# Already fixed upstream, just work around it for this build.
+export SKIP_TEST_BTRFS_IMAGE_0=1
+
 # Skip gnulib tests which fail (probably these are kernel/glibc bugs).
 pushd gnulib/tests
 make -k check ||:
