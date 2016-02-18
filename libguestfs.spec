@@ -10,11 +10,14 @@
 # https://lists.fedoraproject.org/pipermail/devel/2013-April/thread.html#181627
 %global _changelog_trimtime %(date +%s -d "2 years ago")
 
+# Filter perl provides
+%{?perl_default_filter}
+
 Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
 Version:       1.33.12
-Release:       1%{?dist}
+Release:       2%{?dist}
 License:       LGPLv2+
 
 # Source and patches.
@@ -22,6 +25,7 @@ URL:           http://libguestfs.org/
 Source0:       http://libguestfs.org/download/1.33-development/%{name}-%{version}.tar.gz
 
 # Basic build requirements:
+BuildRequires: perl-macros
 BuildRequires: perl(Pod::Simple)
 BuildRequires: perl(Pod::Man)
 BuildRequires: /usr/bin/pod2text
@@ -1306,6 +1310,9 @@ rm ocaml/html/.gitignore
 
 
 %changelog
+* Thu Feb 18 2016 Orion Poplawski <orion@cora.nwra.com> - 1:1.33.12-2
+- Filter perl provides
+
 * Fri Feb 12 2016 Richard W.M. Jones <rjones@redhat.com> - 1:1.33.12-1
 - New upstream version 1.33.12.
 
@@ -2439,7 +2446,7 @@ rm ocaml/html/.gitignore
 
 * Mon Jan 21 2013 Richard W.M. Jones <rjones@redhat.com> - 1:1.21.4-3
 - Add upstream patch to allow btrfs tests to be skipped.
-- Skip btrfs tests because btrfs has been broken forever (RHBZ#863978). 
+- Skip btrfs tests because btrfs has been broken forever (RHBZ#863978).
 
 * Sat Jan 19 2013 Richard W.M. Jones <rjones@redhat.com> - 1:1.21.4-2
 - Depend on openjdk instead of java.
