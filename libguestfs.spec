@@ -13,8 +13,8 @@
 Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
-Version:       1.32.2
-Release:       2%{?dist}
+Version:       1.32.3
+Release:       1%{?dist}
 License:       LGPLv2+
 
 # Source and patches.
@@ -1317,6 +1317,9 @@ rm ocaml/html/.gitignore
 
 
 %changelog
+* Fri Feb 26 2016 Richard W.M. Jones <rjones@redhat.com> - 1:1.32.3-1
+- New upstream version 1.32.3.
+
 * Fri Feb 12 2016 Richard W.M. Jones <rjones@redhat.com> - 1:1.32.2-2
 - Fix failure when disk contains LV with activationskip=yes
   Upstream commit 2e16e3e99 (RHBZ#1306666).
