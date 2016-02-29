@@ -24,15 +24,27 @@ License:       LGPLv2+
 URL:           http://libguestfs.org/
 Source0:       http://libguestfs.org/download/1.33-development/%{name}-%{version}.tar.gz
 
-# Basic build requirements:
-BuildRequires: perl-macros
+# libguestfs live service
+Source2:       guestfsd.service
+Source3:       99-guestfsd.rules
+
+# Replacement README file for Fedora users.
+Source4:       README-replacement.in
+
+# Guestfish colour prompts.
+Source5:       guestfish.sh
+
+# Used to build the supermin appliance in Koji.
+Source6:       yum.conf.in
+
+# Basic build requirements for the library and virt tools.
+BuildRequires: gcc
+BuildRequires: supermin-devel >= 5.1.12-4
+BuildRequires: hivex-devel >= 1.2.7-7
 BuildRequires: perl(Pod::Simple)
 BuildRequires: perl(Pod::Man)
 BuildRequires: /usr/bin/pod2text
-BuildRequires: supermin-devel >= 5.1.12-4
-BuildRequires: hivex-devel >= 1.2.7-7
-BuildRequires: perl(Win::Hivex)
-BuildRequires: perl(Win::Hivex::Regedit)
+BuildRequires: po4a
 BuildRequires: augeas-devel >= 1.0.0-4
 BuildRequires: readline-devel
 BuildRequires: genisoimage
@@ -45,7 +57,6 @@ BuildRequires: fuse, fuse-devel
 BuildRequires: pcre-devel
 BuildRequires: file-devel
 BuildRequires: libvirt-devel
-BuildRequires: po4a
 BuildRequires: gperf
 BuildRequires: flex
 BuildRequires: bison
@@ -55,19 +66,11 @@ BuildRequires: libconfig-devel
 BuildRequires: xz-devel
 BuildRequires: zip
 BuildRequires: unzip
-BuildRequires: ocaml
-BuildRequires: ocaml-ocamldoc
-BuildRequires: ocaml-findlib-devel
-BuildRequires: ocaml-gettext-devel
-BuildRequires: ocaml-ounit-devel
-BuildRequires: ocaml-libvirt-devel >= 0.6.1.4-5
 BuildRequires: systemd-units
 BuildRequires: netpbm-progs
 BuildRequires: icoutils
 BuildRequires: libvirt-daemon-qemu
 BuildRequires: perl(Expect)
-BuildRequires: lua
-BuildRequires: lua-devel
 BuildRequires: libacl-devel
 BuildRequires: libcap-devel
 BuildRequires: libldm-devel
@@ -79,8 +82,21 @@ BuildRequires: /usr/bin/wget
 BuildRequires: curl
 BuildRequires: xz
 BuildRequires: gtk2-devel
-BuildRequires: perl(Sys::Virt)
 BuildRequires: /usr/bin/qemu-img
+BuildRequires: perl(Win::Hivex)
+BuildRequires: perl(Win::Hivex::Regedit)
+
+# For language bindings.
+BuildRequires: ocaml
+BuildRequires: ocaml-ocamldoc
+BuildRequires: ocaml-findlib-devel
+BuildRequires: ocaml-gettext-devel
+BuildRequires: ocaml-ounit-devel
+BuildRequires: ocaml-libvirt-devel >= 0.6.1.4-5
+BuildRequires: lua
+BuildRequires: lua-devel
+BuildRequires: perl-macros
+BuildRequires: perl(Sys::Virt)
 BuildRequires: perl(Test::More)
 BuildRequires: perl(Test::Pod) >= 1.00
 BuildRequires: perl(Test::Pod::Coverage) >= 1.00
@@ -95,13 +111,8 @@ BuildRequires: ruby-devel
 BuildRequires: rubygem-rake
 BuildRequires: rubygem(test-unit)
 BuildRequires: ruby-irb
-%if 0%{?fedora} >= 21
 BuildRequires: java-1.8.0-openjdk
 BuildRequires: java-1.8.0-openjdk-devel
-%else
-BuildRequires: java-1.7.0-openjdk
-BuildRequires: java-1.7.0-openjdk-devel
-%endif
 BuildRequires: jpackage-utils
 BuildRequires: php-devel
 BuildRequires: erlang-erts
@@ -180,19 +191,6 @@ Requires:      selinux-policy >= 3.11.1-63
 #% ifarch % {ix86} x86_64
 #Requires:      uml_utilities
 #% endif
-
-# libguestfs live service
-Source2:       guestfsd.service
-Source3:       99-guestfsd.rules
-
-# Replacement README file for Fedora users.
-Source4:       README-replacement.in
-
-# Guestfish colour prompts.
-Source5:       guestfish.sh
-
-# Used to build the supermin appliance in Koji.
-Source6:       yum.conf.in
 
 # https://fedoraproject.org/wiki/Packaging:No_Bundled_Libraries#Packages_granted_exceptions
 Provides:      bundled(gnulib)
@@ -640,11 +638,7 @@ For Python 2 bindings, install python2-%{name}.
 %package -n ruby-%{name}
 Summary:       Ruby bindings for %{name}
 Requires:      %{name} = %{epoch}:%{version}-%{release}
-%if 0%{?fedora} >= 19
 Requires:      ruby(release)
-%else
-Requires:      ruby(abi) = 1.9.1
-%endif
 Requires:      ruby
 Provides:      ruby(guestfs) = %{version}
 
