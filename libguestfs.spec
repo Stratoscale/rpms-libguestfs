@@ -134,7 +134,7 @@ BuildRequires: gcc >= 5.0.0-0.19.fc23
 #   for f in `cat appliance/packagelist`; do echo $f; done | sort -u
 # However you have to edit the list down to packages which exist in
 # current Fedora, since supermin ignores non-existent packages.
-BuildRequires: acl attr augeas-libs bash binutils btrfs-progs bzip2 coreutils cpio cryptsetup dhclient diffutils dosfstools e2fsprogs file findutils gawk gdisk genisoimage gfs2-utils grep gzip hivex iproute iputils jfsutils kernel kmod less libcap libldm libselinux libxml2 lsof lsscsi lvm2 lzop mdadm nilfs-utils openssh-clients parted pcre procps psmisc reiserfs-utils rsync scrub sed strace systemd tar udev util-linux vim-minimal xfsprogs xz yajl zerofree
+BuildRequires: acl attr augeas-libs bash binutils btrfs-progs bzip2 coreutils cpio cryptsetup dhclient diffutils dosfstools e2fsprogs file findutils gawk gdisk genisoimage gfs2-utils grep gzip hivex iproute iputils jfsutils kernel kmod less libcap libldm libselinux libxml2 lsof lsscsi lvm2 lzop mdadm nilfs-utils openssh-clients parted pcre procps psmisc reiserfs-utils rsync scrub sed sleuthkit strace systemd tar udev util-linux vim-minimal xfsprogs xz yajl zerofree
 %ifnarch ppc
 BuildRequires: hfsplus-tools
 %endif
@@ -228,6 +228,7 @@ subpackages are:
 
 For enhanced features, install:
 
+     libguestfs-forensics  adds filesystem forensics support
           libguestfs-gfs2  adds Global Filesystem (GFS2) support
        libguestfs-hfsplus  adds HFS+ (Mac filesystem) support
  libguestfs-inspect-icons  adds support for inspecting guest icons
@@ -268,6 +269,16 @@ Requires:      %{name}-tools-c = %{epoch}:%{version}-%{release}
 %description devel
 %{name}-devel contains development tools and libraries
 for %{name}.
+
+
+%package forensics
+Summary:       Filesystem forensics support for %{name}
+License:       LGPLv2+
+Requires:      %{name} = %{epoch}:%{version}-%{release}
+
+%description forensics
+This adds filesystem forensics support to %{name}.  Install it if you
+want to forensically analyze disk images using The Sleuth Kit.
 
 
 %package gfs2
@@ -943,6 +954,7 @@ function move_to
 move_to curl            zz-packages-dib
 move_to debootstrap     zz-packages-dib
 move_to which           zz-packages-dib
+move_to sleuthkit       zz-packages-forensics
 move_to gfs2-utils      zz-packages-gfs2
 move_to hfsplus-tools   zz-packages-hfsplus
 move_to jfsutils        zz-packages-jfs
@@ -1030,6 +1042,9 @@ rm ocaml/html/.gitignore
 %{_includedir}/guestfs.h
 %{_libdir}/pkgconfig/libguestfs.pc
 
+
+%files forensics
+%{_libdir}/guestfs/supermin.d/zz-packages-forensics
 
 %files gfs2
 %{_libdir}/guestfs/supermin.d/zz-packages-gfs2
