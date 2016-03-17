@@ -867,7 +867,8 @@ popd
 
 # https://bugzilla.redhat.com/show_bug.cgi?id=1302071
 # https://bugzilla.redhat.com/show_bug.cgi?id=1303147
-%ifnarch %{ix86} %{arm}
+# https://bugzilla.redhat.com/show_bug.cgi?id=1318596
+%ifnarch %{arm} %{ix86} x86_64
 
 # Note that the major tests are done after the package has been built.
 #
