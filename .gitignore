@@ -5,3 +5,4 @@ clog
 /i386/
 /noarch/
 /libguestfs-*.tar.gz
+/libguestfs-1.32.3.tar.gz.sig
