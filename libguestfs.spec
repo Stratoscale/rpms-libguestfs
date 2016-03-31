@@ -10,16 +10,22 @@
 # https://lists.fedoraproject.org/pipermail/devel/2013-April/thread.html#181627
 %global _changelog_trimtime %(date +%s -d "2 years ago")
 
+# Verify tarball signature with GPGv2 (only possible for stable branches).
+%global verify_tarball_signature 1
+
 Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
 Version:       1.32.3
-Release:       2%{?dist}
+Release:       3%{?dist}
 License:       LGPLv2+
 
 # Source and patches.
 URL:           http://libguestfs.org/
 Source0:       http://libguestfs.org/download/1.32-stable/%{name}-%{version}.tar.gz
+%if 0%{verify_tarball_signature}
+Source1:       http://libguestfs.org/download/1.32-stable/%{name}-%{version}.tar.gz.sig
+%endif
 
 # Basic build requirements:
 BuildRequires: perl(Pod::Simple)
@@ -75,6 +81,9 @@ BuildRequires: /usr/bin/wget
 BuildRequires: curl
 BuildRequires: xz
 BuildRequires: gtk2-devel
+%if 0%{verify_tarball_signature}
+BuildRequires: gpg2
+%endif
 BuildRequires: perl(Sys::Virt)
 BuildRequires: /usr/bin/qemu-img
 BuildRequires: perl(Test::More)
@@ -186,6 +195,11 @@ Source4:       README-replacement.in
 
 # Guestfish colour prompts.
 Source5:       guestfish.sh
+
+# Keyring used to verify tarball signature.
+%if 0%{verify_tarball_signature}
+Source7:       libguestfs.keyring
+%endif
 
 # https://fedoraproject.org/wiki/Packaging:No_Bundled_Libraries#Packages_granted_exceptions
 Provides:      bundled(gnulib)
@@ -777,6 +791,10 @@ for %{name}.
 
 
 %prep
+%if 0%{verify_tarball_signature}
+tmphome="$(mktemp -d)"
+gpgv2 --homedir "$tmphome" --keyring %{SOURCE7} %{SOURCE1} %{SOURCE0}
+%endif
 %setup -q
 %autopatch -p1
 
@@ -1314,6 +1332,9 @@ rm ocaml/html/.gitignore
 
 
 %changelog
+* Thu Mar 31 2016 Richard W.M. Jones <rjones@redhat.com> - 1:1.32.3-3
+- Add code to verify tarball signatures (only enabled on stable branches).
+
 * Fri Feb 26 2016 Richard W.M. Jones <rjones@redhat.com> - 1:1.32.3-2
 - New upstream version 1.32.3.
 - Remove patch which is now upstream.
