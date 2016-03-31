@@ -97,7 +97,7 @@ BuildRequires: /usr/bin/qemu-img
 BuildRequires: perl(Win::Hivex)
 BuildRequires: perl(Win::Hivex::Regedit)
 %if 0%{verify_tarball_signature}
-BuildRequires: gpg2
+BuildRequires: gnupg2
 %endif
 
 # For language bindings.
