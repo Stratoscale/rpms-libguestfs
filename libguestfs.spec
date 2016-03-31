@@ -10,6 +10,9 @@
 # https://lists.fedoraproject.org/pipermail/devel/2013-April/thread.html#181627
 %global _changelog_trimtime %(date +%s -d "2 years ago")
 
+# Verify tarball signature with GPGv2 (only possible for stable branches).
+#%global verify_tarball_signature 1
+
 # Filter perl provides
 %{?perl_default_filter}
 
@@ -17,12 +20,15 @@ Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
 Version:       1.33.16
-Release:       1%{?dist}
+Release:       2%{?dist}
 License:       LGPLv2+
 
 # Source and patches.
 URL:           http://libguestfs.org/
 Source0:       http://libguestfs.org/download/1.33-development/%{name}-%{version}.tar.gz
+%if 0%{verify_tarball_signature}
+Source1:       http://libguestfs.org/download/1.33-development/%{name}-%{version}.tar.gz.sig
+%endif
 
 # libguestfs live service
 Source2:       guestfsd.service
@@ -36,6 +42,11 @@ Source5:       guestfish.sh
 
 # Used to build the supermin appliance in Koji.
 Source6:       yum.conf.in
+
+# Keyring used to verify tarball signature.
+%if 0%{verify_tarball_signature}
+Source7:       libguestfs.keyring
+%endif
 
 # Basic build requirements for the library and virt tools.
 BuildRequires: gcc
@@ -85,6 +96,9 @@ BuildRequires: gtk2-devel
 BuildRequires: /usr/bin/qemu-img
 BuildRequires: perl(Win::Hivex)
 BuildRequires: perl(Win::Hivex::Regedit)
+%if 0%{verify_tarball_signature}
+BuildRequires: gpg2
+%endif
 
 # For language bindings.
 BuildRequires: ocaml
@@ -787,6 +801,10 @@ for %{name}.
 
 
 %prep
+%if 0%{verify_tarball_signature}
+tmphome="$(mktemp -d)"
+gpgv2 --homedir "$tmphome" --keyring %{SOURCE7} %{SOURCE1} %{SOURCE0}
+%endif
 %setup -q
 %autopatch -p1
 
@@ -1319,6 +1337,9 @@ rm ocaml/html/.gitignore
 
 
 %changelog
+* Thu Mar 31 2016 Richard W.M. Jones <rjones@redhat.com> - 1:1.33.16-2
+- Add code to verify tarball signatures (only enabled on stable branches).
+
 * Fri Mar 25 2016 Richard W.M. Jones <rjones@redhat.com> - 1:1.33.16-1
 - New upstream version 1.33.16.
 
