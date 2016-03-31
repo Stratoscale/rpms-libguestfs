@@ -82,7 +82,7 @@ BuildRequires: curl
 BuildRequires: xz
 BuildRequires: gtk2-devel
 %if 0%{verify_tarball_signature}
-BuildRequires: gpg2
+BuildRequires: gnupg2
 %endif
 BuildRequires: perl(Sys::Virt)
 BuildRequires: /usr/bin/qemu-img
