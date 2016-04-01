@@ -11,7 +11,7 @@
 %global _changelog_trimtime %(date +%s -d "2 years ago")
 
 # Verify tarball signature with GPGv2 (only possible for stable branches).
-#%global verify_tarball_signature 1
+%global verify_tarball_signature %{nil}
 
 # Filter perl provides
 %{?perl_default_filter}
