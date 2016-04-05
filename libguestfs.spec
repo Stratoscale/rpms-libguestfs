@@ -16,8 +16,8 @@
 Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
-Version:       1.32.3
-Release:       3%{?dist}
+Version:       1.32.4
+Release:       1%{?dist}
 License:       LGPLv2+
 
 # Source and patches.
@@ -1332,6 +1332,9 @@ rm ocaml/html/.gitignore
 
 
 %changelog
+* Tue Apr 05 2016 Richard W.M. Jones <rjones@redhat.com> - 1:1.32.4-1
+- New upstream version 1.32.4.
+
 * Thu Mar 31 2016 Richard W.M. Jones <rjones@redhat.com> - 1:1.32.3-3
 - Add code to verify tarball signatures (only enabled on stable branches).
 
