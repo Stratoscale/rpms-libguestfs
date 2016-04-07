@@ -20,7 +20,7 @@ Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
 Version:       1.33.18
-Release:       3%{?dist}
+Release:       4%{?dist}
 License:       LGPLv2+
 
 # Source and patches.
@@ -123,6 +123,7 @@ BuildRequires: python3-devel
 BuildRequires: libvirt-python3
 BuildRequires: ruby-devel
 BuildRequires: rubygem-rake
+BuildRequires: rubygem(rdoc)
 BuildRequires: rubygem(test-unit)
 BuildRequires: ruby-irb
 BuildRequires: java-1.8.0-openjdk
@@ -1337,9 +1338,10 @@ rm ocaml/html/.gitignore
 
 
 %changelog
-* Thu Apr 07 2016 Richard W.M. Jones <rjones@redhat.com> - 1:1.33.18-3
+* Thu Apr 07 2016 Richard W.M. Jones <rjones@redhat.com> - 1:1.33.18-4
 - Disable tests on POWER because of RHBZ#1293024.
 - Enable tests on 32 bit arm because RHBZ#1303147 supposedly fixed.
+- Explicitly depend on rubygem-rdoc, needed to build Ruby docs.
 
 * Tue Apr 05 2016 Richard W.M. Jones <rjones@redhat.com> - 1:1.33.18-1
 - New upstream version 1.33.18.
