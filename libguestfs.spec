@@ -123,7 +123,8 @@ BuildRequires: python3-devel
 BuildRequires: libvirt-python3
 BuildRequires: ruby-devel
 BuildRequires: rubygem-rake
-BuildRequires: rubygem(json)  # RHBZ#1325022
+# json is not pulled in automatically, see RHBZ#1325022
+BuildRequires: rubygem(json)
 BuildRequires: rubygem(rdoc)
 BuildRequires: rubygem(test-unit)
 BuildRequires: ruby-irb
