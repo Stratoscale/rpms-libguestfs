@@ -20,7 +20,7 @@ Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
 Version:       1.33.18
-Release:       4%{?dist}
+Release:       5%{?dist}
 License:       LGPLv2+
 
 # Source and patches.
@@ -886,9 +886,10 @@ popd
 
 %check
 
+# arm:     https://bugzilla.redhat.com/show_bug.cgi?id=1325085
 # ix86:    https://bugzilla.redhat.com/show_bug.cgi?id=1302071
 # power64: https://bugzilla.redhat.com/show_bug.cgi?id=1293024
-%ifnarch %{ix86} %{power64}
+%ifnarch %{arm} %{ix86} %{power64}
 
 # Note that the major tests are done after the package has been built.
 #
@@ -1340,6 +1341,9 @@ rm ocaml/html/.gitignore
 
 
 %changelog
+* Fri Apr 08 2016 Richard W.M. Jones <rjones@redhat.com> - 1:1.33.18-5
+- Disable tests on 32 bit arm because of libvirt RHBZ#1325085.
+
 * Thu Apr 07 2016 Richard W.M. Jones <rjones@redhat.com> - 1:1.33.18-4
 - Disable tests on POWER because of RHBZ#1293024.
 - Enable tests on 32 bit arm because RHBZ#1303147 supposedly fixed.
