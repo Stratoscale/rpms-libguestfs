@@ -20,7 +20,7 @@ Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
 Version:       1.33.19
-Release:       1%{?dist}
+Release:       2%{?dist}
 License:       LGPLv2+
 
 # Source and patches.
@@ -813,11 +813,10 @@ gpgv2 --homedir "$tmphome" --keyring %{SOURCE7} %{SOURCE1} %{SOURCE0}
 
 # For Python 3 we must build libguestfs twice.  This creates:
 #   %{name}-%{version}/
-#   %{name}-%{version}/python3/
+#   %{name}-%{version}-python3/
 # with a second copy of the sources in the python3 subdir.
 pushd ..
-cp -a %{name}-%{version} tmp-python3
-mv tmp-python3 %{name}-%{version}/python3
+cp -a %{name}-%{version} %{name}-%{version}-python3
 popd
 
 # For sVirt to work, the local temporary directory we use in the tests
@@ -875,10 +874,10 @@ fi
 %{localmake}
 
 # For Python 3 we must compile libguestfs a second time.
-pushd python3
+pushd ../%{name}-%{version}-python3
 export PYTHON=%{__python3}
 # Copy the cache to speed the build:
-cp ../generator/.pod2text* generator/
+cp ../%{name}-%{version}/generator/.pod2text* generator/
 %{localconfigure} --enable-python --enable-perl --disable-ruby --disable-haskell --disable-php --disable-erlang --disable-lua --disable-golang --disable-gobject
 %{localmake}
 popd
@@ -922,7 +921,7 @@ gzip -9 ChangeLog
 make DESTDIR=$RPM_BUILD_ROOT INSTALLDIRS=vendor install
 
 # Install Python 3 bindings which were built in a subdirectory.
-pushd python3
+pushd ../%{name}-%{version}-python3
 make DESTDIR=$RPM_BUILD_ROOT INSTALLDIRS=vendor -C python install
 popd
 
@@ -1341,8 +1340,9 @@ rm ocaml/html/.gitignore
 
 
 %changelog
-* Tue Apr 12 2016 Richard W.M. Jones <rjones@redhat.com> - 1:1.33.19-1
+* Tue Apr 12 2016 Richard W.M. Jones <rjones@redhat.com> - 1:1.33.19-2
 - New upstream version 1.33.19.
+- Build python3 in a different directory.
 
 * Fri Apr 08 2016 Richard W.M. Jones <rjones@redhat.com> - 1:1.33.18-5
 - Disable tests on 32 bit arm because of libvirt RHBZ#1325085.
