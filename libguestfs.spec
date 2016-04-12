@@ -19,8 +19,8 @@
 Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
-Version:       1.33.18
-Release:       5%{?dist}
+Version:       1.33.19
+Release:       1%{?dist}
 License:       LGPLv2+
 
 # Source and patches.
@@ -1341,6 +1341,9 @@ rm ocaml/html/.gitignore
 
 
 %changelog
+* Tue Apr 12 2016 Richard W.M. Jones <rjones@redhat.com> - 1:1.33.19-1
+- New upstream version 1.33.19.
+
 * Fri Apr 08 2016 Richard W.M. Jones <rjones@redhat.com> - 1:1.33.18-5
 - Disable tests on 32 bit arm because of libvirt RHBZ#1325085.
 
