@@ -19,8 +19,8 @@
 Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
-Version:       1.33.19
-Release:       2%{?dist}
+Version:       1.33.20
+Release:       1%{?dist}
 License:       LGPLv2+
 
 # Source and patches.
@@ -1340,6 +1340,9 @@ rm ocaml/html/.gitignore
 
 
 %changelog
+* Fri Apr 15 2016 Richard W.M. Jones <rjones@redhat.com> - 1:1.33.20-1
+- New upstream version 1.33.20.
+
 * Tue Apr 12 2016 Richard W.M. Jones <rjones@redhat.com> - 1:1.33.19-2
 - New upstream version 1.33.19.
 - Build python3 in a different directory.
