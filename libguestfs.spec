@@ -886,9 +886,8 @@ popd
 %check
 
 # arm:     https://bugzilla.redhat.com/show_bug.cgi?id=1325085
-# ix86:    https://bugzilla.redhat.com/show_bug.cgi?id=1302071
 # power64: https://bugzilla.redhat.com/show_bug.cgi?id=1293024
-%ifnarch %{arm} %{ix86} %{power64}
+%ifnarch %{arm} %{power64}
 
 # Note that the major tests are done after the package has been built.
 #
