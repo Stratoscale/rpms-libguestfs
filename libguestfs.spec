@@ -983,6 +983,7 @@ move_to reiserfs-utils  zz-packages-reiserfs
 move_to iputils         zz-packages-rescue
 move_to lsof            zz-packages-rescue
 move_to openssh-clients zz-packages-rescue
+move_to pciutils        zz-packages-rescue
 move_to strace          zz-packages-rescue
 move_to vim-minimal     zz-packages-rescue
 move_to rsync           zz-packages-rsync
