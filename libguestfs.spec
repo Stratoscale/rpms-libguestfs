@@ -1038,15 +1038,11 @@ rm ocaml/html/.gitignore
 %{_libdir}/guestfs/
 %exclude %{_libdir}/guestfs/supermin.d/zz-packages-*
 %{_libdir}/libguestfs.so.*
-%{_mandir}/man1/guestfs-building.1*
 %{_mandir}/man1/guestfs-faq.1*
-%{_mandir}/man1/guestfs-hacking.1*
-%{_mandir}/man1/guestfs-internals.1*
 %{_mandir}/man1/guestfs-performance.1*
 %{_mandir}/man1/guestfs-recipes.1*
 %{_mandir}/man1/guestfs-release-notes.1*
 %{_mandir}/man1/guestfs-security.1*
-%{_mandir}/man1/guestfs-testing.1*
 %{_mandir}/man1/libguestfs-test-tool.1*
 
 
@@ -1056,6 +1052,10 @@ rm ocaml/html/.gitignore
 %doc installed-docs/*
 %{_libdir}/libguestfs.so
 %{_sbindir}/libguestfs-make-fixed-appliance
+%{_mandir}/man1/guestfs-building.1*
+%{_mandir}/man1/guestfs-hacking.1*
+%{_mandir}/man1/guestfs-internals.1*
+%{_mandir}/man1/guestfs-testing.1*
 %{_mandir}/man1/libguestfs-make-fixed-appliance.1*
 %{_mandir}/man3/guestfs.3*
 %{_mandir}/man3/guestfs-examples.3*
