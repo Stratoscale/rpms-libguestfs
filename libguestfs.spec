@@ -1341,7 +1341,6 @@ rm ocaml/html/.gitignore
 %changelog
 * Fri Jun 03 2016 Richard W.M. Jones <rjones@redhat.com> - 1:1.33.34-1
 - New upstream version 1.33.34.
-
 - Now building virt-p2v with gtk3 not gtk2.
 
 * Fri May 27 2016 Richard W.M. Jones <rjones@redhat.com> - 1:1.33.32-1
