@@ -92,7 +92,7 @@ BuildRequires: /usr/bin/ping
 BuildRequires: /usr/bin/wget
 BuildRequires: curl
 BuildRequires: xz
-BuildRequires: gtk2-devel
+BuildRequires: gtk3-devel
 BuildRequires: /usr/bin/qemu-img
 BuildRequires: perl(Win::Hivex)
 BuildRequires: perl(Win::Hivex::Regedit)
@@ -134,7 +134,6 @@ BuildRequires: jpackage-utils
 BuildRequires: php-devel
 BuildRequires: erlang-erts
 BuildRequires: erlang-erl_interface
-BuildRequires: glib2-devel
 BuildRequires: gobject-introspection-devel
 BuildRequires: gjs
 %ifarch %{golang_arches}
@@ -1340,6 +1339,8 @@ rm ocaml/html/.gitignore
 
 
 %changelog
+- Now building virt-p2v with gtk3 not gtk2.
+
 * Fri May 27 2016 Richard W.M. Jones <rjones@redhat.com> - 1:1.33.32-1
 - New upstream version 1.33.32.
 
