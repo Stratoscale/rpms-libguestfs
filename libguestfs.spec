@@ -19,7 +19,7 @@
 Summary:       Access and modify virtual machine disk images
 Name:          libguestfs
 Epoch:         1
-Version:       1.33.34
+Version:       1.33.35
 Release:       1%{?dist}
 License:       LGPLv2+
 
@@ -1339,6 +1339,9 @@ rm ocaml/html/.gitignore
 
 
 %changelog
+* Mon Jun 06 2016 Richard W.M. Jones <rjones@redhat.com> - 1:1.33.35-1
+- New upstream version 1.33.35.
+
 * Fri Jun 03 2016 Richard W.M. Jones <rjones@redhat.com> - 1:1.33.34-1
 - New upstream version 1.33.34.
 - Now building virt-p2v with gtk3 not gtk2.
