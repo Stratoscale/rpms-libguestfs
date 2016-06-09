@@ -258,7 +258,6 @@ For enhanced features, install:
 
 Language bindings:
 
-         libguestfs-devel  C/C++ header files and library
         erlang-libguestfs  Erlang bindings
  libguestfs-gobject-devel  GObject bindings and GObject Introspection
            golang-guestfs  Go language bindings
@@ -270,6 +269,25 @@ Language bindings:
        python2-libguestfs  Python 2 bindings
        python3-libguestfs  Python 3 bindings
           ruby-libguestfs  Ruby bindings
+
+For developers:
+
+         libguestfs-devel  C/C++ header files and library
+  libguestfs-benchmarking  Benchmarking utilities
+
+
+%ifarch aarch64 x86_64
+%package benchmarking
+Summary:       Benchmarking utilities for %{name}
+Requires:      %{name} = %{epoch}:%{version}-%{release}
+
+
+%description benchmarking
+%{name}-benchmarking contains utilities for benchmarking and
+performance analysis of %{name}, and also for general
+understanding of the performance of the kernel and qemu when booting
+small appliances.
+%endif
 
 
 %package devel
@@ -1018,6 +1036,16 @@ rm -r $RPM_BUILD_ROOT%{_libdir}/ocaml/stublibs/dllv2v_test_harness*
 # Remove the .gitignore file from ocaml/html which will be copied to docdir.
 rm ocaml/html/.gitignore
 
+%ifarch aarch64 x86_64
+# Copy the benchmarking tools and man pages, since upstream doesn't
+# install them by default.
+install -m 0755 utils/boot-analysis/boot-analysis $RPM_BUILD_ROOT%{_bindir}/libguestfs-boot-analysis
+install -m 0755 utils/boot-benchmark/boot-benchmark $RPM_BUILD_ROOT%{_bindir}/libguestfs-boot-benchmark
+install -m 0755 utils/boot-benchmark/boot-benchmark-range.pl $RPM_BUILD_ROOT%{_bindir}/libguestfs-boot-benchmark-range.pl
+install -m 0644 utils/boot-analysis/boot-analysis.1 $RPM_BUILD_ROOT%{_mandir}/man1/libguestfs-boot-analysis.1
+install -m 0644 utils/boot-benchmark/boot-benchmark.1 $RPM_BUILD_ROOT%{_mandir}/man1/libguestfs-boot-benchmark.1
+%endif
+
 # Find locale files.
 %find_lang %{name}
 
@@ -1043,6 +1071,14 @@ rm ocaml/html/.gitignore
 %{_mandir}/man1/guestfs-release-notes.1*
 %{_mandir}/man1/guestfs-security.1*
 %{_mandir}/man1/libguestfs-test-tool.1*
+
+
+%files benchmarking
+%{_bindir}/libguestfs-boot-analysis
+%{_bindir}/libguestfs-boot-benchmark
+%{_bindir}/libguestfs-boot-benchmark-range.pl
+%{_mandir}/man1/libguestfs-boot-analysis.1*
+%{_mandir}/man1/libguestfs-boot-benchmark.1*
 
 
 %files devel
