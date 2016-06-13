@@ -1322,6 +1322,7 @@ rm ocaml/html/.gitignore
 %lang(uk) %{_mandir}/uk/man3/*.3*
 %lang(uk) %{_mandir}/uk/man5/*.5*
 
+exclude /usr/share/man/man1/*
 
 %changelog
 * Wed Jun 01 2016 Richard W.M. Jones <rjones@redhat.com> - 1:1.32.5-1
