@@ -1272,9 +1272,9 @@ rm ocaml/html/.gitignore
 
 
 %files -n erlang-%{name}
-%doc erlang/README
-%doc erlang/examples/*.erl
-%doc erlang/examples/LICENSE
+# %doc erlang/README
+# %doc erlang/examples/*.erl
+# %doc erlang/examples/LICENSE
 %{_bindir}/erl-guestfs
 %{_libdir}/erlang/lib/%{name}-%{version}
 %{_mandir}/man3/guestfs-erlang.3*
@@ -1322,7 +1322,7 @@ rm ocaml/html/.gitignore
 %lang(uk) %{_mandir}/uk/man3/*.3*
 %lang(uk) %{_mandir}/uk/man5/*.5*
 
-exclude /usr/share/man/man1/*
+%exclude /usr/share/man/man1/*
 
 %changelog
 * Wed Jun 01 2016 Richard W.M. Jones <rjones@redhat.com> - 1:1.32.5-1
