@@ -941,11 +941,6 @@ rm $RPM_BUILD_ROOT%{_mandir}/man1/virt-list-filesystems.1*
 rm $RPM_BUILD_ROOT%{_mandir}/man1/virt-list-partitions.1*
 rm $RPM_BUILD_ROOT%{_mandir}/man1/virt-tar.1*
 
-# Don't use versioned jar file (RHBZ#1022133).
-# See: https://bugzilla.redhat.com/show_bug.cgi?id=1022184#c4
-mv $RPM_BUILD_ROOT%{_datadir}/java/%{name}-%{version}.jar \
-  $RPM_BUILD_ROOT%{_datadir}/java/%{name}.jar
-
 # golang: Ignore what libguestfs upstream installs, and just copy the
 # source files to %{_datadir}/gocode/src.
 %ifarch %{golang_arches}
