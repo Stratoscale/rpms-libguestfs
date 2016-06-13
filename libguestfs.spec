@@ -1301,9 +1301,6 @@ rm ocaml/html/.gitignore
 %{_libdir}/pkgconfig/libguestfs-gobject-1.0.pc
 
 
-%files gobject-doc
-%{_datadir}/gtk-doc/html/guestfs
-
 
 %ifarch %{golang_arches}
 %files -n golang-guestfs
