@@ -1,0 +1,33 @@
+all: rpm
+
+VERSION=1.32.5
+
+deps:
+	-git clone --branch=yogev/stratoscale-f23 https://github.com/yogev-stratoscale/rpms-libguestfs ~/rpmbuild/SOURCES/
+
+	@echo "mv ~/rpmbuild/SOURCES/libguestfs.spec to ~/rpmbuild/SPECS/libguestfs.spec."
+	-mv ~/rpmbuild/SOURCES/libguestfs.spec ~/rpmbuild/SPECS/libguestfs.spec
+
+	@echo "RUNNING builddep on ~/rpmbuild/SPECS/libguestfs.spec"
+	sudo dnf builddep ~/rpmbuild/SPECS/libguestfs.spec -y
+
+	@echo "Clone the Source code of libguestfs."
+	-git clone --branch=stratoscale/stable-1.32 --single-branch https://github.com/Stratoscale/libguestfs.git /tmp/libguestfs-${VERSION}
+	cd /tmp/libguestfs-${VERSION} \
+	&& echo "RUNNING autogen.sh" \
+	&& ./autogen.sh --with-readline --disable-php --disable-python --disable-perl --disable-golang --disable-haskell --disable-ruby --disable-gobject --disable-probes --disable-lua --disable-erlang --disable-libguestfs-devel --without-java \
+	&& git log --format="* %cd %aN%n- (%h) %s%d%n" --date=local | sed -r 's/[0-9]+:[0-9]+:[0-9]+ //' >> ChangeLog
+	cd /tmp \
+	&& tar -czvf ~/rpmbuild/SOURCES/libguestfs-${VERSION}.tar.gz libguestfs-${VERSION}
+
+rpm-clean:
+	rm  ~/rpmbuild/SPECS/libguestfs.spec
+	rm -rf  ~/rpmbuild/SOURCES/*
+	rm -rf ~/rpmbuild/BUILD/libguestfs-${VERSION}
+	rm -rf ~/rpmbuild/BUILDROOT/libguestfs-${VERSION}*
+	rm -rf /tmp/libguestfs-${VERSION}
+
+rpm: deps
+	@echo "RUNNING rpmbuild..."
+	rpmbuild -ba --target x86_64 ~/rpmbuild/SPECS/libguestfs.spec
+	cp -r ~/rpmbuild/RPMS/* ${HOME}/output
