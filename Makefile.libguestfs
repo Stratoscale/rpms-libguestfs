@@ -3,7 +3,7 @@ all: rpm
 VERSION=1.32.5
 
 deps:
-	-git clone --branch=yogev/stratoscale-f23 https://github.com/yogev-stratoscale/rpms-libguestfs ~/rpmbuild/SOURCES/
+	-git clone --branch=yogev/add-build-scripts https://github.com/yogev-stratoscale/rpms-libguestfs ~/rpmbuild/SOURCES/
 
 	@echo "mv ~/rpmbuild/SOURCES/libguestfs.spec to ~/rpmbuild/SPECS/libguestfs.spec."
 	-mv ~/rpmbuild/SOURCES/libguestfs.spec ~/rpmbuild/SPECS/libguestfs.spec
@@ -27,7 +27,9 @@ rpm-clean:
 	rm -rf ~/rpmbuild/BUILDROOT/libguestfs-${VERSION}*
 	rm -rf /tmp/libguestfs-${VERSION}
 
+submit:
+	strato_osmosis_client submit -p rpms -b rpms-libguestfs -q clean -s ~/rpmbuild/RPMS/ -a=10.47.238.8:8080
+
 rpm: deps
 	@echo "RUNNING rpmbuild..."
 	rpmbuild -ba --target x86_64 ~/rpmbuild/SPECS/libguestfs.spec
-	cp -r ~/rpmbuild/RPMS/* ${HOME}/output
